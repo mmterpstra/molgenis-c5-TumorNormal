@@ -1,0 +1,85 @@
+#MOLGENIS walltime=23:59:00 mem=8gb ppn=2
+
+#Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
+#string stage
+#string checkStage
+#string WORKDIR
+#string projectDir
+
+#string gatkVersion
+#string dbsnpVcf
+#string dbsnpVcfIdx
+#string onekgGenomeFasta
+#list bsqrBam
+#list bsqrBai
+#string targetsList
+#string scatterList
+#string haplotyperDir
+#string haplotyperScatVcf
+#string haplotyperScatVcfIdx
+
+echo "## "$(date)" ##  $0 Started "
+
+alloutputsexist \
+"${haplotyperScatVcf}" \
+"${haplotyperScatVcfIdx}"
+
+for file in "${bsqrBam[@]}" "${bsqrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}"; do
+	echo "getFile file='$file'"
+	getFile $file
+done
+
+#Load gatk module
+${stage} GATK/${gatkVersion}
+${checkStage}
+
+set -x
+set -e
+
+# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+bams=($(printf '%s\n' "${bsqrBam[@]}" | sort -u ))
+
+inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
+
+#if has targets use targets list
+if [ ${#targetsList} -ne 0 ]; then
+
+	getFile ${scatterList}
+	
+	if [ ! -e ${scatterList} ]; then
+		line="skipping this haplotypecaller because not -e ${scatterList}"
+		
+		echo $line
+		echo $line 1>&2
+		
+		if [ -e $ENVIRONMENT_DIR/${taskId}.sh ]; then 
+			touch $ENVIRONMENT_DIR/${taskId}.sh.finished
+			touch $ENVIRONMENT_DIR/${taskId}.env
+		fi
+		exit 0;
+	fi 
+	
+	
+	InterValOperand=" -L ${scatterList} "
+
+fi
+
+mkdir -p ${haplotyperDir}
+
+java -Xmx8g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+ -T HaplotypeCaller \
+ -R ${onekgGenomeFasta} \
+ --dbsnp ${dbsnpVcf}\
+ $inputs \
+ -stand_call_conf 10.0 \
+ -stand_emit_conf 20.0 \
+ -o ${haplotyperScatVcf} \
+ -nct 3 \
+ $InterValOperand
+
+# -dontUseSoftClippedBases \
+
+putFile ${haplotyperScatVcf}
+putFile ${haplotyperScatVcfIdx}
+
+echo "## "$(date)" ##  $0 Done "
