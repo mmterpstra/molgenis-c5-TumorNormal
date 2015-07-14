@@ -1,0 +1,398 @@
+################################################################################
+##general pipeline parameters
+#
+#longQueue,ll
+#queue=longQueue
+queue,gcc
+mem,4
+walltime,23:59:00
+nodes,1
+ppn,1
+defaultInterpreter,#!/bin/bash
+stage,module load
+checkStage,module list
+WORKDIR,/gcc/
+root,${WORKDIR}
+group,oncogenetics
+tmp,tmp01
+#tempDir,${WORKDIR}/groups/${group}/${tmp}/tmp/
+#fix
+#tmpResDir,${WORKDIR}/groups/${group}/${tmp}/resources
+resDir,${root}/resources/
+#resDir,${tmpResDir}
+toolDir,${root}/tools/
+projectDir,/gcc/groups/${group}/${tmp}/projects/${project}/
+################################################################################
+#CreatePaddedIntervals + padding
+#targetsList,/gcc/groups/oncogenetics/tmp01/resources/target_ET1262F_2_182.ensembl.gatksort.list
+slopTargetsList,${projectDir}/targets.slop100.list
+#targetsList,/gcc/groups/oncogenetics/tmp01/resources/cancerPanel_target.ensembl.gatksort.list
+scatterIntervallistDir,${projectDir}/scatter/
+scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.intervals 
+
+
+################################################################################
+##Fastqc
+#
+fastqcVersion,v0.10.1
+fastqcDir,${projectDir}/fastqc/
+fastqcZipExt,_fastqc.zip
+singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
+pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
+pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
+################################################################################
+##General/bwa
+#
+nTreads,8
+bwaVersion,0.7.10
+bwaAlignmentDir,${projectDir}/bwa/
+bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
+#string reads1FqGz
+#string reads2FqGz
+genomeLatSpecies,Homo_sapiens
+genomeSpecies,human
+genomeBuild,b37
+genomeGrchBuild,GRCh37
+ensemblVersion,75
+#onekgGgenomeDecoyFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37_decoy.fasta
+onekgGenomeFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37.fasta
+onekgGenomeFastaIdxBase,${onekgGenomeFasta}
+onekgGenomeFastaDict,${resDir}/${genomeBuild}/indices/human_g1k_v37.dict
+
+################################################################################
+##nugene rmdups
+nugeneDir,${projectDir}/nugeneRmdups/
+nugeneTool,${"/gcc/groups/oncogenetics/tmp01/projects/NugeneValidation/Test/NuGEN_DupAnalysisTool_v5.1.5/runN6pipeline.sh"}
+nugeneOutputPrefix,${nugeneDir}/${sampleName}
+nugeneNodupsBam,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam
+nugeneNodupsBai,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam.bai
+#Usage: -r ${bwaSam} inputBarcode {outputPrefix
+##
+################################################################################
+##nugene AddOrReplaceGroups
+#
+picardVersion,1.102
+nugeneAddOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroupsNugene/
+nugeneAddOrReplaceGroupsBam,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bam
+nugeneAddOrReplaceGroupsBai,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+
+################################################################################
+##nugene HsMetrics
+#
+nugeneCalculateHsMetricsDir,${projectDir}/hsMetricsNugene/
+nugeneCalculateHsMetricsLog, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.log
+nugeneCalculateHsMetricsPerTargetCov, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.pertargetcov.tsv
+
+################################################################################
+##AddOrReplaceGroups
+#
+picardVersion,1.102
+addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
+addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
+addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+#
+################################################################################
+#Nugene Bc Splitter?
+#
+nugBcSplitterPl,/gcc/groups/oncogenetics/tmp01/tools/NugeneBarcodesAsReadgroup/dist/NugeneDigitalSplitter.pl
+nugeneRgDir,${projectDir}/nugeneReadgroups/
+nugeneBam,${nugeneRgDir}${internalId}_${sampleName}.bam
+nugeneBai,${nugeneRgDir}${internalId}_${sampleName}.bai
+#
+################################################################################
+##MergeBamFiles ?? #note the actual picard programme: MergeSamFiles.jar
+MergeBamFilesDir,${projectDir}/MergeBams/
+MergeBamFilesBam,${MergeBamFilesDir}${sampleName}.bam
+MergeBamFilesBai,${MergeBamFilesDir}${sampleName}.bai
+#
+################################################################################
+##MarkDuplicates
+#
+markDuplicatesDir,${projectDir}/markDuplicates/
+markDuplicatesBam,${markDuplicatesDir}${sampleName}.bam
+markDuplicatesBai,${markDuplicatesDir}${sampleName}.bai
+markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
+#
+################################################################################
+##CollectRnaSeqMetrics
+#
+collectRnaSeqMetricsDir,${projectDir}/collectRnaSeqMetrics/
+collectRnaSeqMetrics,${collectRnaSeqMetricsDir}${sampleName}.rna_metrics.log
+collectRnaSeqMetricsChart,${collectRnaSeqMetricsDir}${sampleName}.chart.pdf
+
+genesRefFlat,${resDir}/picard-tools/Ensembl${ensemblVersion}/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
+rRnaIntervalList,${resDir}//picard-tools/Ensembl${ensemblVersion}/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
+
+################################################################################
+##CollectMultipleMetrics
+RVersion,3.0.2
+collectMultipleMetricsDir,${projectDir}/multipleMetrics/
+collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
+################################################################################
+##CalculateHsMetrics bed files
+
+calculateHsMetricsDir,${projectDir}/HsMetrics/
+calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
+calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
+#
+################################################################################
+#gatkVersion 
+
+#gatkVersion,3.1-1-g07a4bf8
+#gatkVersion,3.2-2-gec30cee
+gatkVersion,3.3-0-g37228af
+################################################################################
+##VCF for GATK
+#
+
+goldStandardVcf,${resDir}/${genomeBuild}/sv/1000G/Mills_and_1000G_gold_standard.indels.b37.vcf
+goldStandardVcfIdx,${goldStandardVcf}.idx
+
+oneKgPhase1SnpsVcf,${resDir}/${genomeBuild}/snp/1000G/1000G_phase1.snps.high_confidence.b37.vcf
+oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.idx
+
+oneKgPhase1IndelsVcf,${resDir}/${genomeBuild}/sv/1000G/1000G_phase1.indels.b37.vcf
+oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.idx
+#phase 3 indels / snps
+${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
+
+dbsnpVcf,${resDir}/${genomeBuild}/snp/dbSNP/dbsnp_138.b37.vcf
+dbsnpVcfIdx,${dbsnpVcf}.idx
+
+exacVcf,${resDir}/ExAC/release0.3/ExAC.r0.3.sites.vep.vcf.gz
+exacVcfIdx,${exacVcf}.tbi
+
+################################################################################
+#GatkRealignerTargetCreator
+
+#because want to use alternative not local assembling callers on the same data like mutect/varscan etc
+
+indelRealignmentDir,${projectDir}/indelRealignment/
+realignmentIntervals,${indelRealignmentDir}/realignmentIntervals.list
+
+################################################################################
+#IndelRealigner
+indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+indelRealignmentBai,${indelRealignmentDir}${sampleName}.bai
+#limit to known realignment when using haplotype caller because the haplotypecaller will consider multiple haplotypes instead of one when the GatkRealignerTargetCreator step is used.
+indelRealignmentTargets,${resDir}/${genomeBuild}/intervals/1000G_phase1.indels_Mills_and_1000G_gold_standard.indels.b37.human_g1k_v37.intervals
+
+##############################################################################
+#BSQR(+PrintReads) default
+bsqrDir,${projectDir}/baseQualityScoreRecalibration/
+
+bsqrBam,${bsqrDir}${sampleName}.bam
+bsqrBai,${bsqrDir}${sampleName}.bai
+bsqrBeforeGrp,${bsqrDir}${sampleName}.before.grp
+
+################################################################################
+#(BSQR+)AnalyseCovariants default
+analyseCovarsDir,${projectDir}/CovariantAnalysis/
+bsqrAfterGrp,${bsqrDir}${sampleName}.after.grp
+analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
+#stuffs that is missing 
+
+################################################################################
+#haplotypecaller
+haplotyperDir,${projectDir}/haplotypeCaller/
+haplotyperRealignmentBam,${haplotyperDir}${sampleName}.bam
+haplotyperRealignmentBai,${haplotyperDir}${sampleName}.bam
+haplotyperScatVcf,${haplotyperDir}${project}.${scatterIDs}.vcf
+haplotyperScatVcfIdx,${haplotyperScatVcf}.idx
+haplotyperVcf,${haplotyperDir}${project}.vcf
+haplotyperVcfIdx,${haplotyperVcf}.idx
+################################################################################
+#variant annotation
+
+annotatorDir,${projectDir}/VariantAnnotation/
+
+snpEffGatkAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+snpEffGatkAnnotVcfIdx,${snpEffGatkAnnotVcf}.idx
+gatkAnnotVcf,${annotatorDir}/${project}.annot.intermediate.vcf
+gatkAnnotVcfIdx,${gatkAnnotVcf}.idx
+snpEffAnnotVcf,${annotatorDir}/${project}.snpEff.intermediate.vcf
+snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
+#
+#snpSiftAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+#snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
+#
+annotVcf,${annotatorDir}/${project}.annot.vcf
+annotVcfIdx,${annotVcf}.idx
+
+#snpEff / snipsift
+snpEffVersion,4.1d
+snpEffStats,${annotatorDir}/${project}.snpEff.summary.html
+
+#snpEff database resources...
+motifBin,/gcc/resources/snpEff/3.6c/GRCh37.75/motif.bin
+nextProtBin,/gcc/resources/snpEff/3.6c/GRCh37.75/nextProt.bin
+pwmsBin,/gcc/resources/snpEff/3.6c/GRCh37.75/pwms.bin
+regulation_CD4Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_CD4.bin
+regulation_GM06990Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_GM06990.bin
+regulation_GM12878Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_GM12878.bin
+regulation_H1ESCBin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_H1ESC.bin
+regulation_HeLaS3Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_HeLa-S3.bin
+regulation_HepG2Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_HepG2.bin
+regulation_HMECBin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_HMEC.bin
+regulation_HSMMBin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_HSMM.bin
+regulation_HUVECBin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_HUVEC.bin
+regulation_IMR90Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_IMR90.bin
+regulation_K562bBin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_K562b.bin
+regulation_K562Bin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_K562.bin
+regulation_NHABin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_NH-A.bin
+regulation_NHEKBin,${resDir}/snpEff/3.6c/GRCh37.75/regulation_NHEK.bin
+snpEffectPredictorBin,${resDir}/snpEff/3.6c/GRCh37.75/snpEffectPredictor.bin
+
+#snpSift database resources
+dbnsfp,${resDir}/dbNSFP/2.7/dbNSFP2.7.txt.gz
+dbnsfpTbi,${resDir}/dbNSFP/2.7/dbNSFP2.7.txt.gz.tbi
+
+#vcf
+oneKgP1wgsVcf,${resDir}/
+oneKgP1wgsVcfIdx,${resDir}/
+cosmicDir,${resDir}/Cosmic/
+cosmicVersion,v70
+cosmicVcf,${cosmicDir}/${cosmicVersion}/CosmicCodingMuts.ensembl.vcf
+cosmicVcfIdx,${cosmicVcf}.idx
+
+#customscript
+#normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
+#custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
+#custAnnotVcfIdx,${custAnnotVcf}.idx
+
+################################################################################
+#switch custom annotation around!!!!!!!!!!!!
+#variant filtration
+#variantFiltDir,${projectDir}/variantfiltering/
+#select INDELS & MNP / SNVS
+#snvRawVcf,${variantFiltDir}/${project}.snv.raw.vcf
+#snvRawVcfIdx,${snvRawVcf}.idx
+#indelMnpRawVcf,${variantFiltDir}/${project}.indelmnp.raw.vcf
+#indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
+#and filtered
+#snvVcf,${variantFiltDir}/${project}.snv.vcf
+#snvVcfIdx,${snvVcf}.idx
+#indelMnpVcf,${variantFiltDir}/${project}.indelmnp.vcf
+#indelMnpVcfIdx,${indelMnpVcf}.idx
+
+#customscript
+normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
+custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
+custAnnotVcfIdx,${custAnnotVcf}.idx
+
+################################################################################
+#variant filtration
+variantFiltDir,${projectDir}/variantfiltering/
+#select INDELS & MNP / SNVS
+snvRawVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.raw.vcf
+snvRawVcfIdx,${snvRawVcf}.idx
+indelMnpRawVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.raw.vcf
+indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
+#and filtered
+snvVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.vcf
+snvVcfIdx,${snvVcf}.idx
+indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
+indelMnpVcfIdx,${indelMnpVcf}.idx
+
+################################################################################
+#variants to table
+tableDir,${projectDir}/tables/
+#variantTable,${tableDir}/${project}.tsv
+snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
+indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
+snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
+indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
+
+################################################################################
+#vcf to descriptiontable
+GenerateTableDescriptionByVcfHeaderPl,/gcc/tools/scripts/Vcf_tools_misc/GenerateTableDescriptionByVcfHeader.pl
+snvDescrTable,${tableDir}/${project}.snv.description.tsv
+indelMnpDescrTable,${tableDir}/${project}.indelmnp.description.tsv
+################################################################################
+#tables to xlsx
+xlsxDir,${projectDir}/xlsx/
+snvXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.xlsx
+indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
+snvRawXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.raw.xlsx
+indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
+snvDescrXlsx,${xlsxDir}/${project}.snv.description.xlsx
+indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
+################################################################################
+#haplotypecaller + Gvcf mode
+gHaplotyperDir,${projectDir}/haplotypeCallerGvf/
+haplotyperGvcf,${gHaplotyperDir}${sampleName}.g.vcf
+haplotyperGvcfIdx,${haplotyperGvcf}.idx
+################################################################################
+#mergeGvcfs
+mergeGvcf,${gHaplotyperDir}${project}.g.vcf
+mergeGvcfIdx,${mergeGvcf}.idx
+################################################################################
+#genotypeGvcf
+genotypedVcf,${gHaplotyperDir}${project}.gg.vcf
+genotypedVcfIdx,${genotypedVcf}.idx
+################################################################################
+#gvcf variant annotation extra parameters
+gannotatorDir,${projectDir}/GVariantAnnotation/
+gsnpEffVcf,${gannotatorDir}/${project}.snpEff.vcf
+gsnpEffVcfIdx,${gsnpEffVcf}.idx
+gannotVcf,${gannotatorDir}/${project}.annot.vcf
+gannotVcfIdx,${gannotVcf}.idx
+
+
+
+################################################################################
+#varscanDoIt?
+varScanVersion,v2.3.6
+samtoolsVersion,0.1.18
+
+
+varscanDir,${projectDir}/varscan.${controlSampleName}/
+varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
+varscanCopynumber,${varscanCopynumberPrefix}.copynumber
+varscanCopycaller,${varscanCopynumberPrefix}.called
+varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
+
+
+varscanInputBam,${indelRealignmentBam}
+varscanInputBai,${indelRealignmentBai}
+varscanInputBamBai,${indelRealignmentBai}
+
+#same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+
+controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
+controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
+controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
+
+#
+#
+################################################################################
+#PlotGenome?
+
+RVersion,3.0.2
+vcfToolsVersion,0.1.12a
+segFile,${varscanDir}/${sampleName}.cn.seg
+segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
+cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
+
+scriptDir,/gcc/tools/scripts/
+plotScriptPl,${scriptDir}/PlotVarscan/PlotFloatsOnInterVals0.0.3.pl
+#lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
+#gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
+
+
+
+################################################################################
+#CreateProjectMd aka CreateProjectMarkdown
+#
+projectMarkdown,${projectDir}/${project}.summary.Rmd
+#
+#
+#test projectsamplesheet
+#project,sampleName,sampleprep,barcode,seqtype,sequencer,reads1FqGz,reads2FqGz
+#test,samplePE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_2.fq.gz
+#test,sampleSE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,
+#
+################################################################################
+
+
+targetsList,/target/gpfs2/gcc/groups/oncogenetics/tmp01/resources/SureSelect_All_Exon_50MB_v5_exons_hg19_human_g1k_v37.sorted.list
