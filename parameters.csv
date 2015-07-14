@@ -124,7 +124,7 @@ rRnaIntervalList,${resDir}//picard-tools/Ensembl${ensemblVersion}/${genomeLatSpe
 
 ################################################################################
 ##CollectMultipleMetrics
-RVersion,3.0.2
+RMod,R/3.2.0-goolf-1.7.20-Java-1.7.0_80
 collectMultipleMetricsDir,${projectDir}/multipleMetrics/
 collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
 ################################################################################

@@ -18,7 +18,7 @@ my $use = <<"END";
 END
 die $use if(scalar(@ARGV)==0);
 die "$ARGV[0] does not exist. Is it a file? \n".$use if(not( -e $ARGV[0]));
-my @param; my @val;
+my @param; my @val; my %h; my $lc;
 while(<>){
 	next if(/^\s*$|^#/);#
 	warn "## ".localtime(time)." ## WARN ## char '=' found try char ','" if(/=/);
