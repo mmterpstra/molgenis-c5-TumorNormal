@@ -3,7 +3,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string fastqcVersion
+#string fastqcMod
 #string WORKDIR
 #string projectDir
 #string fastqcDir
@@ -17,7 +17,7 @@
 
 echo -e "test ${reads1FqGz} ${reads2FqGz} 1: $(basename ${reads1FqGz} .gz)${fastqcZipExt} \n2: $(basename ${reads2FqGz} .gz)${fastqcZipExt} "
 
-${stage} fastqc/${fastqcVersion}
+${stage} ${fastqcMod}
 ${checkStage}
 
 set -x

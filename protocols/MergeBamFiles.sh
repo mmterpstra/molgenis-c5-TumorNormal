@@ -44,7 +44,7 @@ inputs=$(printf 'INPUT=%s ' $(printf '%s\n' ${bams[@]}))
 
 mkdir -p ${MergeBamFilesDir}
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/MergeSamFiles.jar \
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar MergeSamFiles \
  $inputs \
  SORT_ORDER=coordinate \
  CREATE_INDEX=true \

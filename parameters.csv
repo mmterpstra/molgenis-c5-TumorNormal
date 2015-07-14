@@ -34,7 +34,7 @@ scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.intervals
 ################################################################################
 ##Fastqc
 #
-fastqcVersion,v0.10.1
+fastqcMod,FastQC/0.11.3-Java-1.7.0_80
 fastqcDir,${projectDir}/fastqc/
 fastqcZipExt,_fastqc.zip
 singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
@@ -44,7 +44,7 @@ pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
 ##General/bwa
 #
 nTreads,8
-bwaVersion,0.7.10
+bwaMod,BWA/0.7.12-goolf-1.7.20
 bwaAlignmentDir,${projectDir}/bwa/
 bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
 #string reads1FqGz
@@ -71,7 +71,7 @@ nugeneNodupsBai,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam.bai
 ################################################################################
 ##nugene AddOrReplaceGroups
 #
-picardVersion,1.102
+picardMod,picard/1.130-Java-1.7.0_80
 nugeneAddOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroupsNugene/
 nugeneAddOrReplaceGroupsBam,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bam
 nugeneAddOrReplaceGroupsBai,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bai
@@ -86,7 +86,6 @@ nugeneCalculateHsMetricsPerTargetCov, ${nugeneCalculateHsMetricsDir}/${internalI
 ################################################################################
 ##AddOrReplaceGroups
 #
-picardVersion,1.102
 addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
 addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
 addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai

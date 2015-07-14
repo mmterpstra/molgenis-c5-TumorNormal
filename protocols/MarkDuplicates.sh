@@ -35,7 +35,7 @@ set -e
 
 mkdir -p ${markDuplicatesDir}
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/MarkDuplicates.jar \
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar MarkDuplicates \
  INPUT=${MergeBamFilesBam} \
  OUTPUT=${markDuplicatesBam} \
  CREATE_INDEX=true \

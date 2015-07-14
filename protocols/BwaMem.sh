@@ -4,7 +4,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string bwaVersion
+#string bwaMod
 #string WORKDIR
 #string resDir
 #string toolDir
@@ -27,7 +27,7 @@ alloutputsexist \
 getFile ${onekgGenomeFasta}
 
 #Load modules
-${stage} bwa/${bwaVersion}
+${stage} bwa/${bwaMod}
 
 #check modules
 ${checkStage}

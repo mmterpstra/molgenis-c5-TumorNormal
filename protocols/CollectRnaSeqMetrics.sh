@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 
 #string markDuplicatesBam
 #string markDuplicatesBai
@@ -25,7 +25,7 @@ alloutputsexist \
 getFile ${markDuplicatesBam}
 getFile ${markDuplicatesBai}
 
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x
@@ -35,7 +35,7 @@ mkdir -p ${collectRnaSeqMetricsDir}
 
 echo "## "$(date)" ##  $0 Started "
 
-java -Xmx4g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/CollectRnaSeqMetrics.jar \
+java -Xmx4g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar CollectRnaSeqMetrics \
  INPUT=${markDuplicatesBam} \
  OUTPUT=${collectRnaSeqMetrics} \
  CHART_OUTPUT=${collectRnaSeqMetricsChart} \

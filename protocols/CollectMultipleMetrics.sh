@@ -3,8 +3,8 @@
 
 #string stage
 #string checkStage
-#string picardVersion
-#string RVersion
+#string picardMod
+#string RMod
 #string reads2FqGz
 #string collectMultipleMetricsDir
 #string collectMultipleMetricsPrefix
@@ -33,8 +33,8 @@ getFile ${onekgGenomeFasta}
 
 
 #load modules
-${stage} picard-tools/${picardVersion}
-${stage} R/${RVersion}
+${stage} ${picardMod}
+${stage} ${RMod}
 ${checkStage}
 
 set -x
@@ -50,7 +50,7 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 fi
 
 #Run Picard CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution and MeanQualityByCycle
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/CollectMultipleMetrics.jar\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CollectMultipleMetrics\
  I=${markDuplicatesBam} \
  O=${collectMultipleMetricsPrefix} \
  R=${onekgGenomeFasta} \

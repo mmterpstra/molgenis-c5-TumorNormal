@@ -41,7 +41,7 @@ mkdir -p ${addOrReplaceGroupsDir}
 
 echo "## "$(date)" Start $0"
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/AddOrReplaceReadGroups.jar\
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar AddOrReplaceReadGroups\
  INPUT=${bwaSam} \
  OUTPUT=${addOrReplaceGroupsBam} \
  SORT_ORDER=coordinate \

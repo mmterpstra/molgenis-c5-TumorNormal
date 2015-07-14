@@ -3,8 +3,8 @@
 
 #string stage
 #string checkStage
-#string picardVersion
-#string RVersion
+#string picardMod
+#string RMod
 #string reads2FqGz
 #string onekgGenomeFasta
 #string markDuplicatesBam
@@ -29,8 +29,8 @@ getFile ${targetsList}
 
 
 #load modules
-${stage} picard-tools/${picardVersion}
-${stage} R/${RVersion}
+${stage} ${picardMod}
+${stage} ${RMod}
 ${checkStage}
 
 set -x
@@ -42,7 +42,7 @@ mkdir -p ${calculateHsMetricsDir}
 
 
 #Run Picard
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/CalculateHsMetrics.jar\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CalculateHsMetrics\
  I=${markDuplicatesBam} \
  O=${calculateHsMetricsLog} \
  R=${onekgGenomeFasta} \
@@ -54,7 +54,7 @@ java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/CalculateHsMetrics.jar\
 
 rm ${calculateHsMetricsLog} -v
 
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/CalculateHsMetrics.jar\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CalculateHsMetrics\
  I=${markDuplicatesBam} \
  O=${calculateHsMetricsLog} \
  R=${onekgGenomeFasta} \
