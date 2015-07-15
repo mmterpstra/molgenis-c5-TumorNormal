@@ -24,7 +24,7 @@ alloutputsexist \
 
 echo "## "$(date)" ##  $0 Started "
 
-for file in "${addOrReplaceGroupsBam[@]}" "${addOrReplaceGroupsBai[@]}"; do
+for file in "${addOrReplaceGroupsBam[@]}" "${addOrReplaceGroupsBai[@]}" ; do
 	echo "getFile file='$file'"
 	getFile $file
 done

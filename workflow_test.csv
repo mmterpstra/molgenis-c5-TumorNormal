@@ -2,3 +2,5 @@ step,protocol,dependencies
 CreatePaddedTargets,protocols/CreatePaddedTargets.sh,
 Fastqc,protocols/Fastqc.sh,
 BwaMemAlignment,protocols/BwaMem.sh,
+AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,BwaMemAlignment
+MergeBamFiles,protocols/MergeBamFiles.sh,AddOrReplaceReadGroups
