@@ -7,8 +7,7 @@
 #string onekgGenomeFastaDict
 #string varscanCopycaller
 #string varscanCopycallerHomdels
-#string RVersion
-#string vcfToolsVersion
+#string RMod
 #string plotScriptPl
 #string snvRawTable
 #string segFile
@@ -33,7 +32,7 @@ getFile ${varscanCopycallerHomdels}
 getfile ${onekgGenomeFastaDict}
 
 #load modules
-$stage R/${RVersion}
+$stage ${RMod}
 #
 $checkStage
 #run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]

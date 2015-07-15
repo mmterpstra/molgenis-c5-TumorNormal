@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #string custAnnotVcf
 #string custAnnotVcfIdx
@@ -28,7 +28,7 @@ for file in "${onekgGenomeFasta}" "${custAnnotVcf}" "${custAnnotVcfIdx}"; do
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

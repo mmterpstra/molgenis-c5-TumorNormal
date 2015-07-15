@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 
 #string MergeBamFilesBam
 #string MergeBamFilesBai
@@ -27,7 +27,7 @@ alloutputsexist \
 getFile ${MergeBamFilesBam}
 getFile ${MergeBamFilesBai}
 
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x

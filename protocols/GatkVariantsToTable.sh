@@ -12,8 +12,8 @@
 #string tableDir
 #string variantTable
 #string variantRawTable
-#string gatkVersion
-#string vcfToolsVersion
+#string gatkMod
+#string vcfToolsMod
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -26,8 +26,8 @@ for file in "${vcf}" "${onekgGenomeFasta}"; do
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
-${stage} vcftools/${vcfToolsVersion}
+${stage} ${gatkMod}
+${stage} ${vcfToolsMod}
 ${checkStage}
 
 set -x

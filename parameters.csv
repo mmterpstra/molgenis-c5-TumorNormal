@@ -23,32 +23,21 @@ resDir,${root}/resources/
 toolDir,${root}/tools/
 projectDir,/gcc/groups/${group}/${tmp}/projects/${project}/
 ################################################################################
-#CreatePaddedIntervals + padding
-#targetsList,/gcc/groups/oncogenetics/tmp01/resources/target_ET1262F_2_182.ensembl.gatksort.list
-slopTargetsList,${projectDir}/targets.slop100.list
-#targetsList,/gcc/groups/oncogenetics/tmp01/resources/cancerPanel_target.ensembl.gatksort.list
-scatterIntervallistDir,${projectDir}/scatter/
-scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.intervals 
-
-
-################################################################################
-##Fastqc
+##module parameters
 #
 fastqcMod,FastQC/0.11.3-Java-1.7.0_80
-fastqcDir,${projectDir}/fastqc/
-fastqcZipExt,_fastqc.zip
-singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
-pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
-pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
-################################################################################
-##General/bwa
-#
-nTreads,8
 bwaMod,BWA/0.7.12-goolf-1.7.20
-bwaAlignmentDir,${projectDir}/bwa/
-bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
-#string reads1FqGz
-#string reads2FqGz
+picardMod,picard/1.130-Java-1.7.0_80
+RMod,R/3.2.0-goolf-1.7.20-Java-1.7.0_80
+gatkMod,GATK/3.3-0-Java-1.7.0_80
+#gatkMod,GATK/3.4-0-Java-1.7.0_80
+snpEffMod,snpEff/4.1d-Java-1.7.0_80
+varScanMod,v2.3.6
+samtoolsMod,0.1.18
+vcfToolsMod,0.1.12a
+################################################################################
+##Reference Data
+#
 genomeLatSpecies,Homo_sapiens
 genomeSpecies,human
 genomeBuild,b37
@@ -58,91 +47,6 @@ ensemblVersion,75
 onekgGenomeFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37.fasta
 onekgGenomeFastaIdxBase,${onekgGenomeFasta}
 onekgGenomeFastaDict,${resDir}/${genomeBuild}/indices/human_g1k_v37.dict
-
-################################################################################
-##nugene rmdups
-nugeneDir,${projectDir}/nugeneRmdups/
-nugeneTool,${"/gcc/groups/oncogenetics/tmp01/projects/NugeneValidation/Test/NuGEN_DupAnalysisTool_v5.1.5/runN6pipeline.sh"}
-nugeneOutputPrefix,${nugeneDir}/${sampleName}
-nugeneNodupsBam,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam
-nugeneNodupsBai,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam.bai
-#Usage: -r ${bwaSam} inputBarcode {outputPrefix
-##
-################################################################################
-##nugene AddOrReplaceGroups
-#
-picardMod,picard/1.130-Java-1.7.0_80
-nugeneAddOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroupsNugene/
-nugeneAddOrReplaceGroupsBam,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bam
-nugeneAddOrReplaceGroupsBai,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bai
-
-################################################################################
-##nugene HsMetrics
-#
-nugeneCalculateHsMetricsDir,${projectDir}/hsMetricsNugene/
-nugeneCalculateHsMetricsLog, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.log
-nugeneCalculateHsMetricsPerTargetCov, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.pertargetcov.tsv
-
-################################################################################
-##AddOrReplaceGroups
-#
-addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
-addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
-addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
-#
-################################################################################
-#Nugene Bc Splitter?
-#
-nugBcSplitterPl,/gcc/groups/oncogenetics/tmp01/tools/NugeneBarcodesAsReadgroup/dist/NugeneDigitalSplitter.pl
-nugeneRgDir,${projectDir}/nugeneReadgroups/
-nugeneBam,${nugeneRgDir}${internalId}_${sampleName}.bam
-nugeneBai,${nugeneRgDir}${internalId}_${sampleName}.bai
-#
-################################################################################
-##MergeBamFiles ?? #note the actual picard programme: MergeSamFiles.jar
-MergeBamFilesDir,${projectDir}/MergeBams/
-MergeBamFilesBam,${MergeBamFilesDir}${sampleName}.bam
-MergeBamFilesBai,${MergeBamFilesDir}${sampleName}.bai
-#
-################################################################################
-##MarkDuplicates
-#
-markDuplicatesDir,${projectDir}/markDuplicates/
-markDuplicatesBam,${markDuplicatesDir}${sampleName}.bam
-markDuplicatesBai,${markDuplicatesDir}${sampleName}.bai
-markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
-#
-################################################################################
-##CollectRnaSeqMetrics
-#
-collectRnaSeqMetricsDir,${projectDir}/collectRnaSeqMetrics/
-collectRnaSeqMetrics,${collectRnaSeqMetricsDir}${sampleName}.rna_metrics.log
-collectRnaSeqMetricsChart,${collectRnaSeqMetricsDir}${sampleName}.chart.pdf
-
-genesRefFlat,${resDir}/picard-tools/Ensembl${ensemblVersion}/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
-rRnaIntervalList,${resDir}//picard-tools/Ensembl${ensemblVersion}/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
-
-################################################################################
-##CollectMultipleMetrics
-RMod,R/3.2.0-goolf-1.7.20-Java-1.7.0_80
-collectMultipleMetricsDir,${projectDir}/multipleMetrics/
-collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
-################################################################################
-##CalculateHsMetrics bed files
-
-calculateHsMetricsDir,${projectDir}/HsMetrics/
-calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
-calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
-#
-################################################################################
-#gatkVersion 
-
-#gatkVersion,3.1-1-g07a4bf8
-#gatkVersion,3.2-2-gec30cee
-gatkVersion,3.3-0-g37228af
-################################################################################
-##VCF for GATK
-#
 
 goldStandardVcf,${resDir}/${genomeBuild}/sv/1000G/Mills_and_1000G_gold_standard.indels.b37.vcf
 goldStandardVcfIdx,${goldStandardVcf}.idx
@@ -161,65 +65,10 @@ dbsnpVcfIdx,${dbsnpVcf}.idx
 exacVcf,${resDir}/ExAC/release0.3/ExAC.r0.3.sites.vep.vcf.gz
 exacVcfIdx,${exacVcf}.tbi
 
-################################################################################
-#GatkRealignerTargetCreator
-
-#because want to use alternative not local assembling callers on the same data like mutect/varscan etc
-
-indelRealignmentDir,${projectDir}/indelRealignment/
-realignmentIntervals,${indelRealignmentDir}/realignmentIntervals.list
-
-################################################################################
-#IndelRealigner
-indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
-indelRealignmentBai,${indelRealignmentDir}${sampleName}.bai
 #limit to known realignment when using haplotype caller because the haplotypecaller will consider multiple haplotypes instead of one when the GatkRealignerTargetCreator step is used.
 indelRealignmentTargets,${resDir}/${genomeBuild}/intervals/1000G_phase1.indels_Mills_and_1000G_gold_standard.indels.b37.human_g1k_v37.intervals
 
-##############################################################################
-#BSQR(+PrintReads) default
-bsqrDir,${projectDir}/baseQualityScoreRecalibration/
-
-bsqrBam,${bsqrDir}${sampleName}.bam
-bsqrBai,${bsqrDir}${sampleName}.bai
-bsqrBeforeGrp,${bsqrDir}${sampleName}.before.grp
-
-################################################################################
-#(BSQR+)AnalyseCovariants default
-analyseCovarsDir,${projectDir}/CovariantAnalysis/
-bsqrAfterGrp,${bsqrDir}${sampleName}.after.grp
-analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
-#stuffs that is missing 
-
-################################################################################
-#haplotypecaller
-haplotyperDir,${projectDir}/haplotypeCaller/
-haplotyperRealignmentBam,${haplotyperDir}${sampleName}.bam
-haplotyperRealignmentBai,${haplotyperDir}${sampleName}.bam
-haplotyperScatVcf,${haplotyperDir}${project}.${scatterIDs}.vcf
-haplotyperScatVcfIdx,${haplotyperScatVcf}.idx
-haplotyperVcf,${haplotyperDir}${project}.vcf
-haplotyperVcfIdx,${haplotyperVcf}.idx
-################################################################################
-#variant annotation
-
-annotatorDir,${projectDir}/VariantAnnotation/
-
-snpEffGatkAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
-snpEffGatkAnnotVcfIdx,${snpEffGatkAnnotVcf}.idx
-gatkAnnotVcf,${annotatorDir}/${project}.annot.intermediate.vcf
-gatkAnnotVcfIdx,${gatkAnnotVcf}.idx
-snpEffAnnotVcf,${annotatorDir}/${project}.snpEff.intermediate.vcf
-snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
-#
-#snpSiftAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
-#snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
-#
-annotVcf,${annotatorDir}/${project}.annot.vcf
-annotVcfIdx,${annotVcf}.idx
-
 #snpEff / snipsift
-snpEffVersion,4.1d
 snpEffStats,${annotatorDir}/${project}.snpEff.summary.html
 
 #snpEff database resources...
@@ -256,6 +105,172 @@ cosmicVcfIdx,${cosmicVcf}.idx
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
+normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
+
+#nugene barcode
+nugBcSplitterPl,/gcc/groups/oncogenetics/tmp01/tools/NugeneBarcodesAsReadgroup/dist/NugeneDigitalSplitter.pl
+#
+
+#
+GenerateTableDescriptionByVcfHeaderPl,/gcc/tools/scripts/Vcf_tools_misc/GenerateTableDescriptionByVcfHeader.pl
+
+RVersion,3.0.2
+vcfToolsVersion,0.1.12a
+
+plotScriptPl,${scriptDir}/PlotVarscan/PlotFloatsOnInterVals0.0.3.pl
+
+################################################################################
+#CreatePaddedIntervals + padding
+#targetsList,/gcc/groups/oncogenetics/tmp01/resources/target_ET1262F_2_182.ensembl.gatksort.list
+slopTargetsList,${projectDir}/targets.slop100.list
+#targetsList,/gcc/groups/oncogenetics/tmp01/resources/cancerPanel_target.ensembl.gatksort.list
+scatterIntervallistDir,${projectDir}/scatter/
+scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.intervals 
+#rna
+genesRefFlat,${resDir}/picard-tools/Ensembl${ensemblVersion}/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
+rRnaIntervalList,${resDir}//picard-tools/Ensembl${ensemblVersion}/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
+
+################################################################################
+##Fastqc
+#
+fastqcDir,${projectDir}/fastqc/
+fastqcZipExt,_fastqc.zip
+singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
+pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
+pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
+################################################################################
+##General/bwa
+#
+nTreads,8
+bwaAlignmentDir,${projectDir}/bwa/
+bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
+#string reads1FqGz
+#string reads2FqGz
+
+################################################################################
+##nugene rmdups
+nugeneDir,${projectDir}/nugeneRmdups/
+nugeneTool,${"/gcc/groups/oncogenetics/tmp01/projects/NugeneValidation/Test/NuGEN_DupAnalysisTool_v5.1.5/runN6pipeline.sh"}
+nugeneOutputPrefix,${nugeneDir}/${sampleName}
+nugeneNodupsBam,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam
+nugeneNodupsBai,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam.bai
+#Usage: -r ${bwaSam} inputBarcode {outputPrefix
+##
+################################################################################
+##nugene AddOrReplaceGroups
+#
+nugeneAddOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroupsNugene/
+nugeneAddOrReplaceGroupsBam,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bam
+nugeneAddOrReplaceGroupsBai,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+
+################################################################################
+##nugene HsMetrics
+#
+nugeneCalculateHsMetricsDir,${projectDir}/hsMetricsNugene/
+nugeneCalculateHsMetricsLog, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.log
+nugeneCalculateHsMetricsPerTargetCov, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.pertargetcov.tsv
+
+################################################################################
+##AddOrReplaceGroups
+#
+addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
+addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
+addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+#
+################################################################################
+#Nugene Bc Splitter?
+#
+#nugBcSplitterPl,/gcc/groups/oncogenetics/tmp01/tools/NugeneBarcodesAsReadgroup/dist/NugeneDigitalSplitter.pl
+nugeneRgDir,${projectDir}/nugeneReadgroups/
+nugeneBam,${nugeneRgDir}${internalId}_${sampleName}.bam
+nugeneBai,${nugeneRgDir}${internalId}_${sampleName}.bai
+#
+################################################################################
+##MergeBamFiles ?? #note the actual picard programme: MergeSamFiles.jar
+MergeBamFilesDir,${projectDir}/MergeBams/
+MergeBamFilesBam,${MergeBamFilesDir}${sampleName}.bam
+MergeBamFilesBai,${MergeBamFilesDir}${sampleName}.bai
+#
+################################################################################
+##MarkDuplicates
+#
+markDuplicatesDir,${projectDir}/markDuplicates/
+markDuplicatesBam,${markDuplicatesDir}${sampleName}.bam
+markDuplicatesBai,${markDuplicatesDir}${sampleName}.bai
+markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
+#
+################################################################################
+##CollectRnaSeqMetrics
+#
+collectRnaSeqMetricsDir,${projectDir}/collectRnaSeqMetrics/
+collectRnaSeqMetrics,${collectRnaSeqMetricsDir}${sampleName}.rna_metrics.log
+collectRnaSeqMetricsChart,${collectRnaSeqMetricsDir}${sampleName}.chart.pdf
+
+################################################################################
+##CollectMultipleMetrics
+
+collectMultipleMetricsDir,${projectDir}/multipleMetrics/
+collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
+################################################################################
+##CalculateHsMetrics bed files
+
+calculateHsMetricsDir,${projectDir}/HsMetrics/
+calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
+calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
+################################################################################
+#GatkRealignerTargetCreator
+
+#because want to use alternative not local assembling callers on the same data like mutect/varscan etc
+
+indelRealignmentDir,${projectDir}/indelRealignment/
+realignmentIntervals,${indelRealignmentDir}/realignmentIntervals.list
+
+################################################################################
+#IndelRealigner
+indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+indelRealignmentBai,${indelRealignmentDir}${sampleName}.bai
+##############################################################################
+#BSQR(+PrintReads) default
+bsqrDir,${projectDir}/baseQualityScoreRecalibration/
+
+bsqrBam,${bsqrDir}${sampleName}.bam
+bsqrBai,${bsqrDir}${sampleName}.bai
+bsqrBeforeGrp,${bsqrDir}${sampleName}.before.grp
+
+################################################################################
+#(BSQR+)AnalyseCovariants default
+analyseCovarsDir,${projectDir}/CovariantAnalysis/
+bsqrAfterGrp,${bsqrDir}${sampleName}.after.grp
+analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
+
+################################################################################
+#haplotypecaller
+haplotyperDir,${projectDir}/haplotypeCaller/
+haplotyperRealignmentBam,${haplotyperDir}${sampleName}.bam
+haplotyperRealignmentBai,${haplotyperDir}${sampleName}.bam
+haplotyperScatVcf,${haplotyperDir}${project}.${scatterIDs}.vcf
+haplotyperScatVcfIdx,${haplotyperScatVcf}.idx
+haplotyperVcf,${haplotyperDir}${project}.vcf
+haplotyperVcfIdx,${haplotyperVcf}.idx
+################################################################################
+#variant annotation
+
+annotatorDir,${projectDir}/VariantAnnotation/
+
+snpEffGatkAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+snpEffGatkAnnotVcfIdx,${snpEffGatkAnnotVcf}.idx
+gatkAnnotVcf,${annotatorDir}/${project}.annot.intermediate.vcf
+gatkAnnotVcfIdx,${gatkAnnotVcf}.idx
+snpEffAnnotVcf,${annotatorDir}/${project}.snpEff.intermediate.vcf
+snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
+#
+#snpSiftAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+#snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
+#
+annotVcf,${annotatorDir}/${project}.annot.vcf
+annotVcfIdx,${annotVcf}.idx
+
+
 #custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
 #custAnnotVcfIdx,${custAnnotVcf}.idx
 
@@ -275,7 +290,7 @@ cosmicVcfIdx,${cosmicVcf}.idx
 #indelMnpVcfIdx,${indelMnpVcf}.idx
 
 #customscript
-normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
+#normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
 custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
 custAnnotVcfIdx,${custAnnotVcf}.idx
 
@@ -304,7 +319,7 @@ indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
 
 ################################################################################
 #vcf to descriptiontable
-GenerateTableDescriptionByVcfHeaderPl,/gcc/tools/scripts/Vcf_tools_misc/GenerateTableDescriptionByVcfHeader.pl
+#GenerateTableDescriptionByVcfHeaderPl,/gcc/tools/scripts/Vcf_tools_misc/GenerateTableDescriptionByVcfHeader.pl
 snvDescrTable,${tableDir}/${project}.snv.description.tsv
 indelMnpDescrTable,${tableDir}/${project}.indelmnp.description.tsv
 ################################################################################
@@ -340,10 +355,7 @@ gannotVcfIdx,${gannotVcf}.idx
 
 
 ################################################################################
-#varscanDoIt?
-varScanVersion,v2.3.6
-samtoolsVersion,0.1.18
-
+#varscan files
 
 varscanDir,${projectDir}/varscan.${controlSampleName}/
 varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
@@ -367,14 +379,12 @@ controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
 ################################################################################
 #PlotGenome?
 
-RVersion,3.0.2
-vcfToolsVersion,0.1.12a
 segFile,${varscanDir}/${sampleName}.cn.seg
 segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
 cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
 
 scriptDir,/gcc/tools/scripts/
-plotScriptPl,${scriptDir}/PlotVarscan/PlotFloatsOnInterVals0.0.3.pl
+
 #lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
 #gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
 

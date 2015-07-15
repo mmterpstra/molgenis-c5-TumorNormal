@@ -11,7 +11,7 @@
 
 #string tableDir
 #string descrTable
-#string vcfToolsVersion
+#string vcfToolsMod
 #string GenerateTableDescriptionByVcfHeaderPl
 
 echo "## "$(date)" ##  $0 Started "
@@ -24,7 +24,7 @@ for file in "${vcf}" "${onekgGenomeFasta}"; do
 	getFile $file
 done
 
-${stage} vcftools/${vcfToolsVersion}
+${stage} ${vcfToolsMod}
 ${checkStage}
 
 set -x

@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #string haplotyperDir
 #list haplotyperScatVcf,haplotyperScatVcfIdx
@@ -25,7 +25,7 @@ for file in "${haplotyperScatVcf[@]}" "${haplotyperScatVcfIdx[@]}" "${onekgGenom
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

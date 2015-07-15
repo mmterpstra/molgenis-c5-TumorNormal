@@ -3,7 +3,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #string splitAndTrimBam
 #string splitAndTrimBai
@@ -27,7 +27,7 @@ getFile ${onekgGenomeFasta}
 getFile ${splitAndTrimBam}
 getFile ${splitAndTrimBai}
 
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

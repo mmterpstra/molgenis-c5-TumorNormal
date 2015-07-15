@@ -3,7 +3,7 @@
 #Parameter mapping
 #string stage
 #string checkStage
-#string vcfToolsVersion
+#string vcfToolsMod
 
 #string annotatorDir
 #string project
@@ -20,7 +20,7 @@ echo ${annotatorDir} ${project} ${annotVcf}
 
 getFile ${annotVcf}
 
-${stage} vcftools/${vcfToolsVersion}
+${stage} ${vcfToolsMod}
 ${checkStage}
 
 set -x

@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
@@ -30,7 +30,7 @@ for file in "${bsqrBam[@]}" "${bsqrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${on
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

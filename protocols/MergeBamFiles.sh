@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 
 
 #string addOrReplaceGroupsDir
@@ -30,7 +30,7 @@ for file in "${addOrReplaceGroupsBam[@]}" "${addOrReplaceGroupsBai[@]}"; do
 done
 
 #Load Picard module
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -o posix

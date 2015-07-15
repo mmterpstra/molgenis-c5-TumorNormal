@@ -3,8 +3,8 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string gatkVersion
-#string samtoolsVersion
+#string gatkMod
+#string samtoolsMod
 #string onekgGenomeFasta
 #string indelRealignmentTargets
 #string goldStandardVcf
@@ -28,8 +28,8 @@ alloutputsexist \
  ${indelRealignmentBam} \
  ${indelRealignmentBai}
 
-${stage} samtools/${samtoolsVersion}
-${stage} GATK/${gatkVersion}
+${stage} ${samtoolsMod}
+${stage} ${gatkMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}

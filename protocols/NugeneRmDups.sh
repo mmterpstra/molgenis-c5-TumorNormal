@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string samtoolsVersion
+#string samtoolsMod
 #string bwaSam 
 #string sampleName
 #string sequencer
@@ -37,7 +37,7 @@ set -x
 getFile ${bwaSam}
 
 
-${stage} samtools/${samtoolsVersion}
+${stage} ${samtoolsMod}
 ${checkStage}
 
 

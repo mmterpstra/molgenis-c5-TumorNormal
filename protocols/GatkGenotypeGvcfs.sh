@@ -8,7 +8,7 @@
 #string dbsnpVcf
 #string dbsnpVcfIdx
 
-#string gatkVersion
+#string gatkMod
 #string haplotyperDir
 #string onekgGenomeFasta
 
@@ -29,7 +29,7 @@ for file in "${mergeGvcf[@]}" "${mergeGvcfIdx[@]}" "${onekgGenomeFasta}"; do
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

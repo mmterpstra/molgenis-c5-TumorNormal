@@ -4,8 +4,8 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string varScanVersion
-#string samtoolsVersion
+#string varScanMod
+#string samtoolsMod
 
 #string varscanCopynumberPrefix
 #string varscanCopynumber
@@ -45,8 +45,8 @@ getFile ${controlvarscanInputBai}
 getFile ${controlvarscanInputBamBai}
 
 #Load modules
-${stage} VarScan/${varScanVersion}
-${stage} samtools/${samtoolsVersion}
+${stage} ${varScanMod}
+${stage} ${samtoolsMod}
 
 
 ${checkStage}

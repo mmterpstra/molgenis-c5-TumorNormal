@@ -4,8 +4,8 @@
 #Parameter mapping
 #string stage
 #string checkStage
-#string picardVersion
-#string samtoolsVersion
+#string picardMod
+#string samtoolsMod
 #string reads3FqGz
 #string addOrReplaceGroupsBam
 #string addOrReplaceGroupsBai
@@ -27,8 +27,8 @@ getFile ${addOrReplaceGroupsBam}
 getFile ${addOrReplaceGroupsBai}
 
 #Load modules
-${stage} samtools/${samtoolsVersion}
-${stage} picard-tools/${picardVersion}
+${stage} ${samtoolsMod}
+${stage} ${picardMod}
 
 
 #check modules

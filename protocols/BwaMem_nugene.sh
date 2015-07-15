@@ -4,7 +4,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string bwaVersion
+#string bwaMod
 #string WORKDIR
 #string resDir
 #string toolDir
@@ -27,7 +27,7 @@ alloutputsexist \
 getFile ${genomeEnsembleAnnotationFile}
 
 #Load modules
-${stage} bwa/${bwaVersion}
+${stage} ${bwaMod}
 
 #check modules
 ${checkStage}

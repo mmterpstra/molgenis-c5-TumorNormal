@@ -3,7 +3,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #list splitAndTrimBam,splitAndTrimBai
 #string indelRealignmentDir
@@ -19,7 +19,7 @@ echo "## "$(date)" ##  $0 Started "
 alloutputsexist \
  ${realignmentIntervals}
 
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}

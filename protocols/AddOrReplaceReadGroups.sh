@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 #string sampleName
 #string sequencer
 #string seqType
@@ -31,7 +31,7 @@ echo "## "$(date)" ##  $0 Started "
 
 getFile ${bwaSam}
 
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x

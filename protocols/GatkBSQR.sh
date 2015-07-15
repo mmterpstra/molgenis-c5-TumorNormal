@@ -3,8 +3,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string samtoolsVersion
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #string goldStandardVcf
 #string goldStandardVcfIdx
@@ -41,7 +40,7 @@ getFile ${goldStandardVcfIdx}
 getFile ${indelRealignmentBam}
 getFile ${indelRealignmentBai}
 
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

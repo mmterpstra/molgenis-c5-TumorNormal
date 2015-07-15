@@ -3,8 +3,8 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string RVersion
-#string gatkVersion
+#string RMod
+#string gatkMod
 #string onekgGenomeFasta
 
 #string goldStandardVcf
@@ -40,8 +40,8 @@ getFile ${goldStandardVcfIdx}
 getFile ${bsqrBam}
 getFile ${bsqrBai}
 
-${stage} R/${RVersion}
-${stage} GATK/${gatkVersion}
+${stage} ${RMod}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x

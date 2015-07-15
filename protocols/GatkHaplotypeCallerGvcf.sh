@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
@@ -32,7 +32,7 @@ for file in "${indelRealignmentBam[@]}" "${indelRealignmentBai[@]}" "${dbsnpVcf}
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 #sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '

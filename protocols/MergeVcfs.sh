@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaDict
 #string haplotyperDir
@@ -25,7 +25,7 @@ for file in "${haplotyperScatVcf[@]}" "${haplotyperScatVcfIdx[@]}" "${onekgGenom
 done
 
 #Load gatk module
-${stage} picard-tools/1.129
+${stage} ${picardMod}
 ${checkStage}
 
 set -x

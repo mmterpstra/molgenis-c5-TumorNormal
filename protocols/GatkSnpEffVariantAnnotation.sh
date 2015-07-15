@@ -6,7 +6,7 @@
 #string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
@@ -18,7 +18,7 @@
 
 
 #string annotatorDir
-#string snpEffVersion
+#string snpEffMod
 #string snpEffStats
 
 #string snpEffGatkAnnotVcf
@@ -83,8 +83,8 @@ for file in "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhas
 done
 
 #Load snpeff/gatk module
-${stage} snpEff/${snpEffVersion}
-${stage} GATK/${gatkVersion}
+${stage} ${snpEffMod}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
