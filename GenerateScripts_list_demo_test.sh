@@ -81,7 +81,7 @@ molgenis_compute.sh \
  -w $workflowdir/workflow_test.csv \
  --backend pbs \
  --weave \
- -rundir $jobsDir \
+ -rundir $jobsDir	 \
  -header $molgenisBase/header.ftl \
  -submit $molgenisBase/submit.ftl \
  -footer $molgenisBase/footer.ftl 

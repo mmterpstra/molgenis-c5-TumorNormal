@@ -32,9 +32,9 @@ RMod,R/3.2.0-goolf-1.7.20-Java-1.7.0_80
 gatkMod,GATK/3.3-0-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
 snpEffMod,snpEff/4.1d-Java-1.7.0_80
-varScanMod,v2.3.6
-samtoolsMod,0.1.18
-vcfToolsMod,0.1.12a
+varScanMod,VarScan/2.3.9-Java-1.7.0_80
+samtoolsMod,SAMtools/1.2-goolf-1.7.20
+vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
 ################################################################################
 ##Reference Data
 #
