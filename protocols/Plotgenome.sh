@@ -38,6 +38,7 @@ $checkStage
 #run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]
 
 set -x
+set -e
 
 oldDirName=$(pwd)
 
