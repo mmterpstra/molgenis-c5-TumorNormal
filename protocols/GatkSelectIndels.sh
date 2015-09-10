@@ -63,7 +63,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --filterName "NotPutatativeHarmfulVariant" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Indels.AF') && (vc.getAttribute('1000gPhase1Indels.AF') > 0.02&&vc.getAttribute('1000gPhase1Indels.AF') < 0.98))" --filterName "1000gMAFgt0.02" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Indels.EUR_AF') && (vc.getAttribute('1000gPhase1Indels.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Indels.EUR_AF') < 0.98))" --filterName "1000gPhase1Indels.EUR_AF0.02" \
- --filterExpression "QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8
+ --filterExpression "QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8"
 
 putFile ${indelMnpVcf}
 putFile ${indelMnpVcfIdx}

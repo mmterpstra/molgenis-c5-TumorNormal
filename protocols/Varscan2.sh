@@ -51,6 +51,7 @@ ${stage} ${samtoolsMod}
 
 ${checkStage}
 set -x
+set -e
 
 #this program performs data reduction of the bam files by selecting intervals and collecting statistics on the intervals
 
