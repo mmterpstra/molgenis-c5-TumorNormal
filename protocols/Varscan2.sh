@@ -64,7 +64,16 @@ samtools mpileup \
  ${controlvarscanInputBam} ${varscanInputBam} | \
  java -Xmx4g -jar $VARSCAN_HOME/VarScan.jar copynumber \
   - ${varscanCopynumberPrefix} \
-  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1
+  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
+cat ${varscanCopynumberPrefix}.err.log >&2
+
+count=$(grep -c "ERROR: Gave up waiting after 500 seconds..." ${varscanCopynumberPrefix}.err.log)
+if [ "$count" -ge 1 ] ;then
+	echo "## "$(date)" ## Varscan2 copynumber inputlag fail please restart" >&2
+	echo "## "$(date)" ## Varscan2 copynumber inputlag fail please restart"
+	rm ${varscanCopynumber} 
+	exit 1
+fi
 
 java -jar -Xmx4g -jar $VARSCAN_HOME/VarScan.jar copyCaller ${varscanCopynumber} --output-file ${varscanCopycaller} --output-homdel-file ${varscanCopycallerHomdels}
 
