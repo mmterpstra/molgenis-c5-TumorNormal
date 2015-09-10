@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=12gb ppn=8
+#MOLGENIS walltime=23:59:00 mem=12gb ppn=1
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
@@ -57,7 +57,6 @@ java -Xmx12g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.
  --dbsnp ${dbsnpVcf}\
  $inputs \
  -o ${haplotyperGvcf} \
- -nct 8 \
  --emitRefConfidence GVCF \
  --variant_index_type LINEAR \
  --variant_index_parameter 128000 \

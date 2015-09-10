@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=8gb ppn=2
+#MOLGENIS walltime=23:59:00 mem=8gb ppn=1
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
@@ -10,8 +10,7 @@
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
-#list bsqrBam
-#list bsqrBai
+#list bsqrBam,bsqrBai
 #string targetsList
 #string scatterList
 #string haplotyperDir
@@ -74,7 +73,6 @@ java -Xmx8g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.j
  -stand_call_conf 10.0 \
  -stand_emit_conf 20.0 \
  -o ${haplotyperScatVcf} \
- -nct 3 \
  $InterValOperand
 
 # -dontUseSoftClippedBases \
