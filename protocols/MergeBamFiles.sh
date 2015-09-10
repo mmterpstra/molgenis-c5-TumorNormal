@@ -10,8 +10,7 @@
 
 
 #string addOrReplaceGroupsDir
-#list addOrReplaceGroupsBam
-#list addOrReplaceGroupsBai
+#list addOrReplaceGroupsBam,addOrReplaceGroupsBai,scatterIDs
 
 #string MergeBamFilesDir
 #string MergeBamFilesBam

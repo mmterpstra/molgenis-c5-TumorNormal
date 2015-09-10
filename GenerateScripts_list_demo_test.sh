@@ -78,7 +78,7 @@ molgenis_compute.sh \
  -p $workflowdir/parameters.molgenis.csv \
  -p $samplesheet.tmp.csv \
  -p $workflowdir/scatter_id.csv \
- -w $workflowdir/workflow_test.csv \
+ -w $workflowdir/workflow.csv \
  --backend pbs \
  --weave \
  -rundir $jobsDir	 \
@@ -90,12 +90,12 @@ runDir=$workflowdir/groups/${group}/${tmp}/projects/${projectname}.20140402.1043
 molgenisBase=$workflowdir/test/molgenis-compute-core-1.0.0-SNAPSHOT/templates/$backend/
 jobsDir=$runDir/jobs
 
-bash $workflowdir/test/molgenis-compute-core-1.0.0-SNAPSHOT/molgenis_compute.sh \
+echo bash $workflowdir/test/molgenis-compute-core-1.0.0-SNAPSHOT/molgenis_compute.sh \
  --generate \
  -p $workflowdir/parameters.molgenis.csv \
  -p $samplesheet.tmp.csv \
  -p $workflowdir/scatter_id.csv \
- -w $workflowdir/workflow_test.csv \
+ -w $workflowdir/workflow.csv \
  --backend pbs \
  --weave \
  -rundir $jobsDir \
