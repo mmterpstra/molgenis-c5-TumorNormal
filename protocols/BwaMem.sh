@@ -6,8 +6,6 @@
 #string checkStage
 #string bwaMod
 #string WORKDIR
-#string resDir
-#string toolDir
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
 #string bwaAlignmentDir 
