@@ -29,7 +29,7 @@ Workflow
 --------
 
 
-![Workflow svg](img/TumorNormalMin.svg)
+![Workflow svg]("https://raw.githubusercontent.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin.svg")
 
 goals:
   - is buildable with easybuild?
