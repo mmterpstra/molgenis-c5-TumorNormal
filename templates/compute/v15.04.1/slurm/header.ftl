@@ -54,6 +54,8 @@ function makeTmpDir {
         fi
 }
 
+<#noparse>
+
 getFile()
 {
         ARGS=($@)
@@ -117,3 +119,5 @@ trap "errorExit" ERR
 MOLGENIS_START=$(date +%s)
 
 touch ${taskId}.sh.started
+</#noparse>
+

@@ -65,19 +65,19 @@ cp $workflowdir/parameters.tmp.csv $runDir/parameters.csv
 
 
 backend="slurm"
-molgenisBase=/apps/software/Molgenis-Compute/v15.04.1-Java-1.7.0_80/templates/$backend/
+molgenisBase=/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/templates/compute/v15.04.1/$backend/
 
 echo "Generate scripts"
 #module load molgenis_compute/v5_20140522
-molgenis_compute.sh \
+echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
  --generate \
  -p $workflowdir/parameters.molgenis.csv \
  -p $samplesheet.tmp.csv \
  -p $workflowdir/scatter_id.csv \
  -w $workflowdir/workflow.csv \
- --backend pbs \
+ --backend ${backend} \
  --weave \
- -rundir $jobsDir/jobs \
+ -rundir $jobsDir \
  -header $molgenisBase/header.ftl \
  -submit $molgenisBase/submit.ftl \
  -footer $molgenisBase/footer.ftl 
