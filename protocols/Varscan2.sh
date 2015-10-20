@@ -62,7 +62,7 @@ echo -n ""> ${varscanCopycaller}
 samtools mpileup \
  -R -q 40 -f ${onekgGenomeFasta} \
  ${controlvarscanInputBam} ${varscanInputBam} | \
- java -Xmx4g -jar $VARSCAN_HOME/VarScan.jar copynumber \
+ java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
   - ${varscanCopynumberPrefix} \
   --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
 cat ${varscanCopynumberPrefix}.err.log >&2
@@ -75,7 +75,7 @@ if [ "$count" -ge 1 ] ;then
 	exit 1
 fi
 
-java -jar -Xmx4g -jar $VARSCAN_HOME/VarScan.jar copyCaller ${varscanCopynumber} --output-file ${varscanCopycaller} --output-homdel-file ${varscanCopycallerHomdels}
+java -jar -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copyCaller ${varscanCopynumber} --output-file ${varscanCopycaller} --output-homdel-file ${varscanCopycallerHomdels}
 
 if [ -z ${varscanCopynumber} ] || [ -z ${varscanCopycaller} ] || [ -z ${varscanCopycaller} ] ; then
  

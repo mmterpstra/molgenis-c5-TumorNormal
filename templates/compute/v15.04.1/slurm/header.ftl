@@ -101,8 +101,10 @@ alloutputsexist()
   then
       echo "skipped"
       echo "skipped" >&2
-      touch $ENVIRONMENT_DIR/${PBS_JOBNAME}.env
-      touch $ENVIRONMENT_DIR/${PBS_JOBNAME}.sh.finished
+      touch ${taskId}.env
+      chmod 755 ${taskId}.env
+
+      touch ${taskId}.sh.finished
       sleep 20s
       exit 0;
 
@@ -118,6 +120,7 @@ trap "errorExit" ERR
 # For bookkeeping how long your task takes
 MOLGENIS_START=$(date +%s)
 
-touch ${taskId}.sh.started
 </#noparse>
+
+touch ${taskId}.sh.started
 

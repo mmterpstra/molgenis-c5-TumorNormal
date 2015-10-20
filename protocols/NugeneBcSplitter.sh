@@ -50,7 +50,7 @@ else
 	
 	perl ${nugBcSplitterPl} ${addOrReplaceGroupsBam} ${nugeneBam}
 	
-	java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar BuildBamIndex \
+	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
  INPUT=${nugeneBam}	
 
 fi

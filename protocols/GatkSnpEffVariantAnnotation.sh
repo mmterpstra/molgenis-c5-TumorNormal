@@ -3,14 +3,13 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
 #string gatkMod
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
-#list bsqrBam,bsqrBai
+#list bqsrBam,bqsrBai
 
 #string haplotyperDir
 #string haplotyperVcf
@@ -77,7 +76,7 @@ echo "## "$(date)" ##  $0 Started "
 #string snpEffAnnotVcfIdx
 
 #tired of typing getfile....
-for file in "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhase1SnpsVcf}" "${oneKgPhase1SnpsVcfIdx}" "${oneKgPhase1IndelsVcf}" "${oneKgPhase1IndelsVcfIdx}" "${bsqrBam[@]}" "${bsqrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${cosmicVcf}" "${cosmicVcfIdx}" "${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562bBin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"  "${snpEffectPredictorBin}" ; do
+for file in "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhase1SnpsVcf}" "${oneKgPhase1SnpsVcfIdx}" "${oneKgPhase1IndelsVcf}" "${oneKgPhase1IndelsVcfIdx}" "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${cosmicVcf}" "${cosmicVcfIdx}" "${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562bBin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"  "${snpEffectPredictorBin}" ; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -91,7 +90,7 @@ set -x
 set -e
 
 # sort unique and print like '-I file1.bam -I file2.bam '
-bams=($(printf '%s\n' "${bsqrBam[@]}" | sort -u ))
+bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
 inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
 mkdir -p ${annotatorDir}
@@ -138,8 +137,8 @@ mkdir -p ${annotatorDir}
 
 
 
-java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
- -c $SNPEFF_HOME/snpEff.config \
+java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
+ -c $EBROOTSNPEFF/snpEff.config \
  -stats ${snpEffStats} \
  -v -o gatk \
  GRCh37.75 \
@@ -151,7 +150,7 @@ rm -v ${snpEffStats}
 
 #review  --excludeAnnotation MVLikelihoodRatio 
 
-java -Xmx8g -Djava.io.tmpdir=${annotatorDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantAnnotator \
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf} \
@@ -205,8 +204,8 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir} -jar $GATK_HOME/GenomeAnalysisTK.ja
  --out ${gatkAnnotVcf} \
  -L ${haplotyperVcf} \
  
-java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
- -c $SNPEFF_HOME/snpEff.config \
+java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
+ -c $EBROOTSNPEFF/snpEff.config \
  -formatEff \
  -canon \
  -hgvs \
@@ -218,8 +217,8 @@ java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
  
 rm  -v ${snpEffStats}
 
-java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
- -c $SNPEFF_HOME/snpEff.config \
+java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
+ -c $EBROOTSNPEFF/snpEff.config \
  -hgvs \
  -lof \
  -stats ${snpEffStats} \
@@ -230,8 +229,8 @@ java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
  
 rm  -v ${snpEffStats}
 
-java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
- -c $SNPEFF_HOME/snpEff.config \
+java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
+ -c $EBROOTSNPEFF/snpEff.config \
  -hgvs \
  -lof \
  -stats ${snpEffStats} \
@@ -240,7 +239,7 @@ java -Xmx8g -jar  $SNPEFF_HOME/snpEff.jar \
  ${gatkAnnotVcf} \
  1>${snpEffAnnotVcf}
  
-java -Xmx8g -jar $SNPEFF_HOME/SnpSift.jar \
+java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar \
  dbnsfp -db ${dbnsfp}\
  -f genename,Uniprot_acc,Uniprot_id,Uniprot_aapos,Interpro_domain,cds_strand,refcodon,SLR_test_statistic,codonpos,fold-degenerate,Ancestral_allele,Ensembl_geneid,Ensembl_transcriptid,aapos,aapos_SIFT,aapos_FATHMM,SIFT_score,SIFT_converted_rankscore,SIFT_pred,Polyphen2_HDIV_score,Polyphen2_HDIV_rankscore,Polyphen2_HDIV_pred,Polyphen2_HVAR_score,Polyphen2_HVAR_rankscore,Polyphen2_HVAR_pred,LRT_score,LRT_converted_rankscore,LRT_pred,MutationTaster_score,MutationTaster_converted_rankscore,MutationTaster_pred,MutationAssessor_score,MutationAssessor_rankscore,MutationAssessor_pred,FATHMM_score,FATHMM_rankscore,FATHMM_pred,RadialSVM_score,RadialSVM_rankscore,RadialSVM_pred,LR_score,LR_rankscore,LR_pred,Reliability_index,VEST3_score,VEST3_rankscore,CADD_raw,CADD_raw_rankscore,CADD_phred,GERP++_NR,GERP++_RS,GERP++_RS_rankscore,phyloP46way_primate,phyloP46way_primate_rankscore,phyloP46way_placental,phyloP46way_placental_rankscore,phyloP100way_vertebrate,phyloP100way_vertebrate_rankscore,phastCons46way_primate,phastCons46way_primate_rankscore,phastCons46way_placental,phastCons46way_placental_rankscore,phastCons100way_vertebrate,phastCons100way_vertebrate_rankscore,SiPhy_29way_pi,SiPhy_29way_logOdds,SiPhy_29way_logOdds_rankscore,LRT_Omega,UniSNP_ids,1000Gp1_AC,1000Gp1_AF,1000Gp1_AFR_AC,1000Gp1_AFR_AF,1000Gp1_EUR_AC,1000Gp1_EUR_AF,1000Gp1_AMR_AC,1000Gp1_AMR_AF,1000Gp1_ASN_AC,1000Gp1_ASN_AF,ESP6500_AA_AF,ESP6500_EA_AF,ARIC5606_AA_AC,ARIC5606_AA_AF,ARIC5606_EA_AC,ARIC5606_EA_AF,clinvar_rs,clinvar_clnsig,clinvar_trait \
  ${snpEffAnnotVcf} \
@@ -255,10 +254,5 @@ rm -v ${snpEffAnnotVcf}* ${gatkAnnotVcf}* ${snpEffGatkAnnotVcf}*
 
 putFile ${annotVcf}
 putFile ${annotVcfIdx}
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
-fi
 
 echo "## "$(date)" ##  $0 Done "

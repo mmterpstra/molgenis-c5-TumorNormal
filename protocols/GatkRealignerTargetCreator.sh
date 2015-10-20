@@ -37,7 +37,7 @@ inputs=$(printf '-I %s ' $(printf '%s\n' ${bams[@]}))
 mkdir -p ${indelRealignmentDir}
 
 
-java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -nt 4 \
  -T RealignerTargetCreator \
  -R ${onekgGenomeFasta} \

@@ -50,7 +50,7 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 fi
 
 #Run Picard CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution and MeanQualityByCycle
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CollectMultipleMetrics\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
  I=${markDuplicatesBam} \
  O=${collectMultipleMetricsPrefix} \
  R=${onekgGenomeFasta} \
@@ -71,11 +71,6 @@ putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
 if [ ${#reads2FqGz} -ne 0 ]; then
 	putFile ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf
 	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics 
-fi
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
 fi
 
 echo "## "$(date)" ##  $0 Done "

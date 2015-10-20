@@ -4,7 +4,6 @@
 #string stage
 #string checkStage
 #string fastqcMod
-#string WORKDIR
 #string projectDir
 #string fastqcDir
 #string fastqcZipExt

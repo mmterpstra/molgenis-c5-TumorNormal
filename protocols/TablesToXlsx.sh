@@ -1,21 +1,21 @@
 #MOLGENIS walltime=23:59:00 mem=1gb ppn=1
 
 #inTable
-#string indelMnpTable
-#string indelMnpRawTable
-#string snvTable
-#string snvRawTable
+#string stage
+#string tableToXlsxMod
+
+#list indelMnpTable,indelMnpRawTable,snvTable,snvRawTable
 #string snvDescrTable
 #string indelMnpDescrTable
 
 #outXlsx
 #string xlsxDir
 
-module load tableToXlsx/0.1
+${stage} ${tableToXlsxMod}
 
 outXlsx=""
 
-for inTable in "${indelMnpTable}" "${indelMnpRawTable}" "${snvTable}" "${snvRawTable}" "${snvDescrTable}" "${indelMnpDescrTable}"; do 
+for inTable in "${indelMnpTable[@]}" "${indelMnpRawTable[@]}" "${snvTable[@]}" "${snvRawTable[@]}" "${snvDescrTable}" "${indelMnpDescrTable}"; do 
 	xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 	outXlsx="$outXlsx ${xlsxDir}/"$(basename $xlsx)
 done
@@ -34,7 +34,7 @@ for inTable in "${indelMnpTable}" "${indelMnpRawTable}" "${snvTable}" "${snvRawT
 	echo "getFile file='$inTable'"
 	getFile $inTable
 	#just guess the output...
-	perl $TABTOXLSX_HOME/tableToXlsx.pl \\t $inTable
+	perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t $inTable
 	xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 	mv -v $xlsx ${xlsxDir}
 	putFile ${xlsxDir}/$(basename $xlsx)

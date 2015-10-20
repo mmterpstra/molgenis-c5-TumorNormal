@@ -16,10 +16,10 @@
 
 #string indelRealignmentBam
 #string indelRealignmentBai
-#string bsqrDir
-#string bsqrBam
-#string bsqrBai
-#string bsqrBeforeGrp
+#string bqsrDir
+#string bqsrBam
+#string bqsrBai
+#string bqsrBeforeGrp
 
 #pseudo from gatk forum (link: http://gatkforums.broadinstitute.org/discussion/3891/best-practices-for-variant-calling-on-rnaseq):
 #java -jar GenomeAnalysisTK.jar -T SplitNCigarReads -R ref.fasta -I dedupped.bam -o split.bam -rf ReassignOneMappingQuality -RMQF 255 -RMQT 60 -U ALLOW_N_CIGAR_READS
@@ -27,8 +27,8 @@
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
- ${bsqrBam} \
- ${bsqrBai}
+ ${bqsrBam} \
+ ${bqsrBai}
 
 getFile ${onekgGenomeFasta}
 getFile ${oneKgPhase1IndelsVcf}
@@ -46,31 +46,31 @@ ${checkStage}
 set -x
 set -e
 
-mkdir -p ${bsqrDir}
+mkdir -p ${bqsrDir}
 
-#do bsqr for covariable determination then do print reads for valid bsqrbams
-#check the bsqr part and add known variants
+#do bqsr for covariable determination then do print reads for valid bsqrbams
+#check the bqsr part and add known variants
 
-java -Xmx4g -Djava.io.tmpdir=${bsqrDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T BaseRecalibrator\
  -R ${onekgGenomeFasta} \
  -I ${indelRealignmentBam} \
- -o ${bsqrBeforeGrp} \
+ -o ${bqsrBeforeGrp} \
  -knownSites ${dbsnpVcf} \
  -knownSites ${goldStandardVcf}\
  -knownSites ${oneKgPhase1IndelsVcf}\
  -nct 8
 
-java -Xmx4g -Djava.io.tmpdir=${bsqrDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T PrintReads \
  -R ${onekgGenomeFasta} \
  -I ${indelRealignmentBam} \
- -o ${bsqrBam} \
- -BQSR ${bsqrBeforeGrp} \
+ -o ${bqsrBam} \
+ -BQSR ${bqsrBeforeGrp} \
  -nct 8 
 
-putFile ${bsqrBam}
-putFile ${bsqrBai}
-putFile ${bsqrBeforeGrp}
+putFile ${bqsrBam}
+putFile ${bqsrBai}
+putFile ${bqsrBeforeGrp}
 
 echo "## "$(date)" ##  $0 Done "

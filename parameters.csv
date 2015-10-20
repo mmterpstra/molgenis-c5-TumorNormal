@@ -11,13 +11,13 @@ ppn,1
 defaultInterpreter,#!/bin/bash
 stage,module load
 checkStage,module list
-WORKDIR,/gcc/
-root,${WORKDIR}
+#WORKDIR,/gcc/
+#root,${WORKDIR}
 group,gcc
-tmp,tmp01
+tmp,tmp04
 data,/apps/data/
 software,/apps/software/
-projectDir,/gcc/groups/${group}/${tmp}/projects/${project}/
+projectDir,/groups/${group}/${tmp}/projects/${project}/
 ################################################################################
 ##module parameters
 #
@@ -28,9 +28,11 @@ RMod,R/3.2.0-goolf-1.7.20-Java-1.7.0_80
 gatkMod,GATK/3.3-0-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
 snpEffMod,snpEff/4.1d-Java-1.7.0_80
-varScanMod,VarScan/2.3.9-Java-1.7.0_80
-samtoolsMod,SAMtools/1.2-goolf-1.7.20
+varScanMod,VarScan/2.4.0-Java-1.7.0_80
+samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
 vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
+pipelineUtilMod,pipeline-util
+tableToXlsxMod,TableToXlsx
 ################################################################################
 ##Reference Data
 #
@@ -98,24 +100,24 @@ dbnsfpTbi,${dbnsfp}.tbi
 cosmicDir,${data}/sftp-cancer.sanger.ac.uk/files/grch37/cosmic/
 
 cosmicVersion,v72
-cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts.ensembl.vcf.gz
+cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts.bundle_2.8_b37.vcf.gz
 cosmicVcfIdx,${cosmicVcf}.idx
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
-normalAnnotPl,${software}/pipeline-utils/0.0.1/ForGerardTeMeermanVcfAnnotation0.0.2.pl
+normalAnnotPl,ForGerardTeMeermanVcfAnnotation.pl
 
 #nugene barcode
-nugBcSplitterPl,${software}/pipeline-utils/0.0.1/NugeneDigitalSplitter.pl
+nugBcSplitterPl,NugeneDigitalSplitter.pl
 #
 
 #
-GenerateTableDescriptionByVcfHeaderPl,${software}/pipeline-utils/0.0.1/GenerateTableDescriptionByVcfHeader.pl
+GenerateTableDescriptionByVcfHeaderPl,GenerateTableDescriptionByVcfHeader.pl
 
 RVersion,3.0.2
 vcfToolsVersion,0.1.12a
 
-plotScriptPl,${software}/pipeline-utils/0.0.1/PlotFloatsOnInterVals0.0.3.pl
+plotScriptPl,PlotFloatsOnInterVals.pl
 
 ################################################################################
 #CreatePaddedIntervals + padding
@@ -229,16 +231,17 @@ indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
 indelRealignmentBai,${indelRealignmentDir}${sampleName}.bai
 ##############################################################################
 #BSQR(+PrintReads) default
-bsqrDir,${projectDir}/baseQualityScoreRecalibration/
+bqsrDir,${projectDir}/baseQualityScoreRecalibration/
 
-bsqrBam,${bsqrDir}${sampleName}.bam
-bsqrBai,${bsqrDir}${sampleName}.bai
-bsqrBeforeGrp,${bsqrDir}${sampleName}.before.grp
+bqsrBam,${bqsrDir}${sampleName}.bam
+bqsrBai,${bqsrDir}${sampleName}.bai
+bqsrBeforeGrp,${bqsrDir}${sampleName}.before.grp
 
 ################################################################################
 #(BSQR+)AnalyseCovariants default
 analyseCovarsDir,${projectDir}/CovariantAnalysis/
-bsqrAfterGrp,${bsqrDir}${sampleName}.after.grp
+bqsrAfterGrp,${bqsrDir}${sampleName}.after.grp
+
 analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
 
 ################################################################################
@@ -317,7 +320,7 @@ indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
 
 ################################################################################
 #vcf to descriptiontable
-#GenerateTableDescriptionByVcfHeaderPl,/gcc/tools/scripts/Vcf_tools_misc/GenerateTableDescriptionByVcfHeader.pl
+#GenerateTableDescriptionByVcfHeaderPl,GenerateTableDescriptionByVcfHeader.pl
 snvDescrTable,${tableDir}/${project}.snv.description.tsv
 indelMnpDescrTable,${tableDir}/${project}.indelmnp.description.tsv
 ################################################################################

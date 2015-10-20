@@ -17,9 +17,9 @@ CalculateHsMetrics,protocols/CalculateHsMetrics.sh,MarkDuplicates
 #GatkRealignerTargetCreator,protocols/GatkRealignerTargetCreator.sh,GatkSplitAndTrim
 #GatkIndelRealignment,protocols/GatkIndelRealignment.sh,GatkRealignerTargetCreator
 IndelRealignmentKnown,protocols/GatkIndelRealignmentKnown.sh,MarkDuplicates
-BSQR,protocols/GatkBSQR.sh,IndelRealignmentKnown
-AnalyseCovariants,protocols/GatkAnalyseCovariants.sh,BSQR
-HaplotypeCaller,protocols/GatkHaplotypeCaller.sh,BSQR;CreatePaddedTargets
+BQSR,protocols/GatkBQSR.sh,IndelRealignmentKnown
+AnalyseCovariants,protocols/GatkAnalyseCovariants.sh,BQSR
+HaplotypeCaller,protocols/GatkHaplotypeCaller.sh,BQSR;CreatePaddedTargets
 #Catvariants,protocols/CatVariants.sh,HaplotypeCaller
 MergeVariants,protocols/MergeVcfs.sh,HaplotypeCaller
 VariantAnnotation,protocols/GatkSnpEffVariantAnnotation.sh,MergeVariants

@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
 #string picardMod
@@ -33,6 +32,8 @@ set -e
 
 vcfs=($(printf '%s\n' "${haplotyperScatVcf[@]}" | sort -u ))
 
+vcflist=
+
 for vcf in "${vcfs[@]}"; do
 	if [ -e $vcf ]; then
 		echo "added $vcf to merge list";
@@ -44,9 +45,9 @@ inputs=$(printf ' INPUT=%s ' $(printf '%s\n' ${vcflist[@]}))
 
 echo $inputs
 
-java -jar $PICARD_HOME/picard.jar picard MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
+java -jar $EBROOTPICARD/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
 
-java -jar $PICARD_HOME/picard.jar picard SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
+java -jar $EBROOTPICARD/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
 
 rm ${haplotyperVcf}.tmp.vcf
 rm ${haplotyperVcf}.tmp.vcf.idx

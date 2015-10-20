@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 #string onekgGenomeFasta
 
@@ -13,6 +12,7 @@
 #string descrTable
 #string vcfToolsMod
 #string GenerateTableDescriptionByVcfHeaderPl
+#string pipelineUtilMod
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -25,6 +25,7 @@ for file in "${vcf}" "${onekgGenomeFasta}"; do
 done
 
 ${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
@@ -33,7 +34,7 @@ set -e
 mkdir -p ${tableDir}
 
 
-perl ${GenerateTableDescriptionByVcfHeaderPl} ${vcf} > ${descrTable}
+perl $EBROOTPIPELINEMINUTIL/bin/${GenerateTableDescriptionByVcfHeaderPl} ${vcf} > ${descrTable}
 
 putFile ${descrTable}
 

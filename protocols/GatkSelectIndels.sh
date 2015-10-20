@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
 #string gatkMod
@@ -37,7 +36,7 @@ set -e
 mkdir -p ${variantFiltDir}
 
 java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
- -jar $GATK_HOME/GenomeAnalysisTK.jar \
+  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T SelectVariants \
  -R ${onekgGenomeFasta} \
  --variant:vcf ${custAnnotVcf} \
@@ -47,7 +46,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  -selectType MNP \
 
 java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
- -jar $GATK_HOME/GenomeAnalysisTK.jar \
+  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantFiltration \
  -R ${onekgGenomeFasta} \
  --variant:VCF ${indelMnpRawVcf} \

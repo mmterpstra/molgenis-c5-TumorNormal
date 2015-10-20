@@ -42,7 +42,7 @@ mkdir -p ${calculateHsMetricsDir}
 
 
 #Run Picard
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CalculateHsMetrics\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMetrics\
  I=${markDuplicatesBam} \
  O=${calculateHsMetricsLog} \
  R=${onekgGenomeFasta} \
@@ -54,14 +54,14 @@ java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CalculateHsMetr
 
 rm ${calculateHsMetricsLog} -v
 
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/picard.jar CalculateHsMetrics\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMetrics\
  I=${markDuplicatesBam} \
  O=${calculateHsMetricsLog} \
  R=${onekgGenomeFasta} \
  BAIT_INTERVALS=${targetsList} \
  TARGET_INTERVALS=${targetsList} \
  METRIC_ACCUMULATION_LEVEL=SAMPLE \
- TMP_DIR=${collectMultipleMetricsDir}
+ TMP_DIR=${calculateHsMetricsDir}
 
 
 #VALIDATION_STRINGENCY=LENIENT \

@@ -4,6 +4,7 @@
 #string stage
 #string checkStage
 #string vcfToolsMod
+#string pipelineUtilMod
 
 #string annotatorDir
 #string project
@@ -21,12 +22,13 @@ echo ${annotatorDir} ${project} ${annotVcf}
 getFile ${annotVcf}
 
 ${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
 set -e
 
-perl ${normalAnnotPl} \
+perl $EBROOTPIPELINEMINUTIL/bin/${normalAnnotPl} \
  ${controlSampleName} \
  ${annotVcf} \
  >${custAnnotVcf}

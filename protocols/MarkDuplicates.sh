@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
 #string picardMod
@@ -35,7 +34,7 @@ set -e
 
 mkdir -p ${markDuplicatesDir}
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar MarkDuplicates \
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
  INPUT=${MergeBamFilesBam} \
  OUTPUT=${markDuplicatesBam} \
  CREATE_INDEX=true \
@@ -48,10 +47,5 @@ java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar MarkDuplicates 
 putFile ${markDuplicatesBam}
 putFile ${markDuplicatesBai}
 putFile ${markDuplicatesMetrics}
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
-fi
 
 echo "## "$(date)" ##  $0 Done "

@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
 #string picardMod
@@ -35,7 +34,7 @@ mkdir -p ${collectRnaSeqMetricsDir}
 
 echo "## "$(date)" ##  $0 Started "
 
-java -Xmx4g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar CollectRnaSeqMetrics \
+java -Xmx4g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar CollectRnaSeqMetrics \
  INPUT=${markDuplicatesBam} \
  OUTPUT=${collectRnaSeqMetrics} \
  CHART_OUTPUT=${collectRnaSeqMetricsChart} \
@@ -50,10 +49,5 @@ java -Xmx4g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar CollectRnaSeqMe
 
 putFile ${collectRnaSeqMetrics}
 putFile ${collectRnaSeqMetricsChart}
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
-fi
 
 echo "## "$(date)" ##  $0 Done "

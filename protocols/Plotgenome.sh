@@ -8,6 +8,7 @@
 #string varscanCopycaller
 #string varscanCopycallerHomdels
 #string RMod
+#string pipelineUtilMod
 #string plotScriptPl
 #string snvRawTable
 #string segFile
@@ -32,7 +33,9 @@ getFile ${varscanCopycallerHomdels}
 getfile ${onekgGenomeFastaDict}
 
 #load modules
-$stage ${RMod}
+${stage} ${RMod}
+${stage} ${pipelineUtilMod}
+
 #
 $checkStage
 #run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]
@@ -44,7 +47,7 @@ oldDirName=$(pwd)
 
 cd $(dirname ${varscanCopycaller})
 
-perl ${plotScriptPl} \
+perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
  -R Rscript \
  -d ${onekgGenomeFastaDict} \
  -v ${snvRawTable} \

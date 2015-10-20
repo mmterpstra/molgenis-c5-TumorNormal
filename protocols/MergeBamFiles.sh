@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
 #string picardMod
@@ -43,7 +42,7 @@ inputs=$(printf 'INPUT=%s ' $(printf '%s\n' ${bams[@]}))
 
 mkdir -p ${MergeBamFilesDir}
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/picard.jar MergeSamFiles \
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MergeSamFiles \
  $inputs \
  SORT_ORDER=coordinate \
  CREATE_INDEX=true \

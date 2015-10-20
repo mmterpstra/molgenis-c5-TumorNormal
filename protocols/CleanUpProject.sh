@@ -1,7 +1,7 @@
 #MOLGENIS walltime=23:59:00 mem=10mb ppn=1
 #string projectDir
 #string project
-#string bsqrDir
+#string bqsrDir
 #string calculateHsMetricsDir
 #string collectMultipleMetricsDir
 #list varscanDir,snvVcf,indelMnpVcf
@@ -69,7 +69,7 @@ cd "${projectDir}"
 md5sum ${project}_nobam.zip > ${project}_nobam.zip.md5
 cd $olddir
 
-for dir in  "${bsqrDir}" ; do
+for dir in  "${bqsrDir}" ; do
 	if [ -n "$(ls -A $dir/*)" ]; then
 		files="$files $dir/* "
 	fi

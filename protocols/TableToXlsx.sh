@@ -13,7 +13,7 @@ getFile ${inTable}
 set -x
 set -e
 
-perl $TABTOXLSX_HOME/tableToXlsx.pl \\t ${inTable}
+perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t ${inTable}
 #just guess the output...
 XLSX=$(echo ${inTable}| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 

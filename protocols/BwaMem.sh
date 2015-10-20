@@ -5,7 +5,6 @@
 #string stage
 #string checkStage
 #string bwaMod
-#string WORKDIR
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
 #string bwaAlignmentDir 
@@ -25,7 +24,7 @@ alloutputsexist \
 getFile ${onekgGenomeFasta}
 
 #Load modules
-${stage} bwa/${bwaMod}
+${stage} ${bwaMod}
 
 #check modules
 ${checkStage}

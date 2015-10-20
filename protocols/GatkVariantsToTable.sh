@@ -3,7 +3,6 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 #string onekgGenomeFasta
 
@@ -14,6 +13,8 @@
 #string variantRawTable
 #string gatkMod
 #string vcfToolsMod
+#string pipelineUtilMod
+
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -28,6 +29,7 @@ done
 #Load gatk module
 ${stage} ${gatkMod}
 ${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
@@ -35,9 +37,9 @@ set -e
 
 mkdir -p ${tableDir}
 
-fields=$(perl /gcc/tools/scripts/DumpFieldsForVariantsToTable.pl ${vcf})
+fields=$(perl $EBROOTPIPELINEMINUTIL/bin/DumpFieldsForVariantsToTable.pl ${vcf})
 
-java -Xmx1g -Djava.io.tmpdir=${tableDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantsToTable \
  -R ${onekgGenomeFasta} \
  -V ${vcf} \
@@ -46,7 +48,7 @@ java -Xmx1g -Djava.io.tmpdir=${tableDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
  -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
  -o ${variantRawTable}
  
-java -Xmx1g -Djava.io.tmpdir=${tableDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantsToTable \
  -R ${onekgGenomeFasta} \
  -V ${vcf} \
