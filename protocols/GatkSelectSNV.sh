@@ -1,5 +1,8 @@
 #MOLGENIS walltime=23:59:00 mem=4gb ppn=1
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
@@ -51,7 +54,6 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --variant:VCF ${snvRawVcf} \
  -o ${snvVcf} \
  --filterExpression "QUAL < 30" --filterName "LowQual" \
- --filterExpression "QD < 2.0" --filterName "QDlt2" \
  --filterExpression "MQ < 40.0" --filterName "MQlt40" \
  --filterExpression "vc.hasAttribute('MQRankSum') && MQRankSum < -12.5" --filterName "MQRankSumlt-12_5" \
  --filterExpression "vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0" --filterName "ReadPosRankSumlt-20" \

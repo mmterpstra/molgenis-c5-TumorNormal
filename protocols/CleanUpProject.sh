@@ -1,6 +1,8 @@
 #MOLGENIS walltime=23:59:00 mem=10mb ppn=1
-#string projectDir
+
 #string project
+
+#string projectDir
 #string bqsrDir
 #string calculateHsMetricsDir
 #string collectMultipleMetricsDir

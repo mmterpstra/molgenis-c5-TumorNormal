@@ -1,4 +1,7 @@
 #MOLGENIS walltime=23:59:00 mem=4gb ppn=1
+
+#string project
+
 ################################^advised 45 gb for 300 files so 30 for 200 files?
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage

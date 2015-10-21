@@ -1,5 +1,7 @@
 #MOLGENIS nodes=1 ppn=1 mem=1gb walltime=10:00:00
 
+#string project
+
 #Parameter mapping
 #string stage
 #string checkStage
@@ -7,7 +9,6 @@
 #string pipelineUtilMod
 
 #string annotatorDir
-#string project
 #string annotVcf
 #string controlSampleName
 #string custAnnotVcf

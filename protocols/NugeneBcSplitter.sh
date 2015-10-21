@@ -1,5 +1,8 @@
 #MOLGENIS nodes=1 ppn=8 mem=8gb walltime=10:00:00
 
+#string project
+
+
 
 #Parameter mapping
 #string stage
