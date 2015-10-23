@@ -367,7 +367,7 @@ varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
 
 varscanInputBam,${indelRealignmentBam}
 varscanInputBai,${indelRealignmentBai}
-varscanInputBamBai,${indelRealignmentBam}.bai
+varscanInputBamBai,${indelRealignmentBam}
 
 #same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
 

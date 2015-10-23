@@ -91,7 +91,11 @@ java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -X
  --LODThresholdForCleaning 0.4 \
  $qualAction
 
+cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
+
 putFile ${indelRealignmentBam}
 putFile ${indelRealignmentBai}
+putfile ${indelRealignmentBam}.bai
+
 
 echo "## "$(date)" ##  $0 Done "

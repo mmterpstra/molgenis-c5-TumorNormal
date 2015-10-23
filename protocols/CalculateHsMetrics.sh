@@ -8,7 +8,6 @@
 #string checkStage
 #string picardMod
 #string RMod
-#string reads2FqGz
 #string onekgGenomeFasta
 #string markDuplicatesBam
 #string markDuplicatesBai

@@ -35,8 +35,43 @@ The resource links for installing references/preparing them
 Workflow
 --------
 
+See picture below:
 
 ![Workflow](https://cdn.rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin.svg)
+
+Variantcalling
+==============
+This is done with the haplotype caller using `-stand_call_conf 10.0` and `-stand_emit_conf 20.0` (produce calls with qual >=10 and mark them with lowQual if <20 ).
+
+Filtering of variant calls
+==========================
+different filtering based on type:
+ - snv
+ - indel & mnp
+
+| name 		| expression 	| applied on  			| description |
+| ---- 		| ---------- 	| ----------- 			| ----------- |
+| "LowQual" 	| "QUAL < 30" 	| both (snv and indel & mnp) 	| Filter for the possibility (> 1/1000 or <30 pred scaled) that the variant call is wrong using a bayesian model. |
+| "QDlt2"	| "QD < 2.0"	| both 				| Filter for the pred scaled possibility that the variant call is wrong divided by the depth < 2.0 |
+| "MQlt40"	| "MQ < 40.0"	| snv				| Filter snv for the pred scaled possibility that a mapping is wrong, capped 60, calculated with secondary hits using the base quality scores at the different positions to call it 0 or higher. Filter for unique mappings. |
+| "MQRankSumlt-12_5" | "MQRankSum < -12.5" | snv		| Filter snv for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
+| "MQRankSumlt-20" | "MQRankSum < -20" | snv                | Filter indel for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
+| "ReadPosRankSumlt-20" | "ReadPosRankSum < -20.0"| snv		|	|
+| "FSgt60"	| "FS > 60.0"   | snv                           |	|
+| "FSgt200"	| "FS > 200.0"   | indel                        |	|
+| "RPAgt8" 	| "vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8" | both |	|
+| "TeMeermanAlleleBiasgt5" | TeMeermanAlleleBias > 5.0 | both	| never filters anything -> legency artifact|
+| "NotPolymorfic" | all GT equal | both				|	|
+| "NotPutatativeHarmfulVariant" | see descr. | both		| everything that is not fuctional according the [snpeff documentation](http://snpeff.sourceforge.net/SnpEff_manual.html) under 'Effect prediction details' aka: "!((vc.hasAttribute('SNPEFF_IMPACT') && vc.getAttribute('SNPEFF_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" |
+| "1000gMAFgt0.02" | see descr. | both				| entire 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" |
+| "1000gEURMAFgt0.02" | see descr. | both			| european 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" |
+| "QDlt2andQdbyAflt8" | "QD < 2.0 && QD / AF < 8.0 | both	| having both QD < 2 and QD/ AF < 8 |
+
+|
+
+"MQ < 40.0" --filterName "MQlt40"
+
+ QD < 2.0
 
 goals:
   - is buildable with easybuild?

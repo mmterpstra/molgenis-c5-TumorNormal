@@ -70,8 +70,8 @@ samtools mpileup \
   --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
 cat ${varscanCopynumberPrefix}.err.log >&2
 
-count=$(grep -c "ERROR: Gave up waiting after 500 seconds..." ${varscanCopynumberPrefix}.err.log)
-if [ "$count" -ge 1 ] ;then
+
+if [ $(grep -c "ERROR: Gave up waiting after 500 seconds..." ${varscanCopynumberPrefix}.err.log) -ge 1 ] ;then
 	echo "## "$(date)" ## Varscan2 copynumber inputlag fail please restart" >&2
 	echo "## "$(date)" ## Varscan2 copynumber inputlag fail please restart"
 	rm ${varscanCopynumber} 
@@ -83,7 +83,7 @@ java -jar -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copyCaller ${varscanCopynumbe
 if [ -z ${varscanCopynumber} ] || [ -z ${varscanCopycaller} ] || [ -z ${varscanCopycaller} ] ; then
  
 	echo "removed ${varscanCopynumber} ${varscanCopycaller} ${varscanCopycaller} because of 0-size"
-	rm ${varscanCopynumber} ${varscanCopycaller} ${varscanCopycaller}
+	rm -v ${varscanCopynumber} ${varscanCopycaller} ${varscanCopycaller}
 	exit 1
 fi
 
