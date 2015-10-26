@@ -380,7 +380,7 @@ controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
 ################################################################################
 #PlotGenome?
 
-segFile,${varscanDir}/${sampleName}.cn.seg
+segFile,${varscanDir}/${sampleName}.seg
 segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
 cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
 

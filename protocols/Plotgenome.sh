@@ -18,6 +18,8 @@
 #string segmentsPlotPdf
 #string cnvPlotPdf
 
+set -e
+set -x
 
 ##you can also add an F score to the genotypes (based on AD) and integrate it into the plot == added value
 ##a string tmpSnpVariantsTableTable {intermediateDir}/tmp/{project}.SnpsToTab.tab.table
@@ -33,18 +35,16 @@ alloutputsexist \
 #getfile declarations
 getFile ${varscanCopycaller}
 getFile ${varscanCopycallerHomdels}
-getfile ${onekgGenomeFastaDict}
+getFile ${onekgGenomeFastaDict}
 
 #load modules
 ${stage} ${RMod}
 ${stage} ${pipelineUtilMod}
 
 #
-$checkStage
-#run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]
+${checkStage}
 
-set -x
-set -e
+#run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]
 
 oldDirName=$(pwd)
 
