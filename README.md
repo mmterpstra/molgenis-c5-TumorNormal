@@ -55,7 +55,7 @@ different filtering based on type:
 | "QDlt2"	| "QD < 2.0"	| both 				| Filter for the pred scaled possibility that the variant call is wrong divided by the depth < 2.0 |
 | "MQlt40"	| "MQ < 40.0"	| snv				| Filter snv for the pred scaled possibility that a mapping is wrong, capped 60, calculated with secondary hits using the base quality scores at the different positions to call it 0 or higher. Filter for unique mappings. |
 | "MQRankSumlt-12_5" | "MQRankSum < -12.5" | snv		| Filter snv for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
-| "MQRankSumlt-20" | "MQRankSum < -20" | snv                | Filter indel for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
+| "MQRankSumlt-20" | "MQRankSum < -20" | both                | Filter indel for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
 | "ReadPosRankSumlt-20" | "ReadPosRankSum < -20.0"| snv		|	|
 | "FSgt60"	| "FS > 60.0"   | snv                           |	|
 | "FSgt200"	| "FS > 200.0"   | indel                        |	|
