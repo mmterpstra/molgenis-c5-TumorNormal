@@ -33,7 +33,7 @@ SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvV
 TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToDescriptionTable
 Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown
 PlotGenome,protocols/Plotgenome.sh,Varscan2
-Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants
+Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller
 #HaplotypeCallerGvcf,protocols/GatkHaplotypeCallerGvcf.sh,IndelRealignmentKnown;
 #MergeGvcfs,protocols/GatkMergeGvcfs.sh,HaplotypeCallerGvcf
 #GenotypeGvcfs,protocols/GatkGenotypeGvcfs.sh,MergeGvcfs
