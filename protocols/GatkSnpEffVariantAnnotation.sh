@@ -62,6 +62,9 @@
 #string regulation_NHEKBin
 #string snpEffectPredictorBin
 
+#string oneKgP1wgsVcf
+#string oneKgP1wgsVcfIdx
+
 #string dbnsfp
 #string dbnsfpTbi
 
@@ -79,7 +82,7 @@ echo "## "$(date)" ##  $0 Started "
 #string snpEffAnnotVcfIdx
 
 #tired of typing getfile....
-for file in "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhase1SnpsVcf}" "${oneKgPhase1SnpsVcfIdx}" "${oneKgPhase1IndelsVcf}" "${oneKgPhase1IndelsVcfIdx}" "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${cosmicVcf}" "${cosmicVcfIdx}" "${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562bBin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"  "${snpEffectPredictorBin}" ; do
+for file in "${oneKgP1wgsVcf}" "${oneKgP1wgsVcfIdx}" "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhase1SnpsVcf}" "${oneKgPhase1SnpsVcfIdx}" "${oneKgPhase1IndelsVcf}" "${oneKgPhase1IndelsVcfIdx}" "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${cosmicVcf}" "${cosmicVcfIdx}" "${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562bBin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"  "${snpEffectPredictorBin}" ; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -168,7 +171,7 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  --snpEffFile ${snpEffGatkAnnotVcf} \
  --resource:cosmic,VCF ${cosmicVcf} \
  -E 'cosmic.ID' \
-  --resource:1000gPhase1Snps,vcf ${oneKgPhase1SnpsVcf} \
+  --resource:1000gPhase1Snps,vcf ${oneKgP1wgsVcf} \
  -E '1000gPhase1Snps.AF' \
  -E '1000gPhase1Snps.AFR_AF' \
  -E '1000gPhase1Snps.AMR_AF' \

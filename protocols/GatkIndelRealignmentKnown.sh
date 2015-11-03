@@ -95,7 +95,7 @@ cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
 
 putFile ${indelRealignmentBam}
 putFile ${indelRealignmentBai}
-putfile ${indelRealignmentBam}.bai
+putFile ${indelRealignmentBam}.bai
 
 
 echo "## "$(date)" ##  $0 Done "

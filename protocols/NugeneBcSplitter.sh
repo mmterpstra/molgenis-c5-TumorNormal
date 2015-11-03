@@ -9,11 +9,11 @@
 #string checkStage
 #string picardMod
 #string samtoolsMod
+#string digiRgMod
 #string reads3FqGz
 #string addOrReplaceGroupsBam
 #string addOrReplaceGroupsBai
 
-#string nugBcSplitterPl
 #string nugeneRgDir
 #string nugeneBam
 #string nugeneBai
@@ -32,7 +32,7 @@ getFile ${addOrReplaceGroupsBai}
 #Load modules
 ${stage} ${samtoolsMod}
 ${stage} ${picardMod}
-
+${stage} ${digiRgMod}
 
 #check modules
 ${checkStage}
@@ -51,7 +51,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 
 else
 	
-	perl ${nugBcSplitterPl} ${addOrReplaceGroupsBam} ${nugeneBam}
+	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl ${addOrReplaceGroupsBam} ${nugeneBam}
 	
 	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
  INPUT=${nugeneBam}	

@@ -33,6 +33,8 @@ samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
 vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util
 tableToXlsxMod,TableToXlsx
+digiRgMod,DigitalBarcodeReadgroups/0.1.0-goolf-1.7.20-Perl-5.20.2-bare
+
 ################################################################################
 ##Reference Data
 #
@@ -52,9 +54,9 @@ goldStandardVcfIdx,${goldStandardVcf}.idx
 
 oneKgPhase1SnpsVcf,${bundle}/1000G_phase1.snps.high_confidence.b37.vcf
 oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.idx
-
 oneKgPhase1IndelsVcf,${bundle}/1000G_phase1.indels.b37.vcf
 oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.idx
+
 #phase 3 indels / snps
 #${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
 
@@ -95,8 +97,8 @@ dbnsfp,${data}/dbNSFP/2.7/dbNSFP2.7.txt.gz
 dbnsfpTbi,${dbnsfp}.tbi
 
 #vcf
-#oneKgP1wgsVcf,${resDir}/
-#oneKgP1wgsVcfIdx,${resDir}/
+oneKgP1wgsVcf,${data}/ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz
+oneKgP1wgsVcfIdx,${oneKgP1wgsVcf}.tbi
 cosmicDir,${data}/sftp-cancer.sanger.ac.uk/files/grch37/cosmic/
 
 cosmicVersion,v72
