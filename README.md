@@ -1,24 +1,69 @@
 # molgenis-c5-TumorNormal
 The main goal is to detect variants in tumor-normal sample combinations.
 
-references will follow:
+Methods
+------------
+
+Variant Calling
+===============
+
+The variant calling pipeline is an implementation of the GATK-best practics recommendations using molgenis compute. 
+Alignment of reads was done using BWA [cite](http://arxiv.org/abs/1303.3997) and the Genome Analysis Toolkit (GATK) [cite](https://www.broadinstitute.org/gatk/about/citing-gatk).
+Using the GRCH37 decoy build frok the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. Annotation of the variants was done using 
+SnpEff [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672) / SnpSift [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069) with the ensembl release 75 gene annotations and the dbNSFP2.7 database ,
+the GATK was used with variant annotations of dbsnp 138, Cosmic v72, 1000 genomes phase 3 and Exac 0.3 databases. The data was filtered for quality metrics according to GATK recommendations (described below) 
+and custom filters for population frequency. 
+
+Cnv Analysis
+============
+
+Copy number variation data were generated using Samtools and Varscan (Li et al., 2009, Koboldt et al., 2012) ([pubmed](http://www.ncbi.nlm.nih.gov/pubmed/19505943), [pubmed link](http://www.ncbi.nlm.nih.gov/pubmed/22300766)).
+The GC-content normalised log2 fold change data was generated using using data of the tumor sample and the matched normal sample. Using a minimal segment size of 2000 bp and a maximal segment size 
+of 5000 bp and the alignments with a mapping quality greater than 40 to calculate the fold changes, otherwise the default settings are assumed. The segment calling was done with DNAcopy algoritmn 
+(Olshen et al., 2004). In addition to the default settings the circulair binary segmentation (CBS) calls were merged if they had an SD of < 0.5 with adjacent segments and weigths were added based on 
+```weigth = mean(normal/sample)+delta(normal,sample)```. Where ```normal``` = mean coverage per base in normal control and ```sample``` = mean coverage per base in described sample. 
+The results were plotted using R after using perl for format conversion.
+
+
+References
+==========
 
 | Name         | project website                                                                            | Article          |
 | ------------ | ------------------------------------------------------------------------------------------ | ---------------- |
 | Fastqc       | [bioinformatics.babraham.ac.uk](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) | |
-| bwa          | [github](https://github.com/lh3/bwa)                                                       | [preprint](http://arxiv.org/abs/1303.3997) |
-| picard-tools | [sourceforge](http://picard.sourceforge.net/)                                              | [instructions below faq](http://picard.sourceforge.net/) |
+| BWA          | [github](https://github.com/lh3/bwa)                                                       | [preprint](http://arxiv.org/abs/1303.3997) |
+| Picard-tools | [sourceforge](http://picard.sourceforge.net/)                                              | [instructions below faq](http://picard.sourceforge.net/) |
 | GATK toolkit | [project home](http://www.broadinstitute.org/gatk/)                                        | [instructions here](https://www.broadinstitute.org/gatk/about/citing-gatk) |
 | VarScan      | [github](http://dkoboldt.github.io/varscan/)                                               | [pubmed link](http://www.ncbi.nlm.nih.gov/pubmed/22300766) |
-| SnpEff       | [sourceforge](http://snpeff.sourceforge.net/index.html)                                    |[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672)|
-| SnpSift      | [sourceforge](http://snpeff.sourceforge.net/index.html)                                    |[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069)|
-| samtools     | [project home](http://www.htslib.org/)                                                     |[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/19505943)|
-| Compute      | [project home](http://www.molgenis.org/wiki/ComputeStart)                                  |[citeseerx](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.415.9799)|
-| DNAcopy      | [bioconductor.org](http://www.bioconductor.org/packages/release/bioc/html/DNAcopy.html)    |[bioconductor.org](http://www.bioconductor.org/packages/release/bioc/vignettes/DNAcopy/inst/doc/DNAcopy.pdf)|
-| Cosmic       | [project home](http://cancer.sanger.ac.uk/cosmic)                                          |[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/25355519) |
-| 1000g        | [project home](http://www.1000genomes.org/)                                                |[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23128226)|
-| dbsnp        | [project home](http://www.ncbi.nlm.nih.gov/snp/)                                           |[pubmed](http://www.ncbi.nlm.nih.gov/pubmed/11125122)|
-| dbnsfp       | [project home](https://sites.google.com/site/jpopgen/dbNSFP)                               |[site](https://sites.google.com/site/jpopgen/dbNSFP) [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/21520341), [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23843252) and [drive link](https://drive.google.com/file/d/0BwXtJxmTWY_td2ZoTXRCQTAySm8/view?usp=sharing)|
+| SnpEff       | [sourceforge](http://snpeff.sourceforge.net/index.html)                                    | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672)|
+| SnpSift      | [sourceforge](http://snpeff.sourceforge.net/index.html)                                    | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069)|
+| SAMtools     | [project home](http://www.htslib.org/)                                                     | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/19505943)|
+| Compute      | [project home](http://www.molgenis.org/wiki/ComputeStart)                                  | [citeseerx](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.415.9799)|
+| DNAcopy      | [bioconductor.org](http://www.bioconductor.org/packages/release/bioc/html/DNAcopy.html)    | [bioconductor.org](http://www.bioconductor.org/packages/release/bioc/vignettes/DNAcopy/inst/doc/DNAcopy.pdf)|
+| Cosmic       | [project home](http://cancer.sanger.ac.uk/cosmic)                                          | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/25355519) |
+| 1000 genomes | [project home](http://www.1000genomes.org/)                                                | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23128226)|
+| dbSNP        | [project home](http://www.ncbi.nlm.nih.gov/snp/)                                           | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/11125122)|
+| dbNSFP       | [project home](https://sites.google.com/site/jpopgen/dbNSFP)                               | [site](https://sites.google.com/site/jpopgen/dbNSFP) [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/21520341), [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23843252) and [drive link](https://drive.google.com/file/d/0BwXtJxmTWY_td2ZoTXRCQTAySm8/view?usp=sharing)|
+| ensembl build 75 | [archive site](http://feb2014.archive.ensembl.org/index.html)			    | [doi.org link](http://dx.doi.org/10.1093/nar/gkt1196)
+| Exac         | [project home](http://exac.broadinstitute.org/)                                            | [instructions here](http://exac.broadinstitute.org/about)|
+
+
+Versions
+========
+
+| software		| version |
+| --------		| ------- |
+| FastQC		| 0.11.3-Java-1.7.0_80 |
+| BWA			| 0.7.12-goolf-1.7.20 |
+| picard		| 1.130-Java-1.7.0_80 |
+| R			| 3.2.0-goolf-1.7.20-Java-1.7.0_80 |
+| GATK			| 3.3-0-Java-1.7.0_80 |
+| snpEff		| 4.1d-Java-1.7.0_80 |
+| VarScan		| 2.4.0-Java-1.7.0_80 |
+| SAMtools		| 0.1.18-goolf-1.7.20 |
+| VCFtools		| 0.1.12b-goolf-1.7.20-Perl-5.20.2-bare | 
+| DigitalBarcodeReadgroups | 0.1.0-goolf-1.7.20-Perl-5.20.2-bare |
+
 
 
 Resource links
@@ -37,11 +82,15 @@ Workflow
 
 See picture below:
 
-![Workflow](https://cdn.rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin.svg)
+generic workflow:
+![Workflow](https://cdn.rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin2.svg)
+
+nugene workflow:
+![Nugene Workflow](https://cdn.rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin2_nugene.svg)
 
 Variantcalling
 ==============
-This is done with the haplotype caller using `-stand_call_conf 10.0` and `-stand_emit_conf 20.0` (produce calls with qual >=10 and mark them with lowQual if <20 ).
+This is done with the haplotype caller using `-stand_call_conf 10.0` and `-stand_emit_conf 20.0` (call bases with QUAL > 10).
 
 Filtering of variant calls
 ==========================
@@ -68,8 +117,5 @@ different filtering based on type:
 | "QDlt2andQdbyAflt8" | "QD < 2.0 && QD / AF < 8.0 | both	| having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data...)  |
 
 
-goals:
-  - is buildable with easybuild?
-  - works on new slurm cluster
-  - integrate tumor-normal callers
+
 
