@@ -24,6 +24,13 @@ of 5000 bp and the alignments with a mapping quality greater than 40 to calculat
 ```weigth = mean(normal/sample)+delta(normal,sample)```. Where ```normal``` = mean coverage per base in normal control and ```sample``` = mean coverage per base in described sample. 
 The results were plotted using R after using perl for format conversion.
 
+Nugene Notes
+===========
+
+In the nugene analysis the BQSR step is omitted because this is only meant for enritchment capturing a whole exome/genome. Using this on a small capturing kit might result in missing variant calls because
+ of lack of observations. This happens because for BSQR you'll need approx 100*10^6 basepairs for recalibration. 
+
+
 
 References
 ==========
@@ -83,10 +90,10 @@ Workflow
 See picture below:
 
 generic workflow:
-![Workflow](https://cdn.rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin2.svg)
+![Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin2.svg)
 
 nugene workflow:
-![Nugene Workflow](https://cdn.rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin2_nugene.svg)
+![Nugene Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin_nugene.svg)
 
 Variantcalling
 ==============
