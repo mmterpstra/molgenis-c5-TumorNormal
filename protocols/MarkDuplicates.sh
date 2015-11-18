@@ -10,8 +10,8 @@
 
 #string picardMod
 
-#string MergeBamFilesBam
-#string MergeBamFilesBai
+#string mergeBamFilesBam
+#string mergeBamFilesBai
 
 #string markDuplicatesDir
 #string markDuplicatesBam
@@ -26,8 +26,8 @@ alloutputsexist \
  ${markDuplicatesBai} \
  ${markDuplicatesMetrics}
 
-getFile ${MergeBamFilesBam}
-getFile ${MergeBamFilesBai}
+getFile ${mergeBamFilesBam}
+getFile ${mergeBamFilesBai}
 
 ${stage} ${picardMod}
 ${checkStage}
@@ -38,7 +38,7 @@ set -e
 mkdir -p ${markDuplicatesDir}
 
 java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
- INPUT=${MergeBamFilesBam} \
+ INPUT=${mergeBamFilesBam} \
  OUTPUT=${markDuplicatesBam} \
  CREATE_INDEX=true \
  MAX_RECORDS_IN_RAM=4000000 \

@@ -14,14 +14,14 @@
 #string addOrReplaceGroupsDir
 #list addOrReplaceGroupsBam,addOrReplaceGroupsBai,scatterIDs
 
-#string MergeBamFilesDir
-#string MergeBamFilesBam
-#string MergeBamFilesBai
+#string mergeBamFilesDir
+#string mergeBamFilesBam
+#string mergeBamFilesBai
 
 
 alloutputsexist \
-"${MergeBamFilesBam}" \
-"${MergeBamFilesBai}"
+"${mergeBamFilesBam}" \
+"${mergeBamFilesBai}"
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -43,20 +43,20 @@ set -e
 bams=($(printf '%s\n' "${addOrReplaceGroupsBam[@]}" | sort -u ))
 inputs=$(printf 'INPUT=%s ' $(printf '%s\n' ${bams[@]}))
 
-mkdir -p ${MergeBamFilesDir}
+mkdir -p ${mergeBamFilesDir}
 
 java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MergeSamFiles \
  $inputs \
  SORT_ORDER=coordinate \
  CREATE_INDEX=true \
  USE_THREADING=true \
- TMP_DIR=${MergeBamFilesDir} \
+ TMP_DIR=${mergeBamFilesDir} \
  MAX_RECORDS_IN_RAM=6000000 \
- OUTPUT=${MergeBamFilesBam} \
+ OUTPUT=${mergeBamFilesBam} \
 
 # VALIDATION_STRINGENCY=LENIENT \
 
-putFile ${MergeBamFilesBam}
-putFile ${MergeBamFilesBai}
+putFile ${mergeBamFilesBam}
+putFile ${mergeBamFilesBai}
 
 echo "## "$(date)" ##  $0 Done "

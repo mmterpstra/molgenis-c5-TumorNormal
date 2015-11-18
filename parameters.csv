@@ -189,9 +189,9 @@ nugeneBai,${nugeneRgDir}${internalId}_${sampleName}.bai
 #
 ################################################################################
 ##MergeBamFiles ?? #note the actual picard programme: MergeSamFiles.jar
-MergeBamFilesDir,${projectDir}/MergeBams/
-MergeBamFilesBam,${MergeBamFilesDir}${sampleName}.bam
-MergeBamFilesBai,${MergeBamFilesDir}${sampleName}.bai
+mergeBamFilesDir,${projectDir}/MergeBams/
+mergeBamFilesBam,${mergeBamFilesDir}${sampleName}.bam
+mergeBamFilesBai,${mergeBamFilesDir}${sampleName}.bai
 #
 ################################################################################
 ##MarkDuplicates
