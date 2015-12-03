@@ -15,6 +15,9 @@
 #string nTreads
 #string reads1FqGz
 #string reads2FqGz
+#string reads1FqGzBwa
+#string reads2FqGzBwa
+
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -39,7 +42,7 @@ set -e
 mkdir -p ${bwaAlignmentDir}
 
 
-if [ ${#reads2FqGz} -eq 0 ]; then
+if [ ${#reads2FqGzBwa} -eq 0 ]; then
 	getFile ${reads1FqGz}
 	bwa mem \
 	 -M \

@@ -34,6 +34,8 @@ vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util
 tableToXlsxMod,TableToXlsx
 digiRgMod,DigitalBarcodeReadgroups/0.1.0-goolf-1.7.20-Perl-5.20.2-bare
+bbmapMod,BBMap/35.69-Java-1.7.0_80
+
 
 ################################################################################
 ##Reference Data
@@ -141,36 +143,22 @@ singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
 pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
 pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
 ################################################################################
+##Nugene random fastq integration/bbduk trimming
+nugeneFastqDir,${projectDir}/nugeneFastq/
+
+nugeneReads1FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_1.fq.gz
+nugeneReads2FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_2.fq.gz
+
+probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
+
+################################################################################
 ##General/bwa
 #
 nTreads,8
 bwaAlignmentDir,${projectDir}/bwa/
 bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
-#string reads1FqGz
-#string reads2FqGz
-
-################################################################################
-##nugene rmdups
-nugeneDir,${projectDir}/nugeneRmdups/
-nugeneTool,${"/gcc/groups/oncogenetics/tmp01/projects/NugeneValidation/Test/NuGEN_DupAnalysisTool_v5.1.5/runN6pipeline.sh"}
-nugeneOutputPrefix,${nugeneDir}/${sampleName}
-nugeneNodupsBam,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam
-nugeneNodupsBai,${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam.bai
-#Usage: -r ${bwaSam} inputBarcode {outputPrefix
-##
-################################################################################
-##nugene AddOrReplaceGroups
-#
-nugeneAddOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroupsNugene/
-nugeneAddOrReplaceGroupsBam,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bam
-nugeneAddOrReplaceGroupsBai,${nugeneAddOrReplaceGroupsDir}${internalId}_${sampleName}.bai
-
-################################################################################
-##nugene HsMetrics
-#
-nugeneCalculateHsMetricsDir,${projectDir}/hsMetricsNugene/
-nugeneCalculateHsMetricsLog, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.log
-nugeneCalculateHsMetricsPerTargetCov, ${nugeneCalculateHsMetricsDir}/${internalId}_${sampleName}.hsmetrics.pertargetcov.tsv
+reads1FqGzBwa,${reads1FqGz}
+reads2FqGzBwa,${reads2FqGz}
 
 ################################################################################
 ##AddOrReplaceGroups

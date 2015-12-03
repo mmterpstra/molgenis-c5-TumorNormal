@@ -5,9 +5,7 @@ set -u
 
 echo "use: samplesheet projectname targetsList"
 
-#module load Molgenis-Compute/v15.04.1-Java-1.7.0_80
-module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
-
+module load Molgenis-Compute/v15.04.1-Java-1.7.0_80
 
 #main thing to remember when working with molgenis "/full/paths" ALWAYS!
 #here some parameters for customisation
@@ -76,7 +74,7 @@ echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
  -p $workflowdir/parameters.molgenis.csv \
  -p $samplesheet.tmp.csv \
  -p $workflowdir/scatter_id.csv \
- -w $workflowdir/workflow.csv \
+ -w $workflowdir/workflow_iont.csv \
  --backend ${backend} \
  --weave \
  -rundir $jobsDir \
