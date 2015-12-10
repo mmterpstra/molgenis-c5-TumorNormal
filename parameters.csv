@@ -24,7 +24,7 @@ projectDir,/groups/${group}/${tmp}/projects/${project}/
 fastqcMod,FastQC/0.11.3-Java-1.7.0_80
 bwaMod,BWA/0.7.12-goolf-1.7.20
 picardMod,picard/1.130-Java-1.7.0_80
-RMod,R/3.2.0-goolf-1.7.20-Java-1.7.0_80
+RMod,R/3.2.1-goolf-1.7.20
 gatkMod,GATK/3.3-0-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
 snpEffMod,snpEff/4.1d-Java-1.7.0_80
@@ -151,6 +151,10 @@ nugeneReads2FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_2.fq.gz
 
 probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
 
+##################################
+##remappable name for sample md generation
+#
+fastqcCleanDir,${nugeneFastqDir}
 ################################################################################
 ##General/bwa
 #
@@ -384,6 +388,9 @@ scriptDir,/gcc/tools/scripts/
 ################################################################################
 #CreateProjectMd aka CreateProjectMarkdown
 #
+sampleMarkdownDir,${projectDir}/md/
+sampleMarkdown,${sampleMarkdownDir}/${project}.${sampleName}.md
+
 projectMarkdown,${projectDir}/${project}.summary.Rmd
 #
 #

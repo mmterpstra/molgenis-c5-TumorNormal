@@ -5,8 +5,8 @@ set -u
 
 echo "use: samplesheet projectname targetsList"
 
-#module load Molgenis-Compute/v15.04.1-Java-1.7.0_80
-module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
+module load Molgenis-Compute/v15.04.1-Java-1.7.0_80
+#module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
 
 
 #main thing to remember when working with molgenis "/full/paths" ALWAYS!

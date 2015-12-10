@@ -31,7 +31,7 @@ if [ ${#reads2FqGz} -eq 0 ]; then
 	
 	echo "## "$(date)" Started single end fastqc"
 	alloutputsexist \
-	 ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt} \
+	 ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} \
 	 ${singleEndfastqcZip}
 
 	getFile ${reads1FqGz}
@@ -44,21 +44,21 @@ if [ ${#reads2FqGz} -eq 0 ]; then
 	echo "## "$(date)" reads1FqGz"
 	fastqc --noextract ${reads1FqGz} --outdir ${fastqcDir}
 	echo
-	cp -v ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt} ${singleEndfastqcZip}
+	cp -v ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} ${singleEndfastqcZip}
 
 	##################################################################
 	
 	cd $OLDPWD
 
-	putFile ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt}
+	putFile ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt}
 	putFile ${singleEndfastqcZip}
 
 else
 	echo "## "$(date)" Started paired end fastqc"
 	
 	alloutputsexist \
-	 ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt} \
-	 ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt} \
+	 ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} \
+	 ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} \
 	 ${pairedEndfastqcZip1} \
 	 ${pairedEndfastqcZip2}
 
@@ -73,21 +73,21 @@ else
 	echo "## "$(date)" reads1FqGz"
 	fastqc --noextract ${reads1FqGz} --outdir ${fastqcDir}
 	
-	cp -v ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.gz!!g')${fastqcZipExt} ${pairedEndfastqcZip1}
+	cp -v ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g')${fastqcZipExt} ${pairedEndfastqcZip1}
 	echo
 	echo "## "$(date)" reads2FqGz"
 	fastqc --noextract ${reads2FqGz} --outdir ${fastqcDir}
 	echo
-	cp -v ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt} ${pairedEndfastqcZip2}
+	cp -v ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} ${pairedEndfastqcZip2}
 
 	##################################################################
 	cd $OLDPWD
-		
-	putFile ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.gz!!g')${fastqcZipExt}
-	putFile ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.gz!!g' )${fastqcZipExt}
+	
 	putFile ${pairedEndfastqcZip1}
 	putFile ${pairedEndfastqcZip2}
-	
+
+	putFile ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g')${fastqcZipExt}
+	putFile ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g' )${fastqcZipExt}
 fi
 
 echo "## "$(date)" ##  $0 Done "
