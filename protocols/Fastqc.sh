@@ -12,6 +12,8 @@
 #string fastqcZipExt
 #string reads1FqGz
 #string reads2FqGz
+#string reads1FqGzOriginal
+#string reads2FqGzOriginal
 #string sampleName
 #string singleEndfastqcZip
 #string pairedEndfastqcZip1
@@ -27,7 +29,7 @@ set -e
 
 echo "## "$(date)" ##  $0 Started "
 
-if [ ${#reads2FqGz} -eq 0 ]; then
+if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	
 	echo "## "$(date)" Started single end fastqc"
 	alloutputsexist \

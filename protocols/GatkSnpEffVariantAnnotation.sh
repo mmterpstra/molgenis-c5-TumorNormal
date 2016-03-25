@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=8gb ppn=2
+#MOLGENIS walltime=23:59:00 mem=9gb ppn=2
 
 #string project
 
@@ -56,7 +56,6 @@
 #string regulation_HSMMBin
 #string regulation_HUVECBin
 #string regulation_IMR90Bin
-#string regulation_K562bBin
 #string regulation_K562Bin
 #string regulation_NHABin
 #string regulation_NHEKBin
@@ -82,7 +81,7 @@ echo "## "$(date)" ##  $0 Started "
 #string snpEffAnnotVcfIdx
 
 #tired of typing getfile....
-for file in "${oneKgP1wgsVcf}" "${oneKgP1wgsVcfIdx}" "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhase1SnpsVcf}" "${oneKgPhase1SnpsVcfIdx}" "${oneKgPhase1IndelsVcf}" "${oneKgPhase1IndelsVcfIdx}" "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${cosmicVcf}" "${cosmicVcfIdx}" "${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562bBin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"  "${snpEffectPredictorBin}" ; do
+for file in "${oneKgP1wgsVcf}" "${oneKgP1wgsVcfIdx}" "${exacVcf}" "${exacVcfIdx}" "${dbnsfp}" "${dbnsfpTbi}" "${oneKgPhase1SnpsVcf}" "${oneKgPhase1SnpsVcfIdx}" "${oneKgPhase1IndelsVcf}" "${oneKgPhase1IndelsVcfIdx}" "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${cosmicVcf}" "${cosmicVcfIdx}" "${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"  "${snpEffectPredictorBin}" ; do
 	echo "getFile file='$file'"
 	getFile $file
 done

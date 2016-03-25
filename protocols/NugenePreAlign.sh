@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=8gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=1 mem=12gb walltime=10:00:00
 
 #string project
 
@@ -8,7 +8,10 @@
 #string checkStage
 #string bbmapMod
 #string digiRgMod
+#string pipelineUtilMod
 #string probeFa
+#string onekgGenomeFastaIdxBase 
+#string probeBed
 #string nugeneFastqDir 
 
 #string reads1FqGz
@@ -33,7 +36,7 @@ getFile ${probeFa}
 #Load modules
 ${stage} ${bbmapMod}
 ${stage} ${digiRgMod}
-
+${stage} ${pipelineUtilMod}
 
 #check modules
 ${checkStage}
@@ -50,8 +53,22 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		        ${nugeneReads1FqGz}  
 		getFile ${reads1FqGz}
 
-		ln -s ${reads1FqGz} ${nugeneReads1FqGz}
+		#ln -s ${reads1FqGz} ${nugeneReads1FqGz}
+		
+		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+                echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
 
+		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -r ${onekgGenomeFastaIdxBase} -b ${probeBed} -i ${reads1FqGz} -o $TMPFASTQ1
+		
+		bash $EBROOTBBMAP/bbduk.sh \
+                 -Xmx11g \
+                 in=$TMPFASTQ1 \
+                 out=${nugeneReads1FqGz} \
+                 qtrim=r \
+                 trimq=20 \
+                 minlen=20
+
+		rm -v $TMPFASTQ1
                 putFile ${nugeneReads1FqGz}
 	else
 	    	alloutputsexist \
@@ -73,21 +90,18 @@ else
 
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
 		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
-
+		
+		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -r ${onekgGenomeFastaIdxBase} -b ${probeBed} -i $TMPFASTQ1 -o $TMPFASTQ1.bedtrimmed.fq.gz
+		
                 bash $EBROOTBBMAP/bbduk.sh \
-                 in=$TMPFASTQ1 \
+                 -Xmx11g \
+                 in=$TMPFASTQ1.bedtrimmed.fq.gz \
                  out=${nugeneReads1FqGz} \
-                 ref=${probeFa} \
-                 hdist=1 \
-                 ktrim=r \
-                 rcomp=f \
-                 k=31 \
-                 mink=11 \
                  qtrim=r \
                  trimq=20 \
                  minlen=20
 
-		rm -v $TMPFASTQ1
+		rm -v $TMPFASTQ1 $TMPFASTQ1.bedtrimmed.fq.gz
 
 		putFile ${nugeneReads1FqGz}
 
@@ -101,7 +115,8 @@ else
 		echo "## "$(date)" ##  TMPFASTQ2= "$TMPFASTQ2
 		
 		bash $EBROOTBBMAP/bbduk.sh \
-	 	 in=TMPFASTQ1 \
+	 	 -Xmx11g \
+		 in=TMPFASTQ1 \
 	 	 out=${nugeneReads1FqGz} \
                  in2=TMPFASTQ2 \
                  out2=${nugeneReads2FqGz} \

@@ -196,9 +196,9 @@ echo 'tablehs=read.table("'${calculateHsMetricsLog}'", skip=6, header=TRUE, fill
  write.table(subset(tablehs,SAMPLE != "",select=c("SAMPLE","TARGET_TERRITORY","PF_UQ_READS_ALIGNED","PF_UQ_BASES_ALIGNED", 
    "ON_TARGET_BASES","PCT_USABLE_BASES_ON_TARGET","MEAN_TARGET_COVERAGE","PCT_TARGET_BASES_2X","PCT_TARGET_BASES_10X", 
    "PCT_TARGET_BASES_20X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_40X", "PCT_TARGET_BASES_50X", "PCT_TARGET_BASES_100X"))
- ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > hsmetrics.R
-Rscript hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; ' >> ${sampleMarkdown}
-
+ ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
+Rscript ${sampleMarkdownDir}/${sampleName}_hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; ' >> ${sampleMarkdown}
+rm -v ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
 ################################################################################
 ##
 #
@@ -231,9 +231,11 @@ echo  >>  ${sampleMarkdown}
 
 echo 'tableas=read.table("'${collectMultipleMetricsPrefix}.alignment_summary_metrics'", skip=6, header=TRUE, sep="\t", fill=NA); 
  write.table(subset(tableas,select=c("CATEGORY","PF_READS","PCT_PF_READS_ALIGNED","PF_READS_ALIGNED","PCT_READS_ALIGNED_IN_PAIRS","READS_ALIGNED_IN_PAIRS","PF_MISMATCH_RATE", "MEAN_READ_LENGTH"))
- ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > alignmetrics.R
+ ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_alignmetrics.R
 
-Rscript alignmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; ' >> ${sampleMarkdown}
+Rscript  ${sampleMarkdownDir}/${sampleName}_alignmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; ' >> ${sampleMarkdown}
+
+rm -v ${sampleMarkdownDir}/${sampleName}_alignmetrics.R
 
 ################################################################################
 ##
@@ -277,8 +279,9 @@ if [ -e ${markDuplicatesMetrics} ] ; then
  pctDups <- as.numeric(((colsumstabledup[c("UNPAIRED_READ_DUPLICATES")] + colsumstabledup[c("READ_PAIR_DUPLICATES")]*2) / (colsumstabledup[c("UNPAIRED_READS_EXAMINED")] + colsumstabledup[c("READ_PAIRS_EXAMINED")] *2)));
  colsumstabledup["PERCENT_DUPLICATION"] = pctDups;colsumstabledup= c("Field"= "Value",colsumstabledup);
 #java:PERCENT_DUPLICATION = (UNPAIRED_READ_DUPLICATES + READ_PAIR_DUPLICATES *2) /(double) (UNPAIRED_READS_EXAMINED + READ_PAIRS_EXAMINED *2);
- write.table(colsumstabledup ,file=stdout(),sep="|", row.names=TRUE, quote=FALSE, col.names=FALSE);' > dupmetrics.R;
-	Rscript dupmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '>> ${sampleMarkdown}
+ write.table(colsumstabledup ,file=stdout(),sep="|", row.names=TRUE, quote=FALSE, col.names=FALSE);' >  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R;
+	Rscript  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '>> ${sampleMarkdown}
+	rm -v  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R
 else
 	echo  >>  ${sampleMarkdown}
 	echo "Duplication removal metrics" >>  ${sampleMarkdown}
@@ -320,9 +323,10 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 
 	echo 'tablepe=read.table("'${collectMultipleMetricsPrefix}.insert_size_metrics.tmp'", header=TRUE, sep="\t", fill=NA); 
  write.table(subset(tablepe,select=c("MEDIAN_INSERT_SIZE","MEDIAN_ABSOLUTE_DEVIATION","MEAN_INSERT_SIZE","PAIR_ORIENTATION"))
- ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);'> pemetrics.R;
+ ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);'> ${sampleMarkdownDir}/${sampleName}_pemetrics.R;
 	
-	Rscript pemetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '>> ${sampleMarkdown}
+	Rscript ${sampleMarkdownDir}/${sampleName}_pemetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '>> ${sampleMarkdown}
+	rm -v ${sampleMarkdownDir}/${sampleName}_pemetrics.R
 else
 	echo "Paired end metrics" >>  ${sampleMarkdown}
 	echo "==================" >> ${sampleMarkdown}
@@ -375,12 +379,15 @@ htmlTemplate='<!DOCTYPE html>
 htmlTemplateFile=$(mktemp)
 echo $htmlTemplate > $htmlTemplateFile
 
-echo  'markdown::markdownToHTML(file="'${sampleMarkdown}'", template="'$htmlTemplateFile'", output="'${sampleMarkdown}.html'")' > markdownToHtml.R
+echo  'markdown::markdownToHTML(file="'${sampleMarkdown}'", template="'$htmlTemplateFile'", output="'${sampleMarkdown}.html'")' > ${sampleMarkdownDir}/${sampleName}_markdownToHtml.R
 
-Rscript markdownToHtml.R
+Rscript ${sampleMarkdownDir}/${sampleName}_markdownToHtml.R
+
+rm -v ${sampleMarkdownDir}/${sampleName}_markdownToHtml.R
 
 rm $htmlTemplateFile
 
 putFile  ${sampleMarkdown}
+putFile  ${sampleMarkdown}.html
 
 echo "## "$(date)" ##  $0 Done "

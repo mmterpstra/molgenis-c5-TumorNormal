@@ -2,6 +2,7 @@
 
 set -e
 set -u
+set -x
 
 echo "use: samplesheet projectname targetsList"
 
@@ -66,6 +67,8 @@ cp $workflowdir/parameters.tmp.csv $runDir/parameters.csv
 
 backend="slurm"
 molgenisBase=/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/templates/compute/v15.04.1/$backend/
+
+EBROOTMOLGENISMINCOMPUTE=/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/unstable/molgenis-compute-v15.12.4/
 
 echo "Generate scripts"
 #module load molgenis_compute/v5_20140522

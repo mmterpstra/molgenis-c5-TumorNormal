@@ -13,16 +13,16 @@
 #string custAnnotVcf
 #string custAnnotVcfIdx
 #string variantFiltDir
-#string snvRawVcf
-#string snvRawVcfIdx
-#string snvVcf
-#string snvVcfIdx
+#string indelMnpRawVcf
+#string indelMnpRawVcfIdx
+#string indelMnpWithPolymorficVcf
+#string indelMnpWithPolymorficVcfIdx
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
-"${snvVcf}" \
-"${snvVcfIdx}" 
+"${indelMnpWithPolymorficVcf}" \
+"${indelMnpWithPolymorficVcfIdx}"
 
 for file in "${onekgGenomeFasta}" "${custAnnotVcf}" "${custAnnotVcfIdx}"; do
 	echo "getFile file='$file'"
@@ -43,34 +43,31 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  -T SelectVariants \
  -R ${onekgGenomeFasta} \
  --variant:vcf ${custAnnotVcf} \
- -o ${snvRawVcf} \
+ -o ${indelMnpRawVcf} \
  -L:VCF ${custAnnotVcf} \
- -selectType SNP
+ -selectType INDEL \
+ -selectType MNP \
 
 java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantFiltration \
  -R ${onekgGenomeFasta} \
- --variant:VCF ${snvRawVcf} \
- -o ${snvVcf} \
- --filterExpression "QUAL < 30" --filterName "LowQual" \
- --filterExpression "MQ < 40.0" --filterName "MQlt40" \
- --filterExpression "vc.hasAttribute('MQRankSum') && MQRankSum < -12.5" --filterName "MQRankSumlt-12_5" \
- --filterExpression "vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0" --filterName "ReadPosRankSumlt-20" \
- --filterExpression "FS > 60.0" --filterName "FSgt60" \
- --filterExpression "vc.hasAttribute('RPA') &&(vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8)" --filterName "RPAgt8" \
- --filterExpression "vc.hasAttribute('TeMeermanAlleleBias') && TeMeermanAlleleBias > 5.0" --filterName "TeMeermanAlleleBiasgt5"\
- --filterExpression "!( vc.hasAttribute('IsChangeInTumor'))" --filterName "NotPolymorfic" \
+ --variant:VCF ${indelMnpRawVcf} \
+ -o ${indelMnpWithPolymorficVcf} \
+ --filterExpression "QUAL < 30"  --filterName "LowQual" \
+ --filterExpression "vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0"  --filterName "ReadPosRankSumlt-20" \
+ --filterExpression "FS > 200.0"  --filterName "FSgt200" \
+ --filterExpression "vc.hasAttribute('RPA') &&(vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8)"  --filterName "RPAgt8" \
+ --filterExpression "vc.hasAttribute('TeMeermanAlleleBias') && TeMeermanAlleleBias > 5.0"  --filterName "TeMeermanAlleleBiasgt5" \
  --filterExpression "!((vc.hasAttribute('SNPEFF_IMPACT') && vc.getAttribute('SNPEFF_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" \
  --filterName "NotPutatativeHarmfulVariant" \
- --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" \
- --filterExpression "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" \
+ --filterExpression "(vc.hasAttribute('1000gPhase1Indels.AF') && (vc.getAttribute('1000gPhase1Indels.AF') > 0.02&&vc.getAttribute('1000gPhase1Indels.AF') < 0.98))" --filterName "1000gMAFgt0.02" \
+ --filterExpression "(vc.hasAttribute('1000gPhase1Indels.EUR_AF') && (vc.getAttribute('1000gPhase1Indels.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Indels.EUR_AF') < 0.98))" --filterName "1000gPhase1Indels.EUR_AF0.02" \
  --filterExpression "QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8"
 
-putFile ${snvVcf}
-putFile ${snvVcfIdx}
+putFile ${indelMnpWithPolymorficVcf}
+putFile ${indelMnpWithPolymorficVcfIdx}
 
-rm ${snvRawVcf} ${snvRawVcfIdx}
-
+rm ${indelMnpRawVcf} ${indelMnpRawVcfIdx}
 
 echo "## "$(date)" ##  $0 Done "

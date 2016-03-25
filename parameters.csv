@@ -33,9 +33,9 @@ samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
 vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util
 tableToXlsxMod,TableToXlsx
-digiRgMod,DigitalBarcodeReadgroups/0.1.0-goolf-1.7.20-Perl-5.20.2-bare
+digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
-
+bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
 
 ################################################################################
 ##Reference Data
@@ -88,7 +88,7 @@ regulation_HMECBin,${data}/snpEff/GRCh37.75/regulation_HMEC.bin
 regulation_HSMMBin,${data}/snpEff/GRCh37.75/regulation_HSMM.bin
 regulation_HUVECBin,${data}/snpEff/GRCh37.75/regulation_HUVEC.bin
 regulation_IMR90Bin,${data}/snpEff/GRCh37.75/regulation_IMR90.bin
-regulation_K562bBin,${data}/snpEff/GRCh37.75/regulation_K562b.bin
+#regulation_K562bBin,${data}/snpEff/GRCh37.75/regulation_K562b.bin
 regulation_K562Bin,${data}/snpEff/GRCh37.75/regulation_K562.bin
 regulation_NHABin,${data}/snpEff/GRCh37.75/regulation_NH-A.bin
 regulation_NHEKBin,${data}/snpEff/GRCh37.75/regulation_NHEK.bin
@@ -105,7 +105,7 @@ cosmicDir,${data}/sftp-cancer.sanger.ac.uk/files/grch37/cosmic/
 
 cosmicVersion,v72
 cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts.bundle_2.8_b37.vcf.gz
-cosmicVcfIdx,${cosmicVcf}.idx
+cosmicVcfIdx,${cosmicVcf}.tbi
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
@@ -150,6 +150,12 @@ nugeneReads1FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_1.fq.gz
 nugeneReads2FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_2.fq.gz
 
 probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
+probeBed,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.bed
+################################################################################
+##Nugene random fastq integration/bbduk trimming
+nugeneProbeMetricsDir,${projectDir}/nugeneProbeMetrics/
+nugeneProbeMetricsLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.tsv
+
 
 ##################################
 ##remappable name for sample md generation
@@ -161,8 +167,8 @@ fastqcCleanDir,${nugeneFastqDir}
 nTreads,8
 bwaAlignmentDir,${projectDir}/bwa/
 bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
-reads1FqGzBwa,${reads1FqGz}
-reads2FqGzBwa,${reads2FqGz}
+reads1FqGzOriginal,${reads1FqGz}
+reads2FqGzOriginal,${reads2FqGz}
 
 ################################################################################
 ##AddOrReplaceGroups
@@ -351,7 +357,6 @@ gannotVcfIdx,${gannotVcf}.idx
 
 ################################################################################
 #varscan files
-
 varscanDir,${projectDir}/varscan.${controlSampleName}/
 varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
 varscanCopynumber,${varscanCopynumberPrefix}.copynumber
@@ -400,5 +405,10 @@ projectMarkdown,${projectDir}/${project}.summary.Rmd
 #test,sampleSE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,
 #
 ################################################################################
+#Misc
+snvWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.snv.vcf
+snvWithPolymorficVcfIdx,${snvWithPolymorficVcf}.idx
 
+indelMnpWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.indelmnp.vcf
+indelMnpWithPolymorficVcfIdx,${indelMnpWithPolymorficVcf}.idx
 

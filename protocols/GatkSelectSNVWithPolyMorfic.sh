@@ -17,12 +17,14 @@
 #string snvRawVcfIdx
 #string snvVcf
 #string snvVcfIdx
+#string snvWithPolymorficVcf
+#string snvWithPolymorficVcfIdx
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
-"${snvVcf}" \
-"${snvVcfIdx}" 
+"${snvWithPolymorficVcf}" \
+"${snvWithPolymorficVcfIdx}"
 
 for file in "${onekgGenomeFasta}" "${custAnnotVcf}" "${custAnnotVcfIdx}"; do
 	echo "getFile file='$file'"
@@ -52,7 +54,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  -T VariantFiltration \
  -R ${onekgGenomeFasta} \
  --variant:VCF ${snvRawVcf} \
- -o ${snvVcf} \
+ -o ${snvWithPolymorficVcf} \
  --filterExpression "QUAL < 30" --filterName "LowQual" \
  --filterExpression "MQ < 40.0" --filterName "MQlt40" \
  --filterExpression "vc.hasAttribute('MQRankSum') && MQRankSum < -12.5" --filterName "MQRankSumlt-12_5" \
@@ -60,17 +62,15 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --filterExpression "FS > 60.0" --filterName "FSgt60" \
  --filterExpression "vc.hasAttribute('RPA') &&(vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8)" --filterName "RPAgt8" \
  --filterExpression "vc.hasAttribute('TeMeermanAlleleBias') && TeMeermanAlleleBias > 5.0" --filterName "TeMeermanAlleleBiasgt5"\
- --filterExpression "!( vc.hasAttribute('IsChangeInTumor'))" --filterName "NotPolymorfic" \
  --filterExpression "!((vc.hasAttribute('SNPEFF_IMPACT') && vc.getAttribute('SNPEFF_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" \
  --filterName "NotPutatativeHarmfulVariant" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" \
  --filterExpression "QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8"
 
-putFile ${snvVcf}
-putFile ${snvVcfIdx}
+putFile ${snvWithPolymorficVcf}
+putFile ${snvWithPolymorficVcfIdx}
 
 rm ${snvRawVcf} ${snvRawVcfIdx}
-
 
 echo "## "$(date)" ##  $0 Done "
