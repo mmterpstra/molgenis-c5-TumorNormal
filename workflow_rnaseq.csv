@@ -4,7 +4,9 @@ Fastqc,protocols/Fastqc.sh,
 Hisat2Alignment,protocols/Hisat2.sh,onekgGenomeFastaIdxBase=hisat2IdxBase
 AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,Hisat2Alignment;bwaSam=hisat2Sam
 MergeBamFiles,protocols/MergeBamFiles.sh,AddOrReplaceReadGroups
+HtseqCount,protocols/HtseqCount.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam;markDuplicatesBai=mergeBamFilesBai;htseqDir=htseqDupsDir;htseqTsv=htseqDupsTsv
 MarkDuplicates,protocols/MarkDuplicates.sh,MergeBamFiles
+HtseqCount,protocols/HtseqCount.sh,MarkDuplicates
 CollectMultipleMetrics,protocols/CollectMultipleMetrics.sh,MarkDuplicates
 CalculateHsMetrics,protocols/CalculateHsMetrics.sh,MarkDuplicates
 SampleMarkdown,protocols/SampleMarkdown.sh,CalculateHsMetrics;CollectMultipleMetrics;Fastqc;MarkDuplicates;fastqcCleanDir=fastqcDir;reads1FqGzClean=reads1FqGz;reads2FqGzClean=reads2FqGz

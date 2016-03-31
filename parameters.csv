@@ -37,6 +37,7 @@ digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
 hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
+htseqMod,HTSeq/0.6.1p1
 ################################################################################
 ##Reference Data
 #
@@ -133,7 +134,7 @@ scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.intervals
 #rna
 genesRefFlat,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
 rRnaIntervalList,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
-
+ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.gtf
 ################################################################################
 ##Fastqc
 #
@@ -207,6 +208,15 @@ markDuplicatesBam,${markDuplicatesDir}${sampleName}.bam
 markDuplicatesBai,${markDuplicatesDir}${sampleName}.bai
 markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
 #
+################################################################################
+##Htseq-count before and after markduplicates
+#
+htseqDir,${projectDir}/htseq/
+htseqTsv,${htseqDir}${sampleName}.tsv
+
+htseqDupsDir,${projectDir}/htseqdups/
+htseqDupsTsv,${htseqDupsDir}${sampleName}.tsv
+
 ################################################################################
 ##CollectRnaSeqMetrics
 #
