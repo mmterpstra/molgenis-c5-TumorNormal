@@ -8,6 +8,7 @@
 #string checkStage
 #string RMod
 #string gatkMod
+#string gatkOpt
 #string onekgGenomeFasta
 
 #string goldStandardVcf
@@ -72,6 +73,7 @@ java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGC
  -before ${bqsrBeforeGrp} \
  -after ${bqsrAfterGrp} \
  -plots ${analyseCovariatesPdf} \
+ ${gatkOpt}
 
 putFile ${bqsrAfterGrp}
 putFile ${analyseCovariatesPdf}

@@ -9,6 +9,7 @@
 #string projectDir
 
 #string gatkMod
+#string gatkOpt
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
@@ -75,7 +76,8 @@ java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:Para
  -stand_call_conf 20.0 \
  -stand_emit_conf 10.0 \
  -o ${haplotyperScatVcf} \
- $InterValOperand
+ $InterValOperand \
+ ${gatkOpt}
 
 # -dontUseSoftClippedBases \
 

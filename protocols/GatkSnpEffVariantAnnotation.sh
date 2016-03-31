@@ -9,6 +9,7 @@
 #string projectDir
 
 #string gatkMod
+#string gatkOpt
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
@@ -208,6 +209,7 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  -V:input,VCF ${haplotyperVcf} \
  --out ${gatkAnnotVcf} \
  -L ${haplotyperVcf} \
+ ${gatkOpt}
  
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \

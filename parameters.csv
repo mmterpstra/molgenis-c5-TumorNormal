@@ -36,7 +36,7 @@ tableToXlsxMod,TableToXlsx
 digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
-
+hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
 ################################################################################
 ##Reference Data
 #
@@ -171,6 +171,14 @@ reads1FqGzOriginal,${reads1FqGz}
 reads2FqGzOriginal,${reads2FqGz}
 
 ################################################################################
+##hisat2
+#
+hisat2AlignmentDir,${projectDir}/hisat2/
+hisat2Sam,${hisat2AlignmentDir}${internalId}_${sampleName}.sam
+hisat2IdxBase,${bundle}/hisat2/2.0.3-beta-goolf-1.7.20/human_g1k_v37_decoy
+gatkOpt,
+
+################################################################################
 ##AddOrReplaceGroups
 #
 addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
@@ -218,12 +226,22 @@ calculateHsMetricsDir,${projectDir}/HsMetrics/
 calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
 calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
 ################################################################################
+#GatkSplitAndTrim
+
+splitAndTrimDir,${projectDir}/splitAndTrim/
+splitAndTrimBam,${splitAndTrimDir}${sampleName}.bam
+splitAndTrimBai,${splitAndTrimDir}${sampleName}.bai
+#gatkOpt=allowNCigarReads;
+allowNCigarReads," -U ALLOW_N_CIGAR_READS "
+
+################################################################################
 #GatkRealignerTargetCreator
 
 #because want to use alternative not local assembling callers on the same data like mutect/varscan etc
 
 indelRealignmentDir,${projectDir}/indelRealignment/
 realignmentIntervals,${indelRealignmentDir}/realignmentIntervals.list
+
 
 ################################################################################
 #IndelRealigner

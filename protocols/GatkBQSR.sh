@@ -7,6 +7,7 @@
 #string stage
 #string checkStage
 #string gatkMod
+#string gatkOpt
 #string onekgGenomeFasta
 #string goldStandardVcf
 #string goldStandardVcfIdx
@@ -70,7 +71,8 @@ java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGC
  -I ${indelRealignmentBam} \
  -o ${bqsrBam} \
  -BQSR ${bqsrBeforeGrp} \
- -nct 8 
+ -nct 8 \
+ ${gatkOpt}
 
 putFile ${bqsrBam}
 putFile ${bqsrBai}

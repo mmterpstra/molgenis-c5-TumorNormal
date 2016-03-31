@@ -9,28 +9,21 @@
 #string gatkMod
 #string samtoolsMod
 #string onekgGenomeFasta
-#string indelRealignmentTargets
-#string goldStandardVcf
-#string goldStandardVcfIdx
-#string oneKgPhase1IndelsVcf
-#string oneKgPhase1IndelsVcfIdx
 #string gatkOpt
 
 #string markDuplicatesBam
 #string markDuplicatesBai
 
-#string indelRealignmentDir
-#string indelRealignmentBam
-#string indelRealignmentBai
+#string splitAndTrimDir
+#string splitAndTrimBam
+#string splitAndTrimBai
 
-#pseudo from gatk forum (link: http://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_sting_gatk_walkers_indels_IndelRealigner):
-#java -Xmx4g -jar GenomeAnalysisTK.jar -T IndelRealigner -R ref.fa -I input.bam -targetIntervals intervalListFromRTC.intervals -o realignedBam.bam [-known /path/to/indels.vcf] -U ALLOW_N_CIGAR_READS --allow_potentially_misencoded_quality_scores
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
- ${indelRealignmentBam} \
- ${indelRealignmentBai}
+ ${splitAndTrimBam} \
+ ${splitAndTrimBai}
 
 ${stage} ${samtoolsMod}
 ${stage} ${gatkMod}
@@ -39,17 +32,12 @@ ${checkStage}
 getFile ${onekgGenomeFasta}
 getFile ${markDuplicatesBam}
 getFile ${markDuplicatesBai}
-getFile ${indelRealignmentTargets}
-getFile ${oneKgPhase1IndelsVcf}
-getFile ${goldStandardVcf}
-getFile ${oneKgPhase1IndelsVcfIdx}
-getFile ${goldStandardVcfIdx}
 
 set -x
 set -e
 
-if [ ! -e ${indelRealignmentDir} ]; then
-	mkdir -p ${indelRealignmentDir}
+if [ ! -e ${splitAndTrimDir} ]; then
+	mkdir -p ${splitAndTrimDir}
 fi
 
 #it botches on base quality scores use --allow_potentially_misencoded_quality_scores / the tool is not paralel with nt/nct
@@ -80,24 +68,25 @@ qualAction=$(samtools view ${markDuplicatesBam} | \
 ')
 
 
-java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T IndelRealigner \
+
+
+
+java -Xmx8g -Djava.io.tmpdir=${splitAndTrimDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+ -T SplitNCigarReads \
  -R ${onekgGenomeFasta} \
  -I ${markDuplicatesBam} \
- -o ${indelRealignmentBam} \
- -targetIntervals ${indelRealignmentTargets} \
- -known ${oneKgPhase1IndelsVcf} \
- -known ${goldStandardVcf} \
- --consensusDeterminationModel KNOWNS_ONLY \
- --LODThresholdForCleaning 0.4 \
+ -o ${splitAndTrimBam} \
+ -rf ReassignOneMappingQuality \
+ -RMQF 255 \
+ -RMQT 60 \
  $qualAction \
  ${gatkOpt}
 
-cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
+cp -v ${splitAndTrimBai} ${splitAndTrimBam}.bai
 
-putFile ${indelRealignmentBam}
-putFile ${indelRealignmentBai}
-putFile ${indelRealignmentBam}.bai
+putFile ${splitAndTrimBam}
+putFile ${splitAndTrimBai}
+putFile ${splitAndTrimBam}.bai
 
 
 echo "## "$(date)" ##  $0 Done "
