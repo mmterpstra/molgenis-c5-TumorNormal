@@ -53,8 +53,8 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  -R ${onekgGenomeFasta} \
  --variant:VCF ${snvRawVcf} \
  -o ${snvVcf} \
- --filterExpression "QUAL < 30" --filterName "LowQual" \
- --filterExpression "MQ < 40.0" --filterName "MQlt40" \
+ --filterExpression "QUAL < 20" --filterName "LowQual" \
+ --filterExpression "MQ < 20.0" --filterName "MQlt40" \
  --filterExpression "vc.hasAttribute('MQRankSum') && MQRankSum < -12.5" --filterName "MQRankSumlt-12_5" \
  --filterExpression "vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0" --filterName "ReadPosRankSumlt-20" \
  --filterExpression "FS > 60.0" --filterName "FSgt60" \

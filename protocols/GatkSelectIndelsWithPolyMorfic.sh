@@ -54,7 +54,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  -R ${onekgGenomeFasta} \
  --variant:VCF ${indelMnpRawVcf} \
  -o ${indelMnpWithPolymorficVcf} \
- --filterExpression "QUAL < 30"  --filterName "LowQual" \
+ --filterExpression "QUAL < 20"  --filterName "LowQual" \
  --filterExpression "vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0"  --filterName "ReadPosRankSumlt-20" \
  --filterExpression "FS > 200.0"  --filterName "FSgt200" \
  --filterExpression "vc.hasAttribute('RPA') &&(vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8)"  --filterName "RPAgt8" \
