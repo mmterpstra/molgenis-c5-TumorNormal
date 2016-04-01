@@ -1,9 +1,12 @@
 #MOLGENIS nodes=1 ppn=4 mem=8gb walltime=23:59:00
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #list splitAndTrimBam,splitAndTrimBai
 #string indelRealignmentDir
@@ -19,7 +22,7 @@ echo "## "$(date)" ##  $0 Started "
 alloutputsexist \
  ${realignmentIntervals}
 
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}
@@ -37,7 +40,7 @@ inputs=$(printf '-I %s ' $(printf '%s\n' ${bams[@]}))
 mkdir -p ${indelRealignmentDir}
 
 
-java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -nt 4 \
  -T RealignerTargetCreator \
  -R ${onekgGenomeFasta} \

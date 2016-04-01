@@ -1,12 +1,14 @@
 #MOLGENIS walltime=23:59:00 mem=4gb ppn=1
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaDict
 #string haplotyperDir
@@ -25,13 +27,15 @@ for file in "${haplotyperScatVcf[@]}" "${haplotyperScatVcfIdx[@]}" "${onekgGenom
 done
 
 #Load gatk module
-${stage} picard-tools/1.129
+${stage} ${picardMod}
 ${checkStage}
 
 set -x
 set -e
 
 vcfs=($(printf '%s\n' "${haplotyperScatVcf[@]}" | sort -u ))
+
+vcflist=
 
 for vcf in "${vcfs[@]}"; do
 	if [ -e $vcf ]; then
@@ -44,9 +48,9 @@ inputs=$(printf ' INPUT=%s ' $(printf '%s\n' ${vcflist[@]}))
 
 echo $inputs
 
-java -jar $PICARD_HOME/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
+java -jar $EBROOTPICARD/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
 
-java -jar $PICARD_HOME/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
+java -jar $EBROOTPICARD/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
 
 rm ${haplotyperVcf}.tmp.vcf
 rm ${haplotyperVcf}.tmp.vcf.idx

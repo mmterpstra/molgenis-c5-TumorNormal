@@ -1,16 +1,20 @@
 #MOLGENIS nodes=1 ppn=1 mem=8gb walltime=23:59:00
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string gatkVersion
-#string samtoolsVersion
+#string gatkMod
+#string samtoolsMod
 #string onekgGenomeFasta
 #string indelRealignmentTargets
 #string goldStandardVcf
 #string goldStandardVcfIdx
 #string oneKgPhase1IndelsVcf
 #string oneKgPhase1IndelsVcfIdx
+#string gatkOpt
 
 #string markDuplicatesBam
 #string markDuplicatesBai
@@ -28,8 +32,8 @@ alloutputsexist \
  ${indelRealignmentBam} \
  ${indelRealignmentBai}
 
-${stage} samtools/${samtoolsVersion}
-${stage} GATK/${gatkVersion}
+${stage} ${samtoolsMod}
+${stage} ${gatkMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}
@@ -76,7 +80,7 @@ qualAction=$(samtools view ${markDuplicatesBam} | \
 ')
 
 
-java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T IndelRealigner \
  -R ${onekgGenomeFasta} \
  -I ${markDuplicatesBam} \
@@ -86,9 +90,14 @@ java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir} -jar $GATK_HOME/GenomeAnalys
  -known ${goldStandardVcf} \
  --consensusDeterminationModel KNOWNS_ONLY \
  --LODThresholdForCleaning 0.4 \
- $qualAction
+ $qualAction \
+ ${gatkOpt}
+
+cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
 
 putFile ${indelRealignmentBam}
 putFile ${indelRealignmentBai}
+putFile ${indelRealignmentBam}.bai
+
 
 echo "## "$(date)" ##  $0 Done "

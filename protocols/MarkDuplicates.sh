@@ -1,15 +1,17 @@
-#MOLGENIS walltime=23:59:00 mem=6gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=7gb nodes=1 ppn=4
+
+#string project
+
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 
-#string MergeBamFilesBam
-#string MergeBamFilesBai
+#string mergeBamFilesBam
+#string mergeBamFilesBai
 
 #string markDuplicatesDir
 #string markDuplicatesBam
@@ -24,10 +26,10 @@ alloutputsexist \
  ${markDuplicatesBai} \
  ${markDuplicatesMetrics}
 
-getFile ${MergeBamFilesBam}
-getFile ${MergeBamFilesBai}
+getFile ${mergeBamFilesBam}
+getFile ${mergeBamFilesBai}
 
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x
@@ -35,8 +37,8 @@ set -e
 
 mkdir -p ${markDuplicatesDir}
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/MarkDuplicates.jar \
- INPUT=${MergeBamFilesBam} \
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
+ INPUT=${mergeBamFilesBam} \
  OUTPUT=${markDuplicatesBam} \
  CREATE_INDEX=true \
  MAX_RECORDS_IN_RAM=4000000 \
@@ -48,10 +50,5 @@ java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/MarkDuplicates.jar \
 putFile ${markDuplicatesBam}
 putFile ${markDuplicatesBai}
 putFile ${markDuplicatesMetrics}
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
-fi
 
 echo "## "$(date)" ##  $0 Done "

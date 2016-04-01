@@ -1,12 +1,14 @@
 #MOLGENIS nodes=1 ppn=1 mem=1gb walltime=10:00:00
 
+#string project
+
 #Parameter mapping
 #string stage
 #string checkStage
-#string vcfToolsVersion
+#string vcfToolsMod
+#string pipelineUtilMod
 
 #string annotatorDir
-#string project
 #string annotVcf
 #string controlSampleName
 #string custAnnotVcf
@@ -20,13 +22,14 @@ echo ${annotatorDir} ${project} ${annotVcf}
 
 getFile ${annotVcf}
 
-${stage} vcftools/${vcfToolsVersion}
+${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
 set -e
 
-perl ${normalAnnotPl} \
+perl $EBROOTPIPELINEMINUTIL/bin/${normalAnnotPl} \
  ${controlSampleName} \
  ${annotVcf} \
  >${custAnnotVcf}

@@ -1,12 +1,14 @@
 #MOLGENIS walltime=23:59:00 mem=4gb ppn=1
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #string haplotyperDir
 #list haplotyperScatVcf,haplotyperScatVcfIdx
@@ -25,7 +27,7 @@ for file in "${haplotyperScatVcf[@]}" "${haplotyperScatVcfIdx[@]}" "${onekgGenom
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
@@ -43,7 +45,7 @@ vcfs=($(printf '%s\n' "${haplotyperScatVcf[@]}" | sort -u ))
 inputs=$(printf ' -V %s ' $(printf '%s\n' ${vcfs[@]}))
 
 
-java -Xmx4g -Djava.io.tmpdir=${haplotyperDir} -cp $GATK_HOME/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \
+java -Xmx4g -Djava.io.tmpdir=${haplotyperDir} -cp $EBROOTGATK/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \
     -R ${onekgGenomeFasta} \
     $inputs \
     -out ${haplotyperVcf}

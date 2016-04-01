@@ -1,12 +1,14 @@
-#MOLGENIS walltime=23:59:00 mem=6gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=8gb nodes=1 ppn=4
+
+#string project
+
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 #string sampleName
 #string sequencer
 #string seqType
@@ -31,7 +33,7 @@ echo "## "$(date)" ##  $0 Started "
 
 getFile ${bwaSam}
 
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x
@@ -41,7 +43,7 @@ mkdir -p ${addOrReplaceGroupsDir}
 
 echo "## "$(date)" Start $0"
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/AddOrReplaceReadGroups.jar\
+java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
  INPUT=${bwaSam} \
  OUTPUT=${addOrReplaceGroupsBam} \
  SORT_ORDER=coordinate \
@@ -60,9 +62,5 @@ java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/AddOrReplaceReadGroups.jar
 putFile ${addOrReplaceGroupsBam}
 putFile ${addOrReplaceGroupsBai}
 
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
-fi
 
 echo "## "$(date)" ##  $0 Done "

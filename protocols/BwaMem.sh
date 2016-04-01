@@ -1,13 +1,13 @@
 #MOLGENIS nodes=1 ppn=8 mem=8gb walltime=10:00:00
 
+#string project
+
+
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string bwaVersion
-#string WORKDIR
-#string resDir
-#string toolDir
+#string bwaMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
 #string bwaAlignmentDir 
@@ -15,6 +15,9 @@
 #string nTreads
 #string reads1FqGz
 #string reads2FqGz
+#string reads1FqGzOriginal
+#string reads2FqGzOriginal
+
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -27,7 +30,7 @@ alloutputsexist \
 getFile ${onekgGenomeFasta}
 
 #Load modules
-${stage} bwa/${bwaVersion}
+${stage} ${bwaMod}
 
 #check modules
 ${checkStage}
@@ -39,7 +42,7 @@ set -e
 mkdir -p ${bwaAlignmentDir}
 
 
-if [ ${#reads2FqGz} -eq 0 ]; then
+if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	getFile ${reads1FqGz}
 	bwa mem \
 	 -M \

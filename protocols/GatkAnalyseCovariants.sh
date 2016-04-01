@@ -1,10 +1,14 @@
 #MOLGENIS nodes=1 ppn=8 mem=4gb walltime=23:59:00
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string RVersion
-#string gatkVersion
+#string RMod
+#string gatkMod
+#string gatkOpt
 #string onekgGenomeFasta
 
 #string goldStandardVcf
@@ -15,19 +19,19 @@
 #string dbsnpVcf
 #string dbsnpVcfIdx
 
-#string bsqrDir
-#string bsqrBam
-#string bsqrBai
+#string bqsrDir
+#string bqsrBam
+#string bqsrBai
 
 #string analyseCovarsDir
-#string bsqrBeforeGrp
-#string bsqrAfterGrp
+#string bqsrBeforeGrp
+#string bqsrAfterGrp
 #string analyseCovariatesPdf
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
- ${bsqrAfterGrp}
+ ${bqsrAfterGrp} \
  ${analyseCovariatesPdf} 
 
 getFile ${onekgGenomeFasta}
@@ -37,11 +41,11 @@ getFile ${dbsnpVcf}
 getFile ${dbsnpVcfIdx}
 getFile ${goldStandardVcf} 
 getFile ${goldStandardVcfIdx}
-getFile ${bsqrBam}
-getFile ${bsqrBai}
+getFile ${bqsrBam}
+getFile ${bqsrBai}
 
-${stage} R/${RVersion}
-${stage} GATK/${gatkVersion}
+${stage} ${RMod}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
@@ -49,28 +53,29 @@ set -e
 
 mkdir -p ${analyseCovarsDir}
 
-#do bsqr for covariable determination then do print reads for valid bsqrbams
-#check the bsqr part and add known variants
+#do bqsr for covariable determination then do print reads for valid bsqrbams
+#check the bqsr part and add known variants
 
-java -Xmx4g -Djava.io.tmpdir=${bsqrDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T BaseRecalibrator\
  -R ${onekgGenomeFasta} \
- -I ${bsqrBam} \
- -o ${bsqrAfterGrp} \
+ -I ${bqsrBam} \
+ -o ${bqsrAfterGrp} \
  -knownSites ${dbsnpVcf} \
  -knownSites ${goldStandardVcf}\
  -knownSites ${oneKgPhase1IndelsVcf}\
  -nct 8
 
-java -Xmx4g -Djava.io.tmpdir=${bsqrDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T AnalyzeCovariates \
  -R ${onekgGenomeFasta} \
  -ignoreLMT \
- -before ${bsqrBeforeGrp} \
- -after ${bsqrAfterGrp} \
+ -before ${bqsrBeforeGrp} \
+ -after ${bqsrAfterGrp} \
  -plots ${analyseCovariatesPdf} \
+ ${gatkOpt}
 
-putFile ${bsqrAfterGrp}
+putFile ${bqsrAfterGrp}
 putFile ${analyseCovariatesPdf}
 
 echo "## "$(date)" ##  $0 Done "

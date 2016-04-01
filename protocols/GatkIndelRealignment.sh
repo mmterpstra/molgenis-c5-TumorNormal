@@ -1,9 +1,12 @@
 #MOLGENIS nodes=1 ppn=1 mem=8gb walltime=23:59:00
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string gatkVersion
+#string gatkMod
 #string onekgGenomeFasta
 #string splitAndTrimBam
 #string splitAndTrimBai
@@ -27,7 +30,7 @@ getFile ${onekgGenomeFasta}
 getFile ${splitAndTrimBam}
 getFile ${splitAndTrimBai}
 
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
@@ -39,7 +42,7 @@ fi
 
 
 
-java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T IndelRealigner \
  -R ${onekgGenomeFasta} \
  -I ${splitAndTrimBam} \

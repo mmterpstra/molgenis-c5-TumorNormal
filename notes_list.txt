@@ -1,0 +1,350 @@
+This is a demo of the list bug.
+
+The parameters addOrReplaceReadgroupsBa[mi] misses in the most recent deployment on the calculon cluster (umcg-username@calculon.gcc.rug.nl).
+
+#this is a example for 2 versions of molgenis using 15.04.1 which is used for production and an old version 20140402.104325-2. Both have a alternate implementatation of #list #list the new one does not weave / declare parameters and the old one that does weaving and parameteric expansion (~= folding) on scatIds.csv and both of the list declarations.
+```
+$ #i suppose you can set your own test site with molgenis-compute. This is what i used:
+$ cd /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal
+$ bash GenerateScripts_list_demo_test.sh
+use: samplesheet projectname targetsList
+No intervallist
+#progname=GenerateScripts_list_demo_test.sh
+#workflowdir=/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal
+#samplesheet=/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/samplesheet.csv
+#group=umcg-oncogenetics
+#tmp=tmp04
+#scriptHome=/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/
+#targetsList=
+append targetsList parameter ''
+Convert parametersheet
+## Wed Jul 15 11:45:14 2015 ## INFO ## Used 203 lines of 407 
+Use of uninitialized value $val[38] in join or string at /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal//convertParametersGitToMolgenis.pl line 36, <> line 407.
+Convert samplesheet
+Generate scriptsfor current molgenis deployed on cluster
+0 [main] INFO org.molgenis.compute5.ComputeCommandLine  - ### MOLGENIS COMPUTE ###
+2 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Version: 1.0.0-SNAPSHOT
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using workflow:         /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/workflow_test.csv
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using parameters:       /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using parameters:       /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/samplesheet.csv.tmp.csv
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using parameters:       /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/scatter_id.csv
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using run (output) dir: /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using backend:          pbs
+28 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Using runID:            5NYy
+
+
+>> Start of parseParamFiles [/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/samplesheet.csv.tmp.csv, /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/scatter_id.csv, /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv]
+>> Start of parseParamFiles [/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/scatter_id.csv, /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv]
+>> Start of parseParamFiles [/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv]
+>> Start of parseParamFiles []
+4023 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Starting script generation...
+4084 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [scatIds] in Protocol [protocols/CreatePaddedTargets.sh] can be unmapped
+4084 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [scatList] in Protocol [protocols/CreatePaddedTargets.sh] can be unmapped
+4084 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#targetsList] in Protocol [protocols/CreatePaddedTargets.sh] can be unmapped
+4084 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#scatterIDs] in Protocol [protocols/CreatePaddedTargets.sh] can be unmapped
+4084 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [scatList] in Protocol [protocols/CreatePaddedTargets.sh] can be unmapped
+4093 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#reads2FqGz] in Protocol [protocols/Fastqc.sh] can be unmapped
+4127 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#reads2FqGz] in Protocol [protocols/BwaMem.sh] can be unmapped
+4205 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [bams] in Protocol [protocols/MergeBamFiles.sh] can be unmapped
+>> Custom header: /apps/software/Molgenis-Compute/v15.04.1-Java-1.7.0_80/templates/localhost/header.ftl
+>> Custom footer: /apps/software/Molgenis-Compute/v15.04.1-Java-1.7.0_80/templates/localhost/footer.ftl
+>> Custom submit script: /apps/software/Molgenis-Compute/v15.04.1-Java-1.7.0_80/templates/localhost/submit.ftl
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/submit.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/CreatePaddedTargets_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/Fastqc_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/Fastqc_1.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/BwaMemAlignment_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/BwaMemAlignment_1.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/AddOrReplaceReadGroups_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/AddOrReplaceReadGroups_1.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/MergeBamFiles_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/MergeBamFiles_1.sh
+6173 [main] INFO org.molgenis.compute5.ComputeCommandLine  - Generation complete.
+### MOLGENIS COMPUTE ###
+Version: 1.0.0-SNAPSHOT
+Using workflow:         /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/workflow_test.csv
+Using parameters:       /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv,/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/samplesheet.csv.tmp.csv,/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/scatter_id.csv
+Using run (output) dir: /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs
+Using backend:          pbs
+Using runID:            zBpX
+
+
+>> Start of parseParamFiles [/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/samplesheet.csv.tmp.csv, /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/scatter_id.csv, /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv]
+>> Start of parseParamFiles [/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/scatter_id.csv, /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv]
+>> Start of parseParamFiles [/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/parameters.molgenis.csv]
+>> Start of parseParamFiles []
+Starting script generation...
+0 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [scatIds] in Protocol [protocols/CreatePaddedTargets.sh] can be not mapped
+1 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [scatList] in Protocol [protocols/CreatePaddedTargets.sh] can be not mapped
+1 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#targetsList] in Protocol [protocols/CreatePaddedTargets.sh] can be not mapped
+1 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#scatterIDs] in Protocol [protocols/CreatePaddedTargets.sh] can be not mapped
+1 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [scatList] in Protocol [protocols/CreatePaddedTargets.sh] can be not mapped
+7 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#reads2FqGz] in Protocol [protocols/Fastqc.sh] can be not mapped
+13 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [#reads2FqGz] in Protocol [protocols/BwaMem.sh] can be not mapped
+25 [main] WARN org.molgenis.compute5.parsers.ProtocolAnalyser  - Variable [bams] in Protocol [protocols/MergeBamFiles.sh] can be not mapped
+>> Custom header: /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/test/molgenis-compute-core-1.0.0-SNAPSHOT/templates/localhost/header.ftl
+>> Custom footer: /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/test/molgenis-compute-core-1.0.0-SNAPSHOT/templates/localhost/footer.ftl
+>> Custom submit script: /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/test/molgenis-compute-core-1.0.0-SNAPSHOT/templates/localhost/submit.ftl
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/submit.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/CreatePaddedTargets_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/Fastqc_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/Fastqc_1.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/BwaMemAlignment_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/BwaMemAlignment_1.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/AddOrReplaceReadGroups_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/AddOrReplaceReadGroups_1.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/MergeBamFiles_0.sh
+Generated /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/MergeBamFiles_1.sh
+Generation complete.
+```
+
+subset of diff with relevant piece of code:
+
+```
+328c181
+< for file in   ; do
+---
+> for file in "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" ; do
+343c196
+< bams=($(printf '%s\n'  | sort -u ))
+---
+> bams=($(printf '%s\n' "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" | sort -u ))
+```
+
+Actual diff command/results:
+
+```
+$ diff /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs/MergeBamFiles_0.sh /groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs/MergeBamFiles_0.sh 
+
+1,151d0
+< #PBS -N MergeBamFiles_0
+< #PBS -q gcc
+< #PBS -l nodes=1:ppn=4
+< #PBS -l walltime=23:59:00
+< #PBS -l mem=6gb
+< #PBS -e MergeBamFiles_0.err
+< #PBS -o MergeBamFiles_0.out
+< #PBS -W umask=0007
+< 
+< # For bookkeeping how long your task takes
+< MOLGENIS_START=$(date +%s)
+< 
+< #
+< ## Header for PBS backend
+< #
+< 
+< declare MC_tmpFolder="tmpFolder"
+< declare MC_tmpFile="tmpFile"
+< 
+< function makeTmpDir {
+<  	base=$(basename $1)
+<         dir=$(dirname $1)
+<         echo "dir $dir"
+<         echo "base $base"
+<         if [[ -d $1 ]]
+<         then
+<                 dir=$dir/$base
+<         fi
+<         myMD5=$(md5sum $0)
+<         IFS=' ' read -a myMD5array <<< "$myMD5"
+<         MC_tmpFolder=$dir/tmp_MergeBamFiles_0_$myMD5array/
+<         mkdir -p $MC_tmpFolder
+<         if [[ -d $1 ]]
+<         then
+<                 MC_tmpFile="$MC_tmpFolder"
+<         else
+<                 MC_tmpFile="$MC_tmpFolder/$base"
+<         fi
+< }
+< echo Running on node: `hostname`
+< 
+< #highly recommended to use
+< set -e # exit if any subcommand or pipeline returns a non-zero status
+< set -u # exit if any uninitialised variable is used
+< 
+< # Set location of *.env files
+< ENVIRONMENT_DIR="$PBS_O_WORKDIR"
+< 
+< # If you detect an error, then exit your script by calling this function
+< exitWithError(){
+< 	errorCode=$1
+< 	errorMessage=$2
+< 	echo "$errorCode: $errorMessage --- TASK 'MergeBamFiles_0.sh' --- ON $(date +"%Y-%m-%d %T"), AFTER $(( ($(date +%s) - $MOLGENIS_START) / 60 )) MINUTES" >> $ENVIRONMENT_DIR/molgenis.error.log
+< 	exit $errorCode
+< }
+< 
+< # For bookkeeping how long your task takes
+< MOLGENIS_START=$(date +%s)
+< 
+< # Show that the task has started
+< touch $ENVIRONMENT_DIR/MergeBamFiles_0.sh.started
+< 
+< 
+< # Define the root to all your tools and data
+< WORKDIR=${WORKDIR}
+< 
+< # Source getFile, putFile, inputs, alloutputsexist
+< include () {
+< 	if [[ -f "$1" ]]; then
+< 		source "$1"
+< 		echo "sourced $1"
+< 	else
+< 		echo "File not found: $1"
+< 	fi		
+< }
+< include $GCC_HOME/gcc.bashrc
+< getFile()
+< {
+<         ARGS=($@)
+<         NUMBER="${#ARGS[@]}";
+<         if [ "$NUMBER" -eq "1" ]
+<         then
+<                 myFile=${ARGS[0]}
+< 
+<                 if test ! -e $myFile;
+<                 then
+<                                 echo "WARNING in getFile/putFile: $myFile is missing" 1>&2
+<                 fi
+< 
+<         else
+<                 echo "Example usage: getData \"\$TMPDIR/datadir/myfile.txt\""
+<         fi
+< }
+< 
+< putFile()
+< {
+<         `getFile $@`
+< }
+< 
+< inputs()
+< {
+<   for name in $@
+<   do
+<     if test ! -e $name;
+<     then
+<       echo "$name is missing" 1>&2
+<       exit 1;
+<     fi
+<   done
+< }
+< 
+< outputs()
+< {
+<   for name in $@
+<   do
+<     if test -e $name;
+<     then
+<       echo "skipped"
+<       echo "skipped" 1>&2
+<       exit 0;
+<     else
+<       return 0;
+<     fi
+<   done
+< }
+< 
+< alloutputsexist()
+< {
+<   all_exist=true
+<   for name in $@
+<   do
+<     if test ! -e $name;
+<     then
+<         all_exist=false
+<     fi
+<   done
+<   if $all_exist;
+<   then
+<       echo "skipped"
+<       echo "skipped" 1>&2
+<       sleep 30
+<       exit 0;
+<   else
+<       return 0;
+<   fi
+< }
+< 
+< #
+< ## End of header for PBS backend
+< #
+< 
+263,264c112,113
+< rundir="/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.15.04.1/jobs"
+< runid="dycO"
+---
+> rundir="/groups/umcg-oncogenetics/tmp04/git/molgenis-c5-TumorNormal/groups/umcg-oncogenetics/tmp04/projects/test.20140402.104325-2/jobs"
+> runid="iOeT"
+270c119
+< port="80"
+---
+> port="8080"
+272c121,125
+< path="."source $ENVIRONMENT_DIR/AddOrReplaceReadGroups_0.env
+---
+> path="./"
+> # Load parameters from previous steps
+> source $ENVIRONMENT_DIR/user.env
+> 
+> source $ENVIRONMENT_DIR/AddOrReplaceReadGroups_0.env
+276,277c129,131
+< stage="module load"
+< MergeBamFilesDir="/gcc/groups/umcg-oncogenetics/tmp01/projects/test//MergeBams/"
+---
+> MergeBamFilesBai="/gcc/groups/umcg-oncogenetics/tmp01/projects/test//MergeBams/samplePE.bai"
+> WORKDIR="/gcc/"
+> projectDir="/gcc/groups/umcg-oncogenetics/tmp01/projects/test/"
+278a133
+> MergeBamFilesDir="/gcc/groups/umcg-oncogenetics/tmp01/projects/test//MergeBams/"
+281,282c136
+< MergeBamFilesBai="/gcc/groups/umcg-oncogenetics/tmp01/projects/test//MergeBams/samplePE.bai"
+< projectDir="/gcc/groups/umcg-oncogenetics/tmp01/projects/test/"
+---
+> stage="module load"
+284d137
+< WORKDIR="/gcc/"
+288,289c141,143
+< if [[ ! $(IFS=$'\n' sort -u <<< "${stage[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'stage' is an array with different values. Maybe 'stage' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+< if [[ ! $(IFS=$'\n' sort -u <<< "${MergeBamFilesDir[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'MergeBamFilesDir' is an array with different values. Maybe 'MergeBamFilesDir' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+---
+> if [[ ! $(IFS=$'\n' sort -u <<< "${MergeBamFilesBai[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'MergeBamFilesBai' is an array with different values. Maybe 'MergeBamFilesBai' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+> if [[ ! $(IFS=$'\n' sort -u <<< "${WORKDIR[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'WORKDIR' is an array with different values. Maybe 'WORKDIR' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+> if [[ ! $(IFS=$'\n' sort -u <<< "${projectDir[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'projectDir' is an array with different values. Maybe 'projectDir' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+290a145
+> if [[ ! $(IFS=$'\n' sort -u <<< "${MergeBamFilesDir[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'MergeBamFilesDir' is an array with different values. Maybe 'MergeBamFilesDir' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+293,294c148
+< if [[ ! $(IFS=$'\n' sort -u <<< "${MergeBamFilesBai[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'MergeBamFilesBai' is an array with different values. Maybe 'MergeBamFilesBai' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+< if [[ ! $(IFS=$'\n' sort -u <<< "${projectDir[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'projectDir' is an array with different values. Maybe 'projectDir' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+---
+> if [[ ! $(IFS=$'\n' sort -u <<< "${stage[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'stage' is an array with different values. Maybe 'stage' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+296d149
+< if [[ ! $(IFS=$'\n' sort -u <<< "${WORKDIR[*]}" | wc -l | sed -e 's/^[[:space:]]*//') = 1 ]]; then echo "Error in Step 'MergeBamFiles': input parameter 'WORKDIR' is an array with different values. Maybe 'WORKDIR' is a runtime parameter with 'more variable' values than what was folded on generation-time?" >&2; exit 1; fi
+328c181
+< for file in   ; do
+---
+> for file in "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bai" ; do
+343c196
+< bams=($(printf '%s\n'  | sort -u ))
+---
+> bams=($(printf '%s\n' "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" "/gcc/groups/umcg-oncogenetics/tmp01/projects/test//addOrReplaceReadGroups/1_samplePE.bam" | sort -u ))
+371,383d223
+< chmod 755 $ENVIRONMENT_DIR/MergeBamFiles_0.env
+< 
+< 
+< 
+< #
+< ## General footer
+< #
+< 
+< # Show that we successfully finished
+< # If this file exists, then this step will be skipped when you resubmit your workflow 
+< touch $ENVIRONMENT_DIR/MergeBamFiles_0.sh.finished
+< 
+< echo "On $(date +"%Y-%m-%d %T"), after $(( ($(date +%s) - $MOLGENIS_START) / 60 )) minutes, task MergeBamFiles_0 finished successfully" >> $ENVIRONMENT_DIR/molgenis.bookkeeping.log
+385,389d224
+< if [ -d ${MC_tmpFolder:-} ];
+< 	then
+< 	echo "removed tmpFolder $MC_tmpFolder"
+< 	rm -r $MC_tmpFolder
+< fi
+
+```

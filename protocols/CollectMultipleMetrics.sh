@@ -1,11 +1,14 @@
 #MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
 
+#string project
+
+
 
 #string stage
 #string checkStage
-#string picardVersion
-#string RVersion
-#string reads2FqGz
+#string picardMod
+#string RMod
+#list reads2FqGz
 #string collectMultipleMetricsDir
 #string collectMultipleMetricsPrefix
 #string onekgGenomeFasta
@@ -33,8 +36,8 @@ getFile ${onekgGenomeFasta}
 
 
 #load modules
-${stage} picard-tools/${picardVersion}
-${stage} R/${RVersion}
+${stage} ${picardMod}
+${stage} ${RMod}
 ${checkStage}
 
 set -x
@@ -50,7 +53,7 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 fi
 
 #Run Picard CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution and MeanQualityByCycle
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/CollectMultipleMetrics.jar\
+java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
  I=${markDuplicatesBam} \
  O=${collectMultipleMetricsPrefix} \
  R=${onekgGenomeFasta} \
@@ -71,11 +74,6 @@ putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
 if [ ${#reads2FqGz} -ne 0 ]; then
 	putFile ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf
 	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics 
-fi
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
 fi
 
 echo "## "$(date)" ##  $0 Done "

@@ -1,12 +1,14 @@
 #MOLGENIS walltime=23:59:00 mem=4gb ppn=1
+
+#string project
+
 ################################^advised 45 gb for 300 files so 30 for 200 files?
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 #string onekgGenomeFasta
-#string gatkVersion
+#string gatkMod
 #list haplotyperGvcf,haplotyperGvcfIdx
 
 #string haplotyperDir
@@ -25,7 +27,7 @@ for file in "${haplotyperGvcf[@]}" "${haplotyperGvcfIdx[@]}" "${onekgGenomeFasta
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
@@ -38,7 +40,7 @@ inputs=$(printf ' --variant %s ' $(printf '%s\n' ${gvcfs[@]}))
 
 mkdir -p ${haplotyperDir}
 
-java -Xmx4g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx4g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T CombineGVCFs \
  -R ${onekgGenomeFasta} \
  -o ${mergeGvcf} \

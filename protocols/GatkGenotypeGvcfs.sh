@@ -1,14 +1,16 @@
 #MOLGENIS walltime=23:59:00 mem=12gb ppn=4
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 #string dbsnpVcf
 #string dbsnpVcfIdx
 
-#string gatkVersion
+#string gatkMod
 #string haplotyperDir
 #string onekgGenomeFasta
 
@@ -29,7 +31,7 @@ for file in "${mergeGvcf[@]}" "${mergeGvcfIdx[@]}" "${onekgGenomeFasta}"; do
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
@@ -45,7 +47,7 @@ mkdir -p ${haplotyperDir}
 
 #pseudo: java -jar GenomeAnalysisTK.jar -T HaplotypeCaller -R ref.fasta -I input.bam -recoverDanglingHeads -dontUseSoftClippedBases -stand_call_conf 20.0 -stand_emit_conf 20.0 -o output.vcf from http://gatkforums.broadinstitute.org/discussion/3891/calling-variants-in-rnaseq
 
-java -Xmx12g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T GenotypeGVCFs \
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf}\

@@ -1,9 +1,12 @@
-MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
+
+#string project
+
 
 
 #string stage
 #string checkStage
-#string picardVersion
+#string picardMod
 #string projectDir
 
 #string targetsList
@@ -27,7 +30,7 @@ echo "## "$(date)" Start $0"
 getFile ${targetsList}
 
 #load modules
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x
@@ -40,7 +43,7 @@ mkdir -p ${projectDir}
 if [ ${#targetsList} -ne 0 ]; then
 	
 	#Run Picard
-	java -jar  -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/IntervalListTools.jar \
+	java -jar  -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar IntervalListTools \
 	 INPUT=${targetsList} \
 	 OUTPUT=${slopTargetsList} \
 	 PADDING=150 \
@@ -53,7 +56,7 @@ if [ ${#targetsList} -ne 0 ]; then
 	
 	mkdir -p ${scatterIntervallistDir}
 	
-	java -jar  -Xmx4g -XX:ParallelGCThreads=4 $PICARD_HOME/IntervalListTools.jar \
+	java -jar  -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar IntervalListTools \
 	 INPUT=${targetsList} \
 	 OUTPUT=${scatterIntervallistDir} \
 	 PADDING=150 \

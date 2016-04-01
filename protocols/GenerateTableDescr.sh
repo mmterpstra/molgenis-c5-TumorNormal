@@ -1,9 +1,11 @@
 #MOLGENIS walltime=23:59:00 mem=1gb ppn=1
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 #string onekgGenomeFasta
 
@@ -11,8 +13,9 @@
 
 #string tableDir
 #string descrTable
-#string vcfToolsVersion
+#string vcfToolsMod
 #string GenerateTableDescriptionByVcfHeaderPl
+#string pipelineUtilMod
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -24,7 +27,8 @@ for file in "${vcf}" "${onekgGenomeFasta}"; do
 	getFile $file
 done
 
-${stage} vcftools/${vcfToolsVersion}
+${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
@@ -33,7 +37,7 @@ set -e
 mkdir -p ${tableDir}
 
 
-perl ${GenerateTableDescriptionByVcfHeaderPl} ${vcf} > ${descrTable}
+perl $EBROOTPIPELINEMINUTIL/bin/${GenerateTableDescriptionByVcfHeaderPl} ${vcf} > ${descrTable}
 
 putFile ${descrTable}
 

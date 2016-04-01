@@ -1,12 +1,14 @@
 #MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
 
+#string project
+
+
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string picardVersion
+#string picardMod
 
 #string markDuplicatesBam
 #string markDuplicatesBai
@@ -25,7 +27,7 @@ alloutputsexist \
 getFile ${markDuplicatesBam}
 getFile ${markDuplicatesBai}
 
-${stage} picard-tools/${picardVersion}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x
@@ -35,7 +37,7 @@ mkdir -p ${collectRnaSeqMetricsDir}
 
 echo "## "$(date)" ##  $0 Started "
 
-java -Xmx4g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/CollectRnaSeqMetrics.jar \
+java -Xmx4g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar CollectRnaSeqMetrics \
  INPUT=${markDuplicatesBam} \
  OUTPUT=${collectRnaSeqMetrics} \
  CHART_OUTPUT=${collectRnaSeqMetricsChart} \
@@ -50,10 +52,5 @@ java -Xmx4g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/CollectRnaSeqMetrics.jar \
 
 putFile ${collectRnaSeqMetrics}
 putFile ${collectRnaSeqMetricsChart}
-
-if [ ! -z "$PBS_JOBID" ]; then
-	echo "## "$(date)" Collecting PBS job statistics"
-	qstat -f $PBS_JOBID
-fi
 
 echo "## "$(date)" ##  $0 Done "

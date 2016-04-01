@@ -1,17 +1,19 @@
-#MOLGENIS walltime=23:59:00 mem=8gb ppn=2
+#MOLGENIS walltime=23:59:00 mem=8gb ppn=1
+
+#string project
+
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
+#string gatkOpt
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
-#list bsqrBam
-#list bsqrBai
+#list bqsrBam,bqsrBai
 #string targetsList
 #string scatterList
 #string haplotyperDir
@@ -24,20 +26,20 @@ alloutputsexist \
 "${haplotyperScatVcf}" \
 "${haplotyperScatVcfIdx}"
 
-for file in "${bsqrBam[@]}" "${bsqrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}"; do
+for file in "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 set -x
 set -e
 
 # sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
-bams=($(printf '%s\n' "${bsqrBam[@]}" | sort -u ))
+bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
 
 inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
@@ -66,16 +68,16 @@ fi
 
 mkdir -p ${haplotyperDir}
 
-java -Xmx8g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T HaplotypeCaller \
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf}\
  $inputs \
- -stand_call_conf 10.0 \
- -stand_emit_conf 20.0 \
+ -stand_call_conf 20.0 \
+ -stand_emit_conf 10.0 \
  -o ${haplotyperScatVcf} \
- -nct 3 \
- $InterValOperand
+ $InterValOperand \
+ ${gatkOpt}
 
 # -dontUseSoftClippedBases \
 

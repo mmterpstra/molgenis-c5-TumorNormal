@@ -1,16 +1,19 @@
 #MOLGENIS nodes=1 ppn=8 mem=8gb walltime=10:00:00
 
+#string project
+
+
 
 #Parameter mapping
 #string stage
 #string checkStage
-#string picardVersion
-#string samtoolsVersion
+#string picardMod
+#string samtoolsMod
+#string digiRgMod
 #string reads3FqGz
 #string addOrReplaceGroupsBam
 #string addOrReplaceGroupsBai
 
-#string nugBcSplitterPl
 #string nugeneRgDir
 #string nugeneBam
 #string nugeneBai
@@ -27,9 +30,9 @@ getFile ${addOrReplaceGroupsBam}
 getFile ${addOrReplaceGroupsBai}
 
 #Load modules
-${stage} samtools/${samtoolsVersion}
-${stage} picard-tools/${picardVersion}
-
+${stage} ${samtoolsMod}
+${stage} ${picardMod}
+${stage} ${digiRgMod}
 
 #check modules
 ${checkStage}
@@ -48,9 +51,9 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 
 else
 	
-	perl ${nugBcSplitterPl} ${addOrReplaceGroupsBam} ${nugeneBam}
+	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl ${addOrReplaceGroupsBam} ${nugeneBam}
 	
-	java -Xmx6g -XX:ParallelGCThreads=4 -jar $PICARD_HOME/BuildBamIndex.jar \
+	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
  INPUT=${nugeneBam}	
 
 fi

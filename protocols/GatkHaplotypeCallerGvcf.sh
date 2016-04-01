@@ -1,12 +1,14 @@
-#MOLGENIS walltime=23:59:00 mem=12gb ppn=8
+#MOLGENIS walltime=23:59:00 mem=12gb ppn=1
+
+#string project
+
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string checkStage
-#string WORKDIR
 #string projectDir
 
-#string gatkVersion
+#string gatkMod
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
@@ -32,7 +34,7 @@ for file in "${indelRealignmentBam[@]}" "${indelRealignmentBai[@]}" "${dbsnpVcf}
 done
 
 #Load gatk module
-${stage} GATK/${gatkVersion}
+${stage} ${gatkMod}
 ${checkStage}
 
 #sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
@@ -51,13 +53,12 @@ if [ ${#targetsList} -ne 0 ]; then
 
 fi
 
-java -Xmx12g -Djava.io.tmpdir=${haplotyperDir} -jar $GATK_HOME/GenomeAnalysisTK.jar \
+java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T HaplotypeCaller \
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf}\
  $inputs \
  -o ${haplotyperGvcf} \
- -nct 8 \
  --emitRefConfidence GVCF \
  --variant_index_type LINEAR \
  --variant_index_parameter 128000 \

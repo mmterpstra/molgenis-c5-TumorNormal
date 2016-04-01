@@ -1,5 +1,8 @@
 #MOLGENIS walltime=23:59:00 mem=1gb
 
+#string project
+
+
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
@@ -7,14 +10,16 @@
 #string onekgGenomeFastaDict
 #string varscanCopycaller
 #string varscanCopycallerHomdels
-#string RVersion
-#string vcfToolsVersion
+#string RMod
+#string pipelineUtilMod
 #string plotScriptPl
 #string snvRawTable
 #string segFile
 #string segmentsPlotPdf
 #string cnvPlotPdf
 
+set -e
+set -x
 
 ##you can also add an F score to the genotypes (based on AD) and integrate it into the plot == added value
 ##a string tmpSnpVariantsTableTable {intermediateDir}/tmp/{project}.SnpsToTab.tab.table
@@ -30,21 +35,22 @@ alloutputsexist \
 #getfile declarations
 getFile ${varscanCopycaller}
 getFile ${varscanCopycallerHomdels}
-getfile ${onekgGenomeFastaDict}
+getFile ${onekgGenomeFastaDict}
 
 #load modules
-$stage R/${RVersion}
-#
-$checkStage
-#run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]
+${stage} ${RMod}
+${stage} ${pipelineUtilMod}
 
-set -x
+#
+${checkStage}
+
+#run script perl PlotFloatsOnInterVals0.0.2.pl -R Rscript -d $dictFile $varscanCopycaller [variantstable.table]
 
 oldDirName=$(pwd)
 
 cd $(dirname ${varscanCopycaller})
 
-perl ${plotScriptPl} \
+perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
  -R Rscript \
  -d ${onekgGenomeFastaDict} \
  -v ${snvRawTable} \
