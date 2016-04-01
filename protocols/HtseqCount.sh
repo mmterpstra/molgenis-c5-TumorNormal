@@ -6,6 +6,7 @@
 #string projectDir
 
 #string picardMod
+#string samtoolsMod
 #string htseqMod
 
 #string ensemblAnnotationGtf
@@ -25,6 +26,7 @@ getFile ${markDuplicatesBai}
 getFile ${ensemblAnnotationGtf}
 
 ${stage} ${picardMod}
+${stage} ${samtoolsMod}
 ${stage} ${htseqMod}
 ${checkStage}
 
@@ -38,7 +40,7 @@ java -Xmx6g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=4 -jar $EBROOTPIC
  OUTPUT=/dev/stdout \
  MAX_RECORDS_IN_RAM=4000000 \
  SORT_ORDER=queryname | \
-samtools view -h | \
+samtools view -h - | \
 python $EBROOTHTSEQ/scripts/htseq-count -m union -s no -t exon -i gene_id - ${ensemblAnnotationGtf} > ${htseqTsv}
 
 

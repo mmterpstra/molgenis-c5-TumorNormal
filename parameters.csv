@@ -38,6 +38,7 @@ bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
 hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
 htseqMod,HTSeq/0.6.1p1
+fusioncatcherMod,FusionCatcher/0.99.5a-goolf-1.7.20-Python-2.7.9
 ################################################################################
 ##Reference Data
 #
@@ -143,6 +144,13 @@ fastqcZipExt,_fastqc.zip
 singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
 pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
 pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
+#################################################################################
+##FusionCatcher
+
+fusioncatcherDataDir,/groups/umcg-oncogenetics/tmp04/res/fusioncatcher/ensembl_v83/
+fusioncatcherDir,${projectDir}/fusioncatcher/
+fusioncatcherOutDir,${projectDir}/fusioncatcher/${sampleName}/
+fusioncatcherTsv,${fusioncatcherOutDir}final-list_candidate-fusion-genes.txt
 ################################################################################
 ##Nugene random fastq integration/bbduk trimming
 nugeneFastqDir,${projectDir}/nugeneFastq/
