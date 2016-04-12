@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=8gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=10gb nodes=1 ppn=4
 #string project
 
 #string stage
@@ -35,7 +35,7 @@ set -e
 
 mkdir -p ${htseqDir}
 
-java -Xmx6g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar SortSam \
+java -Xmx8g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=8 -jar $EBROOTPICARD/picard.jar SortSam \
  INPUT=${markDuplicatesBam} \
  OUTPUT=/dev/stdout \
  MAX_RECORDS_IN_RAM=4000000 \

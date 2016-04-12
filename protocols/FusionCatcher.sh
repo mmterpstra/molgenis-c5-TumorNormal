@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=1 mem=35gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=1 mem=35gb walltime=40:00:00
 
 #string project
 
@@ -16,8 +16,8 @@
 #string fusioncatcherTsv
 
 #string nTreads
-#list reads1FqGz
-#list reads2FqGz
+#string reads1FqGz
+#string reads2FqGz
 #string reads1FqGzOriginal
 #string reads2FqGzOriginal
 
