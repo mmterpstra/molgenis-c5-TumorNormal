@@ -23,6 +23,7 @@
 #string annotatorDir
 #string snpEffMod
 #string snpEffStats
+#string snpeffDataDir
 
 #string snpEffGatkAnnotVcf
 #string snpEffGatkAnnotVcfIdx
@@ -145,6 +146,7 @@ mkdir -p ${annotatorDir}
 
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -stats ${snpEffStats} \
  -v -o gatk \
  GRCh37.75 \
@@ -210,9 +212,10 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  --out ${gatkAnnotVcf} \
  -L ${haplotyperVcf} \
  ${gatkOpt}
- 
+
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -formatEff \
  -canon \
  -hgvs \
@@ -221,11 +224,12 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  GRCh37.75 \
  ${gatkAnnotVcf} \
  1>${snpEffAnnotVcf}.tmp.vcf
- 
+
 rm  -v ${snpEffStats}
 
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -hgvs \
  -lof \
  -stats ${snpEffStats} \
@@ -233,11 +237,12 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  GRCh37.75 \
  ${snpEffAnnotVcf}.tmp.vcf \
  1>${snpEffAnnotVcf}.anneff.vcf
- 
+
 rm  -v ${snpEffStats}
 
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -hgvs \
  -lof \
  -stats ${snpEffStats} \

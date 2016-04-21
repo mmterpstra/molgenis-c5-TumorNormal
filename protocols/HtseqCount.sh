@@ -35,13 +35,25 @@ set -e
 
 mkdir -p ${htseqDir}
 
+
+
+if [ -e $EBROOTHTSEQ/scripts ]; then
+	htseqBinDir="scripts"
+elif [ -e  $EBROOTHTSEQ/bin ]; then
+        htseqBinDir="bin"
+else
+	echo "## "$(date)" ## No Htseq bindir found!.Plz fix this script."
+	exit -1
+fi
+
 java -Xmx8g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=8 -jar $EBROOTPICARD/picard.jar SortSam \
  INPUT=${markDuplicatesBam} \
  OUTPUT=/dev/stdout \
  MAX_RECORDS_IN_RAM=4000000 \
- SORT_ORDER=queryname | \
+ SORT_ORDER=queryname \
+ TMP_DIR=${htseqDir} | \
 samtools view -h - | \
-python $EBROOTHTSEQ/scripts/htseq-count -m union -s no -t exon -i gene_id - ${ensemblAnnotationGtf} > ${htseqTsv}
+python $EBROOTHTSEQ/$htseqBinDir/htseq-count -m union -s no -t exon -i gene_id - ${ensemblAnnotationGtf} > ${htseqTsv}
 
 
 putFile ${htseqTsv}

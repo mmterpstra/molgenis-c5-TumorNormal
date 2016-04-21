@@ -9,6 +9,7 @@
 #string bbmapMod
 #string digiRgMod
 #string pipelineUtilMod
+#string hisat2Mod
 #string probeFa
 #string onekgGenomeFastaIdxBase 
 #string probeBed
@@ -37,6 +38,7 @@ getFile ${probeFa}
 ${stage} ${bbmapMod}
 ${stage} ${digiRgMod}
 ${stage} ${pipelineUtilMod}
+${stage} ${hisat2Mod}
 
 #check modules
 ${checkStage}
@@ -51,16 +53,18 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 	if [ ${#reads2FqGz} -eq 0 ]; then
 	        alloutputsexist \
 		        ${nugeneReads1FqGz}
-
+		
 		getFile ${reads1FqGz}
-
+		
 		#ln -s ${reads1FqGz} ${nugeneReads1FqGz}
 		
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
                 echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
-
-		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -r ${onekgGenomeFastaIdxBase} -b ${probeBed} -i ${reads1FqGz} -o $TMPFASTQ1
 		
+		readspec=" -U ${reads1FqGz} "
+		hisat2 -x ${onekgGenomeFastaIdxBase} $readspec -S ${nugeneReads1FqGz}.hisat2.sam --threads 1
+		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.hisat2.sam -b ${probeBed} -i ${reads1FqGz} -o $TMPFASTQ1
+		 
 		bash $EBROOTBBMAP/bbduk.sh \
                  -Xmx11g \
                  in=$TMPFASTQ1 \
@@ -68,16 +72,17 @@ if [ ${#reads3FqGz} -eq 0 ]; then
                  qtrim=r \
                  trimq=20 \
                  minlen=20
-
-		rm -v $TMPFASTQ1
+		
+		rm -v $TMPFASTQ1 ${nugeneReads1FqGz}.hisat2.sam
+		
                 putFile ${nugeneReads1FqGz}
 	else
 		alloutputsexist \
 		        ${nugeneReads1FqGz}  ${nugeneReads2FqGz}
-
-		getFile ${reads1FqGz}
+		
+	    	getFile ${reads1FqGz}
 		getFile ${reads2FqGz}
-
+		
 	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz}  ${nugeneFastqDir} ${reads1FqGz} ${reads2FqGz}
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
 		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1		
@@ -108,9 +113,9 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 	fi
 else
 	if [ ${#reads2FqGz} -eq 0 ]; then
-		alloutputsexist \
+	        alloutputsexist \
 		        ${nugeneReads1FqGz}
-		
+
 		getFile ${reads1FqGz}
 		
 		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz} ${nugeneFastqDir} ${reads1FqGz} 
@@ -118,7 +123,9 @@ else
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
 		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
 		
-		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -r ${onekgGenomeFastaIdxBase} -b ${probeBed} -i $TMPFASTQ1 -o $TMPFASTQ1.bedtrimmed.fq.gz
+               	readspec=" -U ${reads1FqGz} "
+                hisat2 -x ${onekgGenomeFastaIdxBase} $readspec -S ${nugeneReads1FqGz}.hisat2.sam --threads 1
+                perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.hisat2.sam -b ${probeBed} -i $TMPFASTQ1 -o $TMPFASTQ1.bedtrimmed.fq.gz
 		
                 bash $EBROOTBBMAP/bbduk.sh \
                  -Xmx11g \
@@ -128,7 +135,7 @@ else
                  trimq=20 \
                  minlen=20
 
-		rm -v $TMPFASTQ1 $TMPFASTQ1.bedtrimmed.fq.gz
+		rm -v $TMPFASTQ1 $TMPFASTQ1.bedtrimmed.fq.gz ${nugeneReads1FqGz}.hisat2.sam
 
 		putFile ${nugeneReads1FqGz}
 
@@ -138,7 +145,7 @@ else
 		
 		getFile ${reads1FqGz}
 		getFile ${reads2FqGz}
-
+		
 	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz}  ${nugeneFastqDir} ${reads1FqGz} ${reads2FqGz}
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
 		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1		

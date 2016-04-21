@@ -1,0 +1,39 @@
+################################################################################
+##General Parameters
+#
+queue,ll
+tmp,tmp04
+group,umcg-gcc
+data,/apps/data/
+projectDir,/groups/${group}/${tmp}/projects/${project}/
+
+################################################################################
+##module parameters
+#
+fastqcMod,FastQC/0.11.3-Java-1.7.0_80
+bwaMod,BWA/0.7.12-goolf-1.7.20
+picardMod,picard/1.130-Java-1.7.0_80
+RMod,R/3.2.1-goolf-1.7.20
+gatkMod,GATK/3.5-Java-1.7.0_80
+#gatkMod,GATK/3.4-0-Java-1.7.0_80
+snpEffMod,snpEff/4.1d-Java-1.7.0_80
+varScanMod,VarScan/2.4.0-Java-1.7.0_80
+samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
+vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
+pipelineUtilMod,pipeline-util
+tableToXlsxMod,TableToXlsx
+digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
+bbmapMod,BBMap/35.69-Java-1.7.0_80
+bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
+hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
+htseqMod,HTSeq/0.6.1p1
+fusioncatcherMod,FusionCatcher/0.99.5a-goolf-1.7.20-Python-2.7.9
+
+################################################################################
+##user data
+#remap plz
+#
+#124
+fusioncatcherDataDir,/groups/umcg-oncogenetics/tmp04/res/fusioncatcher/ensembl_v83/
+probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
+probeBed,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.bed

@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=16gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=3 mem=16gb walltime=10:00:00
 
 #string project
 
@@ -8,9 +8,11 @@
 #string stage
 #string checkStage
 #string hisat2Mod
+#string picardMod
+#string samtoolsMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
-#string hisat2AlignmentDir 
+#string hisat2AlignmentDir
 #string hisat2Sam
 #string nTreads
 #string reads1FqGz
@@ -24,13 +26,16 @@ echo "## "$(date)" ##  $0 Started "
 #Check if output exists if so execute 'exit -0'
 alloutputsexist \
 	${hisat2Sam}
- 
+
 #getFile functions
 
 getFile ${onekgGenomeFasta}
 
 #Load modules
 ${stage} ${hisat2Mod}
+${stage} ${picardMod}
+${stage} ${samtoolsMod}
+
 #check modules
 ${checkStage}
 
@@ -53,7 +58,9 @@ fi
 
 echo "## "$(date)" ##  $0 Align with hisat with readspec='$readspec'"
 
-hisat2 -x ${onekgGenomeFastaIdxBase} $readspec -S ${hisat2Sam} --threads 1
+hisat2 -x ${onekgGenomeFastaIdxBase} $readspec -S /dev/stdout --threads 1 | \
+ java -Xmx4g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar CleanSam I=/dev/stdin O=/dev/stdout | \
+ samtools view -h - > ${hisat2Sam}
 
 putFile ${hisat2Sam} 
 

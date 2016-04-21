@@ -58,20 +58,28 @@ References
 Versions
 ========
 
-| software		| version |
-| --------		| ------- |
-| FastQC		| 0.11.3-Java-1.7.0_80 |
-| BWA			| 0.7.12-goolf-1.7.20 |
-| picard		| 1.130-Java-1.7.0_80 |
-| R			| 3.2.0-goolf-1.7.20-Java-1.7.0_80 |
-| GATK			| 3.3-0-Java-1.7.0_80 |
-| snpEff		| 4.1d-Java-1.7.0_80 |
-| VarScan		| 2.4.0-Java-1.7.0_80 |
-| SAMtools		| 0.1.18-goolf-1.7.20 |
-| VCFtools		| 0.1.12b-goolf-1.7.20-Perl-5.20.2-bare | 
-| DigitalBarcodeReadgroups | 0.1.0-goolf-1.7.20-Perl-5.20.2-bare |
+Version managment done with lmod `lua based implementation of environment modules`. Installation/deployment management done with Easybuild.
+Here are the tools and software versions:
 
-
+| software              | version |
+| --------              | ------- |
+| fastQC		 | 0.11.5-Java-1.7.0_80
+| BWA		 | 0.7.12-foss-2016a
+| picard		 | 1.140-foss-2016a-Java-1.8.0_74
+| R		 | 3.2.2-foss-2016a-bioconductor
+| GATK 		 | 3.5-foss-2016a-Java-1.7.0_80
+| snpEff		 | 4.1g-Java-1.7.0_80
+| VarScan		 | 2.4.0-Java-1.7.0_80
+| SAMtools	 | 0.1.18-foss-2016a
+| VCFtools	 | 0.1.12b-foss-2016a-Perl-5.20.2-bare
+| pipeline-util 	 | 0.2.1-foss-2016a-Perl-5.20.2-bare
+| TableToXlsx | 
+| DigitalBarcodeReadgroups | 0.1.2-foss-2016a-Perl-5.20.2-bare
+| BBMap		 | /35.69-Java-1.7.0_80
+| BEDTools	 | 2.25.0-foss-2016a
+| hisat2		 | 2.0.3-beta-foss-2016a
+| HTSeq		 | 0.6.1-p1-goolfc-2.7.11-Python-2.7.9
+| FusionCatcher	 | 0.99.5a-foss-2016a-Python-2.7.11
 
 Resource links
 --------------
