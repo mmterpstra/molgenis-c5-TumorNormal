@@ -161,6 +161,8 @@ reads2FqGzOriginal,${reads2FqGz}
 hisat2AlignmentDir,${projectDir}/hisat2/
 hisat2Sam,${hisat2AlignmentDir}${internalId}_${sampleName}.sam
 hisat2IdxBase,${bundle}/hisat2/2.0.3-beta-goolf-1.7.20/human_g1k_v37_decoy
+hisat2SpliceKnownTxt,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.splicesites.txt
+#--known-splicesite-infile ${hisat2SpliceKnownTxt} /data/umcg-mterpstra/apps/data/ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/Homo_sapiens.GRCh37.75.splicesites.txt
 gatkOpt,
 
 ################################################################################

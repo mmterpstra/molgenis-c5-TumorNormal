@@ -21,12 +21,14 @@ varScanMod,VarScan/2.4.0-Java-1.7.0_80
 samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
 vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util
+#pipelineUtilMod,pipeline-util/0.2.2-foss-2016a-Perl-5.20.2-bare
 tableToXlsxMod,TableToXlsx
 digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
 hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
 htseqMod,HTSeq/0.6.1p1
+cmarkMod,cmark/0.25.2-foss-2015b
 fusioncatcherMod,FusionCatcher/0.99.5a-goolf-1.7.20-Python-2.7.9
 
 ################################################################################

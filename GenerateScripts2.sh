@@ -3,7 +3,7 @@
 set -e
 set -u
 
-echo "use:[none|exome|rna|nugene|iont|withpoly] samplesheet projectname targetsList"
+echo "use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList"
 
 mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
 ###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
@@ -55,13 +55,14 @@ if [ $HOSTNAME == "pg-interactive" ];then
 	
 	cp $siteParam $workflowDir/.parameters.site.tmp.csv
 	cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
-	partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
+	#partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
 elif [ $HOSTNAME == "pg-login" ];then
         echo "setting peregrine molgenis variables"
 	runDir=/scratch/$USER/projects/$projectname
         siteParam=$workflowDir/peregrine.siteconfig.csv
 	cp $siteParam $workflowDir/.parameters.site.tmp.csv
 	cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
+
 elif [ $HOSTNAME == "calculon" ];then
         echo "setting calculon molgenis variables"
 	group=$(ls -alh $(pwd)| perl -wpe 's/ +/ /g' | cut -f 4 -d " "| tail -n1)
@@ -114,7 +115,7 @@ echo "Generate scripts"
 $mlCmd
 #module load molgenis_compute/v5_20140522
 echo $mlCmd 
-echo $partitionFix $jobsDir'/*.sh'
+#echo $partitionFix $jobsDir'/*.sh'
 echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
  --generate \
  -p $workflowDir/.parameters.molgenis.csv \
@@ -129,6 +130,7 @@ echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
  -submit $molgenisBase/submit.ftl \
  -footer $molgenisBase/footer.ftl
 
+echo -e "bash $jobsDir/submit.sh"
 # -header $MC_HOME/templates/pbs/header.ftl \
 # -submit $MC_HOME/templates/pbs/submit.ftl \
 # -footer $MC_HOME/templates/pbs/footer.ftl 

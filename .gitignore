@@ -48,3 +48,6 @@ parameters.molgenis.csv
 # gedit dirt             #
 ##########################
 *~
+# backups                #
+##########################
+*.bak

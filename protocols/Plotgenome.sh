@@ -29,7 +29,6 @@ set -x
 
 alloutputsexist \
 "${segFile}" \
-"${segmentsPlotPdf}" \
 "${cnvPlotPdf}" 
 
 #getfile declarations
@@ -48,20 +47,27 @@ ${checkStage}
 
 oldDirName=$(pwd)
 
-cd $(dirname ${varscanCopycaller})
+varscanlines=$(cat ${varscanCopycaller} | wc -l)
+if [ $varscanlines= -gt 1 ] ; then
 
-perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
- -R Rscript \
- -d ${onekgGenomeFastaDict} \
- -v ${snvRawTable} \
- ${varscanCopycaller} \
- 
-cd $(dirname ${varscanCopycaller})
+	cd $(dirname ${varscanCopycaller})
 
-cd $oldDirName
+	perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
+	 -R Rscript \
+	 -d ${onekgGenomeFastaDict} \
+	 -v ${snvRawTable} \
+	 ${varscanCopycaller} 
+
+	cd $oldDirName
+
+
+else
+	touch "${segFile}" \
+	 "${cnvPlotPdf}" 
+fi
+
 
 # $vcf
 putFile "${segFile}"
-putFile "${segmentsPlotPdf}"
 putFile "${cnvPlotPdf}"
 

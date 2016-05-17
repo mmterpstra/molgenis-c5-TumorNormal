@@ -12,6 +12,7 @@
 #string samtoolsMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
+#string hisat2SpliceKnownTxt
 #string hisat2AlignmentDir
 #string hisat2Sam
 #string nTreads
@@ -29,7 +30,7 @@ alloutputsexist \
 
 #getFile functions
 
-getFile ${onekgGenomeFasta}
+getFile ${onekgGenomeFasta} ${hisat2SpliceKnownTxt}
 
 #Load modules
 ${stage} ${hisat2Mod}
@@ -57,8 +58,8 @@ else
 fi
 
 echo "## "$(date)" ##  $0 Align with hisat with readspec='$readspec'"
-
-hisat2 -x ${onekgGenomeFastaIdxBase} $readspec -S /dev/stdout --threads 1 | \
+#note the cleansam diffcult stuff is for read alignments going outside the reference seqs (still it occasionally happens).
+hisat2 -x ${onekgGenomeFastaIdxBase} $readspec --known-splicesite-infile ${hisat2SpliceKnownTxt} --score-min L,0,-0.6 --sp 1,1.5 -D 20 -R 3 -S /dev/stdout --threads 1 | \
  java -Xmx4g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar CleanSam I=/dev/stdin O=/dev/stdout | \
  samtools view -h - > ${hisat2Sam}
 
