@@ -10,26 +10,26 @@ projectDir,/groups/${group}/${tmp}/projects/${project}/
 ################################################################################
 ##module parameters
 #
-fastqcMod,FastQC/0.11.3-Java-1.7.0_80
-bwaMod,BWA/0.7.12-goolf-1.7.20
-picardMod,picard/1.130-Java-1.7.0_80
-RMod,R/3.2.1-goolf-1.7.20
-gatkMod,GATK/3.5-Java-1.7.0_80
+fastqcMod,FastQC/0.11.5-Java-1.7.0_80
+bwaMod,BWA/0.7.12-foss-2015b
+picardMod,picard/1.140-foss-2015b-Java-1.8.0_45
+RMod,R/3.2.2-foss-2015b-bioconductor
+gatkMod,GATK/3.5-foss-2015b-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
-snpEffMod,snpEff/4.1d-Java-1.7.0_80
+snpEffMod,snpEff/4.1g-Java-1.7.0_80
 varScanMod,VarScan/2.4.0-Java-1.7.0_80
-samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
-vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
-pipelineUtilMod,pipeline-util
+samtoolsMod,SAMtools/0.1.18-foss-2015b
+vcfToolsMod,VCFtools/0.1.12b-foss-2015b-Perl-5.20.2-bare
+pipelineUtilMod,pipeline-util/0.2.3-foss-2015b-Perl-5.20.2-bare
 #pipelineUtilMod,pipeline-util/0.2.2-foss-2016a-Perl-5.20.2-bare
-tableToXlsxMod,TableToXlsx
-digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
+tableToXlsxMod,TableToXlsx/0.1.0-foss-2015b-Perl-5.20.2-bare
+digiRgMod,DigitalBarcodeReadgroups/0.1.4-foss-2015b-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
-bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
-hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
+bedtoolsMod,BEDTools/2.25.0-foss-2015b
+hisat2Mod,hisat2/2.0.4-foss-2015b-Python-2.7.11
 htseqMod,HTSeq/0.6.1p1
-cmarkMod,cmark/0.25.2-foss-2015b
-fusioncatcherMod,FusionCatcher/0.99.5a-goolf-1.7.20-Python-2.7.9
+#cmarkMod,cmark/0.25.2-foss-2015b
+fusioncatcherMod,FusionCatcher/0.99.6a-foss-2015b-Python-2.7.11
 
 ################################################################################
 ##user data
