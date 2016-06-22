@@ -256,8 +256,8 @@ bqsrBeforeGrp,${bqsrDir}${sampleName}.before.grp
 analyseCovarsDir,${projectDir}/CovariantAnalysis/
 bqsrAfterGrp,${bqsrDir}${sampleName}.after.grp
 
-analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
-
+#analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
+analyseCovariatesCsv,${analyseCovarsDir}/${sampleName}.analysecovariates.csv
 ################################################################################
 #haplotypecaller
 haplotyperDir,${projectDir}/haplotypeCaller/
@@ -346,6 +346,15 @@ snvRawXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.raw.xlsx
 indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
 snvDescrXlsx,${xlsxDir}/${project}.snv.description.xlsx
 indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
+
+################################################################################
+#manta sv callling
+#
+#mantaMod,
+mantaDir,${projectDir}/Manta/
+mantaVcf,${mantaDir}/${project}.vcf
+mantaVcfIdx,${mantaVcf}.idx
+
 ################################################################################
 #haplotypecaller + Gvcf mode
 gHaplotyperDir,${projectDir}/haplotypeCallerGvf/

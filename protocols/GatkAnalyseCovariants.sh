@@ -26,13 +26,13 @@
 #string analyseCovarsDir
 #string bqsrBeforeGrp
 #string bqsrAfterGrp
-#string analyseCovariatesPdf
+#string analyseCovariatesCsv
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
  ${bqsrAfterGrp} \
- ${analyseCovariatesPdf} 
+ ${analyseCovariatesCsv} 
 
 getFile ${onekgGenomeFasta}
 getFile ${oneKgPhase1IndelsVcf}
@@ -72,10 +72,10 @@ java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGC
  -ignoreLMT \
  -before ${bqsrBeforeGrp} \
  -after ${bqsrAfterGrp} \
- -plots ${analyseCovariatesPdf} \
+ -csv ${analyseCovariatesCsv} \
  ${gatkOpt}
 
 putFile ${bqsrAfterGrp}
-putFile ${analyseCovariatesPdf}
+putFile ${analyseCovariatesCsv}
 
 echo "## "$(date)" ##  $0 Done "

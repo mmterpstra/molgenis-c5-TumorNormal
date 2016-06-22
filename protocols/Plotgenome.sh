@@ -48,7 +48,9 @@ ${checkStage}
 oldDirName=$(pwd)
 
 varscanlines=$(cat ${varscanCopycaller} | wc -l)
-if [ $varscanlines= -gt 1 ] ; then
+if [ $varscanlines -gt 1 ] ; then
+
+	echo "Varscan lines found. plotting genome."
 
 	cd $(dirname ${varscanCopycaller})
 
@@ -62,6 +64,7 @@ if [ $varscanlines= -gt 1 ] ; then
 
 
 else
+	echo "No varscan lines found. skipping."
 	touch "${segFile}" \
 	 "${cnvPlotPdf}" 
 fi

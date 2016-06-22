@@ -106,7 +106,7 @@ echo "Convert samplesheet"
 perl -wpe 's!projectNameHere!'$projectname'!g' $samplesheet > $samplesheet.tmp.csv
 
 cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet)
-cp $workflowDir/parameters.tmp.csv $runDir/parameters.csv
+cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
 
 backend="slurm"
 molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
@@ -130,6 +130,7 @@ echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
  -submit $molgenisBase/submit.ftl \
  -footer $molgenisBase/footer.ftl
 
+echo -e "perl RemoveDuplicatesCompute.pl $jobsDir/*.sh &>/dev/null"
 echo -e "bash $jobsDir/submit.sh"
 # -header $MC_HOME/templates/pbs/header.ftl \
 # -submit $MC_HOME/templates/pbs/submit.ftl \

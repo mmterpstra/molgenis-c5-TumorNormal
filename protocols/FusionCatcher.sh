@@ -56,7 +56,7 @@ else
 	getFile ${reads2FqGz}
 	input=$(paste <(printf '%s\n' ${reads1FqGz[@]}| sort -u) <(printf '%s\n' ${reads2FqGz[@]}| sort -u) | perl -wne 'chomp;s/\s/,/g;$_=",".$_ if($. != 1);print $_;')
 
-	python $EBROOTFUSIONCATCHER/bin/fusioncatcher.py --input=$input --output=${fusioncatcherOutDir} --data=${fusioncatcherDataDir} --threads=1
+	python $EBROOTFUSIONCATCHER/bin/fusioncatcher.py --input=$input --output=${fusioncatcherOutDir} --data=${fusioncatcherDataDir} --threads=1 --visualization-sam --skip-conversion-grch37 --reads-preliminary-fusions
 fi
 
 putFile ${fusioncatcherTsv} 
