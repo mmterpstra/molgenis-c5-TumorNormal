@@ -52,7 +52,7 @@ java -Xmx8g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=8 -jar $EBROOTPIC
  MAX_RECORDS_IN_RAM=4000000 \
  SORT_ORDER=queryname \
  TMP_DIR=${htseqDir} | \
-samtools view -h - | \
+samtools view -h -F 1024 - | \
 python $EBROOTHTSEQ/$htseqBinDir/htseq-count -m union -s no -t exon -i gene_id - ${ensemblAnnotationGtf} > ${htseqTsv}
 
 
