@@ -37,7 +37,7 @@ RmarkMod,markdown/0.7.7-foss-2016a-R-3.2.2-bioconductor
 ##user data
 #remap plz
 #
-fusioncatcherDataDir,/data/umcg-mterpstra/apps/data/resources/fusioncatcher/ensembl_v83/
+fusioncatcherDataDir,/data/umcg-mterpstra/apps/data/resources/fusioncatcher/ensembl_v84-fusioncatcher0.99.6a/
 probeFa,${data}/resources/probeSeq_RDonly_ET1262F_2_182.rc.fasta
 probeBed,${data}/resources/probeSeq_RDonly_ET1262F_2_182.bed
 probeRnaFa,${data}/resources/target_ET1508R_3a_782_3b_783_probeSeq.fasta

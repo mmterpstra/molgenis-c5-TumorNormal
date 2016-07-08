@@ -15,7 +15,7 @@
 #list varscanDir,snvVcf,indelMnpVcf
 #string fastqcDir
 #string xlsxDir
-
+#string htseqDir
 #
 
 set -e
@@ -84,6 +84,10 @@ if [ -n "$(ls -A ${sampleMarkdownDir}/*.html)" ]; then
 	$zipbase $(echo "${sampleMarkdownDir}/*.html" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 
+if [ -e  "${htseqDir}" ]; then 
+	$zipbase $(echo "${htseqDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+fi
+
 
 #tar -zcf ${projectDir}/${project}_nobam.tar.gz $(echo $files| perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g' | perl -wpe 's!/+!/!g')
 #zip -r ${projectDir}/${project}_nobam.zip $(echo $files| perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g' | perl -wpe 's!/+!/!g')
@@ -115,7 +119,6 @@ if [  -e "${markDuplicatesDir}" ] && [ -e "${splitAndTrimDir}" ]; then
         done
 
 fi
-
 
 #olddir=$(pwd)
 #cd "$(dirname "${projectDir}")"

@@ -123,7 +123,7 @@ pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
 #################################################################################
 ##FusionCatcher
 
-#fusioncatcherDataDir,/groups/umcg-oncogenetics/tmp04/res/fusioncatcher/ensembl_v83/
+#fusioncatcherDataDir,/data/umcg-mterpstra/apps/data/resources/fusioncatcher/ensembl_v84-fusioncatcher0.99.6a/
 fusioncatcherDir,${projectDir}/fusioncatcher/
 fusioncatcherOutDir,${projectDir}/fusioncatcher/${sampleName}/
 fusioncatcherTsv,${fusioncatcherOutDir}final-list_candidate-fusion-genes.txt
