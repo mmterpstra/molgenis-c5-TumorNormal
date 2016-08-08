@@ -1,6 +1,13 @@
 # molgenis-c5-TumorNormal
 The main goal is to detect variants in tumor-normal sample combinations.
 
+Build status
+------------
+
+branches
+	- master ![master](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=master)
+	- devel ![devel](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=devel)
+
 Methods
 ------------
 
