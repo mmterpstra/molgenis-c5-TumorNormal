@@ -5,6 +5,7 @@ Build status
 ------------
 
 branches
+
 	- master ![master](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=master)
 	- devel ![devel](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=devel)
 
