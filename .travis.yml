@@ -22,7 +22,6 @@ before_install:
 #install easybuild
   - wget https://raw.githubusercontent.com/hpcugent/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py
   - python --version
-  - python bootstrap_eb.py
   - export EASYBUILD_PREFIX=$HOME/.local/easybuild && mkdir -p $HOME/.local/easybuild && python bootstrap_eb.py $HOME/.local/easybuild && module use $HOME/.local/easybuild/modules/all
   - module load EasyBuild
 #init lmod
