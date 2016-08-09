@@ -23,7 +23,7 @@ before_install:
   - wget https://raw.githubusercontent.com/hpcugent/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py
   - python --version
   - export EASYBUILD_PREFIX=$HOME/.local/easybuild && mkdir -p $HOME/.local/easybuild && python bootstrap_eb.py $HOME/.local/easybuild && module use $HOME/.local/easybuild/modules/all
-  - export EASYBUILD_MODULES_TOOL='Lmod' && module load EasyBuild && pwd && eb -f -l /home/travis/build/mmterpstra/molgenis-c5-TumorNormal/eb/Molgenis-Compute-v16.04.1.eb
+  - export EASYBUILD_MODULES_TOOL='Lmod' && module load EasyBuild && pwd && cd /home/travis/build/mmterpstra/molgenis-c5-TumorNormal/eb/ && eb -l Molgenis-Compute-v16.04.1.eb
 
 #  - export PATH=$PATH:/opt/apps/lmod/lmod/libexec && . /opt/apps/lmod/lmod/init/profile && module use $HOME/.local/easybuild/modules/all && module load EasyBuild && eb eb/Molgenis-Compute-v16.04.1.eb -f -l   
 #init lmod
