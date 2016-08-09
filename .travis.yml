@@ -12,3 +12,6 @@ before_install:
   - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
   - printf "y\n\n\t\n" | sudo apt-get install oracle-java8-installer
 #the funky echo does not work but ill will still keep it in for future reference
+install:
+- echo "future work"
+
