@@ -4,6 +4,7 @@ perl:
 
 
 before_install:
+#install oracle java 8
   - sudo apt-get install python-software-properties
   - sudo add-apt-repository ppa:webupd8team/java -y
   - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 
@@ -11,7 +12,20 @@ before_install:
   - sudo apt-get install debconf-utils
   - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
   - printf "y\n\n\t\n" | sudo apt-get install oracle-java8-installer
-#the funky echo does not work but ill will still keep it in for future reference
+#note: migth be optimised here and there
+#instal lua / lmod
+  - sudo apt-get install liblua5.1-0 liblua5.1-0-dev liblua5.1-filesystem-dev liblua5.1-filesystem0 liblua5.1-posix-dev liblua5.1-posix0 lua5.1
+  - wget https://github.com/TACC/Lmod/archive/6.4.5.tar.gz
+  - tar -zxf 6.4.5.tar.gz
+  - cd Lmod-*/ && mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install
+  - . /opt/apps/lmod/lmod/init/profile
+
+#init lmod
+#$ ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh
+#$ ln -s /opt/apps/lmod/lmod/init/cshrc   /etc/profile.d/z00_lmod.csh
+#
+#easybuild
+#molgenis-compute <the depencany hell begins here
 install:
-- echo "future work"
+- echo "future work. you can use it from the source dir"
 
