@@ -23,7 +23,7 @@ before_install:
   - wget https://raw.githubusercontent.com/hpcugent/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py
   - python --version
   - export EASYBUILD_PREFIX=$HOME/.local/easybuild && mkdir -p $HOME/.local/easybuild && python bootstrap_eb.py $HOME/.local/easybuild && module use $HOME/.local/easybuild/modules/all
-  - (. /opt/apps/lmod/lmod/init/profile && module use $HOME/.local/easybuild/modules/all && module load EasyBuild && eb eb/Molgenis-Compute-v16.04.1.eb -f) || (cat /tmp/eb-*/e*.log && exit 1)  
+  - . /opt/apps/lmod/lmod/init/profile && module use $HOME/.local/easybuild/modules/all && module load EasyBuild && eb eb/Molgenis-Compute-v16.04.1.eb -f -l   
 #init lmod
 #$ ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh
 #$ ln -s /opt/apps/lmod/lmod/init/cshrc   /etc/profile.d/z00_lmod.csh
