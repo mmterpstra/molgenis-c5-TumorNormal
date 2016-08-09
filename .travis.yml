@@ -32,4 +32,4 @@ before_install:
 #molgenis-compute <the depencany hell begins here
 install:
   - echo "future work. you can use it from the source dir"
-
+  - make test
