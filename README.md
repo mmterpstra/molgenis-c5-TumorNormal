@@ -6,8 +6,8 @@ Build status
 
 branches
 
-	- master ![master](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=master)
-	- devel ![devel](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=devel)
+	- master ![alt master](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=master)
+	- devel ![alt devel](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=devel)
 
 Methods
 ------------
