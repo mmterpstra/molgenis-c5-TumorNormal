@@ -354,6 +354,9 @@ indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
 mantaDir,${projectDir}/Manta/
 mantaVcf,${mantaDir}/${project}.vcf
 mantaVcfIdx,${mantaVcf}.idx
+mantaConfigType,
+mantaConfigTypeRna,--rna
+mantaConfigTypeExome,--exome
 
 ################################################################################
 #haplotypecaller + Gvcf mode

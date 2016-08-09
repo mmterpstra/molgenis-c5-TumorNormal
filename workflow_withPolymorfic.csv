@@ -8,6 +8,7 @@ BwaMemAlignment,protocols/BwaMem.sh,
 AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,BwaMemAlignment
 MergeBamFiles,protocols/MergeBamFiles.sh,AddOrReplaceReadGroups
 MarkDuplicates,protocols/MarkDuplicates.sh,MergeBamFiles
+Manta,protocols/MantaSV.sh,MarkDuplicates;mantaConfigType=mantaConfigTypeExome
 #CollectRnaSeqMetrics,protocols/CollectRnaSeqMetrics.sh,MarkDuplicates
 CollectMultipleMetrics,protocols/CollectMultipleMetrics.sh,MarkDuplicates
 CalculateHsMetrics,protocols/CalculateHsMetrics.sh,MarkDuplicates
