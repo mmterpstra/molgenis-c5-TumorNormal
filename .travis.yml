@@ -17,9 +17,12 @@ before_install:
   - sudo apt-get install liblua5.1-0 liblua5.1-0-dev liblua5.1-filesystem-dev liblua5.1-filesystem liblua5.1-posix-dev liblua5.1-posix lua5.1
   - wget https://github.com/TACC/Lmod/archive/6.4.5.tar.gz
   - tar -zxf 6.4.5.tar.gz
-  - cd Lmod-*/ && mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install
+  - cd Lmod-*/ && sudo mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install
   - . /opt/apps/lmod/lmod/init/profile
-
+#install easybuild
+  - wget https://raw.githubusercontent.com/hpcugent/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py
+  - python --version
+  - python bootstrap_eb.py
 #init lmod
 #$ ln -s /opt/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh
 #$ ln -s /opt/apps/lmod/lmod/init/cshrc   /etc/profile.d/z00_lmod.csh
@@ -27,5 +30,5 @@ before_install:
 #easybuild
 #molgenis-compute <the depencany hell begins here
 install:
-- echo "future work. you can use it from the source dir"
+  - echo "future work. you can use it from the source dir"
 
