@@ -11,6 +11,7 @@ before_install:
   - sudo apt-get install debconf-utils
   - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
   - printf "y\n\n\t\n" | sudo apt-get install oracle-java8-installer
+  - update-java-alternatives --list
 #note: migth be optimised here and there
 #instal lua / lmod
   - sudo apt-get install liblua5.1-0 liblua5.1-0-dev liblua5.1-filesystem-dev liblua5.1-filesystem liblua5.1-posix-dev liblua5.1-posix lua5.1
