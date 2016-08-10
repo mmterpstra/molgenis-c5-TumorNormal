@@ -1,6 +1,10 @@
 #!/bin/bash
 
+set -e
+set -x
 java -version
 perl --version
 bash --version
-
+python --version
+ml Molgenis-Compute
+molgenis_compute.sh
