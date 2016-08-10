@@ -17,7 +17,6 @@ if [ $1 == "none" ];then
 elif [ $1 == "exome" ];then
 	echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
 	workflowBase="workflow.csv"
-	
 elif [ $1 == "rna" ];then
         echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
         workflowBase="workflow_rnaseq.csv"
@@ -137,7 +136,8 @@ echo  "## "$(date)" ## $0 ## Generate scripts"
 $mlCmd
 #module load molgenis_compute/v5_20140522
 (
-	echo $mlCmd 
+	set -e; set -x
+	echo $mlCmd
 	#echo $partitionFix $jobsDir'/*.sh'
 	echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
 	 --generate \
