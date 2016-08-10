@@ -1,12 +1,11 @@
 SHELL := /bin/bash
 
-
 all-tests := $(addsuffix .test, $(basename $(wildcard test/*.test-in)))
 
 test : $(all-tests)
 
 %.test : %.test-in
-	bash $< >$@ 2>$@.err || exit 1 
+	bash $< >$@  || exit 1 
 
 clean-test := (addsuffix .test, $(basename $(wildcard test/*.test test/*err)))
 
