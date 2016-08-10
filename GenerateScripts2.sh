@@ -84,6 +84,16 @@ elif [[ "$HOSTNAME" =~ "travis\-worker\-.*" ]] ; then
 	cp $siteParam $workflowDir/.parameters.site.tmp.csv
         cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
 
+elif [[ "$HOSTNAME" =~ "testing\-.*" ]] ; then
+        echo  "## "$(date)" ## $0 ## Setting testing molgenis variables"
+
+        mlCmd="module load Molgenis-Compute/v16.04.1"
+        runDir=/home/$USER/projects/$projectname
+        siteParam=$workflowDir/peregrine.siteconfig.csv
+        cp $siteParam $workflowDir/.parameters.site.tmp.csv
+       	cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
+
+
 fi
 
 

@@ -2,7 +2,7 @@
 
 set -e
 set -x
-hostname >2
+hostname
 java -version
 perl --version
 bash --version
