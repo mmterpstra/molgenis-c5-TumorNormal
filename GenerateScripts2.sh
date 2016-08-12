@@ -136,7 +136,7 @@ echo  "## "$(date)" ## $0 ## Generate scripts"
 $mlCmd
 #module load molgenis_compute/v5_20140522
 (
-	set -e; set -x
+	echo 'set -e; set -x'
 	echo $mlCmd
 	#echo $partitionFix $jobsDir'/*.sh'
 	echo bash ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh \
