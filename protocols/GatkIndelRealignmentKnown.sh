@@ -91,7 +91,9 @@ java -Xmx8g -Djava.io.tmpdir=${indelRealignmentDir}  -XX:+UseConcMarkSweepGC  -X
  --consensusDeterminationModel KNOWNS_ONLY \
  --LODThresholdForCleaning 0.4 \
  $qualAction \
- ${gatkOpt}
+ ${gatkOpt} \
+ --maxReadsInMemory 400000 \
+ --maxReadsForRealignment 45000
 
 cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
 

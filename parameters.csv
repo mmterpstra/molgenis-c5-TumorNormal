@@ -352,12 +352,18 @@ indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
 #
 #mantaMod,
 mantaDir,${projectDir}/Manta/
-mantaVcf,${mantaDir}/${project}.vcf
-mantaVcfIdx,${mantaVcf}.idx
+mantaVcf,${mantaDir}/results/variants/diploidSV.vcf.gz
+mantaVcfIdx,${mantaVcf}.tbi
 mantaConfigType,
 mantaConfigTypeRna,--rna
 mantaConfigTypeExome,--exome
-
+################################################################################
+#snpeff manta sv annotation
+#
+snpeffMantaDir,${projectDir}/SnpEffManta/
+snpeffMantaVcf,${snpeffMantaDir}/${project}.vcf
+snpeffMantaVcfIdx,${snpeffMantaVcf}.idx
+snpEffMantaStats,${snpeffMantaDir}/${project}.snpeffmanta.stats.html
 ################################################################################
 #haplotypecaller + Gvcf mode
 gHaplotyperDir,${projectDir}/haplotypeCallerGvf/
