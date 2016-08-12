@@ -18,7 +18,6 @@
 #string singleEndfastqcZip
 #string pairedEndfastqcZip1
 #string pairedEndfastqcZip2
-#string WillThisBreakCI
 echo -e "test ${reads1FqGz} ${reads2FqGz} 1: $(basename ${reads1FqGz} .gz)${fastqcZipExt} \n2: $(basename ${reads2FqGz} .gz)${fastqcZipExt} "
 
 ${stage} ${fastqcMod}
