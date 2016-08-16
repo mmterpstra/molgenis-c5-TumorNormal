@@ -19,7 +19,7 @@
 #string snpEffMantaStats
 
 alloutputsexist \
-"${snpeffmantaVcf}" \
+"${snpeffMantaVcf}" \
 "${snpEffMantaStats}"
 
 echo "## "$(date)" ##  $0 Started "

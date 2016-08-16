@@ -89,10 +89,10 @@ alloutputsexist()
     then
         all_exist=false
         if [ -e $name ];then
-            rm -v -- "${name}";
+            rm -r -v -- "${name}";
 	fi
 	if [ -e $name.done ];then
-            rm -v -- "${name}.done";
+            rm -r -v -- "${name}.done";
         fi
 
     fi

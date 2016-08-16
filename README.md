@@ -9,18 +9,54 @@ branches
  - master ![alt master](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=master)
  - devel ![alt devel](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=devel)
 
+Install
+-----------
+
+check out my `.travis.yml` and the `test/*.sh` files.
+
+Prerequirements:
+ - Lmod
+ - EasyBuild
+ - Molgenis-Compute
+ - All the other software: installs using Easybuild.
+ - Slurm sheduler / localhost
+
+Running
+------- 
+
+Prepare a samplesheet similar to `Samplesheet.csv` update the setting to match your dataset and run it using:
+
+```
+bash GenerateScripts2.sh [none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList
+
+[none|exome|rna|nugene|nugrna|iont|withpoly]
+	workflow selection
+samplesheet
+	Samplesheet describing your data
+projectname
+	Project name. Will generate the data below /path/to/projects/${project} and some main project files are using this variable.
+targetsList
+	interval_list file to limit/split your datasets.
+``` 
+
+
+
+
+
 Methods
 ------------
 
 Variant Calling
 ===============
 
-The variant calling pipeline is an implementation of the GATK-best practics recommendations using molgenis compute. 
+The variant calling pipeline is an implementation of the GATK pipeline using molgenis compute as workflow management software. As variant caller this pipeline uses the `HaplotypeCaller` instead of `Mutect` this because the sensitivity of `Mutect` needs multiple normal samples to correct for the senstivity if the caller.
 Alignment of reads was done using BWA [cite](http://arxiv.org/abs/1303.3997) and the Genome Analysis Toolkit (GATK) [cite](https://www.broadinstitute.org/gatk/about/citing-gatk).
-Using the GRCH37 decoy build frok the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. Annotation of the variants was done using 
+Using the GRCH37 decoy build from the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. Annotation of the variants was done using 
 SnpEff [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672) / SnpSift [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069) with the ensembl release 75 gene annotations and the dbNSFP2.7 database ,
 the GATK was used with variant annotations of dbsnp 138, Cosmic v72, 1000 genomes phase 3 and Exac 0.3 databases. The data was filtered for quality metrics according to GATK recommendations (described below) 
-and custom filters for population frequency. 
+and custom filters for population frequency and variant effect.
+
+
 
 Cnv Analysis
 ============
@@ -32,12 +68,25 @@ of 5000 bp and the alignments with a mapping quality greater than 40 to calculat
 ```weigth = mean(normal/sample)+delta(normal,sample)```. Where ```normal``` = mean coverage per base in normal control and ```sample``` = mean coverage per base in described sample. 
 The results were plotted using R after using perl for format conversion.
 
-Nugene Notes
-===========
+Alternate Workflows
+==================
 
-In the nugene analysis the BQSR step is omitted because this is only meant for enritchment capturing a whole exome/genome. Using this on a small capturing kit might result in missing variant calls because
+These are the atlternate workflows and the change compared to the original.
+ - Nugene
+    - In the nugene analysis the BQSR step is omitted because this is only meant for enritchment capturing a whole exome/genome. Using this on a small capturing kit might result in missing variant calls because
  of lack of observations. This happens because for BSQR you'll need approx 100*10^6 basepairs for recalibration. 
-
+ - RNAseq
+    - This has Hisat2 as aligner, used the GATK tool SplitNReads and uses different haplotypecaller settings.
+ - Exome
+    - This is considered the default.
+ - NugeneRNA 
+   - combination of the Nugene and the RNAseq protocol changes.
+ - none
+    - WGS protocol (future work).
+ - Iontorrent
+    - Ion torrent workflow.... similar to nugene although work in progress.
+ - Whith polymorfic reads
+    - Does not filter out polymorfic reads.
 
 
 References
@@ -61,6 +110,12 @@ References
 | dbNSFP       | [project home](https://sites.google.com/site/jpopgen/dbNSFP)                               | [site](https://sites.google.com/site/jpopgen/dbNSFP) [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/21520341), [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/23843252) and [drive link](https://drive.google.com/file/d/0BwXtJxmTWY_td2ZoTXRCQTAySm8/view?usp=sharing)|
 | ensembl build 75 | [archive site](http://feb2014.archive.ensembl.org/index.html)			    | [doi.org link](http://dx.doi.org/10.1093/nar/gkt1196)
 | Exac         | [project home](http://exac.broadinstitute.org/)                                            | [instructions here](http://exac.broadinstitute.org/about)|
+| FusionCatcher | [github](https://github.com/ndaniel/fusioncatcher)					    | [instructions here](https://github.com/ndaniel/fusioncatcher#citing)
+| manta		| [github](https://github.com/Illumina/manta)						    | [preprint](http://biorxiv.org/content/early/2015/08/10/024232)
+| HTSeq		| [project home](http://www-huber.embl.de/users/anders/HTSeq/doc/index.html)		    | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/25260700)
+| BBMap		| [sourceforge](https://sourceforge.net/projects/bbmap/)				    | na |
+| BEDTools2	| [github](https://github.com/arq5x/bedtools2)						    | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/20110278) 
+| Hisat2	| [project home](http://ccb.jhu.edu/software/hisat2/index.shtml) [github](https://github.com/infphilo/hisat2/)     | [nature](http://www.nature.com/nprot/journal/v11/n9/full/nprot.2016.095.html)
 
 
 Versions
@@ -80,14 +135,17 @@ Here are the tools and software versions:
 | VarScan		 | 2.4.0-Java-1.7.0_80
 | SAMtools	 | 0.1.18-foss-2016a
 | VCFtools	 | 0.1.12b-foss-2016a-Perl-5.20.2-bare
-| pipeline-util 	 | 0.2.1-foss-2016a-Perl-5.20.2-bare
-| TableToXlsx | 
-| DigitalBarcodeReadgroups | 0.1.2-foss-2016a-Perl-5.20.2-bare
-| BBMap		 | /35.69-Java-1.7.0_80
+| pipeline-util 	 | 0.4.1-foss-2016a-Perl-5.20.2-bare
+| TableToXlsx | latest 
+| DigitalBarcodeReadgroups | 0.1.4-foss-2016a-Perl-5.20.2-bare
+| BBMap		 | 35.69-Java-1.7.0_80
 | BEDTools	 | 2.25.0-foss-2016a
 | hisat2		 | 2.0.3-beta-foss-2016a
 | HTSeq		 | 0.6.1-p1-goolfc-2.7.11-Python-2.7.9
-| FusionCatcher	 | 0.99.5a-foss-2016a-Python-2.7.11
+| FusionCatcher	 | 0.99.6a-foss-2016a-Python-2.7.11
+| markdown(R package)	| 0.7.7-foss-2016a-R-3.2.2-bioconductor
+| manta		 | 0.29.5-foss-2016a 
+
 
 Resource links
 --------------
@@ -102,6 +160,8 @@ The resource links for installing references/preparing them
 
 Workflow
 --------
+
+This repo is an implementation of 
 
 See picture below:
 

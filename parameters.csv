@@ -355,8 +355,10 @@ mantaDir,${projectDir}/Manta/
 mantaVcf,${mantaDir}/results/variants/diploidSV.vcf.gz
 mantaVcfIdx,${mantaVcf}.tbi
 mantaConfigType,
+#you can do a remap in the workflow for these for example `mantaConfigType=mantaConfigTypeRna;`
 mantaConfigTypeRna,--rna
 mantaConfigTypeExome,--exome
+
 ################################################################################
 #snpeff manta sv annotation
 #
