@@ -310,44 +310,6 @@ custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
 custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
-#variant filtration
-variantFiltDir,${projectDir}/variantfiltering/
-#select INDELS & MNP / SNVS
-snvRawVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.raw.vcf
-snvRawVcfIdx,${snvRawVcf}.idx
-indelMnpRawVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.raw.vcf
-indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
-#and filtered
-snvVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.vcf
-snvVcfIdx,${snvVcf}.idx
-indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
-indelMnpVcfIdx,${indelMnpVcf}.idx
-
-################################################################################
-#variants to table
-tableDir,${projectDir}/tables/
-#variantTable,${tableDir}/${project}.tsv
-snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
-indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
-snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
-indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
-
-################################################################################
-#vcf to descriptiontable
-#GenerateTableDescriptionByVcfHeaderPl,GenerateTableDescriptionByVcfHeader.pl
-snvDescrTable,${tableDir}/${project}.snv.description.tsv
-indelMnpDescrTable,${tableDir}/${project}.indelmnp.description.tsv
-################################################################################
-#tables to xlsx
-xlsxDir,${projectDir}/xlsx/
-snvXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.xlsx
-indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
-snvRawXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.raw.xlsx
-indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
-snvDescrXlsx,${xlsxDir}/${project}.snv.description.xlsx
-indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
-
-################################################################################
 #manta sv callling
 #
 #mantaMod,
@@ -366,6 +328,117 @@ snpeffMantaDir,${projectDir}/SnpEffManta/
 snpeffMantaVcf,${snpeffMantaDir}/${project}.vcf
 snpeffMantaVcfIdx,${snpeffMantaVcf}.idx
 snpEffMantaStats,${snpeffMantaDir}/${project}.snpeffmanta.stats.html
+#custom annotation?
+
+################################################################################
+#variant filtration
+variantFiltDir,${projectDir}/variantfiltering/
+#select INDELS & MNP / SNVS
+snvRawVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.raw.vcf
+snvRawVcfIdx,${snvRawVcf}.idx
+indelMnpRawVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.raw.vcf
+indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
+svRawVcf,${variantFiltDir}/${project}.${controlSampleName}.sv.raw.vcf
+svRawVcfIdx,${svRawVcf}.idx
+#and filtered
+snvVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.vcf
+snvVcfIdx,${snvVcf}.idx
+indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
+indelMnpVcfIdx,${indelMnpVcf}.idx
+#to be added
+svVcf,${variantFiltDir}/${project}.${controlSampleName}.sv.vcf
+svVcfIdx,${svVcf}.idx
+
+################################################################################
+#variants to table
+#
+tableDir,${projectDir}/tables/
+variantFields,
+variantFieldsLimited, -G 1000gPhase1Indels.AF -G 1000gPhase1Indels.AFR_AF -G 1000gPhase1Indels.AMR_AF -G 1000gPhase1Indels.ASN_AF -G 1000gPhase1Indels.EUR_AF -G 1000gPhase1Snps.AF -G 1000gPhase1Snps.AFR_AF -G 1000gPhase1Snps.AMR_AF -G 1000gPhase1Snps.EUR_AF -G AC -G AF -G AN -G BaseCounts -G BaseQRankSum -G ClippingRankSum -G cosmic.ID -G dbNSFP_1000Gp1_AC -G dbNSFP_1000Gp1_AF -G dbNSFP_1000Gp1_AFR_AC -G dbNSFP_1000Gp1_AFR_AF -G dbNSFP_1000Gp1_AMR_AC -G dbNSFP_1000Gp1_AMR_AF -G dbNSFP_1000Gp1_ASN_AC -G dbNSFP_1000Gp1_ASN_AF -G dbNSFP_1000Gp1_EUR_AC -G dbNSFP_1000Gp1_EUR_AF -G dbNSFP_aapos -G dbNSFP_aapos_SIFT -G dbNSFP_Ancestral_allele -G dbNSFP_ARIC5606_AA_AC -G dbNSFP_ARIC5606_AA_AF -G dbNSFP_ARIC5606_EA_AC -G dbNSFP_ARIC5606_EA_AF -G dbNSFP_ESP6500_AA_AF -G dbNSFP_ESP6500_EA_AF -G dbNSFP_Interpro_domain -G dbNSFP_Polyphen2_HDIV_pred -G dbNSFP_Polyphen2_HDIV_rankscore -G dbNSFP_Polyphen2_HDIV_score -G dbNSFP_Polyphen2_HVAR_pred -G dbNSFP_Polyphen2_HVAR_rankscore -G dbNSFP_Polyphen2_HVAR_score -G dbNSFP_SIFT_converted_rankscore -G dbNSFP_SIFT_pred -G dbNSFP_SIFT_score -G dbSnp.CAF -G dbSnp.COMMON -G dbSnp.dbSNPBuildID -G DP -G exac.AC -G exac.AC_Adj -G exac.AC_AFR -G exac.AC_AMR -G exac.AC_EAS -G exac.AC_FIN -G exac.AC_Hemi -G exac.AC_Het -G exac.AC_Hom -G exac.AC_OTH -G exac.AC_SAS -G exac.AN -G exac.AN_AFR -G exac.AN_AMR -G exac.AN_EAS -G exac.AN_FIN -G exac.AN_OTH -G exac.AN_SAS -G FILTER -G FS -G GC -G GQ_MEAN -G GQ_STDDEV -G HRun -G IsChangeInTumor -G IsChangeInTumorGQnormal -G IsChangeInTumorGQtumor -G IsHetrozygousInNormal -G LOF -G LowMQ -G MeanDP -G MinDP -G MQ -G MQ0 -G MQRankSum -G PercentNBase -G QD -G QUAL -G ReadPosRankSum -G RPA -G RU -G Samples -G SNPEFF_AMINO_ACID_CHANGE -G SNPEFFANN_AA_POS_AND_AA_LENGTH -G SNPEFFANN_ALLELE -G SNPEFFANN_ANNOTATION -G SNPEFFANN_ANNOTATION_IMPACT -G SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -G SNPEFFANN_CDS_POS_AND_CDS_LENGTH -G SNPEFFANN_DISTANCE -G SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -G SNPEFFANN_FEATURE_ID -G SNPEFFANN_FEATURE_TYPE -G SNPEFFANN_GENE_ID -G SNPEFFANN_GENE_NAME -G SNPEFFANN_HGVS_C -G SNPEFFANN_HGVS_P -G SNPEFFANN_RANK -G SNPEFFANN_TRANSCRIPT_BIOTYPE -G SNPEFF_CODON_CHANGE -G SNPEFF_EFFECT -G SNPEFF_EXON_ID -G SNPEFF_FUNCTIONAL_CLASS -G SNPEFF_GENE_BIOTYPE -G SNPEFF_GENE_NAME -G SNPEFF_IMPACT -G SNPEFF_TRANSCRIPT_ID -G SOR -G STR -G VariantType  -G AD -G DP -G F -G GQ -G GT -G MQ0 -G Z -G AB
+#variantTable,${tableDir}/${project}.tsv
+snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
+snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
+indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
+indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
+svTable,${tableDir}/${project}.${controlSampleName}.sv.tsv
+svRawTable,${tableDir}/${project}.${controlSampleName}.sv.raw.tsv
+
+#Minified tables
+snvMinTable,${tableDir}/${project}.${controlSampleName}.snv.min.tsv
+snvMinRawTable,${tableDir}/${project}.${controlSampleName}.snv.min.raw.tsv
+indelMnpMinTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.tsv
+indelMnpMinRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.raw.tsv
+svMinTable,${tableDir}/${project}.${controlSampleName}.sv.min.tsv
+svMinRawTable,${tableDir}/${project}.${controlSampleName}.sv.min.raw.tsv
+
+################################################################################
+#vcf to descriptiontable
+#
+#GenerateTableDescriptionByVcfHeaderPl,GenerateTableDescriptionByVcfHeader.pl
+snvDescrTable,${tableDir}/${project}.snv.description.tsv
+indelMnpDescrTable,${tableDir}/${project}.indelmnp.description.tsv
+svDescrTable,${tableDir}/${project}.sv.description.tsv
+################################################################################
+#tables to xlsx
+#
+xlsxDir,${projectDir}/xlsx/
+snvXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.xlsx
+snvRawXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.raw.xlsx
+snvDescrXlsx,${xlsxDir}/${project}.snv.description.xlsx
+
+indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
+indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
+indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
+
+svXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
+svRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
+svDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
+
+
+################################################################################
+#varscan files
+#
+varscanDir,${projectDir}/varscan.${controlSampleName}/
+varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
+varscanCopynumber,${varscanCopynumberPrefix}.copynumber
+varscanCopycaller,${varscanCopynumberPrefix}.called
+varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
+
+
+varscanInputBam,${indelRealignmentBam}
+varscanInputBai,${indelRealignmentBai}
+varscanInputBamBai,${indelRealignmentBam}
+
+#same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+
+controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
+controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
+controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
+
+#
+################################################################################
+#PlotGenome?
+
+segFile,${varscanDir}/${sampleName}.seg
+segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
+cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
+
+scriptDir,/gcc/tools/scripts/
+
+#lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
+#gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
+
+################################################################################
+#Misc
+snvWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.snv.vcf
+snvWithPolymorficVcfIdx,${snvWithPolymorficVcf}.idx
+
+indelMnpWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.indelmnp.vcf
+indelMnpWithPolymorficVcfIdx,${indelMnpWithPolymorficVcf}.idx
+
+
+
+##Oldcodes:
 ################################################################################
 #haplotypecaller + Gvcf mode
 gHaplotyperDir,${projectDir}/haplotypeCallerGvf/
@@ -386,44 +459,6 @@ gsnpEffVcf,${gannotatorDir}/${project}.snpEff.vcf
 gsnpEffVcfIdx,${gsnpEffVcf}.idx
 gannotVcf,${gannotatorDir}/${project}.annot.vcf
 gannotVcfIdx,${gannotVcf}.idx
-
-
-
-################################################################################
-#varscan files
-varscanDir,${projectDir}/varscan.${controlSampleName}/
-varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
-varscanCopynumber,${varscanCopynumberPrefix}.copynumber
-varscanCopycaller,${varscanCopynumberPrefix}.called
-varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
-
-
-varscanInputBam,${indelRealignmentBam}
-varscanInputBai,${indelRealignmentBai}
-varscanInputBamBai,${indelRealignmentBam}
-
-#same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
-
-controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
-controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
-controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
-
-#
-#
-################################################################################
-#PlotGenome?
-
-segFile,${varscanDir}/${sampleName}.seg
-segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
-cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
-
-scriptDir,/gcc/tools/scripts/
-
-#lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
-#gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
-
-
-
 ################################################################################
 #CreateProjectMd aka CreateProjectMarkdown
 #
@@ -438,11 +473,4 @@ projectMarkdown,${projectDir}/${project}.summary.Rmd
 #test,samplePE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_2.fq.gz
 #test,sampleSE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,
 #
-################################################################################
-#Misc
-snvWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.snv.vcf
-snvWithPolymorficVcfIdx,${snvWithPolymorficVcf}.idx
-
-indelMnpWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.indelmnp.vcf
-indelMnpWithPolymorficVcfIdx,${indelMnpWithPolymorficVcf}.idx
 

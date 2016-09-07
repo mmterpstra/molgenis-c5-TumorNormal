@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=1gb ppn=1
+#MOLGENIS walltime=23:59:00 mem=2gb ppn=1
 
 #string project
 
@@ -14,6 +14,7 @@
 #string tableDir
 #string variantTable
 #string variantRawTable
+#string variantFields
 #string gatkMod
 #string vcfToolsMod
 #string pipelineUtilMod
@@ -22,7 +23,7 @@
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
-"${variantTable}" 
+"${variantTable}"
 
 for file in "${vcf}" "${onekgGenomeFasta}"; do
 	echo "getFile file='$file'"
@@ -40,24 +41,34 @@ set -e
 
 mkdir -p ${tableDir}
 
-fields=$(perl $EBROOTPIPELINEMINUTIL/bin/DumpFieldsForVariantsToTable.pl ${vcf})
+if [ $(grep -vP '^#'  ${vcf}| wc -l) -ge 1 ]; then
 
-java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T VariantsToTable \
- -R ${onekgGenomeFasta} \
- -V ${vcf} \
- -AMD \
- -raw \
- -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
- -o ${variantRawTable}
- 
-java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T VariantsToTable \
- -R ${onekgGenomeFasta} \
- -V ${vcf} \
- -AMD \
- -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
- -o ${variantTable}
+	if [ ${#variantFields} -eq 0 ]; then
+		fields=$(perl $EBROOTPIPELINEMINUTIL/bin/DumpFieldsForVariantsToTable.pl ${vcf})
+	else
+		fields=${variantFields}
+	fi
+
+	java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	 -T VariantsToTable \
+	 -R ${onekgGenomeFasta} \
+	 -V ${vcf} \
+	 -AMD \
+	 -raw \
+	 -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
+	 -o ${variantRawTable}
+
+	java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	 -T VariantsToTable \
+	 -R ${onekgGenomeFasta} \
+	 -V ${vcf} \
+	 -AMD \
+	 -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
+	 -o ${variantTable}
+else
+	touch ${variantTable}
+	touch ${variantRawTable}
+fi
 
 putFile ${variantTable}
 putFile ${variantRawTable}

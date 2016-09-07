@@ -7,8 +7,9 @@
 #string checkStage
 #string projectDir
 #string snpEffMod
-
-
+#string snpeffDataDir
+#string vcfToolsMod
+#string pipelineUtilMod
 
 #string mantaDir
 #string mantaVcf
@@ -17,6 +18,25 @@
 #string snpeffMantaVcf
 #string snpeffMantaVcfIdx
 #string snpEffMantaStats
+
+#string motifBin
+#string nextProtBin
+#string pwmsBin
+#string regulation_CD4Bin
+#string regulation_GM06990Bin
+#string regulation_GM12878Bin
+#string regulation_H1ESCBin
+#string regulation_HeLaS3Bin
+#string regulation_HepG2Bin
+#string regulation_HMECBin
+#string regulation_HSMMBin
+#string regulation_HUVECBin
+#string regulation_IMR90Bin
+#string regulation_K562Bin
+#string regulation_NHABin
+#string regulation_NHEKBin
+#string snpEffectPredictorBin
+
 
 alloutputsexist \
 "${snpeffMantaVcf}" \
@@ -32,6 +52,10 @@ done
 
 #Load module
 ${stage} ${snpEffMod}
+${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
+${checkStage}
+
 ${checkStage}
 
 set -x
@@ -39,16 +63,30 @@ set -e
 
 mkdir -p ${snpeffMantaDir}
 
-java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
- -c $EBROOTSNPEFF/snpEff.config \
- -dataDir ${snpeffDataDir} \
- -hgvs \
- -lof \
- -stats ${snpEffMantaStats} \
- -v \
- GRCh37.75 \
- ${mantaVcf} \
- 1>${snpeffMantaVcf}
+
+if [ $(grep -v '^#' ${mantaVcf} | wc -l ) -ge 1 ]; then
+	(echo "##fileformat=VCFv4.1";
+	zcat  ${mantaVcf} | \
+	grep -vP "^##contig=<ID=hs37d5,length=35477943>|^hs37d5\t" /dev/stdin | \
+	java -Xmx8g -jar $EBROOTSNPEFF/snpEff.jar \
+	 -c $EBROOTSNPEFF/snpEff.config \
+	 -dataDir ${snpeffDataDir} \
+	 -hgvs \
+	 -lof \
+	 -stats ${snpEffMantaStats} \
+	 -v \
+	 GRCh37.75  | \
+	perl $EBROOTPIPELINEMINUTIL/bin/VcfSnpEffAsGatk.pl \
+	 /dev/stdin \
+	 ) > ${snpeffMantaVcf}
+
+
+else
+	echo "SE, Skipped"
+	touch ${snpEffMantaStats}
+        touch ${snpeffMantaVcf}
+
+fi;
 
 putFile ${snpEffMantaStats}
 putFile ${snpeffMantaVcf}

@@ -44,10 +44,12 @@ Thumbs.db
 worksheet.csv
 .compute.properties
 parameters.molgenis.csv
-
+*.tmp.csv
+[Ss]amplesheet*.csv
 # gedit dirt             #
 ##########################
 *~
 # backups                #
 ##########################
 *.bak
+*.bak_*

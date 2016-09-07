@@ -57,6 +57,14 @@ if [ $HOSTNAME == "pg-interactive" ];then
 	cp $siteParam $workflowDir/.parameters.site.tmp.csv
 	cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
 	#partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
+elif [ $HOSTNAME == "peregrine.hpc.rug.nl" ];then
+        echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
+        runDir=/scratch/$USER/projects/$projectname
+        siteParam=$workflowDir/peregrine.siteconfig.csv
+
+        cp $siteParam $workflowDir/.parameters.site.tmp.csv
+        cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
+        #partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
 elif [ $HOSTNAME == "pg-login" ];then
         echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 	runDir=/scratch/$USER/projects/$projectname
@@ -72,6 +80,8 @@ elif [ $HOSTNAME == "calculon" ];then
 	runDir=/groups/${group}/${tmp}/projects/$projectname
         siteParam=$workflowDir/umcg.siteconfig.csv
 	
+	mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_45'
+
 	perl -wpe 's/group,gcc/group,'$group'/g' $workflowDir/parameters.csv > $workflowDir/.parameters.tmp.csv
 	perl -wpe 's/group,gcc/group,'$group'/g' $siteParam > $workflowDir/.parameters.site.tmp.csv
 elif [[ "$HOSTNAME" =~ travis-worker-* ]] ; then

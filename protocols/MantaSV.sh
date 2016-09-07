@@ -11,7 +11,7 @@
 #string onekgGenomeFasta
 #list markDuplicatesBam,markDuplicatesBai
 
-
+#string samtoolsMod
 #string mantaMod
 #string mantaConfigType
 #string mantaDir
@@ -31,6 +31,7 @@ for file in "${onekgGenomeFasta}" "${markDuplicatesBam[@]}" "${markDuplicatesBai
 done
 
 #Load module
+${stage} ${samtoolsMod}
 ${stage} ${mantaMod}
 ${checkStage}
 
@@ -38,24 +39,45 @@ set -x
 set -e
 
 # sort unique and print like '--bam=file1.bam --bam=file2.bam '
-bams=($(printf '%s\n' "${markDuplicatesBam[@]}" | sort -u ))
-inputs=$(printf ' --bam=%s ' $(printf '%s\n' ${bams[@]}))
+bamsu=($(printf '%s\n' "${markDuplicatesBam[@]}" | sort -u ))
 
-mkdir -p ${mantaDir}
+declare -a bams
 
-#pseudo: 
-#configManta.py --bam=FILE --exome --referenceFasta=FILE --runDir=DIR 
-#python ${mantaDir}/runWorkflow.py -m local -j 10 -g 20
-configManta.py \
- $inputs \
- ${mantaConfigType} \
- --referenceFasta=${onekgGenomeFasta} \
- --runDir=${mantaDir}
+for bam in "${bamsu[@]}" ; do
+	if [ $(samtools view -c -f 1  $bam) -ge 1 ]; then
+		bams+=($bam)
+	else
+		echo "SE, Skipped "$bam"'"
+	fi;
+done
 
-python ${mantaDir}/runWorkflow.py \
- -m local \
- -j 10 \
- -g 20
+if [ ${#bams[*]} -ge 1 ]; then
+
+	inputs=$(printf ' --bam=%s ' $(printf '%s\n' ${bams[@]}))
+
+	mkdir -p ${mantaDir}
+
+	#pseudo: 
+	#configManta.py --bam=FILE --exome --referenceFasta=FILE --runDir=DIR 
+	#python ${mantaDir}/runWorkflow.py -m local -j 10 -g 20
+	configManta.py \
+	 $inputs \
+	 ${mantaConfigType} \
+	 --referenceFasta=${onekgGenomeFasta} \
+	 --runDir=${mantaDir}
+
+	python ${mantaDir}/runWorkflow.py \
+	 -m local \
+	 -j 10 \
+	 -g 20
+
+else
+	echo "Manta sv detection skipped because no PE reads present in bamfiles"
+	mkdir -p $(dirname ${mantaVcf})
+	touch ${mantaVcf}
+	touch ${mantaVcfIdx}
+	touch ${mantaVcf}.pefail
+fi
 
 putFile ${mantaVcf}
 putFile ${mantaVcfIdx}

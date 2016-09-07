@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=1gb
+#MOLGENIS walltime=23:59:00 mem=3gb
 
 #string project
 
@@ -58,7 +58,7 @@ if [ $varscanlines -gt 1 ] ; then
 	 -R Rscript \
 	 -d ${onekgGenomeFastaDict} \
 	 -v ${snvRawTable} \
-	 ${varscanCopycaller} 
+	 ${varscanCopycaller}
 
 	cd $oldDirName
 

@@ -22,6 +22,8 @@
 
 #string annotatorDir
 #string snpEffMod
+#string vcfToolsMod
+#string pipelineUtilMod
 #string snpEffStats
 #string snpeffDataDir
 
@@ -91,6 +93,8 @@ done
 #Load snpeff/gatk module
 ${stage} ${snpEffMod}
 ${stage} ${gatkMod}
+${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
@@ -235,21 +239,10 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -stats ${snpEffStats} \
  -v \
  GRCh37.75 \
- ${snpEffAnnotVcf}.tmp.vcf \
- 1>${snpEffAnnotVcf}.anneff.vcf
-
-rm  -v ${snpEffStats}
-
-java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
- -c $EBROOTSNPEFF/snpEff.config \
- -dataDir ${snpeffDataDir} \
- -hgvs \
- -lof \
- -stats ${snpEffStats} \
- -v \
- GRCh37.75 \
- ${gatkAnnotVcf} \
- 1>${snpEffAnnotVcf}
+ ${gatkAnnotVcf} | \
+perl $EBROOTPIPELINEMINUTIL/bin/VcfSnpEffAsGatk.pl \
+  /dev/stdin \
+  1>${snpEffAnnotVcf}
  
 java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar \
  dbnsfp -db ${dbnsfp}\
