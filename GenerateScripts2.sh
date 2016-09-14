@@ -163,7 +163,7 @@ $mlCmd
 	 -submit $molgenisBase/submit.ftl \
 	 -footer $molgenisBase/footer.ftl "1>/dev/null"
 
-	echo -e "perl RemoveDuplicatesCompute.pl $jobsDir/*.sh &>/dev/null"
+	echo -e "perl RemoveDuplicatesCompute.pl $jobsDir/*.sh &>/dev/null && perl -i -wpe 's/#SBATCH --partition=duo-pro/#SBATCH --partition=duo-pro\n#SBATCH --qos=leftover/;s/#SBATCH --partition=duo-dev/#SBATCH --partition=duo-dev\n#SBATCH --qos=leftover/' $jobsDir/*.sh"
 	echo -e "echo -e bash $jobsDir/submit.sh"
 )| tee .RunWorkFlowGeneration.sh
 #GenerateScripts2.sh
