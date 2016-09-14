@@ -163,6 +163,9 @@ echo -e "|\t${sampleName}\t|\tClean bases Q20\t|\t${baseQ20pct}\t|\tPercent\t|" 
 baseQ30pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 30){sumQ30 += $2}}; END { print sumQ30/sum*100 }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
 echo -e "|\t${sampleName}\t|\tClean bases Q30\t|\t${baseQ30pct}\t|\tPercent\t|" >> ${sampleMarkdown}
 
+echo -e "|\tsamplename\t|\tReads raw\t|\tReads clean\t|\tBases clean\t|\tClean bases Q20\t|\tClean bases Q30\t|" >> ${sampleMarkdown}
+echo -e "|\t${sampleName}\t|\t${readNumberRaw}\t|\t${readNumberClean}\t|\t${baseNumberClean}\t|\t${baseQ20pct}\t|\t${baseQ30pct}\t|" >> ${sampleMarkdown}
+
 
 ################################################################################
 ##

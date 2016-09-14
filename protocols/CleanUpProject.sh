@@ -60,6 +60,9 @@ fi
 if [ -n "$(ls -A ${dir}/*.called.homdels)" ]; then
 	$zipbase $(echo "${varscanDir}/*.called.homdels" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
+if [ -n "$(ls -A ${dir}/multi/*)" ]; then
+        $zipbase $(echo "${varscanDir}/multi/*.[tp][sd][vf]" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+fi
 
 
 dir="${projectDir}"'/*'
