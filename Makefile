@@ -6,7 +6,7 @@ test : $(all-tests)
 
 %.test : %.test-in
 	set -e; set -x
-	bash $< | tee $@  || rm -v $@ && exit 1 
+	bash $< | tee $@  || (rm -v $@ && exit 1) 
 
 clean-test := (addsuffix .test, $(basename $(wildcard test/*.test test/*err)))
 
