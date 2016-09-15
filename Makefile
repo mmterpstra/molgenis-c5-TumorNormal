@@ -5,15 +5,14 @@ all-tests := $(addsuffix .test, $(basename $(wildcard test/*.test-in)))
 test : $(all-tests)
 
 %.test : %.test-in
-	set -e; set -x
-	bash $< | tee $@  || (rm -v $@ && exit 1) 
+	set -e; set -o pipefail; bash $< | tee $@
 
-clean-test := (addsuffix .test, $(basename $(wildcard test/*.test test/*err)))
+clean-tests := $(wildcard test/*.test)
 
 clean : rmtests
 
-rmtests : $(all-tests)
-	rm -v $(all-tests)
+rmtests :
+	rm -v $(wildcard test/*.test)
 
 #	for test in $(ls test/*.sh); do echo $$test && bash $$test > $${test}.	test|| exit 1;  done
 
