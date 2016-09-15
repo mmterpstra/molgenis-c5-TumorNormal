@@ -87,7 +87,7 @@ elif [ $HOSTNAME == "calculon" ];then
 elif [[ "$HOSTNAME" =~ travis-worker-* ]] ; then
 	echo  "## "$(date)" ## $0 ## Setting testing molgenis variables"
 
-	mlCmd="module load Molgenis-Compute/v16.04.1 || module load Molgenis-Compute"
+	mlCmd="module load Molgenis-Compute"
 	runDir=/home/$USER/projects/$projectname
         siteParam=$workflowDir/peregrine.siteconfig.csv
 	cp $siteParam $workflowDir/.parameters.site.tmp.csv
@@ -97,7 +97,7 @@ elif [[ "$HOSTNAME" =~ testing-* ]] ; then
 
         echo  "## "$(date)" ## $0 ## Setting testing molgenis variables (2)"
 
-        mlCmd="module load Molgenis-Compute/v16.04.1"
+        mlCmd="module load Molgenis-Compute"
         runDir=/home/$USER/projects/$projectname
         siteParam=$workflowDir/peregrine.siteconfig.csv
         cp $siteParam $workflowDir/.parameters.site.tmp.csv
