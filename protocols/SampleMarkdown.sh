@@ -90,7 +90,7 @@ for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
 		echo "Below this paragraph the results of the fastqc tool are shown."  >> ${sampleMarkdown}
 		echo "" >> ${sampleMarkdown}
 		
-		fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+		fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g')'_fastqc')
 
 		perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
 		${fastqcBasename}.html >> ${sampleMarkdown}
@@ -115,7 +115,7 @@ if [ -e ${fastqcCleanDir} ] ; then
 	        	echo "Clean fastqc data"      >>  ${sampleMarkdown}
 	        	echo "----------------------" >> ${sampleMarkdown}
 			
-			fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+			fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fastq\.gz|\.gz!!g')'_fastqc')
 			
 		        perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
 		         ${fastqcBasename}.html >> ${sampleMarkdown}
