@@ -117,9 +117,9 @@ ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/h
 #
 fastqcDir,${projectDir}/fastqc/
 fastqcZipExt,_fastqc.zip
-singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
-pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
-pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
+singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
+pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
+pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
 #################################################################################
 ##FusionCatcher
 

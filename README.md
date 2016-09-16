@@ -53,8 +53,7 @@ The variant calling pipeline is an implementation of the GATK pipeline using mol
 Alignment of reads was done using BWA [cite](http://arxiv.org/abs/1303.3997) and the Genome Analysis Toolkit (GATK) [cite](https://www.broadinstitute.org/gatk/about/citing-gatk).
 Using the GRCH37 decoy build from the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. Annotation of the variants was done using 
 SnpEff [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672) / SnpSift [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069) with the ensembl release 75 gene annotations and the dbNSFP2.7 database ,
-the GATK was used with variant annotations of dbsnp 138, Cosmic v72, 1000 genomes phase 3 and Exac 0.3 databases. The data was filtered for quality metrics according to GATK recommendations (described below) 
-and custom filters for population frequency and variant effect.
+the GATK was used with variant annotations of dbsnp 138, Cosmic v72, 1000 genomes phase 3 and Exac 0.3 databases. The data was filtered for quality metrics according to GATK recommendations (described below) and custom filters for population frequency and variant effect. 
 
 
 
@@ -170,6 +169,36 @@ generic workflow:
 
 nugene workflow:
 ![Nugene Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin_nugene.svg)
+
+Output files
+------------
+
+The output contains 3 different types:
+
+Project folder
+ - All the (intermediate) files of the analysis
+ - Use: to clean up
+${project}_nobam.zip
+ - All the relevant files excluding the bam files.
+ - Subfolders
+    - `CovariantAnalysis/`
+       - The base quality score recalibration results. This shows the effect of the analysis on the quality scores.
+    - `fastqc/`
+       - The complete results of the fastqc tool 
+    - `HsMetrics/`
+       - The complete results of the picard CalculateHsMetrics tool. ${sample}.hsmetrics.log: calulated metrics like fraction of bases 20x covered and mean coverage. ${sample}.hsmetrics.pertargetcov.tsv: coverage for each target region 
+    - `md/`
+       - **Collected metrics** of the more important quality metrics in html/markdown format. 
+    - `multipleMetrics/`
+       - The complete results of the picard multipleMetrics tool. Many metrics included...
+    - `variantfiltering/`
+       - The (soft) filtered vcf files, to make IGV(integrative genomics viewer)/bioinformatics people happy.
+    - `varscan.${controlSampleName}/`
+       - **Our CNV analysis** see the varscan.normals/*.pdf varscan.normals/*.seg files for results. This shows the copynumber ratios versus the normal samples.
+    - `xlsx/`
+       - **The table dumps of the VCF files made for excel spreadsheet processing**. Tree types are present raw,min and filtered for viewing the raw variant calls (without filtering), the variant calls with a selected amount of columns and the variant calls filtered for population frequency and function. This for different type of calls: single nucletide variants (snv), small indels and multinucleotide polymorfisms (indelmnp) and structural variants called with manta (sv / work in progress).
+
+
 
 Variantcalling
 ==============
