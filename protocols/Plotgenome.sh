@@ -48,7 +48,7 @@ ${checkStage}
 oldDirName=$(pwd)
 
 varscanlines=$(cat ${varscanCopycaller} | wc -l)
-if [ $varscanlines -gt 1 ] ; then
+if [ $varscanlines -gt 100 ] ; then
 
 	echo "Varscan lines found. plotting genome."
 

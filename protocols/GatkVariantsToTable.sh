@@ -46,7 +46,7 @@ if [ $(grep -vP '^#'  ${vcf}| wc -l) -ge 1 ]; then
 	if [ ${#variantFields} -eq 0 ]; then
 		fields=$(perl $EBROOTPIPELINEMINUTIL/bin/DumpFieldsForVariantsToTable.pl ${vcf})
 	else
-		fields=${variantFields}
+		fields="${variantFields}"
 	fi
 
 	java -Xmx1g -Djava.io.tmpdir=${tableDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
