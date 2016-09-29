@@ -53,8 +53,8 @@ java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:Par
  --dbsnp ${dbsnpVcf}\
  -o ${genotypedVcf} \
  $inputs \
- -stand_call_conf 10.0 \
- -stand_emit_conf 20.0 \
+ -stand_call_conf 20.0 \
+ -stand_emit_conf 10.0 \
  -nt 4
 
 

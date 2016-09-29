@@ -16,7 +16,7 @@
 #string fastqcDir
 #string xlsxDir
 #string htseqDir
-#
+#string htseqDupsDir
 
 set -e
 set -x
@@ -92,6 +92,18 @@ fi
 
 if [ -e  "${htseqDir}" ]; then 
 	$zipbase $(echo "${htseqDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+fi
+if [ -e  "${htseqDupsDir}" ]; then
+        $zipbase $(echo "${htseqDupsDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+fi
+
+if [  -e "${markDuplicatesDir}" ]; then
+        for dir in  "${markDuplicatesDir}" ; do
+                if [ -n "$(ls -A $dir/*.log)" ]; then
+                        $zipbase  $(echo "$dir/*.log" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+                fi
+        done
+
 fi
 
 
