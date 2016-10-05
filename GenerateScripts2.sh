@@ -3,14 +3,16 @@
 set -e
 set -u
 
-echo "use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList"
+SCRIPTCALL="$0 $@"
+echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
+echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList"
 
 mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
 ###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
 
 
 #main thing to remember when working with molgenis "/full/paths" ALWAYS!
-##here some parameters for customisation
+#here some parameters for customisation
 
 if [ $1 == "none" ];then
 	exit 1
@@ -106,6 +108,16 @@ elif [[ "$HOSTNAME" =~ testing-* ]] ; then
 
 fi
 
+#backup samplesheets somewhere
+if [ -z "${SAMPLESHEETFOLDER+x}" ]; then
+	SAMPLESHEETFOLDER="$(dirname $0)/samplesheets/"
+fi
+if [ -d $SAMPLESHEETFOLDER ]; then
+	echo "## "$(date)" ## $0 ## Copying samplesheet to samplesheets folder '$SAMPLESHEETFOLDER'"
+	cp -v "${samplesheet}" "$SAMPLESHEETFOLDER/${HOSTNAME}_"$(basename ${samplesheet})
+	echo "## "$(date)",${0},${HOSTNAME},${SCRIPTCALL}" >> $SAMPLESHEETFOLDER/"${HOSTNAME}"_all_generated.log
+fi
+echo "## "$(date)" ## $0 ## Creating rundir/jobsdir"
 
 jobsDir=$runDir/jobs
 
@@ -125,10 +137,10 @@ echo  "## "$(date)" ## $0 ## targetsList="$targetsList
 #perl -wpe 's/group,gcc/group,'$group'/g' $workflowDir/parameters.csv > $workflowDir/.parameters.tmp.csv
 #perl -wpe 's/group,gcc/group,'$group'/g' $siteParam > $workflowDir/.parameters.site.tmp.csv
 
-
+#add additional parameters and convert samplesheets to molgenis-compute format
 echo  "## "$(date)" ## $0 ## append targetsList parameter '$targetsList'"
 echo "targetsList,"$targetsList>>$workflowDir/.parameters.tmp.csv
-
+echo "projectSampleSheet,${runDir}"/$(basename "${samplesheet}")>>$workflowDir/.parameters.tmp.csv
 echo  "## "$(date)" ## $0 ## Convert parametersheet"
 perl $workflowDir/convertParametersGitToMolgenis.pl $workflowDir/.parameters.tmp.csv > $workflowDir/.parameters.molgenis.csv
 perl $workflowDir/convertParametersGitToMolgenis.pl $workflowDir/.parameters.site.tmp.csv > $workflowDir/.parameters.site.molgenis.csv
@@ -138,9 +150,15 @@ perl -wpe 's!projectNameHere!'$projectname'!g' $samplesheet > $samplesheet.tmp.c
 
 cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet)
 cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
-
+#echo "$SCRIPTCALL" >> 
 backend="slurm"
 molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
+
+if [ -e $jobsDir/submit.sh ]; then
+	echo "## "$(date)" ## $0 ## Already generated removing finished."
+	rm $jobsDir/*finished
+fi
+
 
 echo  "## "$(date)" ## $0 ## Generate scripts"
 $mlCmd

@@ -314,6 +314,7 @@ custAnnotVcfIdx,${custAnnotVcf}.idx
 #
 #mantaMod,
 mantaDir,${projectDir}/Manta/
+mantaRunDir,${mantaDir}${sampleName}/
 mantaVcf,${mantaDir}/results/variants/diploidSV.vcf.gz
 mantaVcfIdx,${mantaVcf}.tbi
 mantaConfigType,

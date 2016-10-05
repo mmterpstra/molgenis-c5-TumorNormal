@@ -17,7 +17,8 @@
 #string xlsxDir
 #string htseqDir
 #string htseqDupsDir
-
+#string fusioncatcherDir
+#string projectSampleSheet
 set -e
 set -x
 
@@ -41,7 +42,7 @@ for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDi
 	fi
 done
 
-for file in $(ls  "${snvVcf[@]}*" "${indelMnpVcf[@]}" | sort -u); do
+for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" | sort -u); do
 	if [ -n "$(ls -A $file*)" ]; then
                	$zipbase $(echo "$file*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
@@ -93,8 +94,13 @@ fi
 if [ -e  "${htseqDir}" ]; then 
 	$zipbase $(echo "${htseqDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
+
 if [ -e  "${htseqDupsDir}" ]; then
         $zipbase $(echo "${htseqDupsDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+fi
+
+if [ -e "${fusioncatcherDir}" ]; then
+	$zipbase $(echo "${fusioncatcherDir}/*/final-list_candidate-fusion-genes.txt" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 
 if [  -e "${markDuplicatesDir}" ]; then

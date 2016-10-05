@@ -9,12 +9,13 @@
 #string projectDir
 
 #string onekgGenomeFasta
-#list markDuplicatesBam,markDuplicatesBai
+#string markDuplicatesBam,markDuplicatesBai
 
 #string samtoolsMod
 #string mantaMod
 #string mantaConfigType
 #string mantaDir
+#string mantaRunDir
 #string mantaVcf
 #string mantaVcfIdx
 
@@ -56,19 +57,19 @@ if [ ${#bams[*]} -ge 1 ]; then
 	inputs=$(printf ' --bam=%s ' $(printf '%s\n' ${bams[@]}))
 
 	mkdir -p ${mantaDir}
-
+	mkdir ${mantaRunDir}
 	#pseudo: 
 	#configManta.py --bam=FILE --exome --referenceFasta=FILE --runDir=DIR 
-	#python ${mantaDir}/runWorkflow.py -m local -j 10 -g 20
+	#python ${mantaDir}/runWorkflow.py -m local -j 1 -g 20
 	configManta.py \
 	 $inputs \
 	 ${mantaConfigType} \
 	 --referenceFasta=${onekgGenomeFasta} \
-	 --runDir=${mantaDir}
+	 --runDir=${mantaRunDir}
 
 	python ${mantaDir}/runWorkflow.py \
 	 -m local \
-	 -j 10 \
+	 -j 1 \
 	 -g 20
 
 else
