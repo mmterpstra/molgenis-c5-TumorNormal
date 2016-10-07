@@ -28,6 +28,9 @@ elif [ $1 == "nugene" ];then
 elif [ $1 == "nuginc" ];then
         echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
         workflowBase="workflow_nugeneinc.csv"
+elif [ $1 == "nugincbybed" ];then
+        echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+        workflowBase="workflow_nugeneinctrimbybed.csv"
 elif [ $1 == "nugrna" ];then
         echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
         workflowBase="workflow_nugenerna.csv"
