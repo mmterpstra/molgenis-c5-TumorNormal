@@ -96,7 +96,7 @@ done
         for md in "${mdlist[@]}"; do
                 if [ -s "$md" ] ; then
                         SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-                        grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1 
+                        grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
                	fi
         done
 ) >>  ${projectMarkdown}
@@ -119,11 +119,64 @@ done
 		fi
 	done
 ) >>  ${projectMarkdown}
+#vcf metrics? entincity? gender? HLA type? CGH metrics?
+
+
+#notes
+(
+	echo
+	echo "Notes"
+	echo "====="
+
+	echo "This report was generated with this [source](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
+ This is used for research and may contain errors or typoos. So if you encounter
+ issues please report them to the github or by mailing the correct people. Also
+ do not be afraid to contact if you have suggestions and improvements."
+) >> ${projectMarkdown}
+
+#yo, i heard you like html templates so ...
+
+htmlTemplate='<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>#!title#</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.24.2/css/uikit.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.24.2/js/uikit.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+#!r_highlight#
+
+#!mathjax#
+
+<style type="text/css">
+#!markdown_css#
+</style>
+
+#!header#
+
+</head>
+
+<body>
+#!html_output#
+</body>
+
+</html>'
+htmlTemplateFile=$(mktemp)
+echo $htmlTemplate > $htmlTemplateFile
+
+echo  'markdown::markdownToHTML(file="'${projectMarkdown}'", template="'$htmlTemplateFile'", output="'${projectMarkdown}.html'")' > ${projectMarkdown}.markdownToHtml.R
+
+Rscript ${projectMarkdown}.markdownToHtml.R
+
+rm -v ${projectMarkdown}.markdownToHtml.R
+
+rm -v $htmlTemplateFile
+
+putFile  ${projectMarkdown}
+putFile  ${projectMarkdown}.html
+
+echo "## "$(date)" ##  $0 Done "
 
 cat ${projectMarkdown}
-mv  ${projectMarkdown} ${projectMarkdown}.tmp
-#vcf metrics??
-
-
-putFile ${projectMarkdown}
-echo "## "$(date)" ##  $0 Done "
