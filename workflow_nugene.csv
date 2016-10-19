@@ -29,4 +29,5 @@ SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvV
 TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToDescriptionTable
 Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
+ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller
