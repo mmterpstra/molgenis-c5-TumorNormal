@@ -25,6 +25,12 @@ elif [ $1 == "rna" ];then
 elif [ $1 == "nugene" ];then
         echo  "## "$(date)" ## $0 ## Using nugene workflow"
         workflowBase="workflow_nugene.csv"
+elif [ $1 == "nuginc" ];then
+        echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+        workflowBase="workflow_nugeneinc.csv"
+elif [ $1 == "nugincbybed" ];then
+        echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+        workflowBase="workflow_nugeneinctrimbybed.csv"
 elif [ $1 == "nugrna" ];then
         echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
         workflowBase="workflow_nugenerna.csv"
@@ -154,9 +160,9 @@ cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
 backend="slurm"
 molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
 
-if [ -e $jobsDir/submit.sh ]; then
+if [ $(find $jobsDir -iname *.finished| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
 	echo "## "$(date)" ## $0 ## Already generated removing finished."
-	rm $jobsDir/*finished
+	rm $jobsDir/*.finished
 fi
 
 

@@ -19,7 +19,7 @@ Prerequirements:
  - EasyBuild
  - Molgenis-Compute
  - All the other software: installs using Easybuild.
- - Slurm sheduler / localhost
+ - Slurm sheduler or large enough machine to run locally perferably ~30g mem & ~1t storage and 8 cpu's
 
 Running
 ------- 
@@ -39,30 +39,24 @@ targetsList
 	interval_list file to limit/split your datasets.
 ``` 
 
-
-
-
-
 Methods
 ------------
 
 Variant Calling
 ===============
 
-The variant calling pipeline is an implementation of the GATK pipeline using molgenis compute as workflow management software. As variant caller this pipeline uses the `HaplotypeCaller` instead of `Mutect` this because the sensitivity of `Mutect` needs multiple normal samples to correct for the senstivity if the caller.
+The variant calling pipeline is an implementation of a variant calling pipeline using the GATK tools and molgenis compute as workflow management software. As variant caller this pipeline uses the `HaplotypeCaller` instead of `Mutect` this because the sensitivity of `Mutect` needs multiple normal samples to correct for the senstivity if the caller.
 Alignment of reads was done using BWA [cite](http://arxiv.org/abs/1303.3997) and the Genome Analysis Toolkit (GATK) [cite](https://www.broadinstitute.org/gatk/about/citing-gatk).
 Using the GRCH37 decoy build from the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. Annotation of the variants was done using 
 SnpEff [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672) / SnpSift [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069) with the ensembl release 75 gene annotations and the dbNSFP2.7 database ,
 the GATK was used with variant annotations of dbsnp 138, Cosmic v72, 1000 genomes phase 3 and Exac 0.3 databases. The data was filtered for quality metrics according to GATK recommendations (described below) and custom filters for population frequency and variant effect. 
 
-
-
 Cnv Analysis
 ============
 
 Copy number variation data were generated using Samtools and Varscan (Li et al., 2009, Koboldt et al., 2012) ([pubmed](http://www.ncbi.nlm.nih.gov/pubmed/19505943), [pubmed link](http://www.ncbi.nlm.nih.gov/pubmed/22300766)).
-The GC-content normalised log2 fold change data was generated using using data of the tumor sample and the matched normal sample. Using a minimal segment size of 2000 bp and a maximal segment size 
-of 5000 bp and the alignments with a mapping quality greater than 40 to calculate the fold changes, otherwise the default settings are assumed. The segment calling was done with DNAcopy algoritmn 
+The GC-content normalised log2 fold change data was generated using using data of the tumor sample and the matched normal sample. Using a minimal segment size of 2000 bp, a maximal segment size 
+of 5000 bp, minimal base wise coverage of 1 and the alignments with a mapping quality greater than 40 to calculate the fold changes, otherwise the default settings are assumed. The segment calling was done with DNAcopy algoritmn 
 (Olshen et al., 2004). In addition to the default settings the circulair binary segmentation (CBS) calls were merged if they had an SD of < 0.5 with adjacent segments and weigths were added based on 
 ```weigth = mean(normal/sample)+delta(normal,sample)```. Where ```normal``` = mean coverage per base in normal control and ```sample``` = mean coverage per base in described sample. 
 The results were plotted using R after using perl for format conversion.
@@ -74,6 +68,9 @@ These are the atlternate workflows and the change compared to the original.
  - Nugene
     - In the nugene analysis the BQSR step is omitted because this is only meant for enritchment capturing a whole exome/genome. Using this on a small capturing kit might result in missing variant calls because
  of lack of observations. This happens because for BSQR you'll need approx 100*10^6 basepairs for recalibration. 
+    - Also Landing probe removal by aligment location was performed with custom script from pipeline-util repo and quality trimming (Q>20) with bbduk was performed
+ - NugeneInc
+    - This is not the official nugene pipeline but modeled to look like it: trimming for landing probe sequence and quality >20 trim using bbduk from the bbmap package.
  - RNAseq
     - This has Hisat2 as aligner, used the GATK tool SplitNReads and uses different haplotypecaller settings.
  - Exome
@@ -84,8 +81,9 @@ These are the atlternate workflows and the change compared to the original.
     - WGS protocol (future work).
  - Iontorrent
     - Ion torrent workflow.... similar to nugene although work in progress.
- - Whith polymorfic reads
-    - Does not filter out polymorfic reads.
+ - With non polymorfic reads
+    - Does not filter for non polymorfic reads.
+
 
 
 References
@@ -121,7 +119,7 @@ Versions
 ========
 
 Version managment done with lmod `lua based implementation of environment modules`. Installation/deployment management done with Easybuild.
-Here are the tools and software versions:
+Here are the tools and software versions (for the current versions look at the *.siteconfig.csv):
 
 | software              | version |
 | --------              | ------- |
@@ -160,9 +158,7 @@ The resource links for installing references/preparing them
 Workflow
 --------
 
-This repo is an implementation of 
-
-See picture below:
+See pictures below for the different sub workflows:
 
 generic workflow:
 ![Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin.svg)
@@ -202,7 +198,8 @@ ${project}_nobam.zip
 
 Variantcalling
 ==============
-This is done with the haplotype caller using `-stand_call_conf 10.0` and `-stand_emit_conf 20.0` (call bases with QUAL > 10).
+This is done with the haplotype caller using `-stand_call_conf 10.0` and `-stand_emit_conf 20.0` (call bases with QUAL > 10). 
+Instead of the default calling with a QUAL >= 30 (see also the 'Filtering of variant calls' paragraph).
 
 Filtering of variant calls
 ==========================
@@ -228,6 +225,26 @@ different filtering based on type:
 | "1000gEURMAFgt0.02" | see descr. | both			| european 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" |
 | "QDlt2andQdbyAflt8" | "QD < 2.0 && QD / AF < 8.0 | both	| having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data...)  |
 
+Filtering of variant calls V2
+==========================
 
+The recommended filtering procedure depends on the sample size, sequencing method, target region size and depth these are general recommendations. The filtering might benefit from less stringent filtering of the variant statistics to increase sensitivity. The refiltering is best done on the raw data because these still contain the removed variance.
 
+| Name          		| Expression    		| Applied on                    | Description |
+| ----          		| ----------    		| -----------                   | ----------- |
+| "LowQual"     		| "QUAL < 30"   		| both (snv and indel & mnp)    | Variant statistic. Filter for the possibility (> 1/1000 or <30 pred scaled) that the variant call is wrong using a bayesian model. |
+| "QDlt2"			| "QD < 2.0"    		| both                          | Variant statistic. Filter for the pred scaled possibility that the variant call is wrong divided by the depth < 2.0 |
+| "MQlt40"			| "MQ < 40.0"			| snv				| Variant statistic. Filter snv for the pred scaled possibility that a mapping is wrong, capped 60, calculated with secondary hits using the base quality scores at the different positions to call it 0 or higher. Filter for unique mappings. |
+| "MQRankSumlt-12_5"		| "MQRankSum < -12.5" 		| snv				| Variant statistic. Filter snv for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
+| "MQRankSumlt-20" 		| "MQRankSum < -20" 		| indel & mnp  			| Variant statistic. Filter indel for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
+| "ReadPosRankSumlt-20" 	| "ReadPosRankSum < -20.0"	| snv				| Variant statistic. Fisher strand bias of the covering reads. High values == more bias. |
+| "FSgt60"			| "FS > 60.0"			| snv  				| Variant statistic. Fisher strand bias of the covering reads. High values == more bias. |
+| "FSgt200"			| "FS > 200.0"			| indel & mnp			| Variant statistic. Tandem repeat annotation of the region. The more repeats the less likely the indel call is true. Sequencing has difficulties with repeats (with about >=8 repeating units).	|
+| "RPAgt8" 			| "vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8" | both | Functional Annotation. Tandem repeat annotation of the region. The more repeats the less likely the indel call is true. Sequencing has difficulties with repeats (having about >=8 repeating units). |
+| "TeMeermanAlleleBiasgt5" 	| TeMeermanAlleleBias > 5.0	| both				| Variant statistic. Never filters anything -> legency artifact|
+| "NotPolymorfic" 		| all GT equal			| both				| Genotype annotation. All the genotypes are equal. If analysed with a proper control this variant is very unlikely to be harmful.|
+| "NotPutatativeHarmfulVariant" | see descr. 			| both				| Functional annotation. everything that is not fuctional according the [snpeff documentation](http://snpeff.sourceforge.net/SnpEff_manual.html) under 'Effect prediction details' aka: ###Should be updated for the SNPEFFANN FIELDS :"!((vc.hasAttribute('SNPEFFANN_ANNOTATION_IMPACT') && vc.getAttribute('SNPEFFANN_ANNOTATION_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" |
+| "1000gMAFgt0.02" 		| see descr.			| both				| Population annotation. entire 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" |
+| "1000gEURMAFgt0.02" 		| see descr. 			| both				| Population annotation. european 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" |
+| "QDlt2andQdbyAflt8" 		| "QD < 2.0 && QD / AF < 8.0	| both				| Variant statistic. having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data...)  |
 
