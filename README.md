@@ -228,7 +228,11 @@ different filtering based on type:
 Filtering of variant calls V2
 ==========================
 
-The recommended filtering procedure depends on the sample size, sequencing method, target region size and depth these are general recommendations. The filtering might benefit from less stringent filtering of the variant statistics to increase sensitivity. The refiltering is best done on the raw data because these still contain the removed variance.
+The recommended filtering procedure depends on the sample size, sequencing method, target region size and depth these are general recommendations. The filtering might benefit from less stringent filtering of the variant statistics to increase sensitivity. The refiltering is best done on the raw data because these still contain the removed variance. Also consider adding exac.ac/exac.an <> 0.02 and adding the population(european/asian/american/african) specific filters for exac,esp6500 and 1000g. If you document your filtering I might add it to the filtering pipeline.
+
+Note the different filtering strategies for the following subtypes.
+ - snv
+ - indel & mnp
 
 | Name          		| Expression    		| Applied on                    | Description |
 | ----          		| ----------    		| -----------                   | ----------- |
