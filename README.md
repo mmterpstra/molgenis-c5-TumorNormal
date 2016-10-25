@@ -187,13 +187,21 @@ list of definitions
 
 See pictures below for the different sub workflows:
 
-generic workflow:
+Generic workflow
+
+
 ![Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin.svg)
 
-nugene workflow:
+
+Nugene workflow
+
+
 ![Nugene Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin_nugene.svg)
 
-nugene rna workflow
+
+Nugene RNA workflow
+
+
 ![Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin_nugeneRNA.svg)
 
 
