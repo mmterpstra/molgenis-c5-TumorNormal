@@ -158,6 +158,33 @@ The resource links for installing references/preparing them
 Workflow
 --------
 
+The workflow is a multistep protocol including the following main steps. 
+
+ - Start with input reads in fastq format (from illumina sequencing)
+ - (`RNA` / `NugeneRNA` ) Perform FusionCather on PE reads or else skip this analysis.
+ - (`Nugene`/`NugeneRNA`) Add N6 barcode info into the read and trim by alignment position and quality. steps detailed below.
+    - Add N6 barcode into read.
+    - Align reads (`DNA -> bwa`/ `RNA -> hisat2`) and trim on overlap with the landing probes.
+    - Use BBduk of the bbmap package for trimming the data on pred scaled base quality <20.
+ - Do alignment on the grch refernce build v37 (`DNA -> bwa`/ `RNA -> hisat2`) for each fastq dataset.
+ - Use Picard tools AddOrReplaceGroups to covert the sam into properly sorted and indexed bam format.
+ - (`Nugene`/`NugeneRNA`) Expand readgroups based on the N6 barcodes: for each unique N6 barcode create a new readgroup.
+ - Use Picard tools MergeBamFiles merge the .bam into a single .bam file for each sample.
+ - Use Picard tools MarkDuplicates to mark the duplicates in each sample.
+ - Use GATK indel realignment to know sites.
+ - Call variants using GATK HaplotypeCaller
+ - Annotate Variants using SNPEFF (funtional effects), SNPSIFT (dbsnfp) and GATK VariantAnnotator (exac / 1000g /cosmic).
+ - Using the GATK SelectVariants and FilterVariants split by `snv` and `indel & mnp` then filter depending on the dataset. 
+
+list of definitions
+
+
+| Definition | Meaning |
+| ---------- | ------- |
+| Readgroup  | A subset of data with attached sample/library/machine/lane/etc..  info attached for use in Duplicate removal, BQSR, variant calling and other analysis steps to improve them.|
+| N6 barcode | The random barcode of nugene attached to the normal sample barcode.|
+
+
 See pictures below for the different sub workflows:
 
 generic workflow:
@@ -165,6 +192,10 @@ generic workflow:
 
 nugene workflow:
 ![Nugene Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin_nugene.svg)
+
+nugene rna workflow
+![Workflow](https://rawgit.com/mmterpstra/molgenis-c5-TumorNormal/devel/img/TumorNormalMin_nugeneRNA.svg)
+
 
 Output files
 ------------
@@ -204,6 +235,7 @@ Instead of the default calling with a QUAL >= 30 (see also the 'Filtering of var
 Filtering of variant calls
 ==========================
 different filtering based on type:
+
  - snv
  - indel & mnp
 
@@ -227,17 +259,15 @@ different filtering based on type:
 
 Filtering of variant calls V2
 ==========================
-<<<<<<< HEAD
 
 The recommended filtering procedure depends on the sample size, sequencing method, target region size and depth these are general recommendations. The filtering might benefit from less stringent filtering of the variant statistics to increase sensitivity. The refiltering is best done on the raw data because these still contain the removed variance. Also consider adding exac.ac/exac.an <> 0.02 and adding the population(european/asian/american/african) specific filters for exac,esp6500 and 1000g. If you document your filtering I might add it to the filtering pipeline.
 
-Note the different filtering strategies for the following subtypes.
+
+The table below shows the filtering steps that are automatically performed. Note the different filtering strategies for the following subtypes.
  - snv
  - indel & mnp
-=======
 
-The recommended filtering procedure depends on the sample size, sequencing method, target region size and depth these are general recommendations. The filtering might benefit from less stringent filtering of the variant statistics to increase sensitivity. The refiltering is best done on the raw data because these still contain the removed variance.
->>>>>>> ff1a2f060e70201a8d7f65a2159fde937d87a672
+
 
 | Name          		| Expression    		| Applied on                    | Description |
 | ----          		| ----------    		| -----------                   | ----------- |
