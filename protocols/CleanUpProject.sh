@@ -21,6 +21,7 @@
 #string projectSampleSheet
 set -e
 set -x
+set -o pipefail
 
 alloutputsexist \
 "$(dirname "${projectDir}")/${project}_nobam.zip" \
@@ -87,22 +88,26 @@ fi
 #	if [ -n "$(ls -A ${dir}*)" ]; then
 #		$zipbase $(echo "${indelMnpVcf}*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 #	fi
+
+#qc html by sample
 if [ -n "$(ls -A ${sampleMarkdownDir}/*.html)" ]; then
 	$zipbase $(echo "${sampleMarkdownDir}/*.html" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 
+#rna seq output of htseq-count
 if [ -e  "${htseqDir}" ]; then 
 	$zipbase $(echo "${htseqDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
-
+#rna seq output of htseq-count with dups?
 if [ -e  "${htseqDupsDir}" ]; then
         $zipbase $(echo "${htseqDupsDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
-
+#rna seq output of fusions of fusioncather
 if [ -e "${fusioncatcherDir}" ]; then
 	$zipbase $(echo "${fusioncatcherDir}/*/final-list_candidate-fusion-genes.txt" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 
+#for markduplicates results log
 if [  -e "${markDuplicatesDir}" ]; then
         for dir in  "${markDuplicatesDir}" ; do
                 if [ -n "$(ls -A $dir/*.log)" ]; then
@@ -125,7 +130,8 @@ if [ -e "${bqsrDir}" ]  ; then
 		fi
 	done
 
-elif [  -e "${indelRealignmentDir}" ] ]; then
+#control for workflows skipping bqsr 
+elif [  -e "${indelRealignmentDir}" ]; then
         for dir in  "${indelRealignmentDir}" ; do
                 if [ -n "$(ls -A $dir/*)" ]; then
                         $zipbase $(echo "$dir/*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
@@ -134,7 +140,7 @@ elif [  -e "${indelRealignmentDir}" ] ]; then
 
 fi
 
-
+#control for rna seq spliced alignments in markduplicates dir
 if [  -e "${markDuplicatesDir}" ] && [ -e "${splitAndTrimDir}" ]; then
 	for dir in  "${markDuplicatesDir}" ; do
                 if [ -n "$(ls -A $dir/*)" ]; then
@@ -152,7 +158,6 @@ fi
 
 #cd "${projectDir}"
 md5sum ${project}.zip > ${project}.zip.md5
-#cd $olddir
 
 for i in $(ls ${projectDir}/*/ -d| grep -v jobs ); do 
 	echo $i
@@ -163,4 +168,6 @@ done
 putFile "$(dirname "${projectDir}")/${project}_nobam.zip" 
 putFile "$(dirname "${projectDir}")/${project}.zip" 
 
+
+cd $olddir
 

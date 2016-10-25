@@ -161,9 +161,14 @@ baseQ20pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 20){sumQ20 += $2}}; END { prin
 echo -e "|\t${sampleName}\t|\tClean bases Q20\t|\t${baseQ20pct}\t|\tPercent\t|" >> ${sampleMarkdown}
 
 baseQ30pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 30){sumQ30 += $2}}; END { print sumQ30/sum*100 }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
+
 echo -e "|\t${sampleName}\t|\tClean bases Q30\t|\t${baseQ30pct}\t|\tPercent\t|" >> ${sampleMarkdown}
 
+echo
+
 echo -e "|\tsamplename\t|\tReads raw\t|\tReads clean\t|\tBases clean\t|\tClean bases Q20\t|\tClean bases Q30\t|" >> ${sampleMarkdown}
+echo -e "|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|" >> ${sampleMarkdown}
+
 echo -e "|\t${sampleName}\t|\t${readNumberRaw}\t|\t${readNumberClean}\t|\t${baseNumberClean}\t|\t${baseQ20pct}\t|\t${baseQ30pct}\t|" >> ${sampleMarkdown}
 
 
@@ -283,7 +288,7 @@ if [ -e ${markDuplicatesMetrics} ] ; then
  pctDups <- as.numeric(((colsumstabledup[c("UNPAIRED_READ_DUPLICATES")] + colsumstabledup[c("READ_PAIR_DUPLICATES")]*2) / (colsumstabledup[c("UNPAIRED_READS_EXAMINED")] + colsumstabledup[c("READ_PAIRS_EXAMINED")] *2)));
  colsumstabledup["PERCENT_DUPLICATION"] = pctDups;colsumstabledup= c("Field"= "Value",colsumstabledup);
 #java:PERCENT_DUPLICATION = (UNPAIRED_READ_DUPLICATES + READ_PAIR_DUPLICATES *2) /(double) (UNPAIRED_READS_EXAMINED + READ_PAIRS_EXAMINED *2);
- write.table(colsumstabledup ,file=stdout(),sep="|", row.names=TRUE, quote=FALSE, col.names=FALSE);' >  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R;
+ write.table(t(colsumstabledup) ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE, col.names=TRUE);' >  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R;
 	Rscript  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '>> ${sampleMarkdown}
 	rm -v  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R
 else
