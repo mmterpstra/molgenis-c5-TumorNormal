@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=20gb ppn=10
+#MOLGENIS walltime=23:59:00 mem=20gb ppn=2
 
 #string project
 
@@ -67,7 +67,7 @@ if [ ${#bams[*]} -ge 1 ]; then
 	 --referenceFasta=${onekgGenomeFasta} \
 	 --runDir=${mantaRunDir}
 
-	python ${mantaDir}/runWorkflow.py \
+	python ${mantaRunDir}/runWorkflow.py \
 	 -m local \
 	 -j 1 \
 	 -g 20

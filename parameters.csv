@@ -315,7 +315,7 @@ custAnnotVcfIdx,${custAnnotVcf}.idx
 #mantaMod,
 mantaDir,${projectDir}/Manta/
 mantaRunDir,${mantaDir}${sampleName}/
-mantaVcf,${mantaDir}/results/variants/diploidSV.vcf.gz
+mantaVcf,${mantaDir}${sampleName}/results/variants/diploidSV.vcf.gz
 mantaVcfIdx,${mantaVcf}.tbi
 mantaConfigType,
 #you can do a remap in the workflow for these for example `mantaConfigType=mantaConfigTypeRna;`
@@ -326,9 +326,9 @@ mantaConfigTypeExome,--exome
 #snpeff manta sv annotation
 #
 snpeffMantaDir,${projectDir}/SnpEffManta/
-snpeffMantaVcf,${snpeffMantaDir}/${project}.vcf
+snpeffMantaVcf,${snpeffMantaDir}/${project}.${sampleName}.vcf
 snpeffMantaVcfIdx,${snpeffMantaVcf}.idx
-snpEffMantaStats,${snpeffMantaDir}/${project}.snpeffmanta.stats.html
+snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.html
 #custom annotation?
 
 ################################################################################
@@ -339,7 +339,7 @@ snvRawVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.raw.vcf
 snvRawVcfIdx,${snvRawVcf}.idx
 indelMnpRawVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.raw.vcf
 indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
-svRawVcf,${variantFiltDir}/${project}.${controlSampleName}.sv.raw.vcf
+svRawVcf,${variantFiltDir}/${project}.${sampleName}.${controlSampleName}.sv.raw.vcf
 svRawVcfIdx,${svRawVcf}.idx
 #and filtered
 snvVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.vcf

@@ -153,10 +153,11 @@ perl $workflowDir/convertParametersGitToMolgenis.pl $workflowDir/.parameters.sit
 
 echo  "## "$(date)" ## $0 ## Convert samplesheet"
 perl -wpe 's!projectNameHere!'$projectname'!g' $samplesheet > $samplesheet.tmp.csv
+perl $workflowDir/ValidateSampleSheet.pl $samplesheet
 
 cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet)
 cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
-#echo "$SCRIPTCALL" >> 
+#echo "$SCRIPTCALL" >>
 backend="slurm"
 molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
 
