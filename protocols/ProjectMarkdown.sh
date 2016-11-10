@@ -58,8 +58,10 @@ done
 
         for md in "${mdlist[@]}"; do
                	if [ -s "$md" ] ; then
-			SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-	               	grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+			#samplename is already present
+			#SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
+	               	#grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+			grep -A 2 "$HEADER" "$md" | tail -n 1
 		fi
         done
 ) >>  ${projectMarkdown}
@@ -91,8 +93,10 @@ done
         echo
         echo "Result table of the Duplicates for all samples"
         echo
-        HEADER='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES|PERCENT_DUPLICATION |'
-        grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*CATEGORY/\| SAMPLE \| CATEGORY/;s/^\|  --- /\|  --- \|  --- /;'
+	#header differs between single end and paired end so first use the headerbase to grep the file do determine the real header
+	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
+        HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
+	grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*CATEGORY/\| SAMPLE \| CATEGORY/;s/^\|  --- /\|  --- \|  --- /;'
         for md in "${mdlist[@]}"; do
                 if [ -s "$md" ] ; then
                         SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)

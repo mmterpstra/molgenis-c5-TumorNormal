@@ -32,6 +32,7 @@ sub ReadSamplesheet {
 		chomp;
 		my @c = CommaseparatedSplit($_);
 		ValidateColvalues(\@h,\@c);
+		ValidateSpecialChars(\@h,\@c);
 		#die Dumper(\@c);
 		my %d;
 		my $i=0;
@@ -48,11 +49,27 @@ sub ValidateColvalues {
 	my $header = shift @_;
 	my $columns = shift @_;
 	if(scalar(@{$header}) ne scalar(@{$columns})){
-		die "[VALIDATIONERROR] no of columns (".scalar(@{$columns}).") in line $. are not equal to columns in header ".scalar(@{$columns})
+		die "[VALIDATIONERROR] number of columns (".scalar(@{$columns}).") in line $. are not equal to columns in header ".scalar(@{$columns})
 			.".\nArray dump of header".Dumper($header)
 			.".\nArray dump of $. columns".Dumper($columns)." ";
 	}
 }
+sub ValidateSpecialChars {
+        my $header = shift @_;
+        my $columns = shift @_;
+	for my $field (@{$header}, @{$columns}){
+		if($field =~ /[ \&\%\@\$\'\"\[\]\{\}\*\!\~\`]/){
+			die "[VALIDATIONERROR] field '".$field."' matches /[ \#\&\%\@\$\-\'\"\[\]\{\}\*\!\~\`]/ in line '$.' "
+                	        .".\nArray dump of header".Dumper($header)
+                	        .".\nArray dump of $. columns".Dumper($columns)." ";
+		}
+                if($field =~ /[\-]/){
+                        warn "[VALIDATIONERROR] field '".$field."' matches /[\-]/ in line '$.'. Consider removing.";
+                }
+
+	}
+}
+
 sub ValidateControlSampleNames {
 	my $samplesheet = shift @_;
 	
@@ -72,10 +89,10 @@ sub ValidateControlSampleNames {
 		map{
 			$seen++ if($_ eq $csproject.'|'.$csname);
 		}(@s);
-		$error = "'".$csname."' at $csline," if(not($seen));
+		$error = "'".$csname."' in project '".$csproject."' at $csline," if(not($seen));
 	}(@{$cs});
 	chop $error;
-	die "[VALIDATIONERROR] the following samplename(s) are seen in the controlsamplenames row but not seen in the samplenames row (format'controlsaplename' at \$lineno) : \n".$error if($error ne "");
+	die "[VALIDATIONERROR] The following samplename(s) are seen in the controlsamplenames row but not seen in the samplenames row for the project (format'controlsaplename' at \$lineno) : \n".$error if($error ne "");
 }
 sub CommaseparatedSplit {
 	my $string=pop @_;
