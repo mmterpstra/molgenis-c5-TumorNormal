@@ -27,6 +27,7 @@ echo "## "$(date)" ##  $0 Started "
 #Check if output exists if so execute 'exit -0'
 alloutputsexist \
 	${fusioncatcherTsv}
+	${fusioncatcherOutDir}
  
 #getFile functions
 
@@ -59,6 +60,7 @@ else
 	python $EBROOTFUSIONCATCHER/bin/fusioncatcher.py --input=$input --output=${fusioncatcherOutDir} --data=${fusioncatcherDataDir} --threads=1 --visualization-sam --skip-conversion-grch37 --reads-preliminary-fusions
 fi
 
-putFile ${fusioncatcherTsv} 
+putFile ${fusioncatcherTsv}
+putFile ${fusioncatcherOutDir}
 
 echo "## "$(date)" ##  $0 Done "

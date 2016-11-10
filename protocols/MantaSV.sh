@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=20gb ppn=2
+#MOLGENIS walltime=143:59:00 mem=30gb ppn=2
 
 #string project
 
@@ -9,7 +9,8 @@
 #string projectDir
 
 #string onekgGenomeFasta
-#string markDuplicatesBam,markDuplicatesBai
+#string markDuplicatesBam
+#string markDuplicatesBai
 
 #string samtoolsMod
 #string mantaMod
@@ -20,7 +21,7 @@
 #string mantaVcfIdx
 
 alloutputsexist \
-"${mantaDir}" \
+"${mantaRunDir}" \
 "${mantaVcf}"
 
 echo "## "$(date)" ##  $0 Started "
@@ -65,12 +66,15 @@ if [ ${#bams[*]} -ge 1 ]; then
 	 $inputs \
 	 ${mantaConfigType} \
 	 --referenceFasta=${onekgGenomeFasta} \
-	 --runDir=${mantaRunDir}
+	 --runDir=${mantaRunDir} \
 
+	#python ${mantaRunDir}/runWorkflow.py \
+	# -m local \
+	# -j 1 \
+	# -g 20
 	python ${mantaRunDir}/runWorkflow.py \
-	 -m local \
-	 -j 1 \
-	 -g 20
+         -m local \
+         -j 1 \
 
 else
 	echo "Manta sv detection skipped because no PE reads present in bamfiles"
