@@ -125,6 +125,10 @@ done
 ) >>  ${projectMarkdown}
 #vcf metrics? entincity? gender? HLA type? CGH metrics?
 
+#version
+(	echo
+	cat generation.log
+)>> ${projectMarkdown}
 
 #notes
 (

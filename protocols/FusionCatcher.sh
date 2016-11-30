@@ -28,6 +28,7 @@ alloutputsexist \
 getFile ${onekgGenomeFasta}
 
 #Load modules
+ml TableToXlsx
 ${stage} ${fusioncatcherMod}
 
 #check modules
@@ -52,7 +53,6 @@ else
 
 	python $EBROOTFUSIONCATCHER/bin/fusioncatcher.py --input=$input --output=${fusioncatcherOutDir} --data=${fusioncatcherDataDir} --threads=1 --visualization-sam --skip-conversion-grch37 --reads-preliminary-fusions
 
-	ml TableToXlsx
 	perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t ${fusioncatcherTsv}
 fi
 

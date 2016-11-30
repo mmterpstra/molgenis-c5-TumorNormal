@@ -70,7 +70,8 @@ if [ ${#reads3FqGz} -eq 0 ]; then
                  out=${nugeneReads1FqGz} \
                  qtrim=r \
                  trimq=20 \
-                 minlen=20
+                 minlen=20 \
+		 overwrite=t
 
 		rm -v $TMPFASTQ1.fq.gz
                 putFile ${nugeneReads1FqGz}
@@ -100,7 +101,8 @@ if [ ${#reads3FqGz} -eq 0 ]; then
                  out2=${nugeneReads2FqGz} \
 		 qtrim=r \
                  trimq=20 \
-                 minlen=20
+                 minlen=20 \
+		 overwrite=t
 
 		rm -v ${TMPFASTQ1}_R1.fq.gz ${TMPFASTQ1}_R2.fq.gz
 
@@ -131,7 +133,8 @@ else
                  out=${nugeneReads1FqGz} \
                  qtrim=r \
                  trimq=20 \
-                 minlen=20
+                 minlen=20 \
+		 overwrite=t
 
 		rm -v $TMPFASTQ1 $TMPFASTQ1.fq.gz
 
@@ -163,7 +166,8 @@ else
                  out2=${nugeneReads2FqGz} \
                  qtrim=r \
                  trimq=20 \
-                 minlen=20
+                 minlen=20 \
+		 overwrite=t
 
                 rm -v ${TMPFASTQ1}_R1.fq.gz ${TMPFASTQ1}_R2.fq.gz
 

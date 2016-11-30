@@ -199,9 +199,16 @@ markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
 #
 htseqDir,${projectDir}/htseq/
 htseqTsv,${htseqDir}${sampleName}.tsv
-
+#with duplicates
 htseqDupsDir,${projectDir}/htseqdups/
 htseqDupsTsv,${htseqDupsDir}${sampleName}.tsv
+#merging the tables
+#htseqTsv
+#htseqDupsTsv
+htseqTable,${tableDir}/${project}.htseq.merged.tsv
+htseqDupsTable,${tableDir}/${project}.htseqdups.merged.tsv
+htseqXlsx,${xlsxDir}/${project}.htseq.merged.xlsx
+htseqDupsXlsx,${xlsxDir}/${project}.htseqdups.merged.xlsx
 
 ################################################################################
 ##CollectRnaSeqMetrics
@@ -364,7 +371,7 @@ indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
 svTable,${tableDir}/${project}.${controlSampleName}.sv.tsv
 svRawTable,${tableDir}/${project}.${controlSampleName}.sv.raw.tsv
 
-#Minified tables
+#Minified tables (subset of the main table)
 snvMinTable,${tableDir}/${project}.${controlSampleName}.snv.min.tsv
 snvMinRawTable,${tableDir}/${project}.${controlSampleName}.snv.min.raw.tsv
 indelMnpMinTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.tsv

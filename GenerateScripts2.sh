@@ -61,7 +61,7 @@ if [ $HOSTNAME == "pg-interactive" ];then
 	echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 	runDir=/scratch/$USER/projects/$projectname
 	siteParam=$workflowDir/peregrine.siteconfig.csv
-	
+
 	cp $siteParam $workflowDir/.parameters.site.tmp.csv
 	cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
 	#partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
@@ -84,10 +84,10 @@ elif [ $HOSTNAME == "calculon" ];then
         echo "## "$(date)" ## $0 ## Setting calculon molgenis variables"
 	group=$(ls -alh $(pwd)| perl -wpe 's/ +/ /g' | cut -f 4 -d " "| tail -n1)
 	tmp="tmp04"
-	
+
 	runDir=/groups/${group}/${tmp}/projects/$projectname
         siteParam=$workflowDir/umcg.siteconfig.csv
-	
+
 	mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_45'
 
 	perl -wpe 's/group,gcc/group,'$group'/g' $workflowDir/parameters.csv > $workflowDir/.parameters.tmp.csv
@@ -165,6 +165,18 @@ if [ $(find $jobsDir -iname *.finished| head -1|wc -l | tee /dev/stderr) -ne 0 ]
 	echo "## "$(date)" ## $0 ## Already generated removing finished."
 	rm $jobsDir/*.finished
 fi
+
+#git info tracking
+echo "## "$(date)" ## $0 ## Generation info"
+echo "## "$(date)" ## $0 ## Generation info" >> $runDir/generation.log
+(
+	echo "## Version info"
+	git log | head -n 1
+        echo "## Branch info"
+	git branch
+	echo "## Used software versions as Software/version-toolchain[-suffix]"
+	grep Mod peregrine.siteconfig.csv | perl -wpe 's/.*Mod,//g'
+) >> $runDir/generation.log
 
 
 echo  "## "$(date)" ## $0 ## Generate scripts"

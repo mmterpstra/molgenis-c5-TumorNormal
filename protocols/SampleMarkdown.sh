@@ -105,7 +105,6 @@ for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
 			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
 			let 'readNumberRaw=readNumberRaw+readnumberfastq'
 		)>>${sampleMarkdown}
-		cd $OLDPWD
 	fi
 done
 
@@ -132,7 +131,6 @@ if [ -e ${fastqcCleanDir} ] ; then
 			        let 'readNumberClean=readNumberClean+readnumberfastq'
 			)>> ${sampleMarkdown}
 
-        		cd $OLDPWD
 		fi
 	done
 fi
