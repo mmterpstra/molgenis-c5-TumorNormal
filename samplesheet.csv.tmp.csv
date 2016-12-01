@@ -1,3 +1,0 @@
-internalId,project,sampleName,samplePrep,sequencer,seqType,sequencerId,flowcellId,run,lane,barcode,reads1FqGz,reads2FqGz,controlSampleName
-1,rundir,samplePE,000001,illumina,hiseq2500,SN163,BD0WDYACXX,0474,5,ACTGAT,/groups/umcg-oncogenetics/tmp04/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,/groups/umcg-oncogenetics/tmp04/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_2.fq.gz,sampleSE
-2,rundir,sampleSE,000002,illumina,hiseq2500,SN163,BD0WDYACXX,0474,6,NNNNNN,/groups/umcg-oncogenetics/tmp04/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,,samplePE

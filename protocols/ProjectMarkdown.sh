@@ -1,114 +1,190 @@
 #MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
 
 #string project
+#string projectDir
 
-
-
+#string RMod
+#string RmarkMod
 #string stage
 #string checkStage
 
-#string fastqcMod
-#string bwaMod
-#string picardMod
-#string RMod
-#string gatkMod
-#string snpEffMod
-#string varScanMod
-#string samtoolsMod
-#string vcfToolsMod
-#string pipelineUtilMod
-#string tableToXlsxMod
-#string digiRgMod
-#string bbmapMod
-
-
-#list reads2FqGz
-#string collectMultipleMetricsDir
-#string collectMultipleMetricsPrefix
-#string onekgGenomeFasta
-#string markDuplicatesBam
-#string markDuplicatesBai
+#list sampleMarkdown
+#string projectMarkdown
 
 alloutputsexist \
- ${collectMultipleMetricsPrefix}.alignment_summary_metrics \
- ${collectMultipleMetricsPrefix}.quality_by_cycle_metrics \
- ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf \
- ${collectMultipleMetricsPrefix}.quality_distribution_metrics \
- ${collectMultipleMetricsPrefix}.quality_distribution.pdf 
-# ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf \
-# ${collectMultipleMetricsPrefix}.insert_size_metrics 
-#
+ ${projectMarkdown} \
+ ${projectMarkdown}.html \
 
 echo "## "$(date)" Start $0"
 
-#echo  ${collectMultipleMetricsPrefix} 
-
-#getFile ${markDuplicatesBam}
-#getFile ${markDuplicatesBai}
-#getFile ${onekgGenomeFasta}
-
-
-
-
 #load modules
-${stage} ${fastqcMod}
-${stage} ${bwaMod}
-${stage} ${picardMod}
-${stage} ${RMod}
-${stage} ${gatkMod}
-${stage} ${snpEffMod}
-${stage} ${varScanMod}
-${stage} ${samtoolsMod}
-${stage} ${vcfToolsMod}
-${stage} ${pipelineUtilMod}
-${stage} ${tableToXlsxMod}
-${stage} ${digiRgMod}
-${stage} ${bbmapMod}
+${stage} ${RmarkMod}
 
 ${checkStage}
-
-
-
-${checkStage} > 
 
 set -x
 set -e
 
-#main ceate dir and run programmes
+#get samplemarkdown
+mds=($(printf '%s\n' "${sampleMarkdown[@]}" | sort -u ))
 
-mkdir -p ${QcMarkdownDir}
+mdlist=
+
+for md in "${mds[@]}"; do
+	getFile $md
+	if [ -s $md ]; then
+		echo "added $md to merge list";
+		mdlist=("${mdlist[@]}" "$md")
+	fi
+done
+
+
+#main and collect data
+
+#fastq table
+
+(
+        echo
+	echo "## Fastq metrics"
+        echo
+        echo "Result table of the fastq metrics for all samples"
+        echo
+	#clean this up as future work
+        HEADER=$(echo -en "|\tsamplename\t|\tReads raw\t|\tReads clean\t|\tBases clean\t|\tClean bases Q20\t|\tClean bases Q30\t|")
+	#grep -A 1 "$HEADER" ${mdlist[1]}
+
+        echo $HEADER
+	echo -e "|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|"
+
+        for md in "${mdlist[@]}"; do
+               	if [ -s "$md" ] ; then
+			#samplename is already present
+			#SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
+	               	#grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+			grep -A 2 "$HEADER" "$md" | tail -n 1
+		fi
+        done
+) >>  ${projectMarkdown}
+
+#alignment metrics
+
+(
+        echo
+        echo "## Alignment metrics"
+        echo
+	echo "Result table of the alignment for all samples"
+        echo
+        HEADER='| CATEGORY|PF_READS|PCT_PF_READS_ALIGNED|PF_READS_ALIGNED|PCT_READS_ALIGNED_IN_PAIRS|READS_ALIGNED_IN_PAIRS|PF_MISMATCH_RATE|MEAN_READ_LENGTH |'
+        grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*CATEGORY/\| SAMPLE \| CATEGORY/;s/^\|  --- /\|  --- \|  --- /;'
+        for md in "${mdlist[@]}"; do
+		if [ -s "$md" ] ; then
+			SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
+                	grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+		fi
+        done
+) >>  ${projectMarkdown}
+
+
+#markduplicates
+
+(
+        echo
+        echo "## Duplicate metrics"
+        echo
+        echo "Result table of the Duplicates for all samples"
+        echo
+	#header differs between single end and paired end so first use the headerbase to grep the file do determine the real header
+	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
+        HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
+	grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*CATEGORY/\| SAMPLE \| CATEGORY/;s/^\|  --- /\|  --- \|  --- /;'
+        for md in "${mdlist[@]}"; do
+                if [ -s "$md" ] ; then
+                        SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
+                        grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+               	fi
+        done
+) >>  ${projectMarkdown}
 
 
 
+#hsmetrics
 
+(
+	echo
+	echo "## Hybrid selection metrics"
+	echo
+	echo "Result table of the hybrid selection for all samples"
+	echo
+	HEADER='| SAMPLE|TARGET_TERRITORY|PF_UQ_READS_ALIGNED|PF_UQ_BASES_ALIGNED|ON_TARGET_BASES|PCT_USABLE_BASES_ON_TARGET|MEAN_TARGET_COVERAGE|PCT_TARGET_BASES_2X|PCT_TARGET_BASES_10X|PCT_TARGET_BASES_20X|PCT_TARGET_BASES_30X|PCT_TARGET_BASES_40X|PCT_TARGET_BASES_50X|PCT_TARGET_BASES_100X |'
+	grep -A 1 "$HEADER" ${mdlist[1]}
+	for md in "${mdlist[@]}"; do
+		if [ -s "$md" ] ; then
+			grep -A 2 "$HEADER" "$md" | tail -n 1
+		fi
+	done
+) >>  ${projectMarkdown}
+#vcf metrics? entincity? gender? HLA type? CGH metrics?
 
-#insertSizeMetrics=""
-#if [ ${#reads2FqGz} -ne 0 ]; then
-#	insertSizeMetrics="PROGRAM=CollectInsertSizeMetrics"
-#fi
+#version
+(	echo
+	cat generation.log
+)>> ${projectMarkdown}
 
-#Run Picard CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution and MeanQualityByCycle
-#java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
-# I=${markDuplicatesBam} \
-# O=${collectMultipleMetricsPrefix} \
-# R=${onekgGenomeFasta} \
-# PROGRAM=CollectAlignmentSummaryMetrics \
-# PROGRAM=QualityScoreDistribution \
-# PROGRAM=MeanQualityByCycle \
-# $insertSizeMetrics \
-# TMP_DIR=${collectMultipleMetricsDir}
+#notes
+(
+	echo
+	echo "Notes"
+	echo "====="
 
-#VALIDATION_STRINGENCY=LENIENT \
+	echo "This report was generated with this [source](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
+ This is used for research and may contain errors or typoos. So if you encounter
+ issues please report them to the github or by mailing the correct people. Also
+ do not be afraid to contact if you have suggestions and improvements."
+) >> ${projectMarkdown}
 
-#putFile  ${collectMultipleMetricsPrefix}.alignment_summary_metrics 
-#putFile ${collectMultipleMetricsPrefix}.quality_by_cycle_metrics 
-#putFile ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf 
-#putFile ${collectMultipleMetricsPrefix}.quality_distribution_metrics 
-#putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
+#yo, i heard you like html templates so ...
 
-#if [ ${#reads2FqGz} -ne 0 ]; then
-#	putFile ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf
-#	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics 
-#fi
+htmlTemplate='<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>#!title#</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.24.2/css/uikit.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.24.2/js/uikit.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+#!r_highlight#
+
+#!mathjax#
+
+<style type="text/css">
+#!markdown_css#
+</style>
+
+#!header#
+
+</head>
+
+<body>
+#!html_output#
+</body>
+
+</html>'
+htmlTemplateFile=$(mktemp)
+echo $htmlTemplate > $htmlTemplateFile
+
+echo  'markdown::markdownToHTML(file="'${projectMarkdown}'", template="'$htmlTemplateFile'", output="'${projectMarkdown}.html'")' > ${projectMarkdown}.markdownToHtml.R
+
+Rscript ${projectMarkdown}.markdownToHtml.R
+
+rm -v ${projectMarkdown}.markdownToHtml.R
+
+rm -v $htmlTemplateFile
+
+putFile  ${projectMarkdown}
+putFile  ${projectMarkdown}.html
 
 echo "## "$(date)" ##  $0 Done "
+
+cat ${projectMarkdown}

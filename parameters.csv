@@ -3,7 +3,7 @@
 #
 #longQueue,ll
 #queue=longQueue
-queue,ll
+#queue,ll
 mem,4
 walltime,23:59:00
 nodes,1
@@ -13,31 +13,6 @@ stage,module load
 checkStage,module list
 #WORKDIR,/gcc/
 #root,${WORKDIR}
-group,gcc
-tmp,tmp04
-data,/apps/data/
-software,/apps/software/
-projectDir,/groups/${group}/${tmp}/projects/${project}/
-################################################################################
-##module parameters
-#
-fastqcMod,FastQC/0.11.3-Java-1.7.0_80
-bwaMod,BWA/0.7.12-goolf-1.7.20
-picardMod,picard/1.130-Java-1.7.0_80
-RMod,R/3.2.1-goolf-1.7.20
-gatkMod,GATK/3.5-Java-1.7.0_80
-#gatkMod,GATK/3.4-0-Java-1.7.0_80
-snpEffMod,snpEff/4.1d-Java-1.7.0_80
-varScanMod,VarScan/2.4.0-Java-1.7.0_80
-samtoolsMod,SAMtools/0.1.18-goolf-1.7.20
-vcfToolsMod,VCFtools/0.1.12b-goolf-1.7.20-Perl-5.20.2-bare
-pipelineUtilMod,pipeline-util
-tableToXlsxMod,TableToXlsx
-digiRgMod,DigitalBarcodeReadgroups/0.1.2-goolf-1.7.20-Perl-5.20.2-bare
-bbmapMod,BBMap/35.69-Java-1.7.0_80
-bedtoolsMod,BEDTools/2.23.0-goolf-1.7.20
-hisat2Mod,hisat2/2.0.3-beta-goolf-1.7.20
-htseqMod,HTSeq/0.6.1p1
 ################################################################################
 ##Reference Data
 #
@@ -49,7 +24,7 @@ ensemblVersion,75
 bundle,${data}/ftp.broadinstitute.org/bundle/2.8/${genomeBuild}/
 #onekgGgenomeDecoyFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37_decoy.fasta
 onekgGenomeFasta,${bundle}/human_g1k_v37_decoy.fasta
-onekgGenomeFastaIdxBase,${bundle}/${bwaMod}/human_g1k_v37_decoy.fasta
+onekgGenomeFastaIdxBase,${bundle}/BWA/0.7.12-goolf-1.7.20/human_g1k_v37_decoy.fasta
 onekgGenomeFastaDict,${bundle}/human_g1k_v37_decoy.dict
 
 goldStandardVcf,${bundle}/Mills_and_1000G_gold_standard.indels.b37.vcf
@@ -76,24 +51,26 @@ indelRealignmentTargets,${bundle}/Mills_and_1000G_gold_standard.indels.b37.vcf
 snpEffStats,${annotatorDir}/${project}.snpEff.summary.html
 
 #snpEff database resources...
-motifBin,${data}/snpEff/GRCh37.75/motif.bin
-nextProtBin,${data}/snpEff/GRCh37.75/nextProt.bin
-pwmsBin,${data}/snpEff/GRCh37.75/pwms.bin
-regulation_CD4Bin,${data}/snpEff/GRCh37.75/regulation_CD4.bin
-regulation_GM06990Bin,${data}/snpEff/GRCh37.75/regulation_GM06990.bin
-regulation_GM12878Bin,${data}/snpEff/GRCh37.75/regulation_GM12878.bin
-regulation_H1ESCBin,${data}/snpEff/GRCh37.75/regulation_H1ESC.bin
-regulation_HeLaS3Bin,${data}/snpEff/GRCh37.75/regulation_HeLa-S3.bin
-regulation_HepG2Bin,${data}/snpEff/GRCh37.75/regulation_HepG2.bin
-regulation_HMECBin,${data}/snpEff/GRCh37.75/regulation_HMEC.bin
-regulation_HSMMBin,${data}/snpEff/GRCh37.75/regulation_HSMM.bin
-regulation_HUVECBin,${data}/snpEff/GRCh37.75/regulation_HUVEC.bin
-regulation_IMR90Bin,${data}/snpEff/GRCh37.75/regulation_IMR90.bin
-#regulation_K562bBin,${data}/snpEff/GRCh37.75/regulation_K562b.bin
-regulation_K562Bin,${data}/snpEff/GRCh37.75/regulation_K562.bin
-regulation_NHABin,${data}/snpEff/GRCh37.75/regulation_NH-A.bin
-regulation_NHEKBin,${data}/snpEff/GRCh37.75/regulation_NHEK.bin
-snpEffectPredictorBin,${data}/snpEff/GRCh37.75/snpEffectPredictor.bin
+snpeffDataDir,${data}/snpEff/
+snpeffGrcData,${snpeffDataDir}/GRCh37.75/
+motifBin,${snpeffGrcData}/motif.bin
+nextProtBin,${snpeffGrcData}/nextProt.bin
+pwmsBin,${snpeffGrcData}/pwms.bin
+regulation_CD4Bin,${snpeffGrcData}/regulation_CD4.bin
+regulation_GM06990Bin,${snpeffGrcData}/regulation_GM06990.bin
+regulation_GM12878Bin,${snpeffGrcData}/regulation_GM12878.bin
+regulation_H1ESCBin,${snpeffGrcData}/regulation_H1ESC.bin
+regulation_HeLaS3Bin,${snpeffGrcData}/regulation_HeLa-S3.bin
+regulation_HepG2Bin,${snpeffGrcData}/regulation_HepG2.bin
+regulation_HMECBin,${snpeffGrcData}/regulation_HMEC.bin
+regulation_HSMMBin,${snpeffGrcData}/regulation_HSMM.bin
+regulation_HUVECBin,${snpeffGrcData}/regulation_HUVEC.bin
+regulation_IMR90Bin,${snpeffGrcData}/regulation_IMR90.bin
+#regulation_K562bBin,${snpeffGrcData}/regulation_K562b.bin
+regulation_K562Bin,${snpeffGrcData}/regulation_K562.bin
+regulation_NHABin,${snpeffGrcData}/regulation_NH-A.bin
+regulation_NHEKBin,${snpeffGrcData}/regulation_NHEK.bin
+snpEffectPredictorBin,${snpeffGrcData}/snpEffectPredictor.bin
 
 #snpSift database resources
 dbnsfp,${data}/dbNSFP/2.7/dbNSFP2.7.txt.gz
@@ -130,7 +107,7 @@ plotScriptPl,PlotFloatsOnInterVals.pl
 slopTargetsList,${projectDir}/targets.slop100.list
 #targetsList,/gcc/groups/oncogenetics/tmp01/resources/cancerPanel_target.ensembl.gatksort.list
 scatterIntervallistDir,${projectDir}/scatter/
-scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.intervals 
+scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.interval_list
 #rna
 genesRefFlat,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
 rRnaIntervalList,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
@@ -140,9 +117,16 @@ ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/h
 #
 fastqcDir,${projectDir}/fastqc/
 fastqcZipExt,_fastqc.zip
-singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}.fq${fastqcZipExt}
-pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}_1.fq${fastqcZipExt}
-pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}_2.fq${fastqcZipExt}
+singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
+pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
+pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
+#################################################################################
+##FusionCatcher
+
+#fusioncatcherDataDir,/data/umcg-mterpstra/apps/data/resources/fusioncatcher/ensembl_v84-fusioncatcher0.99.6a/
+fusioncatcherDir,${projectDir}/fusioncatcher/
+fusioncatcherOutDir,${projectDir}/fusioncatcher/${sampleName}/
+fusioncatcherTsv,${fusioncatcherOutDir}final-list_candidate-fusion-genes.txt
 ################################################################################
 ##Nugene random fastq integration/bbduk trimming
 nugeneFastqDir,${projectDir}/nugeneFastq/
@@ -150,8 +134,8 @@ nugeneFastqDir,${projectDir}/nugeneFastq/
 nugeneReads1FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_1.fq.gz
 nugeneReads2FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_2.fq.gz
 
-probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
-probeBed,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.bed
+#probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
+#probeBed,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.bed
 ################################################################################
 ##Nugene random fastq integration/bbduk trimming
 nugeneProbeMetricsDir,${projectDir}/nugeneProbeMetrics/
@@ -177,6 +161,8 @@ reads2FqGzOriginal,${reads2FqGz}
 hisat2AlignmentDir,${projectDir}/hisat2/
 hisat2Sam,${hisat2AlignmentDir}${internalId}_${sampleName}.sam
 hisat2IdxBase,${bundle}/hisat2/2.0.3-beta-goolf-1.7.20/human_g1k_v37_decoy
+hisat2SpliceKnownTxt,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.splicesites.txt
+#--known-splicesite-infile ${hisat2SpliceKnownTxt} /data/umcg-mterpstra/apps/data/ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/Homo_sapiens.GRCh37.75.splicesites.txt
 gatkOpt,
 
 ################################################################################
@@ -213,9 +199,16 @@ markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
 #
 htseqDir,${projectDir}/htseq/
 htseqTsv,${htseqDir}${sampleName}.tsv
-
+#with duplicates
 htseqDupsDir,${projectDir}/htseqdups/
 htseqDupsTsv,${htseqDupsDir}${sampleName}.tsv
+#merging the tables
+#htseqTsv
+#htseqDupsTsv
+htseqTable,${tableDir}/${project}.htseq.merged.tsv
+htseqDupsTable,${tableDir}/${project}.htseqdups.merged.tsv
+htseqXlsx,${xlsxDir}/${project}.htseq.merged.xlsx
+htseqDupsXlsx,${xlsxDir}/${project}.htseqdups.merged.xlsx
 
 ################################################################################
 ##CollectRnaSeqMetrics
@@ -270,8 +263,8 @@ bqsrBeforeGrp,${bqsrDir}${sampleName}.before.grp
 analyseCovarsDir,${projectDir}/CovariantAnalysis/
 bqsrAfterGrp,${bqsrDir}${sampleName}.after.grp
 
-analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
-
+#analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
+analyseCovariatesCsv,${analyseCovarsDir}/${sampleName}.analysecovariates.csv
 ################################################################################
 #haplotypecaller
 haplotyperDir,${projectDir}/haplotypeCaller/
@@ -324,6 +317,28 @@ custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
 custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
+#manta sv callling
+#
+#mantaMod,
+mantaDir,${projectDir}/Manta/
+mantaRunDir,${mantaDir}${sampleName}/
+mantaVcf,${mantaDir}${sampleName}/results/variants/diploidSV.vcf.gz
+mantaVcfIdx,${mantaVcf}.tbi
+mantaConfigType,
+#you can do a remap in the workflow for these for example `mantaConfigType=mantaConfigTypeRna;`
+mantaConfigTypeRna,--rna
+mantaConfigTypeExome,--exome
+
+################################################################################
+#snpeff manta sv annotation
+#
+snpeffMantaDir,${projectDir}/SnpEffManta/
+snpeffMantaVcf,${snpeffMantaDir}/${project}.${sampleName}.vcf
+snpeffMantaVcfIdx,${snpeffMantaVcf}.idx
+snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.html
+#custom annotation?
+
+################################################################################
 #variant filtration
 variantFiltDir,${projectDir}/variantfiltering/
 #select INDELS & MNP / SNVS
@@ -331,35 +346,107 @@ snvRawVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.raw.vcf
 snvRawVcfIdx,${snvRawVcf}.idx
 indelMnpRawVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.raw.vcf
 indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
+svRawVcf,${variantFiltDir}/${project}.${sampleName}.${controlSampleName}.sv.raw.vcf
+svRawVcfIdx,${svRawVcf}.idx
 #and filtered
 snvVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.vcf
 snvVcfIdx,${snvVcf}.idx
 indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
 indelMnpVcfIdx,${indelMnpVcf}.idx
+#to be added
+svVcf,${variantFiltDir}/${project}.${controlSampleName}.sv.vcf
+svVcfIdx,${svVcf}.idx
 
 ################################################################################
 #variants to table
+#
 tableDir,${projectDir}/tables/
+variantFields,
+variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AF -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AC -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AC -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AC -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AC -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AC -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AC -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AC -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Interpro_domain -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC -F GQ_MEAN -F GQ_STDDEV -F HRun -F IsChangeInTumor -F IsChangeInTumorGQnormal -F IsChangeInTumorGQtumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MeanDP -F MinDP -F MQ -F MQ0 -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFF_AMINO_ACID_CHANGE -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SNPEFF_CODON_CHANGE -F SNPEFF_EFFECT -F SNPEFF_EXON_ID -F SNPEFF_FUNCTIONAL_CLASS -F SNPEFF_GENE_BIOTYPE -F SNPEFF_GENE_NAME -F SNPEFF_IMPACT -F SNPEFF_TRANSCRIPT_ID -F SOR -F STR -F VariantType  -GF AD -GF DP -GF F -GF GQ -GF GT -GF MQ0 -GF Z -GF AB
 #variantTable,${tableDir}/${project}.tsv
 snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
-indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
 snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
+indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
 indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
+svTable,${tableDir}/${project}.${controlSampleName}.sv.tsv
+svRawTable,${tableDir}/${project}.${controlSampleName}.sv.raw.tsv
+
+#Minified tables (subset of the main table)
+snvMinTable,${tableDir}/${project}.${controlSampleName}.snv.min.tsv
+snvMinRawTable,${tableDir}/${project}.${controlSampleName}.snv.min.raw.tsv
+indelMnpMinTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.tsv
+indelMnpMinRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.raw.tsv
+svMinTable,${tableDir}/${project}.${controlSampleName}.sv.min.tsv
+svMinRawTable,${tableDir}/${project}.${controlSampleName}.sv.min.raw.tsv
 
 ################################################################################
 #vcf to descriptiontable
+#
 #GenerateTableDescriptionByVcfHeaderPl,GenerateTableDescriptionByVcfHeader.pl
 snvDescrTable,${tableDir}/${project}.snv.description.tsv
 indelMnpDescrTable,${tableDir}/${project}.indelmnp.description.tsv
+svDescrTable,${tableDir}/${project}.sv.description.tsv
 ################################################################################
 #tables to xlsx
+#
 xlsxDir,${projectDir}/xlsx/
 snvXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.xlsx
-indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
 snvRawXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.raw.xlsx
-indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
 snvDescrXlsx,${xlsxDir}/${project}.snv.description.xlsx
+
+indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
+indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
 indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
+
+svXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
+svRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
+svDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
+
+
+################################################################################
+#varscan files
+#
+varscanDir,${projectDir}/varscan.${controlSampleName}/
+varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
+varscanCopynumber,${varscanCopynumberPrefix}.copynumber
+varscanCopycaller,${varscanCopynumberPrefix}.called
+varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
+
+
+varscanInputBam,${indelRealignmentBam}
+varscanInputBai,${indelRealignmentBai}
+varscanInputBamBai,${indelRealignmentBam}
+
+#same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+
+controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
+controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
+controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
+
+#
+################################################################################
+#PlotGenome?
+
+segFile,${varscanDir}/${sampleName}.seg
+segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
+cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
+
+scriptDir,/gcc/tools/scripts/
+
+#lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
+#gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
+
+################################################################################
+#Misc
+snvWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.snv.vcf
+snvWithPolymorficVcfIdx,${snvWithPolymorficVcf}.idx
+
+indelMnpWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.indelmnp.vcf
+indelMnpWithPolymorficVcfIdx,${indelMnpWithPolymorficVcf}.idx
+
+
+
+##Oldcodes:
 ################################################################################
 #haplotypecaller + Gvcf mode
 gHaplotyperDir,${projectDir}/haplotypeCallerGvf/
@@ -380,44 +467,6 @@ gsnpEffVcf,${gannotatorDir}/${project}.snpEff.vcf
 gsnpEffVcfIdx,${gsnpEffVcf}.idx
 gannotVcf,${gannotatorDir}/${project}.annot.vcf
 gannotVcfIdx,${gannotVcf}.idx
-
-
-
-################################################################################
-#varscan files
-varscanDir,${projectDir}/varscan.${controlSampleName}/
-varscanCopynumberPrefix,${varscanDir}/${sampleName}.cn
-varscanCopynumber,${varscanCopynumberPrefix}.copynumber
-varscanCopycaller,${varscanCopynumberPrefix}.called
-varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
-
-
-varscanInputBam,${indelRealignmentBam}
-varscanInputBai,${indelRealignmentBai}
-varscanInputBamBai,${indelRealignmentBam}
-
-#same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
-
-controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
-controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
-controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
-
-#
-#
-################################################################################
-#PlotGenome?
-
-segFile,${varscanDir}/${sampleName}.seg
-segmentsPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
-cnvPlotPdf,${varscanDir}/${sampleName}.cn.called.pdf
-
-scriptDir,/gcc/tools/scripts/
-
-#lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
-#gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
-
-
-
 ################################################################################
 #CreateProjectMd aka CreateProjectMarkdown
 #
@@ -432,11 +481,4 @@ projectMarkdown,${projectDir}/${project}.summary.Rmd
 #test,samplePE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_2.fq.gz
 #test,sampleSE,000001,AAAAAA,illumina,hiseq2500,/gcc/groups/oncogenetics/${tmp}/projects/resourcesRNASeq/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,
 #
-################################################################################
-#Misc
-snvWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.snv.vcf
-snvWithPolymorficVcfIdx,${snvWithPolymorficVcf}.idx
-
-indelMnpWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.indelmnp.vcf
-indelMnpWithPolymorficVcfIdx,${indelMnpWithPolymorficVcf}.idx
 

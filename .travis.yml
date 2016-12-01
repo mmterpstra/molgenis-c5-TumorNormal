@@ -1,0 +1,43 @@
+language: perl
+perl:
+  - "5.18"
+env:
+  global:
+    - LMODVERSION="6.4.5"
+    - LMODPREFIX="/opt/apps"
+    - LMODPATH="/opt/apps/lmod/lmod/libexec"
+    - EASYBUILD_PREFIX=~/.local/easybuild
+    - EASYBUILDMODS=~/.local/easybuild/modules/all
+    - EASYBUILD_MODULES_TOOL='Lmod'
+  matrix:
+    - MOLGENISVERSION="v16.04.1"
+    - MOLGENISVERSION="v16.08.1" 
+before_install:
+#note: might need cleanup here and there
+#install java
+  - sudo apt-get install python-software-properties
+  - sudo add-apt-repository ppa:webupd8team/java -y
+  - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 
+  - sudo apt-get update -qq
+  - sudo apt-get install debconf-utils
+  - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+  - printf "y\n\n\t\n" | sudo apt-get install oracle-java8-installer
+  - sudo update-java-alternatives --set /usr/lib/jvm/java-8-oracle
+#instal lua / lmod
+  - sudo apt-get install liblua5.1-0 liblua5.1-0-dev liblua5.1-filesystem-dev liblua5.1-filesystem liblua5.1-posix-dev liblua5.1-posix lua5.1
+  - wget https://github.com/TACC/Lmod/archive/6.4.5.tar.gz
+  - tar -zxf 6.4.5.tar.gz
+  - cd Lmod-*/ && sudo mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install && cd $OLDPWD
+  - export PATH=$PATH:$LMODPATH && . /opt/apps/lmod/lmod/init/profile
+  - module av && module list
+#install easybuild
+  - wget https://raw.githubusercontent.com/hpcugent/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py
+  - python --version
+  - echo "travis-env:" $EASYBUILD_PREFIX $EASYBUILDMODS $EASYBUILD_MODULES_TOOL $MOLGENISVERSION $LMODVERSION $LMODPREFIX $LMODPATH 
+  - export EASYBUILD_PREFIX=$HOME/.local/easybuild && mkdir -p $HOME/.local/easybuild && python bootstrap_eb.py $HOME/.local/easybuild && module use $HOME/.local/easybuild/modules/all
+  - export EASYBUILD_MODULES_TOOL='Lmod' && module load EasyBuild && eb -l eb/Molgenis-Compute-${MOLGENISVERSION}.eb
+
+#easybuild
+#molgenis-compute <- Dependency hell begins here
+install:
+  - echo "Future work. You can use it from the source dir"

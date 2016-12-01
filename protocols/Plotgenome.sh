@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=1gb
+#MOLGENIS walltime=23:59:00 mem=3gb
 
 #string project
 
@@ -29,7 +29,6 @@ set -x
 
 alloutputsexist \
 "${segFile}" \
-"${segmentsPlotPdf}" \
 "${cnvPlotPdf}" 
 
 #getfile declarations
@@ -48,20 +47,30 @@ ${checkStage}
 
 oldDirName=$(pwd)
 
-cd $(dirname ${varscanCopycaller})
+varscanlines=$(cat ${varscanCopycaller} | wc -l)
+if [ $varscanlines -gt 100 ] ; then
 
-perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
- -R Rscript \
- -d ${onekgGenomeFastaDict} \
- -v ${snvRawTable} \
- ${varscanCopycaller} \
- 
-cd $(dirname ${varscanCopycaller})
+	echo "Varscan lines found. plotting genome."
 
-cd $oldDirName
+	cd $(dirname ${varscanCopycaller})
+
+	perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
+	 -R Rscript \
+	 -d ${onekgGenomeFastaDict} \
+	 -v ${snvRawTable} \
+	 ${varscanCopycaller}
+
+	cd $oldDirName
+
+
+else
+	echo "No varscan lines found. skipping."
+	touch "${segFile}" \
+	 "${cnvPlotPdf}" 
+fi
+
 
 # $vcf
 putFile "${segFile}"
-putFile "${segmentsPlotPdf}"
 putFile "${cnvPlotPdf}"
 

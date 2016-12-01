@@ -1,0 +1,55 @@
+# perl basics #
+######################
+/blib/
+/.build/
+_build/
+cover_db/
+inc/
+Build
+!Build/
+Build.bat
+.last_cover_stats
+/Makefile
+/Makefile.old
+/MANIFEST.bak
+/META.yml
+/META.json
+/MYMETA.*
+nytprof.out
+/pm_to_blib
+*.o
+*.bs
+# Eclipse specific stuff #
+######################
+.project
+
+# Logs and databases #
+######################
+*.log
+logger.out
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Project specific files #
+##########################
+worksheet.csv
+.compute.properties
+parameters.molgenis.csv
+*.tmp.csv
+[Ss]amplesheet*.csv
+# gedit dirt             #
+##########################
+*~
+# backups                #
+##########################
+*.bak
+*.bak_*

@@ -70,8 +70,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
                  out=${nugeneReads1FqGz} \
                  qtrim=r \
                  trimq=20 \
-                 minlen=20 \
-		 overwrite=t
+                 minlen=20
 
 		rm -v $TMPFASTQ1.fq.gz
                 putFile ${nugeneReads1FqGz}
@@ -101,8 +100,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
                  out2=${nugeneReads2FqGz} \
 		 qtrim=r \
                  trimq=20 \
-                 minlen=20 \
-		 overwrite=t
+                 minlen=20
 
 		rm -v ${TMPFASTQ1}_R1.fq.gz ${TMPFASTQ1}_R2.fq.gz
 
@@ -118,7 +116,7 @@ else
 
 		getFile ${reads1FqGz}
 
-		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz} ${nugeneFastqDir} ${reads1FqGz} 
+		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl -u ${reads3FqGz} ${nugeneFastqDir} ${reads1FqGz} 
 
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
 		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
@@ -133,8 +131,7 @@ else
                  out=${nugeneReads1FqGz} \
                  qtrim=r \
                  trimq=20 \
-                 minlen=20 \
-		 overwrite=t
+                 minlen=20
 
 		rm -v $TMPFASTQ1 $TMPFASTQ1.fq.gz
 
@@ -148,7 +145,7 @@ else
 		getFile ${reads1FqGz}
 		getFile ${reads2FqGz}
 
-	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz}  ${nugeneFastqDir} ${reads1FqGz} ${reads2FqGz}
+	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl -u ${reads3FqGz}  ${nugeneFastqDir} ${reads1FqGz} ${reads2FqGz}
 		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
 		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
 		TMPFASTQ2=${nugeneFastqDir}/$(echo ${reads2FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
@@ -166,8 +163,7 @@ else
                  out2=${nugeneReads2FqGz} \
                  qtrim=r \
                  trimq=20 \
-                 minlen=20 \
-		 overwrite=t
+                 minlen=20
 
                 rm -v ${TMPFASTQ1}_R1.fq.gz ${TMPFASTQ1}_R2.fq.gz
 

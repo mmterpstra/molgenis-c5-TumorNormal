@@ -22,7 +22,10 @@
 
 #string annotatorDir
 #string snpEffMod
+#string vcfToolsMod
+#string pipelineUtilMod
 #string snpEffStats
+#string snpeffDataDir
 
 #string snpEffGatkAnnotVcf
 #string snpEffGatkAnnotVcfIdx
@@ -90,6 +93,8 @@ done
 #Load snpeff/gatk module
 ${stage} ${snpEffMod}
 ${stage} ${gatkMod}
+${stage} ${vcfToolsMod}
+${stage} ${pipelineUtilMod}
 ${checkStage}
 
 set -x
@@ -145,6 +150,7 @@ mkdir -p ${annotatorDir}
 
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -stats ${snpEffStats} \
  -v -o gatk \
  GRCh37.75 \
@@ -210,9 +216,10 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  --out ${gatkAnnotVcf} \
  -L ${haplotyperVcf} \
  ${gatkOpt}
- 
+
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -formatEff \
  -canon \
  -hgvs \
@@ -221,30 +228,21 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  GRCh37.75 \
  ${gatkAnnotVcf} \
  1>${snpEffAnnotVcf}.tmp.vcf
- 
+
 rm  -v ${snpEffStats}
 
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
+ -dataDir ${snpeffDataDir} \
  -hgvs \
  -lof \
  -stats ${snpEffStats} \
  -v \
  GRCh37.75 \
- ${snpEffAnnotVcf}.tmp.vcf \
- 1>${snpEffAnnotVcf}.anneff.vcf
- 
-rm  -v ${snpEffStats}
-
-java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
- -c $EBROOTSNPEFF/snpEff.config \
- -hgvs \
- -lof \
- -stats ${snpEffStats} \
- -v \
- GRCh37.75 \
- ${gatkAnnotVcf} \
- 1>${snpEffAnnotVcf}
+ ${gatkAnnotVcf} | \
+perl $EBROOTPIPELINEMINUTIL/bin/VcfSnpEffAsGatk.pl \
+  /dev/stdin \
+  1>${snpEffAnnotVcf}
  
 java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar \
  dbnsfp -db ${dbnsfp}\

@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=16gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=3 mem=16gb walltime=10:00:00
 
 #string project
 
@@ -8,9 +8,12 @@
 #string stage
 #string checkStage
 #string hisat2Mod
+#string picardMod
+#string samtoolsMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
-#string hisat2AlignmentDir 
+#string hisat2SpliceKnownTxt
+#string hisat2AlignmentDir
 #string hisat2Sam
 #string nTreads
 #string reads1FqGz
@@ -24,13 +27,16 @@ echo "## "$(date)" ##  $0 Started "
 #Check if output exists if so execute 'exit -0'
 alloutputsexist \
 	${hisat2Sam}
- 
+
 #getFile functions
 
-getFile ${onekgGenomeFasta}
+getFile ${onekgGenomeFasta} ${hisat2SpliceKnownTxt}
 
 #Load modules
 ${stage} ${hisat2Mod}
+${stage} ${picardMod}
+${stage} ${samtoolsMod}
+
 #check modules
 ${checkStage}
 
@@ -52,8 +58,10 @@ else
 fi
 
 echo "## "$(date)" ##  $0 Align with hisat with readspec='$readspec'"
-
-hisat2 -x ${onekgGenomeFastaIdxBase} $readspec -S ${hisat2Sam} --threads 1
+#note the cleansam diffcult stuff is for read alignments going outside the reference seqs (still it occasionally happens).
+hisat2 -x ${onekgGenomeFastaIdxBase} $readspec --known-splicesite-infile ${hisat2SpliceKnownTxt} --score-min L,0,-0.6 --sp 1,1.5 -D 20 -R 3 -S /dev/stdout --threads 1 | \
+ java -Xmx4g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar CleanSam I=/dev/stdin O=/dev/stdout | \
+ samtools view -h - > ${hisat2Sam}
 
 putFile ${hisat2Sam} 
 

@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=4gb walltime=23:59:00
+#MOLGENIS nodes=1 ppn=8 mem=7gb walltime=47:59:00
 
 #string project
 
@@ -55,7 +55,7 @@ mkdir -p ${bqsrDir}
 #do bqsr for covariable determination then do print reads for valid bsqrbams
 #check the bqsr part and add known variants
 
-java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+java -Xmx6g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T BaseRecalibrator\
  -R ${onekgGenomeFasta} \
  -I ${indelRealignmentBam} \

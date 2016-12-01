@@ -1,0 +1,44 @@
+################################################################################
+##General Parameters
+#
+#queue,ll
+queue,duo-pro
+tmp,tmp04
+#group,umcg-gcc
+group,umcg-oncogenetics
+data,/apps/data/
+projectDir,/groups/${group}/${tmp}/projects/${project}/
+
+################################################################################
+##module parameters
+#
+fastqcMod,FastQC/0.11.5-Java-1.7.0_80
+bwaMod,BWA/0.7.12-foss-2015b
+picardMod,picard/1.140-foss-2015b-Java-1.8.0_45
+RMod,R/3.2.2-foss-2015b-bioconductor
+gatkMod,GATK/3.5-foss-2015b-Java-1.7.0_80
+#gatkMod,GATK/3.4-0-Java-1.7.0_80
+snpEffMod,snpEff/4.1g-Java-1.7.0_80
+varScanMod,VarScan/2.4.0-Java-1.7.0_80
+samtoolsMod,SAMtools/0.1.18-foss-2015b
+vcfToolsMod,VCFtools/0.1.12b-foss-2015b-Perl-5.20.2-bare
+pipelineUtilMod,pipeline-util/0.4.7-foss-2015b-Perl-5.20.2-bare
+#pipelineUtilMod,pipeline-util/0.2.2-foss-2016a-Perl-5.20.2-bare
+tableToXlsxMod,TableToXlsx/0.1.0-foss-2015b-Perl-5.20.2-bare
+digiRgMod,DigitalBarcodeReadgroups/0.1.4-foss-2015b-Perl-5.20.2-bare
+nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
+bbmapMod,BBMap/35.69-Java-1.7.0_80
+bedtoolsMod,BEDTools/2.25.0-foss-2015b
+hisat2Mod,hisat2/2.0.4-foss-2015b-Python-2.7.11
+htseqMod,HTSeq/0.6.1p1
+RmarkMod,markdown/0.7.7-foss-2015b-R-3.2.2-bioconductor
+fusioncatcherMod,FusionCatcher/0.99.6a-foss-2015b-Python-2.7.11
+mantaMod,manta/0.29.5-foss-2015b
+################################################################################
+##user data
+#remap plz
+#
+#124
+fusioncatcherDataDir,/groups/umcg-oncogenetics/tmp04/res/fusioncatcher/ensembl_v84-fusioncatcher0.99.6a/
+probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
+probeBed,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.bed
