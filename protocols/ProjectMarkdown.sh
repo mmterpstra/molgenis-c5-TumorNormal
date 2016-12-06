@@ -79,7 +79,15 @@ done
         for md in "${mdlist[@]}"; do
 		if [ -s "$md" ] ; then
 			SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-                	grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+                	#if [[ $(grep -A 2 "$HEADER" /scratch/umcg-mterpstra/projects/WES_novogene_path_P1_3/md/WES_novogene_path_P1_3.T11_21822_I.md | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1) =~ "FIRST_OF_PAIR" ]]; then grep -A 4 "$HEADER" /scratch/umcg-mterpstra/projects/WES_novogene_path_P1_3/md/WES_novogene_path_P1_3.T11_21822_I.md | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 3; else grep -A 2 "$HEADER" /scratch/umcg-mterpstra/projects/WES_novogene_path_P1_3/md/WES_novogene_path_P1_3.T11_21822_I.md | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1;fi
+			#grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+			if [[ $(grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1) =~ "FIRST_OF_PAIR" ]]; then 
+                       	        #pe
+                                grep -A 4 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 3
+                        else
+                                #se
+                                grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+                        fi
 		fi
         done
 ) >>  ${projectMarkdown}
@@ -96,11 +104,11 @@ done
 	#header differs between single end and paired end so first use the headerbase to grep the file do determine the real header
 	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
         HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
-	grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*CATEGORY/\| SAMPLE \| CATEGORY/;s/^\|  --- /\|  --- \|  --- /;'
+	grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*Field/\| SAMPLE \| FIELD/;s/^\|  --- /\|  --- \|  --- /;'
         for md in "${mdlist[@]}"; do
                 if [ -s "$md" ] ; then
                         SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-                        grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+			grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
                	fi
         done
 ) >>  ${projectMarkdown}
@@ -124,10 +132,11 @@ done
 	done
 ) >>  ${projectMarkdown}
 #vcf metrics? entincity? gender? HLA type? CGH metrics?
+#pe metrics?
 
 #version
 (	echo
-	cat generation.log
+	cat $(pwd)/../generation.log
 )>> ${projectMarkdown}
 
 #notes

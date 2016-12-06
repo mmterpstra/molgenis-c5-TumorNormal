@@ -354,7 +354,7 @@ snvVcfIdx,${snvVcf}.idx
 indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
 indelMnpVcfIdx,${indelMnpVcf}.idx
 #to be added
-svVcf,${variantFiltDir}/${project}.${controlSampleName}.sv.vcf
+svVcf,${variantFiltDir}/${project}.${sampleName}.sv.vcf
 svVcfIdx,${svVcf}.idx
 
 ################################################################################
@@ -362,22 +362,24 @@ svVcfIdx,${svVcf}.idx
 #
 tableDir,${projectDir}/tables/
 variantFields,
+#variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AF -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AC -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AC -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AC -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AC -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AC -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AC -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AC -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Interpro_domain -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC -F GQ_MEAN -F GQ_STDDEV -F HRun -F IsChangeInTumor -F IsChangeInTumorGQnormal -F IsChangeInTumorGQtumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MeanDP -F MinDP -F MQ -F MQ0 -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFF_AMINO_ACID_CHANGE -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SNPEFF_CODON_CHANGE -F SNPEFF_EFFECT -F SNPEFF_EXON_ID -F SNPEFF_FUNCTIONAL_CLASS -F SNPEFF_GENE_BIOTYPE -F SNPEFF_GENE_NAME -F SNPEFF_IMPACT -F SNPEFF_TRANSCRIPT_ID -F SOR -F STR -F VariantType  -GF AD -GF DP -GF F -GF GQ -GF GT -GF MQ0 -GF Z -GF AB
 variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AF -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AC -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AC -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AC -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AC -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AC -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AC -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AC -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Interpro_domain -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC -F GQ_MEAN -F GQ_STDDEV -F HRun -F IsChangeInTumor -F IsChangeInTumorGQnormal -F IsChangeInTumorGQtumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MeanDP -F MinDP -F MQ -F MQ0 -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFF_AMINO_ACID_CHANGE -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SNPEFF_CODON_CHANGE -F SNPEFF_EFFECT -F SNPEFF_EXON_ID -F SNPEFF_FUNCTIONAL_CLASS -F SNPEFF_GENE_BIOTYPE -F SNPEFF_GENE_NAME -F SNPEFF_IMPACT -F SNPEFF_TRANSCRIPT_ID -F SOR -F STR -F VariantType  -GF AD -GF DP -GF F -GF GQ -GF GT -GF MQ0 -GF Z -GF AB
+
 #variantTable,${tableDir}/${project}.tsv
 snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
 snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
 indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
 indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
-svTable,${tableDir}/${project}.${controlSampleName}.sv.tsv
-svRawTable,${tableDir}/${project}.${controlSampleName}.sv.raw.tsv
+svTable,${tableDir}/${project}.${sampleName}.sv.tsv
+svRawTable,${tableDir}/${project}.${sampleName}.sv.raw.tsv
 
 #Minified tables (subset of the main table)
 snvMinTable,${tableDir}/${project}.${controlSampleName}.snv.min.tsv
 snvMinRawTable,${tableDir}/${project}.${controlSampleName}.snv.min.raw.tsv
 indelMnpMinTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.tsv
 indelMnpMinRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.raw.tsv
-svMinTable,${tableDir}/${project}.${controlSampleName}.sv.min.tsv
-svMinRawTable,${tableDir}/${project}.${controlSampleName}.sv.min.raw.tsv
+svMinTable,${tableDir}/${project}.${sampleName}.sv.min.tsv
+svMinRawTable,${tableDir}/${project}.${sampleName}.sv.min.raw.tsv
 
 ################################################################################
 #vcf to descriptiontable
@@ -398,8 +400,8 @@ indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
 indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
 indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
 
-svXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
-svRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
+svXlsx,${xlsxDir}/${project}.${sampleName}.indelmnp.xlsx
+svRawXlsx,${xlsxDir}/${project}.${sampleName}.indelmnp.raw.xlsx
 svDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
 
 

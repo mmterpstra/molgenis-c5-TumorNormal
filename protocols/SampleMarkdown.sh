@@ -210,7 +210,7 @@ fi
 	   "PCT_TARGET_BASES_20X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_40X", "PCT_TARGET_BASES_50X", "PCT_TARGET_BASES_100X"))
 	 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
 	Rscript ${sampleMarkdownDir}/${sampleName}_hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
-	rm -v ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
+	rm  ${sampleMarkdownDir}/${sampleName}_hsmetrics.R 
 )>> ${sampleMarkdown}
 ################################################################################
 ##
@@ -247,7 +247,7 @@ fi
 
 	Rscript  ${sampleMarkdownDir}/${sampleName}_alignmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
 
-	rm -v ${sampleMarkdownDir}/${sampleName}_alignmetrics.R
+	rm  ${sampleMarkdownDir}/${sampleName}_alignmetrics.R
 )>> ${sampleMarkdown}
 ################################################################################
 ##
@@ -289,7 +289,7 @@ if [ -e ${markDuplicatesMetrics} ] ; then
 		#java:PERCENT_DUPLICATION = (UNPAIRED_READ_DUPLICATES + READ_PAIR_DUPLICATES *2) /(double) (UNPAIRED_READS_EXAMINED + READ_PAIRS_EXAMINED *2);
 		 write.table(t(colsumstabledup) ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE, col.names=TRUE);' >  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R;
 		Rscript  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
-		rm -v  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R
+		rm   ${sampleMarkdownDir}/${sampleName}_dupmetrics.R
 	)>> ${sampleMarkdown}
 else
 	(
@@ -339,7 +339,7 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 
 		Rscript ${sampleMarkdownDir}/${sampleName}_pemetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
 	) >> ${sampleMarkdown}
-		rm -v ${sampleMarkdownDir}/${sampleName}_pemetrics.R
+		rm  ${sampleMarkdownDir}/${sampleName}_pemetrics.R
 else
 	(
 		echo "Paired end metrics"
