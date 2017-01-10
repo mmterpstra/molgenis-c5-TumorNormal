@@ -54,7 +54,7 @@ done
 
 mkdir -p ${varscanDir}"/multi"
 
-perl $EBROOTPIPELINEMINUTIL/bin/multiIntersectSeg.pl ${onekgGenomeFastaDict} ${varscanDir}"/multi" "${segList[@]}"
+perl $EBROOTPIPELINEMINUTIL/bin/multiIntersectSeg.pl ${onekgGenomeFastaDict} ${varscanDir}"/multi" $( printf ' %s'  ${segList[@]})
 
 putFile ${varscanDir}/multi
 # $vcf

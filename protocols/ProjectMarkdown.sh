@@ -40,6 +40,19 @@ done
 
 
 #main and collect data
+(
+	echo "# ${project} Project info"
+	echo
+	echo "This contains the ${project} project info of all the samples in the project. This contains the following steps:"
+	echo
+	echo " - Fastq metrics"
+	echo " - Alignment metrics"
+	echo " - Duplicate metrics"
+	echo " - Hybrid selection (abbr. HS) metrics"
+
+) >  ${projectMarkdown}
+
+
 
 #fastq table
 
@@ -141,11 +154,11 @@ done
 
 #notes
 (
-	echo
 	echo "Notes"
 	echo "====="
 
-	echo "This report was generated with this [source](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
+	echo "This report was generated with the source present at the following
+ github repo: [github.com/mmterpstra/molgenis-c5-TumorNormal](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
  This is used for research and may contain errors or typoos. So if you encounter
  issues please report them to the github or by mailing the correct people. Also
  do not be afraid to contact if you have suggestions and improvements."

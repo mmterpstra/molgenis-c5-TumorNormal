@@ -52,7 +52,7 @@ mkdir -p ${nugeneFastqDir}
 
 
 
-if [ ${#reads2FqGzOriginal} -eq 0 ]; then
+if [ ${#reads2FqGz} -eq 0 ]; then
 	getFile ${reads1FqGz}
 	readspec=" -U ${reads1FqGz} "
 else
@@ -62,8 +62,13 @@ else
 fi
 
 if [ ${#reads3FqGz} -eq 0 ]; then
+    	TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+        echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
+        TMPFASTQ2=${nugeneFastqDir}/$(echo ${reads2FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+        echo "## "$(date)" ##  TMPFASTQ2= "$TMPFASTQ2
 
-	if [ ${#reads2FqGzOriginal} -eq 0 ]; then
+	
+	if [ ${#reads2FqGz} -eq 0 ]; then
 	        getFile ${reads1FqGz}
 	        readspec=" -U ${reads1FqGz} "
 	else
@@ -82,8 +87,8 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 
 		#ln -s ${reads1FqGz} ${nugeneReads1FqGz}
 
-		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
-                echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
+		#TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+                #echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
 
                 hisat2 -x ${onekgGenomeFastaIdxBase} $readspec --known-splicesite-infile ${hisat2SpliceKnownTxt} --score-min L,0,-0.6 --sp 1,1.5 -D 20 -R 3 -S ${nugeneReads1FqGz}.hisat2.sam --threads 1
 
@@ -109,12 +114,6 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		getFile ${reads1FqGz}
 		getFile ${reads2FqGz}
 
-	        #perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz}  ${nugeneFastqDir} ${reads1FqGz} ${reads2FqGz}
-		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
-		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
-		TMPFASTQ2=${nugeneFastqDir}/$(echo ${reads2FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
-		echo "## "$(date)" ##  TMPFASTQ2= "$TMPFASTQ2
-		
 #		bwa mem ${onekgGenomeFastaIdxBase} ${reads1FqGz}  ${reads2FqGz} > ${nugeneReads1FqGz}.bwamem.sam
 #		
 #		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.bwamem.sam -b ${probeBed} -o $TMPFASTQ1 && rm -v ${nugeneReads1FqGz}.bwamem.sam
@@ -142,7 +141,12 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 
 	fi
 else
-	if [ ${#reads2FqGzOriginal} -eq 0 ]; then
+	TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+        echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
+        TMPFASTQ2=${nugeneFastqDir}/$(echo ${reads2FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+        echo "## "$(date)" ##  TMPFASTQ2= "$TMPFASTQ2
+
+	if [ ${#reads2FqGz} -eq 0 ]; then
 	        getFile ${reads1FqGz}
 	        readspec=" -U $TMPFASTQ1 "
 	else
@@ -160,8 +164,8 @@ else
 
 		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz} ${nugeneFastqDir} ${reads1FqGz} 
 
-		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
-		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
+		#TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+		#echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
 
                 hisat2 -x ${onekgGenomeFastaIdxBase} $readspec --known-splicesite-infile ${hisat2SpliceKnownTxt} --score-min L,0,-0.6 --sp 1,1.5 -D 20 -R 3 -S ${nugeneReads1FqGz}.hisat2.sam --threads 1
 
@@ -190,10 +194,10 @@ else
 		getFile ${reads2FqGz}
 
 	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles.pl ${reads3FqGz}  ${nugeneFastqDir} ${reads1FqGz} ${reads2FqGz}
-		TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
-		echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
-		TMPFASTQ2=${nugeneFastqDir}/$(echo ${reads2FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
-		echo "## "$(date)" ##  TMPFASTQ2= "$TMPFASTQ2
+		#TMPFASTQ1=${nugeneFastqDir}/$(echo ${reads1FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+		#echo "## "$(date)" ##  TMPFASTQ1= "$TMPFASTQ1
+		#TMPFASTQ2=${nugeneFastqDir}/$(echo ${reads2FqGz}| perl -wpe 's/^.*\/|\.fastq\.gz|\.fq\.gz//g;chomp').fq.gz
+		#echo "## "$(date)" ##  TMPFASTQ2= "$TMPFASTQ2
 
 		hisat2 -x ${onekgGenomeFastaIdxBase} $readspec --known-splicesite-infile ${hisat2SpliceKnownTxt} --score-min L,0,-0.6 --sp 1,1.5 -D 20 -R 3 -S ${nugeneReads1FqGz}.hisat2.sam --threads 1
 

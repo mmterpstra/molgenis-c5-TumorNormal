@@ -170,26 +170,26 @@ fi
 >&2 echo "## "$(date)" ## $0 ## Generation info"
 
 (
-	if which git &>/dev/null; then 
-		>&2 echo "## "$(date)" ## $0 ## Command `git` present" 
+	if which git &>/dev/null; then
+		>&2 echo "## "$(date)" ## $0 ## Command `git` present"
 	else
-		>&2 echo "## "$(date)" ## $0 ## Commmand `git` not present, trying module load." 
+		>&2 echo "## "$(date)" ## $0 ## Commmand `git` not present, trying module load."
 		ml git
-	 fi
+	fi
 	echo
 	echo "## "$(date)" ## $0 ## Generation info"
 	echo
-	echo "## Version info"
+	echo "### Version info"
 	echo
-	echo -n "This is generated based on the "
+	echo -n "This is generated based on the git "
 	git log | head -n 1
 	echo ". Althought this is software in developent and also the next commit should also be considered."
         echo
-	echo "## Branch info"
+	echo "### Branch info"
 	echo
 	git branch
 	echo
-	echo "## Used software versions"
+	echo "### Used software versions"
 	echo
 	echo " The used software versions are shown below. Easybuild software \
 deployment/versioning was used so the versions are named as as \

@@ -84,6 +84,10 @@ baseQ30pct=0
 
 for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
+		fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+		unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+		readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+		let 'readNumberRaw=readNumberRaw+readnumberfastq'
 		(
 			echo
 			echo "Raw fastqc data"
@@ -92,7 +96,7 @@ for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
 			echo "Below this paragraph the results of the fastqc tool are shown."
 			echo
 
-			fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+			#fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
 
 			perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
 			${fastqcBasename}.html
@@ -100,10 +104,10 @@ for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
 
 			echo
 			cd ${fastqcDir}
-			unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+			#unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
 			#readNumberRaw
-			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-			let 'readNumberRaw=readNumberRaw+readnumberfastq'
+			#readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+			#let 'readNumberRaw=readNumberRaw+readnumberfastq'
 		)>>${sampleMarkdown}
 	fi
 done
@@ -111,13 +115,18 @@ done
 if [ -e ${fastqcCleanDir} ] ; then
 	for fqClean in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| sort -u ); do
 		if [ -e $fqClean ] ;then
+			fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+			unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+			let 'readNumberClean=readNumberClean+readnumberfastq'
+
 			(
 				echo ""
 
 	        		echo "Clean fastqc data"
 	        		echo "----------------------"
 
-				fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+				#fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
 
 		        	perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
 		        	 ${fastqcBasename}.html
@@ -125,10 +134,10 @@ if [ -e ${fastqcCleanDir} ] ; then
 				cd ${fastqcCleanDir}
 
 				#this works \*/ yaay
-			        unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+			        #unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
 				#readNumberClean
-			        readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-			        let 'readNumberClean=readNumberClean+readnumberfastq'
+			        #readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+			        #let 'readNumberClean=readNumberClean+readnumberfastq'
 			)>> ${sampleMarkdown}
 
 		fi
@@ -280,7 +289,7 @@ if [ -e ${markDuplicatesMetrics} ] ; then
 		echo
 		perl -wne 'BEGIN{my $pr=0;};$pr=0 if($_ =~ m/^\n$/); $pr = 1 if($_ =~ m/LIBRARY/); print $_ if($pr); ' ${markDuplicatesMetrics} > ${markDuplicatesMetrics}.tmp
 		#just for logging
-		cat ${markDuplicatesMetrics}.tmp
+		cat ${markDuplicatesMetrics}.tmp >/dev/stderr
 		#create markduplicates table for a single sample. Note the recalculation of PCT_PCR_DUPs.
 		echo 'tabledup=read.table("'${markDuplicatesMetrics}.tmp'", header=TRUE, sep="\t", fill=NA);
 		 colsumstabledup<- colSums(tabledup[,(! is.na(tabledup[1,"ESTIMATED_LIBRARY_SIZE"]) | colnames(x=tabledup)!="ESTIMATED_LIBRARY_SIZE")&colnames(tabledup)!="LIBRARY"&colnames(tabledup)!="PERCENT_DUPLICATION"]);
