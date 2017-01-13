@@ -171,9 +171,9 @@ fi
 
 (
 	if which git &>/dev/null; then
-		>&2 echo "## "$(date)" ## $0 ## Command `git` present"
+		>&2 echo "## "$(date)" ## $0 ## Command 'git' present"
 	else
-		>&2 echo "## "$(date)" ## $0 ## Commmand `git` not present, trying module load."
+		>&2 echo "## "$(date)" ## $0 ## Commmand 'git' not present, trying module load."
 		ml git
 	fi
 	echo
