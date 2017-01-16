@@ -140,7 +140,7 @@ nugeneReads2FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_2.fq.gz
 ##Nugene random fastq integration/bbduk trimming
 nugeneProbeMetricsDir,${projectDir}/nugeneProbeMetrics/
 nugeneProbeMetricsLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.tsv
-
+nugeneProbeMetricsDeDupLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.dedup.tsv
 
 ##################################
 ##remappable name for sample md generation
