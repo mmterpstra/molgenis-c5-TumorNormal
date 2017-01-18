@@ -85,7 +85,7 @@ baseQ30pct=0
 for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
 		fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-		unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+		unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt -d ${fastqcDir}
 		readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
 		let 'readNumberRaw=readNumberRaw+readnumberfastq'
 		(
@@ -116,7 +116,7 @@ if [ -e ${fastqcCleanDir} ] ; then
 	for fqClean in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| sort -u ); do
 		if [ -e $fqClean ] ;then
 			fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-			unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+			unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt -d ${fastqcCleanDir}
 			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
 			let 'readNumberClean=readNumberClean+readnumberfastq'
 
@@ -149,7 +149,7 @@ fi
 #
 
 (
-	echo 
+	echo
 	echo "Fastq single sample summary data"
 	echo "==============="
 	echo

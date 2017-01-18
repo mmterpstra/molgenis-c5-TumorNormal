@@ -17,6 +17,7 @@ sub main {
 		push(@$mergedSamplesheet,@$samplesheet);
 	}
 	ValidateControlSampleNames($mergedSamplesheet);
+	ValidateFqFiles($mergedSamplesheet);
 	print SamplesheetAsString($mergedSamplesheet);
 }
 
@@ -47,6 +48,7 @@ sub ReadSamplesheet {
 }
 sub ValidateColvalues {
 	my $header = shift @_;
+	ValidateHeader($header);
 	my $columns = shift @_;
 	if(scalar(@{$header}) ne scalar(@{$columns})){
 		die "[VALIDATIONERROR] number of columns (".scalar(@{$columns}).") in line $. are not equal to columns in header ".scalar(@{$columns})
@@ -64,10 +66,47 @@ sub ValidateSpecialChars {
                 	        .".\nArray dump of $. columns".Dumper($columns)." ";
 		}
                 if($field =~ /[\-]/){
-                        warn "[VALIDATIONERROR] field '".$field."' matches /[\-]/ in line '$.'. Consider removing.";
+                        warn "[VALIDATIONWARNING] field '".$field."' matches /[\-]/ in line '$.'. Consider removing.";
                 }
 
 	}
+}
+sub ValidateHeader {
+	my $header = shift(@_);
+	
+	my @requiredValues = (
+		'internalId',
+		'samplePrep',
+		'seqType',
+		'sequencer',
+		'sequencerId',
+		'run',
+		'flowcellId',
+		'lane',
+		'sampleName',
+		'barcode',
+		'sequencingStartDate',
+		'project',
+		'controlSampleName',
+		'reads1FqGz',
+		'reads3FqGz',
+		'reads2FqGz');
+	
+	my @dieRequired = ();
+	for my $requirement (@requiredValues){
+		push(@dieRequired,$requirement) if(scalar(grep(${requirement} eq $_,@{$header})) != 1);
+		warn "[VALIDATIONWARNING] is this ok? $requirement ".join(',',(@{$header}, scalar(grep(${requirement} eq $_,@{$header})) )) if(scalar(grep(${requirement} eq $_ , @{$header})) != 1);
+	}
+	die "[VALIDATIONERROR] Missing required field(s) or field(s) declared twice: '".join(',',@dieRequired)."' in samplesheet header '".join(',',@{$header})."'" if(scalar(@dieRequired)>0);
+
+	#(
+	#	'reads1FqGz',
+	#	'reads3FqGz',
+	#	'reads2FqGz'
+	#);
+	
+	#@{$header}
+	#die Dumper($header);
 }
 
 sub ValidateControlSampleNames {
@@ -93,6 +132,19 @@ sub ValidateControlSampleNames {
 	}(@{$cs});
 	chop $error;
 	die "[VALIDATIONERROR] The following samplename(s) are seen in the controlsamplenames row but not seen in the samplenames row for the project (format'controlsaplename' at \$lineno) : \n".$error if($error ne "");
+}
+sub ValidateFqFiles {
+	my $samplesheet = shift @_;
+	for my $fileparam ('reads1FqGz',
+        	'reads3FqGz',
+        	'reads2FqGz'){
+		#next if (not(defined($samplesheet -> [0] -> {$file})));
+		for my $sample (@{$samplesheet}){
+			next if(not(defined($sample -> {$fileparam})));
+			die "[VALIDATIONERROR] Invalid file '".$sample -> {$fileparam}."' in parameter '".$fileparam."' ".Dumper($sample) 
+				if(defined($sample -> {$fileparam}) &&  $sample -> {$fileparam} ne "" && ! -e $sample -> {$fileparam});
+		}
+	}
 }
 sub CommaseparatedSplit {
 	my $string=pop @_;
