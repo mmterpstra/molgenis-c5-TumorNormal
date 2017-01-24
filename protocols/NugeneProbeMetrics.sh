@@ -39,6 +39,8 @@ mkdir -p ${nugeneProbeMetricsDir}
 #do bqsr for covariable determination then do print reads for valid bsqrbams
 #check the bqsr part and add known variants
 
+
+
 bedtools closest -D 'a' -fd -iu -S -a \
 	<(bedtools sort -i \
 		<(bedtools bamtobed  -i ${indelRealignmentBam}))\
