@@ -154,9 +154,10 @@ done
 
 #notes
 (
+	echo
 	echo "Notes"
 	echo "====="
-
+	echo
 	echo "This report was generated with the source present at the following
  github repo: [github.com/mmterpstra/molgenis-c5-TumorNormal](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
  This is used for research and may contain errors or typoos. So if you encounter
