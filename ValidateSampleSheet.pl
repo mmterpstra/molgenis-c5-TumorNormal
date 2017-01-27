@@ -18,6 +18,7 @@ sub main {
 	}
 	ValidateControlSampleNames($mergedSamplesheet);
 	ValidateFqFiles($mergedSamplesheet);
+	ValidateInternalId($mergedSamplesheet);
 	print SamplesheetAsString($mergedSamplesheet);
 }
 
@@ -98,7 +99,8 @@ sub ValidateHeader {
 		warn "[VALIDATIONWARNING] is this ok? $requirement ".join(',',(@{$header}, scalar(grep(${requirement} eq $_,@{$header})) )) if(scalar(grep(${requirement} eq $_ , @{$header})) != 1);
 	}
 	die "[VALIDATIONERROR] Missing required field(s) or field(s) declared twice: '".join(',',@dieRequired)."' in samplesheet header '".join(',',@{$header})."'" if(scalar(@dieRequired)>0);
-
+	
+	
 	#(
 	#	'reads1FqGz',
 	#	'reads3FqGz',
@@ -146,6 +148,23 @@ sub ValidateFqFiles {
 		}
 	}
 }
+sub ValidateInternalId {
+	my $samplesheet = shift @_;
+	for my $param ('internalId'){
+		my %seen;
+		#next if (not(defined($samplesheet -> [0] -> {$file})));
+		for my $sample (@{$samplesheet}){
+			next if(not(defined($sample -> {$param})));
+			die "Invalid sampleid" if(defined($seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'seen'}) && 
+				defined($seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'fileold'}) &&
+				$seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'fileold'} ne $sample -> {'reads1FqGz'});
+			$seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'seen'}++;
+			$seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'fileold'}=$sample -> {'reads1FqGz'};
+		}
+		warn Dumper(\%seen);
+	}
+}
+
 sub CommaseparatedSplit {
 	my $string=pop @_;
 	#needs to be fixed for citation marks!
