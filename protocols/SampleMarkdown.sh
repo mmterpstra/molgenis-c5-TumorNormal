@@ -82,65 +82,65 @@ baseNumberClean=0
 baseQ20pct=0
 baseQ30pct=0
 
-for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
+for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
-		fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-		unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt -d ${fastqcDir}
-		readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-		let 'readNumberRaw=readNumberRaw+readnumberfastq'
-		(
-			echo
-			echo "Raw fastqc data"
-        		echo "----------------"
-			echo
-			echo "Below this paragraph the results of the fastqc tool are shown."
-			echo
+		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/" -d); do
+			cd ${fastqcBasename}
+			unzip -u -o ${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc".zip \*/fastqc_data.txt -d $(dirname ${fastqcBasename}) 
+			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}//$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc"/fastqc_data.txt | cut  -f2)
+			let 'readNumberRaw=readNumberRaw+readnumberfastq'
+			(
+				echo
+				echo "Raw fastqc data"
+        			echo "----------------"
+				echo
+				echo "Below this paragraph the results of the fastqc tool are shown."
+				echo
 
-			#fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+				#fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
 
-			perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
-			${fastqcBasename}.html
+				perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
+				${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc.html"
 
 
-			echo
-			cd ${fastqcDir}
-			#unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
-			#readNumberRaw
-			#readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-			#let 'readNumberRaw=readNumberRaw+readnumberfastq'
-		)>>${sampleMarkdown}
+				echo
+				cd ${fastqcDir}
+				#unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+				#readNumberRaw
+				#readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+				#let 'readNumberRaw=readNumberRaw+readnumberfastq'
+			)>>${sampleMarkdown}
+
+			cd $OLDPWD
+		done
 	fi
 done
 
 if [ -e ${fastqcCleanDir} ] ; then
-	for fqClean in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| sort -u ); do
-		if [ -e $fqClean ] ;then
-			fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-			unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt -d ${fastqcCleanDir}
-			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-			let 'readNumberClean=readNumberClean+readnumberfastq'
+       for fqClean in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| sort -u ); do
+		#if [ -e $fqClean ] ;then
+		fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+		unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt -d ${fastqcCleanDir}
+		readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+		let 'readNumberClean=readNumberClean+readnumberfastq'
 
-			(
-				echo ""
-
-	        		echo "Clean fastqc data"
-	        		echo "----------------------"
+		(
+			echo ""
+	       		echo "Clean fastqc data"
+	       		echo "----------------------"
 
 				#fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
 
-		        	perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
-		        	 ${fastqcBasename}.html
-
-				cd ${fastqcCleanDir}
-
-				#this works \*/ yaay
-			        #unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
-				#readNumberClean
-			        #readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-			        #let 'readNumberClean=readNumberClean+readnumberfastq'
-			)>> ${sampleMarkdown}
-
-		fi
+        		perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
+	        	 ${fastqcBasename}.html
+			cd ${fastqcCleanDir}
+			#this works \*/ yaay
+		        #unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+			#readNumberClean
+		        #readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+		        #let 'readNumberClean=readNumberClean+readnumberfastq'
+		)>> ${sampleMarkdown}
+		#fi
 	done
 fi
 
