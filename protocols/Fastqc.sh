@@ -52,7 +52,7 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	
 	cd $OLDPWD
 
-	putFile ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt}
+	putFile ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt}
 	putFile ${singleEndfastqcZip}
 
 else
@@ -88,8 +88,8 @@ else
 	putFile ${pairedEndfastqcZip1}
 	putFile ${pairedEndfastqcZip2}
 
-	putFile ${fastqcDir}/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')${fastqcZipExt}
-	putFile ${fastqcDir}/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt}
+	putFile ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip)/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')${fastqcZipExt}
+	putFile ${fastqcDir}/$(basename ${pairedEndfastqcZip2} .zip)/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')${fastqcZipExt}
 fi
 
 echo "## "$(date)" ##  $0 Done "

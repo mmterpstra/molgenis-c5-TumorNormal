@@ -1,4 +1,4 @@
-#MOLGENIS walltime=195:59:00 mem=1gb ppn=1 nodes=1
+#MOLGENIS walltime=195:59:00 mem=5gb ppn=1 nodes=1
 
 #string project
 
@@ -66,16 +66,25 @@ echo -n ""> ${varscanCopycaller}
 echo -n ""> ${varscanCopycaller}
 
 #create bedfile on the fly
- grep -v '^@' targetsList | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' |bedtools slop -b 300 -g <(cut -f1,2 ${onekgGenomeFasta}.fai) -i ->  ${varscanCopynumberPrefix}.intervals.bed
+ grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' |bedtools slop -b 300 -g <(cut -f1,2 ${onekgGenomeFasta}.fai) -i ->  ${varscanCopynumberPrefix}.intervals.bed
 
 
 #run the pipeline: select the regions not in the targeted sequencing and do cnv data collection
 samtools mpileup \
- -R -q 40 -f ${onekgGenomeFasta} \
- <( bedtools intersect -v -a ${controlvarscanInputBam} -b  ${varscanCopynumberPrefix}.intervals.bed) <( bedtools intersect -v -a ${varscanInputBam} -b  ${varscanCopynumberPrefix}.intervals.bed)
- java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
-  - ${varscanCopynumberPrefix} \
-  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
+ -B -R -q 40 -f ${onekgGenomeFasta} \
+ <( bedtools intersect -v -a ${controlvarscanInputBam} -b  ${varscanCopynumberPrefix}.intervals.bed) <( bedtools intersect -v -a ${varscanInputBam} -b  ${varscanCopynumberPrefix}.intervals.bed) | \
+	java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
+	  - ${varscanCopynumberPrefix} \
+	  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
+#old command
+#samtools mpileup \
+# -B -R -q 40 -f ${onekgGenomeFasta} \
+# ${controlvarscanInputBam} ${varscanInputBam}  | \
+#        java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
+#          - ${varscanCopynumberPrefix} \
+#          --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
+
+
 cat ${varscanCopynumberPrefix}.err.log >&2
 
 #check for input lag of varscan

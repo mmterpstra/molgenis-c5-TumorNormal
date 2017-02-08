@@ -16,7 +16,7 @@ SvVariantsToMinTable,protocols/GatkVariantsToTable.sh,SnpEffManta;vcf=snpeffMant
 #CollectRnaSeqMetrics,protocols/CollectRnaSeqMetrics.sh,MarkDuplicates
 CollectMultipleMetrics,protocols/CollectMultipleMetrics.sh,MarkDuplicates
 CalculateHsMetrics,protocols/CalculateHsMetrics.sh,MarkDuplicates
-SampleMarkdown,protocols/SampleMarkdown.sh,CalculateHsMetrics;CollectMultipleMetrics;Fastqc;MarkDuplicates;fastqcCleanDir=fastqcDir;reads1FqGzClean=reads1FqGz;reads2FqGzClean=reads2FqGz
+SampleMarkdown,protocols/SampleMarkdown.sh,CalculateHsMetrics;CollectMultipleMetrics;Fastqc;MarkDuplicates;reads1FqGzClean=reads1FqGz;reads2FqGzClean=reads2FqGz
 #HtseqCount,protocols/HtseqCount.sh,MarkDuplicates
 #FluxCapacitor,protocols/FluxCapacitor.sh,MarkDuplicates
 #GatkSplitAndTrim,protocols/GatkSplitAndTrim.sh,MarkDuplicates
