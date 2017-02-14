@@ -253,7 +253,7 @@ The table below shows the filtering steps that are automatically performed. Note
 
 | Name          		| Expression    		| Applied on                    | Description |
 | ----          		| ----------    		| -----------                   | ----------- |
-| "LowQual"     		| "QUAL < 30"   		| both (snv and indel & mnp)    | Variant statistic. Filter for the possibility (> 1/1000 or <30 pred scaled) that the variant call is wrong using a bayesian model. |
+| "LowQual"     		| "QUAL < 20"   		| both (snv and indel & mnp)    | Variant statistic. Filter for the possibility (> 1/1000 or <30 pred scaled or > 1/100 or <20 pred scaled) that the variant call is wrong using a bayesian model. |
 | "QDlt2"			| "QD < 2.0"    		| both                          | Variant statistic. Filter for the pred scaled possibility that the variant call is wrong divided by the depth < 2.0 |
 | "MQlt40"			| "MQ < 40.0"			| snv				| Variant statistic. Filter snv for the pred scaled possibility that a mapping is wrong, capped 60, calculated with secondary hits using the base quality scores at the different positions to call it 0 or higher. Filter for unique mappings. |
 | "MQRankSumlt-12_5"		| "MQRankSum < -12.5" 		| snv				| Variant statistic. Filter snv for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
