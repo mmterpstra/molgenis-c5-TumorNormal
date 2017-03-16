@@ -25,7 +25,8 @@ sub main {
 sub ReadSamplesheet {
 	my $samplesheetf = shift @_;
 	my $samplesheet;
-	open( my $samplesheeth,'<', $samplesheetf) or die "Cannot read samplesheet file:'$samplesheetf'";
+	warn "[INFO] Analysing file '$samplesheetf'.\n";
+	open( my $samplesheeth,'<', $samplesheetf) or die "[ERROR] Cannot read samplesheet file:'$samplesheetf'";
 	$_=<$samplesheeth>;
 	chomp;
 	my @h = CommaseparatedSplit($_);
@@ -155,7 +156,13 @@ sub ValidateInternalId {
 		#next if (not(defined($samplesheet -> [0] -> {$file})));
 		for my $sample (@{$samplesheet}){
 			next if(not(defined($sample -> {$param})));
-			die "Invalid sampleid" if(defined($seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'seen'}) && 
+			die "[VALIDATIONERROR] Invalid sampleid/file mapping seen internalId id'".
+				$sample -> {$param}.
+				"' sample'".$sample -> {'sampleName'}."' more than once with different files: '".
+				$sample -> {'reads1FqGz'}.
+				"' & '".$seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'fileold'}.
+				"'" 
+				if(defined($seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'seen'}) && 
 				defined($seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'fileold'}) &&
 				$seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'fileold'} ne $sample -> {'reads1FqGz'});
 			$seen{ $sample -> {$param} }{ $sample -> {'sampleName'} }{'seen'}++;
@@ -196,7 +203,11 @@ sub SamplesheetAsString {
 	for my $sample (@$self){
 		my @c;
 		for my $h (@h){
-			push (@c,$$sample{$h});
+			if(defined($$sample{$h})){
+				push (@c,$$sample{$h});
+			}else{
+				push (@c,'');
+			}
 		}
 		$string.=join(",",@c)."\n";
 	}
