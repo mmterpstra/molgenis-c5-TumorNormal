@@ -86,11 +86,11 @@ fqList=()
 
 for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
-		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)*/ -d); do
+		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)*.zip -d); do
 			fqList+=($fq)
 			fastqcBasename=$(dirname ${fastqcBasename})
 			cd ${fastqcBasename}
-			unzip -u -o ${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc".zip \*/fastqc_data.txt -d ${fastqcBasename} 
+			unzip -u -o ${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc.zip" \*/fastqc_data.txt -d ${fastqcBasename}
 			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}//$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc"/fastqc_data.txt | cut  -f2)
 			let 'readNumberRaw=readNumberRaw+readnumberfastq'
 			(
@@ -120,7 +120,7 @@ for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fa
 	fi
 done
 
-if [ $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u | wc -l) -ne ${#fqList[@]} ]; then
+if [ $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u | wc -l) -ne ${#fqList[@]} ]; then
 	>&2 echo "[FATAL] length of fq files processed and fq files present is not equal."
 	>&2 echo -e "\tProcessed list:"
 	>&2 printf '\t%s\n' ${fqList[@]}
@@ -135,9 +135,10 @@ readNumberClean=0
 if [ -e ${fastqcCleanDir} ] ; then
        for fqClean in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| sort -u ); do
 		#if [ -e $fqClean ] ;then
-		fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-		unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt -d ${fastqcCleanDir}
-		readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+		#/scratch/umcg-mterpstra/projects/INDO_16_MRT_14_1545//nugeneFastq//13294562_IN-14_1545_A4_2A_repeat_22_6_2015_fastqc/13294562_IN-14_1545_A4_2A_repeat_22_6_2015_1_fastqc.zip
+		fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|(_[12]){0,1}\.fq\.gz|(_[12]){0,1}\.fastq\.gz|\.gz!!g')'_fastqc')
+		unzip -u -o ${fastqcBasename}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc'.zip \*/fastqc_data.txt -d $fastqcBasename
+		readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc'/fastqc_data.txt | cut  -f2)
 		let 'readNumberClean=readNumberClean+readnumberfastq'
 
 		(
@@ -148,7 +149,7 @@ if [ -e ${fastqcCleanDir} ] ; then
 				#fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
 
         		perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
-	        	 ${fastqcBasename}.html
+	        	 ${fastqcBasename}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc.html'
 			cd ${fastqcCleanDir}
 			#this works \*/ yaay
 		        #unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
@@ -195,11 +196,11 @@ fi
 
 	echo -e "|\tsamplename\t|\tReads raw\t|\tReads clean\t|\tBases clean\t|\tClean bases Q20\t|\tClean bases Q30\t|"
 	echo -e "|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|"
-	
+
 	if [ ! -e ${fastqcCleanDir} ] ; then
 		readNumberClean=${readNumberRaw}
 	fi
-	
+
 	echo -e "|\t${sampleName}\t|\t${readNumberRaw}\t|\t${readNumberClean}\t|\t${baseNumberClean}\t|\t${baseQ20pct}\t|\t${baseQ30pct}\t|"
 )>>${sampleMarkdown}
 
