@@ -7,8 +7,10 @@ SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
 >&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList"
 
+backend="slurm"
 mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
 ###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
+
 
 
 #main thing to remember when working with molgenis "/full/paths" ALWAYS!
@@ -37,6 +39,11 @@ elif [ $1 == "nugrna" ];then
 elif [ $1 == "iont" ];then
         >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
         workflowBase="workflow_iont.csv"
+elif [ $1 == "prepiont" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
+        workflowBase="workflow_prepiont.csv"
+	backend="localhost"
+
 elif [ $1 == "withpoly" ];then
         >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
         workflowBase="workflow_withPolymorfic.csv"
@@ -153,12 +160,12 @@ perl $workflowDir/convertParametersGitToMolgenis.pl $workflowDir/.parameters.sit
 
 >&2 echo  "## "$(date)" ## $0 ## Convert samplesheet"
 perl -wpe 's!projectNameHere!'$projectname'!g' $samplesheet > $samplesheet.tmp.csv
-perl $workflowDir/ValidateSampleSheet.pl $samplesheet
-
-cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet)
+if [ $1 != "prepiont" ];then
+	perl $workflowDir/ValidateSampleSheet.pl $samplesheet
+fi
+cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet .csv).input.csv
 cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
 #echo "$SCRIPTCALL" >>
-backend="slurm"
 molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
 
 if [ $(find $jobsDir -iname *.finished| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then

@@ -1,4 +1,5 @@
 # First cd to the directory with the *.sh and *.finished scripts
+set -e
 <#noparse>
 MOLGENIS_scriptsDir=$( cd -P "$( dirname "$0" )" && pwd )
 echo "cd $MOLGENIS_scriptsDir"
