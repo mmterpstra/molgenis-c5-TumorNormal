@@ -10,7 +10,6 @@
 #string digiRgMod
 #string pipelineUtilMod
 #string probeFa
-#string onekgGenomeFastaIdxBase
 #string probeBed
 #string nugeneFastqDir
 
@@ -47,117 +46,144 @@ set -e
 
 mkdir -p ${nugeneFastqDir}
 
-if [ ${#reads3FqGz} -eq 0 ]; then 
-	if [ ${#reads2FqGz} -eq 0 ]; then
-	        #single end no umi
+
+getFile ${reads1FqGz}
+
+if [ ${#reads3FqGz} -eq 0 ]; then
+	#no umi
+        if [ ${#reads2FqGz} -eq 0 ]; then
+		#single end
 		alloutputsexist \
-		        ${nugeneReads1FqGz}
-
-		getFile ${reads1FqGz}
-
-		#ln -s ${reads1FqGz} ${nugeneReads1FqGz}
-
-		bwa mem ${onekgGenomeFastaIdxBase} ${reads1FqGz} > ${nugeneReads1FqGz}.bwamem.sam
-
-		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.bwamem.sam -b ${probeBed} -o ${nugeneReads1FqGz}.trimbed.tmp && rm -v ${nugeneReads1FqGz}.bwamem.sam
-
-		bash $EBROOTBBMAP/bbduk.sh \
-                 -Xmx11g \
-                 in=${nugeneReads1FqGz}.trimbed.tmp.fq.gz \
-                 out=${nugeneReads1FqGz} \
-                 qtrim=r \
-                 trimq=20 \
-                 minlen=20 \
-		 overwrite=t
-
-		rm -v ${nugeneReads1FqGz}.trimbed.tmp*.gz
-                putFile ${nugeneReads1FqGz}
-	else
-		#paired end no umi
-		alloutputsexist \
-		        ${nugeneReads1FqGz}  ${nugeneReads2FqGz}
-
-		getFile ${reads1FqGz}
-		getFile ${reads2FqGz}
-
-		bwa mem ${onekgGenomeFastaIdxBase} ${reads1FqGz}  ${reads2FqGz} > ${nugeneReads1FqGz}.bwamem.sam
-		
-		perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.bwamem.sam -b ${probeBed} -o ${nugeneReads1FqGz}.trimbed.tmp && rm -v ${nugeneReads1FqGz}.bwamem.sam
+		 ${nugeneReads1FqGz}
 		
 		bash $EBROOTBBMAP/bbduk.sh \
-	 	 -Xmx11g \
-		 in=${nugeneReads1FqGz}.trimbed.tmp_R1.fq.gz \
-	 	 out=${nugeneReads1FqGz} \
-                 in2=${nugeneReads1FqGz}.trimbed.tmp_R2.fq.gz \
-                 out2=${nugeneReads2FqGz} \
+		 in=${reads1FqGz} \
+		 out=${nugeneReads1FqGz} \
+		 literal='GAGAGCGATCCTTGC' \
+		 hdist=1 \
+		 ktrim=r \
+		 rcomp=f \
+		 k=31 \
+		 mink=11 \
 		 qtrim=r \
-                 trimq=20 \
-                 minlen=20 \
-		 overwrite=t
+		 trimq=20 \
+		 minlen=20
 
-		rm -v ${nugeneReads1FqGz}.trimbed.tmp*.gz
+	else
+		#paired end
+		getFile ${reads2FqGz}
+		alloutputsexist \
+		 ${nugeneReads1FqGz}  ${nugeneReads2FqGz}
+		
+		bash $EBROOTBBMAP/bbduk.sh \
+		 in=${reads1FqGz} \
+		 out=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
+		 in2=${reads2FqGz} \
+		 out2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
+		 literal='GAGAGCGATCCTTGC' \
+		 hdist=1 \
+		 ktrim=r \
+		 rcomp=f \
+		 k=31 \
+		 mink=11 \
+		 qtrim=r \
+		 trimq=20 \
+		 minlen=20 \
+		 skipr2=t
 
-		putFile ${nugeneReads1FqGz}
-		putFile ${nugeneReads2FqGz}
-
+		bash $EBROOTBBMAP/bbduk.sh \
+		 in=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
+		 out=${nugeneReads1FqGz} \
+		 in2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
+		 out2=${nugeneReads2FqGz} \
+		 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC') \
+		 hdist=1 \
+		 ktrim=l \
+		 rcomp=f \
+		 k=31 \
+		 mink=11 \
+		 qtrim=r \
+		 trimq=20 \
+		 minlen=20 \
+		 skipr1=t 
+		
+		#rm -v ${nugeneReads1FqGz}.tmpbbduk.1.fq.gz ${nugeneReads2FqGz}.tmpbbduk.2.fq.gz
+		
 	fi
 else
+	#umi
+	getFile ${reads3FqGz}
+
 	if [ ${#reads2FqGz} -eq 0 ]; then
-		#single end with umi
+		
+		#single end + umi => get random barcode in read + trim nugene linker
 		alloutputsexist \
-		        ${nugeneReads1FqGz}
+		 ${nugeneReads1FqGz}
+		
+		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles2.pl \
+		 ${reads3FqGz} \
+		 ${reads1FqGz} ${nugeneReads1FqGz}.tmpmergefq.1.fq.gz
 
-		getFile ${reads1FqGz}
-
-		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles2.pl ${reads3FqGz} ${reads1FqGz} ${nugeneReads1FqGz}.mergefq.tmp.fq.gz
-
-               	bwa mem ${onekgGenomeFastaIdxBase} ${nugeneReads1FqGz}.mergefq.tmp.fq.gz > ${nugeneReads1FqGz}.bwamem.sam
-
-               	perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.bwamem.sam -b ${probeBed} -o ${nugeneReads1FqGz}.trimbed.tmp && rm -v ${nugeneReads1FqGz}.bwamem.sam
-
-                bash $EBROOTBBMAP/bbduk.sh \
-                 -Xmx11g \
-                 in=${nugeneReads1FqGz}.trimbed.tmp.fq.gz \
-                 out=${nugeneReads1FqGz} \
-                 qtrim=r \
-                 trimq=20 \
-                 minlen=20 \
-		 overwrite=t
-
-		rm -v ${nugeneReads1FqGz}.mergefq.tmp.fq.gz ${nugeneReads1FqGz}.trimbed.tmp*.gz
+		bash $EBROOTBBMAP/bbduk.sh \
+		 in=${nugeneReads1FqGz}.tmpmergefq.1.fq.gz \
+		 out=${nugeneReads1FqGz} \
+		 literal='GAGAGCGATCCTTGC' \
+		 hdist=1 \
+		 ktrim=r \
+		 rcomp=f \
+		 k=31 \
+		 mink=11 \
+		 qtrim=r \
+		 trimq=20 \
+		 minlen=20
 
 		putFile ${nugeneReads1FqGz}
-
-	else
-		#paired end with umi
-		alloutputsexist \
-		        ${nugeneReads1FqGz}  ${nugeneReads2FqGz}
-
-		getFile ${reads1FqGz}
+       	else
+		#paired end
 		getFile ${reads2FqGz}
+		alloutputsexist \
+		 ${nugeneReads1FqGz}  ${nugeneReads2FqGz}
+		
+	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles2.pl \
+		 ${reads3FqGz} \
+		 ${reads1FqGz} ${nugeneReads1FqGz}.tmpmergefq.1.fq.gz \
+		 ${reads2FqGz} ${nugeneReads2FqGz}.tmpmergefq.2.fq.gz
 
-	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles2.pl ${reads3FqGz} ${reads1FqGz} ${nugeneReads1FqGz}.mergefq.tmp_1.fq.gz ${reads2FqGz} ${nugeneReads1FqGz}.mergefq.tmp_2.fq.gz
+		bash $EBROOTBBMAP/bbduk.sh \
+		 in=${reads1FqGz}.tmpmergefq.1.fq.gz \
+		 out=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
+		 in2=${reads2FqGz}.tmpmergefq.2.fq.gz \
+		 out2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
+		 literal='GAGAGCGATCCTTGC' \
+		 hdist=1 \
+		 ktrim=r \
+		 rcomp=f \
+		 k=31 \
+		 mink=11 \
+		 qtrim=r \
+		 trimq=20 \
+		 minlen=20 \
+		 skipr2=t
 
-		bwa mem ${onekgGenomeFastaIdxBase} ${nugeneReads1FqGz}.mergefq.tmp_1.fq.gz ${nugeneReads1FqGz}.mergefq.tmp_2.fq.gz > ${nugeneReads1FqGz}.bwamem.sam
-
-               	perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl -s ${nugeneReads1FqGz}.bwamem.sam -b ${probeBed} -o ${nugeneReads1FqGz}.trimbed.tmp && rm -v ${nugeneReads1FqGz}.bwamem.sam
-
-               	bash $EBROOTBBMAP/bbduk.sh \
-                 -Xmx11g \
-                 in=${nugeneReads1FqGz}.trimbed.tmp_R1.fq.gz \
-                 out=${nugeneReads1FqGz} \
-                 in2=${nugeneReads1FqGz}.trimbed.tmp_R2.fq.gz \
-                 out2=${nugeneReads2FqGz} \
-                 qtrim=r \
-                 trimq=20 \
-                 minlen=20 \
-		 overwrite=t
-
-                rm -v ${nugeneReads1FqGz}.trimbed.tmp*.gz ${nugeneReads1FqGz}.mergefq.tmp_[12].fq.gz
+		bash $EBROOTBBMAP/bbduk.sh \
+		 in=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
+		 out=${nugeneReads1FqGz} \
+		 in2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
+		 out2=${nugeneReads2FqGz} \
+		 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC') \
+		 hdist=1 \
+		 ktrim=l \
+		 rcomp=f \
+		 k=31 \
+		 mink=11 \
+		 qtrim=r \
+		 trimq=20 \
+		 minlen=20 \
+		 skipr1=t 
 
 		putFile ${nugeneReads1FqGz}
 		putFile ${nugeneReads2FqGz}
-	fi
+       	fi
 fi
 
 echo "## "$(date)" ##  $0 Done "
