@@ -63,7 +63,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
-		 k=31 \
+		 k=15 \
 		 mink=11 \
 		 qtrim=r \
 		 trimq=20 \
@@ -84,7 +84,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
-		 k=31 \
+		 k=15 \
 		 mink=11 \
 		 qtrim=r \
 		 trimq=20 \
@@ -100,12 +100,12 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		 hdist=1 \
 		 ktrim=l \
 		 rcomp=f \
-		 k=31 \
+		 k=15 \
 		 mink=11 \
 		 qtrim=r \
 		 trimq=20 \
 		 minlen=20 \
-		 skipr1=t 
+		 skipr1=t
 		
 		#rm -v ${nugeneReads1FqGz}.tmpbbduk.1.fq.gz ${nugeneReads2FqGz}.tmpbbduk.2.fq.gz
 		
@@ -131,7 +131,7 @@ else
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
-		 k=31 \
+		 k=15 \
 		 mink=11 \
 		 qtrim=r \
 		 trimq=20 \
@@ -150,15 +150,15 @@ else
 		 ${reads2FqGz} ${nugeneReads2FqGz}.tmpmergefq.2.fq.gz
 
 		bash $EBROOTBBMAP/bbduk.sh \
-		 in=${reads1FqGz}.tmpmergefq.1.fq.gz \
+		 in=${nugeneReads1FqGz}.tmpmergefq.1.fq.gz \
 		 out=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
-		 in2=${reads2FqGz}.tmpmergefq.2.fq.gz \
+		 in2=${nugeneReads2FqGz}.tmpmergefq.2.fq.gz \
 		 out2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
 		 literal='GAGAGCGATCCTTGC' \
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
-		 k=31 \
+		 k=15 \
 		 mink=11 \
 		 qtrim=r \
 		 trimq=20 \
@@ -174,7 +174,7 @@ else
 		 hdist=1 \
 		 ktrim=l \
 		 rcomp=f \
-		 k=31 \
+		 k=15 \
 		 mink=11 \
 		 qtrim=r \
 		 trimq=20 \

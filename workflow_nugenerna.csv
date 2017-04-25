@@ -5,7 +5,7 @@ FusionCatcher,protocols/FusionCatcher.sh,
 NugenePreRnaAlign,protocols/NugenePreAlign.sh,probeBed=probeRnaBed;probeFa=probeRnaFa
 FastqcNugene,protocols/Fastqc.sh,NugenePreRnaAlign;fastqcDir=nugeneFastqDir;reads1FqGz=nugeneReads1FqGz;reads2FqGz=nugeneReads2FqGz
 Hisat2Alignment,protocols/Hisat2.sh,onekgGenomeFastaIdxBase=hisat2IdxBase;NugenePreRnaAlign;reads1FqGz=nugeneReads1FqGz;reads2FqGz=nugeneReads2FqGz
-TrimByBed,protocols/TrimByBed.sh,Hisat2Alignment;probeBed=probeRnaBed;probeFa=probeRnaFa
+TrimByBed,protocols/TrimByBed.sh,Hisat2Alignment;probeBed=probeRnaBed;probeFa=probeRnaFa;bwaSam=hisat2Sam
 AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,TrimByBed;bwaSam=trimByBedBam
 NugeneBcSplitter,protocols/NugeneBcSplitter.sh,AddOrReplaceReadGroups
 MergeBamFiles,protocols/MergeBamFiles.sh,NugeneBcSplitter;addOrReplaceGroupsBam=nugeneBam;addOrReplaceGroupsBai=nugeneBai

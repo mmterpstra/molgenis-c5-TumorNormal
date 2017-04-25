@@ -19,8 +19,8 @@
 
 
 alloutputsexist \
- ${addOrReplaceGroupsBam} \
- ${addOrReplaceGroupsBai}
+ ${trimByBedBam} \
+ ${trimByBedBai}
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -31,14 +31,14 @@ ${checkStage}
 
 set -x
 set -e
-
+set -o pipefail
 
 mkdir -p ${trimByBedDir}
 
 echo "## "$(date)" Start $0"
 
 
-perl $EBROOTPIPELINEMINUNTIL/bin/trimByBed.pl \
+perl $EBROOTPIPELINEMINUTIL/bin/trimByBed.pl \
  -s ${bwaSam} \
  -b ${probeBed} \
  -o $(dirname ${trimByBedBam})/$(basename ${trimByBedBam} .bam).out \
