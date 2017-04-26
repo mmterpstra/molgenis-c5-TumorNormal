@@ -31,7 +31,8 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	mkdir -p $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!')
 	cp ${reads1FqGz} $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})
 	cp ${reads1FqGz}.md5 $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz}).md5
-	perl -i.bak -wpe 's!'${reads1FqGz}'!'$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})'!g' ${rundir}/../*.input.csv
+
+	perl -i.bak -wpe 's!'${reads1FqGz}'!'$(dirname ${reads1FqGz} | perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})'!g' ${rundir}/../*.input.csv
 	putFile $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp02/raw/!g')/$(basename ${reads1FqGz})
 	putFile $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp02/raw/!g')/$(basename ${reads1FqGz}).md5
 else

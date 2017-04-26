@@ -181,7 +181,15 @@ trimByBedMetrics,${trimByBedDir}${internalId}_${sampleName}.metrics.log
 addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
 addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
 addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+
+################################################################################
+## Iontorrent workflow SelectSpanningReads for selection of reads from bam matching end to end seq
 #
+spanningDir,${projectDir}/SelectSpanningReads/
+spanningBam,${spanningDir}${internalId}_${sampleName}.bam
+spanningBai,${spanningDir}${internalId}_${sampleName}.bai
+
+
 ################################################################################
 #Nugene Bc Splitter?
 #
@@ -284,6 +292,10 @@ haplotyperScatVcf,${haplotyperDir}${project}.${scatterIDs}.vcf
 haplotyperScatVcfIdx,${haplotyperScatVcf}.idx
 haplotyperVcf,${haplotyperDir}${project}.vcf
 haplotyperVcfIdx,${haplotyperVcf}.idx
+#gatkOpt=gatkDownSample1000; more lenient downsampling
+gatkDownSample1000," --downsample_to_coverage 1000 --downsampling_type BY_SAMPLE "
+
+
 ################################################################################
 #variant annotation
 

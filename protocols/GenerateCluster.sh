@@ -15,6 +15,7 @@
 #string reads1FqGzOriginal
 #string reads2FqGzOriginal
 #string sampleName
+#string targetsList
 
 echo -e "test ${reads1FqGz} ${reads2FqGz} 1: "
 
@@ -24,7 +25,11 @@ set -e
 echo "## "$(date)" ##  $0 Started "
 
 cd /groups/umcg-oncogenetics/prm02/data/git/molgenis-c5-TumorNormal
-bash GenerateScripts2.sh iont $(ls ${rundir}/../*.input.csv | grep -v 'input.input.csv' ) $(basename $(dirname ${rundir})) ${targetsList} && bash .RunWorkFlowGeneration.sh	
+if [ ${#targetsList} -eq 0 ]; then
+        bash GenerateScripts2.sh iont $(ls ${rundir}/../*.input.csv | grep -v 'input.input.csv' ) $(basename $(dirname ${rundir})) none && bash .RunWorkFlowGeneration.sh
+else
+	bash GenerateScripts2.sh iont $(ls ${rundir}/../*.input.csv | grep -v 'input.input.csv' ) $(basename $(dirname ${rundir})) ${targetsList} && bash .RunWorkFlowGeneration.sh	
+fi
 #run submit script again
 
 
