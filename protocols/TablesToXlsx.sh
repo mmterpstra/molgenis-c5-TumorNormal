@@ -45,12 +45,14 @@ for inTable in "${indelMnpTable[@]}" "${indelMnpRawTable[@]}" "${indelMnpMinTabl
                "${svTable[@]}" "${svRawTable[@]}" "${svMinTable[@]}" "${svMinRawTable[@]}" \
                "${snvDescrTable}" "${indelMnpDescrTable}"  "${svDescrTable}"; do
 
-	echo "getFile file='$inTable'"
-	getFile $inTable
-	#just guess the output...
-	perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t $inTable
-	xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
-	mv -v $xlsx ${xlsxDir}
-	putFile ${xlsxDir}/$(basename $xlsx)
+	if [ -f $inTable ]; then
+		echo "getFile file='$inTable'"
+		getFile $inTable
+		#just guess the output...
+		perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t $inTable
+		xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
+		mv -v $xlsx ${xlsxDir}
+		putFile ${xlsxDir}/$(basename $xlsx)
+	fi
 done
 

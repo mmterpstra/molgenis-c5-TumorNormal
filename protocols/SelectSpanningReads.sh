@@ -48,13 +48,13 @@ echo "## "$(date)" Start $0"
 
 bedtools intersect \
  -F 0.95 \
+ -r
  -u \
  -sorted \
  -a ${addOrReplaceGroupsBam} \
  -b ${ampliconsBed} \
  | tee  ${spanningBam} \
  | samtools index - ${spanningBai}
-
 
 putFile ${spanningBam}
 putFile ${spanningBai}
