@@ -36,25 +36,26 @@ ${checkStage}
 
 set -x
 set -e
+set -o pipefail
 
 mkdir -p ${spanningDir}
 
 echo "## "$(date)" Start $0"
 
-#-F = fraction of overlap with '-b' this should be somewhere between ~0.90 and 0.99 because with amplicons the last ~10% is just adapter.
+#-F = fraction of overlap with '-b' this should be somewhere between ~0.85% ~0.90%  because with amplicons the last ~10% is just adapter, also some amplicons seem to be a bit off.
 #-u = Only report overlap of '-a' once
 #-sorted = Use sorted input
 #tee for indexing on the fly / error checking
 
 bedtools intersect \
- -F 0.95 \
- -r
+ -F 0.85 \
+ -f 0.85 \
  -u \
  -sorted \
  -a ${addOrReplaceGroupsBam} \
  -b ${ampliconsBed} \
  | tee  ${spanningBam} \
- | samtools index - ${spanningBai}
+ | samtools index /dev/stdin ${spanningBai}
 
 putFile ${spanningBam}
 putFile ${spanningBai}
