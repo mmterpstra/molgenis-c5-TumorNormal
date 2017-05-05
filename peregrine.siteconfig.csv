@@ -34,7 +34,7 @@ htseqMod,HTSeq/0.6.1p1-goolfc-2.7.11-Python-2.7.9
 #cmarkMod,cmark/0.25.2-foss-2016a
 fusioncatcherMod,FusionCatcher/0.99.6a-foss-2016a-Python-2.7.11
 RmarkMod,markdown/0.7.7-foss-2016a-R-3.2.2-bioconductor
-mantaMod,manta/1.0.2-foss-2016a
+mantaMod,manta/1.1.0-foss-2016a
 ################################################################################
 ##user data
 #remap plz
