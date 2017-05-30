@@ -25,5 +25,6 @@ test-weave-nuginc:
 	bash weave_test.sh nuginc
 test-weave-nugrna:
 	bash weave_test.sh nugrna
+	
 test-all: test-java test-perl test-bash test-python test-wfdups test-mlcompute test-weave-exome test-weave-rna test-weave-withpoly test-weave-iont test-weave-nugene test-weave-nuginc test-weave-nugrna
 test: test-all
