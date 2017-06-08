@@ -21,7 +21,7 @@ echo "## "$(date)" ##  $0 Started "
 alloutputsexist \
 "${haplotyperVcf}"
 
-for file in "${haplotyperScatVcf[@]}" "${haplotyperScatVcfIdx[@]}" "${onekgGenomeFasta}"; do
+for file in "${haplotyperScatVcf[@]}"  "${onekgGenomeFasta}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done

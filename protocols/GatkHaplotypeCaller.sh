@@ -73,8 +73,7 @@ java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:Para
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf}\
  $inputs \
- -stand_call_conf 20.0 \
- -stand_emit_conf 10.0 \
+ -stand_call_conf 10.0 \
  -o ${haplotyperScatVcf} \
  $InterValOperand \
  ${gatkOpt}

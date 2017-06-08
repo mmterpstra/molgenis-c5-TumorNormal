@@ -294,6 +294,20 @@ haplotyperVcf,${haplotyperDir}${project}.vcf
 haplotyperVcfIdx,${haplotyperVcf}.idx
 #gatkOpt=gatkDownSample1000; more lenient downsampling
 gatkDownSample1000," --maxReadsInRegionPerSample 1000 "
+################################################################################
+#freebayesMod
+freebayesDir,${projectDir}/freebayes/
+freebayesProjectBam,${projectDir}/freebayes/${project}.bam
+freebayesProjectBai,${projectDir}/freebayes/${project}.bai
+freebayesScatVcf,${freebayesDir}${project}.${scatterIDs}.vcf
+freebayesVcf,${freebayesDir}${project}.vcf
+#freebayesVcfIdx,${freebayesVcf}.idx ?
+
+################################################################################
+#variant combination (combine HG + freebayes)
+variantCombineDir,${projectDir}/combinevariants/
+combineVcf,${variantCombineDir}${project}.vcf
+combineVcfIdx,${combineVcf}.idx
 
 
 ################################################################################

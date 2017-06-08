@@ -172,6 +172,8 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  --excludeAnnotation DepthPerSampleHC \
  --excludeAnnotation PercentNBaseSolid \
  --excludeAnnotation PossibleDeNovo \
+ --excludeAnnotation ClusteredReadPosition \
+ --excludeAnnotation AS_RMSMappingQuality \
  --filter_bases_not_stored \
  --useAllAnnotations \
  --snpEffFile ${snpEffGatkAnnotVcf} \

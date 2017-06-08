@@ -5,7 +5,7 @@ set -u
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
->&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList"
+>&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList <nugeneProbebed>"
 
 backend="slurm"
 mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
@@ -16,40 +16,6 @@ mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
 #main thing to remember when working with molgenis "/full/paths" ALWAYS!
 #here some parameters for customisation
 
-if [ $1 == "none" ];then
-	exit 1
-elif [ $1 == "exome" ];then
-	>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
-	workflowBase="workflow.csv"
-elif [ $1 == "rna" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
-        workflowBase="workflow_rnaseq.csv"
-elif [ $1 == "nugene" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using nugene workflow"
-        workflowBase="workflow_nugene.csv"
-elif [ $1 == "nuginc" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
-        workflowBase="workflow_nugeneinc.csv"
-elif [ $1 == "nugincbybed" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
-        workflowBase="workflow_nugeneinctrimbybed.csv"
-elif [ $1 == "nugrna" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
-        workflowBase="workflow_nugenerna.csv"
-elif [ $1 == "iont" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
-        workflowBase="workflow_iont.csv"
-elif [ $1 == "prepiont" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
-        workflowBase="workflow_prepiont.csv"
-	backend="localhost"
-
-elif [ $1 == "withpoly" ];then
-        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
-        workflowBase="workflow_withPolymorfic.csv"
-else
-	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
-fi
 workflowDir=$(dirname $(which GenerateScripts2.sh 2> /dev/null) 2>/dev/null || readlink -f $(dirname $0))
 samplesheet=$(readlink -f $2)
 projectname=$3
@@ -120,6 +86,50 @@ elif [[ "$HOSTNAME" =~ testing-* ]] ; then
 
 
 fi
+
+if [ $1 == "none" ];then
+        exit 1
+elif [ $1 == "exome" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+        workflowBase="workflow.csv"
+elif [ $1 == "rna" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
+        workflowBase="workflow_rnaseq.csv"
+elif [ $1 == "nugene" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using nugene workflow"
+        workflowBase="workflow_nugene.csv"
+        nugeneProbeBed=$5
+
+        perl -i.bak  -wpe 's!(probeBed,).*!$1'"$nugeneProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
+
+elif [ $1 == "nuginc" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+        workflowBase="workflow_nugeneinc.csv"
+elif [ $1 == "nugincbybed" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+        workflowBase="workflow_nugeneinctrimbybed.csv"
+elif [ $1 == "nugrna" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
+        workflowBase="workflow_nugenerna.csv"
+        nugeneRnaProbeBed=$5
+
+        perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv 
+
+elif [ $1 == "iont" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
+        workflowBase="workflow_iont.csv"
+elif [ $1 == "prepiont" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
+        workflowBase="workflow_prepiont.csv"
+        backend="localhost"
+
+elif [ $1 == "withpoly" ];then
+        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
+        workflowBase="workflow_withPolymorfic.csv"
+else
+    	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
+fi
+
 
 #backup samplesheets somewhere
 if [ -z "${SAMPLESHEETFOLDER+x}" ]; then

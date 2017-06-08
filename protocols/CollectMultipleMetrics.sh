@@ -73,7 +73,7 @@ putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
 
 if [ ${#reads2FqGz} -ne 0 ]; then
 	putFile ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf
-	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics 
+	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics
 fi
 
 echo "## "$(date)" ##  $0 Done "
