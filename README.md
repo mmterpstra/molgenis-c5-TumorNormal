@@ -47,7 +47,7 @@ Methods
 Variant Calling
 ===============
 
-The variant calling pipeline is an adapation of the GATK workflow (DePristo et al. 2011, Van der Auwera et al. 2013) and molgenis compute (Byelas, H et al. 2013) as workflow management software.
+The variant calling pipeline is an adaptation of the GATK workflow (DePristo et al. 2011, Van der Auwera et al. 2013) and molgenis compute (Byelas, H et al. 2013) as workflow management software.
 
 Alignment of reads was done using BWA (Li, H. 2013) and the Genome Analysis Toolkit (abbr. GATK) (McKenna et al. 2010 ). Using the human genome reference build GRCH37 with decoys from the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. As variant caller this pipeline uses the HaplotypeCaller to call all the samples of the same patient/cohort. Annotation of the variants was done using SnpEff (Cingolani P, Platts A, Wang le L et al. 2012, ) / SnpSift (Cingolani P, Patel VM, Coon M et al 2012) with the ensembl release 75 (Flicek, P et al 2014) gene annotations and the dbNSFP2.7 database (Liu, X et al. 2011, Liu, X et al. 2013), the GATK was used with variant annotations of dbsnp 138 (Sherry, ST et al. 2001), Cosmic v72 (Forbes et al. 2014), 1000 genomes phase 3 (1000 Genomes Project Consortium et al. 2012) and Exac 0.3 databases (Lek et al. 2016). The data was filtered for quality metrics similar to GATK recommendations (described below) and custom filters for population frequency and variant effect. For code and exact versioning see: https://github.com/mmterpstra/molgenis-c5-TumorNormal
 
@@ -162,11 +162,11 @@ The workflow is a multistep protocol including the following main steps.
 
  - Start with input reads in fastq format (from illumina sequencing)
  - (`RNA` / `NugeneRNA` ) Perform FusionCather on PE reads or else skip this analysis.
- - (`Nugene`/`NugeneRNA`) Add N6 barcode info into the read and trim by alignment position and quality. steps detailed below.
+ - (`Nugene`/`NugeneRNA`) Add N6 barcode info into the read and trim by linker sequence and quality. steps detailed below.
     - Add N6 barcode into read.
-    - Align reads (`DNA -> bwa`/ `RNA -> hisat2`) and trim on overlap with the landing probes.
-    - Use BBduk of the bbmap package for trimming the data on pred scaled base quality <20.
- - Do alignment on the grch refernce build v37 (`DNA -> bwa`/ `RNA -> hisat2`) for each fastq dataset.
+    - Trim on Linker sequence and on base qual < 20
+ - Align reads versus 1000g b37 reference genome using BWA or hisat for DNA or RNA respectively.
+ - (`Nugene`/`NugeneRNA`) hard trim alignment on overlap with the landing probes.
  - Use Picard tools AddOrReplaceGroups to covert the sam into properly sorted and indexed bam format.
  - (`Nugene`/`NugeneRNA`) Expand readgroups based on the N6 barcodes: for each unique N6 barcode create a new readgroup.
  - Use Picard tools MergeBamFiles merge the .bam into a single .bam file for each sample.
@@ -231,7 +231,7 @@ ${project}_nobam.zip
     - `varscan.${controlSampleName}/`
        - **Our CNV analysis** see the varscan.normals/*.pdf varscan.normals/*.seg files for results. This shows the copynumber ratios versus the normal samples.
     - `xlsx/`
-       - **The table dumps of the VCF files made for excel spreadsheet processing**. Tree types are present raw,min and filtered for viewing the raw variant calls (without filtering), the variant calls with a selected amount of columns and the variant calls filtered for population frequency and function. This for different type of calls: single nucletide variants (snv), small indels and multinucleotide polymorfisms (indelmnp) and structural variants called with manta (sv / work in progress).
+       - **The table dumps of the VCF files made for excel spreadsheet processing**. Four types are present description,raw,min and filtered for viewing description of the headers,the raw variant calls (without filtering), the variant calls with a selected amount of columns and the variant calls filtered for population frequency and function. This for different type of calls: single nucletide variants (snv), small indels and multinucleotide polymorfisms (indelmnp) and structural variants called with manta (sv / work in progress).
 
 
 
