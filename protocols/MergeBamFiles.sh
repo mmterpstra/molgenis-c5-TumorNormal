@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=6gb ppn=4
+#MOLGENIS walltime=23:59:00 mem=15gb ppn=4
 
 #string project
 
@@ -45,7 +45,7 @@ inputs=$(printf 'INPUT=%s ' $(printf '%s\n' ${bams[@]}))
 
 mkdir -p ${mergeBamFilesDir}
 
-java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MergeSamFiles \
+java -Xmx14g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MergeSamFiles \
  $inputs \
  SORT_ORDER=coordinate \
  CREATE_INDEX=true \

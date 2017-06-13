@@ -30,6 +30,7 @@ for file in "${onekgGenomeFasta}" "${freebayesVcf}" "${haplotyperVcf}"; do
 done
 
 #Load gatk module
+${stage} ${pipelineUtilMod}
 ${stage} ${gatkMod}
 ${checkStage}
 
