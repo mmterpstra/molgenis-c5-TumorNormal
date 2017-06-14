@@ -38,6 +38,7 @@ RmarkMod,markdown/0.7.7-foss-2015b-R-3.2.2-bioconductor
 fusioncatcherMod,FusionCatcher/0.99.6a-foss-2015b-Python-2.7.11
 mantaMod,manta/1.1.0-foss-2015b
 freebayesMod,freebayes/1.1.0-foss-2015b-961e5f3
+multiqcMod,multiqc/1.0-foss-2015b-Python-2.7.11
 ################################################################################
 ##user data
 #remap plz

@@ -512,6 +512,12 @@ sampleMarkdownDir,${projectDir}/md/
 sampleMarkdown,${sampleMarkdownDir}/${project}.${sampleName}.md
 
 projectMarkdown,${projectDir}/${project}.summary.Rmd
+################################################################################
+#MultiQC
+#
+projectMultiQcHtml,${projectDir}/multiqc_report.html
+
+
 #
 #
 #test projectsamplesheet

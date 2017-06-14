@@ -42,4 +42,5 @@ Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
+MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV
 Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;TablesToXlsx;HaplotypeCaller;ProjectMarkdown
