@@ -50,6 +50,7 @@ java -Xmx4g -Djava.io.tmpdir=/scratch/umcg-mterpstra/projects/1703_Ferronika_Nug
 perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex;/||m/TYPE=snp;/||m/TYPE=del;/||m/TYPE=ins;/||m/TYPE=mnp;/))){$_="";}' \
  ${freebayesVcf}.allelicprimitives.vcf
 
+rm ${freebayesVcf}.allelicprimitives.vcf.idx
 
 #merge gatk/freebayes
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
