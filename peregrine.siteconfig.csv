@@ -30,7 +30,7 @@ nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
 #digiRgMod,DigitalBarcodeReadgroups/0.1.3-foss-2016a-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.25.0-foss-2016a
-hisat2/2.0.4-foss-2016a-Python-2.7.11
+hisat2Mod,hisat2/2.0.4-foss-2016a-Python-2.7.11
 htseqMod,HTSeq/0.6.1p1-foss-2016a-Python-2.7.11
 #cmarkMod,cmark/0.25.2-foss-2016a
 fusioncatcherMod,FusionCatcher/0.99.6a-foss-2016a-Python-2.7.11
