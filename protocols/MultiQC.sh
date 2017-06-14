@@ -3,7 +3,7 @@
 #string project
 #string projectDir
 
-#string multiQcMod
+#string multiqcMod
 #string stage
 #string checkStage
 
