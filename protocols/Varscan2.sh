@@ -17,13 +17,13 @@
 #string varscanCopycallerHomdels
 #string varscanDir
 
-#string varscanInputBam
-#string varscanInputBai
-#string varscanInputBamBai
+#string indelRealignmentBam
+#string indelRealignmentBai
+#string indelRealignmentBamBai
 
-#string controlvarscanInputBam
-#string controlvarscanInputBai
-#string controlvarscanInputBamBai
+#string controlSampleBam
+#string controlSampleBai
+#string controlSampleBamBai
 
 #string onekgGenomeFastaDict
 #string onekgGenomeFasta
@@ -42,12 +42,12 @@ mkdir -p ${varscanDir}
 #getfile decl
 getFile ${onekgGenomeFasta}
 getFile ${onekgGenomeFastaDict}
-getFile ${varscanInputBam}
-getFile ${varscanInputBai}
-getFile ${varscanInputBamBai}
-getFile ${controlvarscanInputBam}
-getFile ${controlvarscanInputBai}
-getFile ${controlvarscanInputBamBai}
+getFile ${indelRealignmentBam}
+getFile ${indelRealignmentBai}
+getFile ${indelRealignmentBamBai}
+getFile ${controlSampleBam}
+getFile ${controlSampleBai}
+getFile ${controlSampleBamBai}
 getFile ${targetsList}
 
 #Load modules
@@ -72,14 +72,14 @@ echo -n ""> ${varscanCopycaller}
 #run the pipeline: select the regions not in the targeted sequencing and do cnv data collection
 samtools mpileup \
  -B -R -q 40 -f ${onekgGenomeFasta} \
- <( bedtools intersect -v -a ${controlvarscanInputBam} -b  ${varscanCopynumberPrefix}.intervals.bed) <( bedtools intersect -v -a ${varscanInputBam} -b  ${varscanCopynumberPrefix}.intervals.bed) | \
+ <( bedtools intersect -v -a ${controlSampleBam} -b  ${varscanCopynumberPrefix}.intervals.bed) <( bedtools intersect -v -a ${indelRealignmentBam} -b  ${varscanCopynumberPrefix}.intervals.bed) | \
 	java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
 	  - ${varscanCopynumberPrefix} \
 	  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
 #old command
 #samtools mpileup \
 # -B -R -q 40 -f ${onekgGenomeFasta} \
-# ${controlvarscanInputBam} ${varscanInputBam}  | \
+# ${controlSampleBam} ${indelRealignmentBam}  | \
 #        java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
 #          - ${varscanCopynumberPrefix} \
 #          --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log

@@ -47,7 +47,7 @@ java -Xmx4g -Djava.io.tmpdir=/scratch/umcg-mterpstra/projects/1703_Ferronika_Nug
  -V  ${freebayesVcf} \
  -o ${freebayesVcf}.allelicprimitives.vcf
 
-perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex;/||m/TYPE=snp;/||m/TYPE=del;/||m/TYPE=ins;/||m/TYPE=mnp;/))){$_="";}' \
+perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex[;\t]/||m/TYPE=snp[;\t]/||m/TYPE=del[;\t]/||m/TYPE=ins[;\t]/||m/TYPE=mnp[;\t]/))){$_="";}' \
  ${freebayesVcf}.allelicprimitives.vcf
 
 rm ${freebayesVcf}.allelicprimitives.vcf.idx

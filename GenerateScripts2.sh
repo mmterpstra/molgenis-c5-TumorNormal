@@ -178,11 +178,6 @@ cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
 #echo "$SCRIPTCALL" >>
 molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
 
-if [ $(find $jobsDir -iname *.finished| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
-	>&2 echo "## "$(date)" ## $0 ## Already generated removing finished."
-	rm $jobsDir/*.finished
-fi
-
 #git info tracking
 >&2 echo "## "$(date)" ## $0 ## Generation info"
 
@@ -243,6 +238,13 @@ $mlCmd
 	echo -e "perl RemoveDuplicatesCompute.pl $jobsDir/*.sh &>/dev/null && perl -i -wpe 's/#SBATCH --partition=duo-pro/#SBATCH --partition=duo-pro\n#SBATCH --qos=leftover/;s/#SBATCH --partition=duo-dev/#SBATCH --partition=duo-dev\n#SBATCH --qos=leftover/' $jobsDir/*.sh"
 	echo -e "echo -e bash $jobsDir/submit.sh"
 )| tee .RunWorkFlowGeneration.sh
+
+if [ $(find $jobsDir -iname *.finished| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
+        >&2 echo "## "$(date)" ## $0 ## Already generated removing finished."
+       	echo 'rm $jobsDir/*.finished' >> .RunWorkFlowGeneration.sh
+  	
+fi
+
 #GenerateScripts2.sh
 
 # -header $MC_HOME/templates/pbs/header.ftl \

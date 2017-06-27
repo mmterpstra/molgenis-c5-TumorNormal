@@ -35,6 +35,11 @@ oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.idx
 oneKgPhase1IndelsVcf,${bundle}/1000G_phase1.indels.b37.vcf
 oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.idx
 
+oneKgPhase3v4Vcf,${bundle}/1000G_phase3_v4_20130502.sites.vcf.gz
+oneKgPhase3v4VcfIdx,${oneKgPhase3v4Vcf}.tbi
+
+popStratifiedVcf,${bundle}/hapmap_3.3_b37_pop_stratified_af.vcf.gz
+popStratifiedVcfIdx,${popStratifiedVcf}.idx
 #phase 3 indels / snps
 #${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
 
@@ -246,6 +251,15 @@ collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
 calculateHsMetricsDir,${projectDir}/HsMetrics/
 calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
 calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
+
+################################################################################
+#Qc provided by samtools
+samQcDir,${projectDir}/SamtoolsQc
+samQcFlagStatLog,${samQcDir}/${sampleName}.flagstat.log
+samQcStatsLog,${samQcDir}/${sampleName}.stats.log
+samQcDupStatsLog,${samQcDir}/${sampleName}.dup.stats.log
+samQcIdxStatsLog,${samQcDir}/${sampleName}.idxstats.log
+
 ################################################################################
 #GatkSplitAndTrim
 
@@ -267,7 +281,14 @@ realignmentIntervals,${indelRealignmentDir}/realignmentIntervals.list
 ################################################################################
 #IndelRealigner
 indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+indelRealignmentBamBai,${indelRealignmentBam}.bai
 indelRealignmentBai,${indelRealignmentDir}${sampleName}.bai
+################################################################################
+#ContEst
+contEstDir,${projectDir}/contEst/
+contEstLog,${contEstDir}${sampleName}.cont_${controlSampleName}.log
+
+
 ##############################################################################
 #BSQR(+PrintReads) default
 bqsrDir,${projectDir}/baseQualityScoreRecalibration/
@@ -276,6 +297,7 @@ bqsrBam,${bqsrDir}${sampleName}.bam
 bqsrBai,${bqsrDir}${sampleName}.bai
 bqsrBeforeGrp,${bqsrDir}${sampleName}.before.grp
 
+
 ################################################################################
 #(BSQR+)AnalyseCovariants default
 analyseCovarsDir,${projectDir}/CovariantAnalysis/
@@ -283,6 +305,7 @@ bqsrAfterGrp,${bqsrDir}${sampleName}.after.grp
 
 #analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
 analyseCovariatesCsv,${analyseCovarsDir}/${sampleName}.analysecovariates.csv
+
 ################################################################################
 #haplotypecaller
 haplotyperDir,${projectDir}/haplotypeCaller/
@@ -308,7 +331,6 @@ freebayesVcf,${freebayesDir}${project}.vcf
 variantCombineDir,${projectDir}/combinevariants/
 combineVcf,${variantCombineDir}${project}.vcf
 combineVcfIdx,${combineVcf}.idx
-
 
 ################################################################################
 #variant annotation
@@ -451,15 +473,15 @@ varscanCopycaller,${varscanCopynumberPrefix}.called
 varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
 
 
-varscanInputBam,${indelRealignmentBam}
-varscanInputBai,${indelRealignmentBai}
-varscanInputBamBai,${indelRealignmentBam}
+#varscanInputBam,${indelRealignmentBam}
+#varscanInputBai,${indelRealignmentBai}
+#varscanInputBamBai,${indelRealignmentBam}
 
 #same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
 
-controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
-controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
-controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
+controlSampleBam,${indelRealignmentDir}${controlSampleName}.bam
+controlSampleBai,${indelRealignmentDir}${controlSampleName}.bai
+controlSampleBamBai,${indelRealignmentDir}${controlSampleName}.bai
 
 #
 ################################################################################
@@ -515,8 +537,7 @@ projectMarkdown,${projectDir}/${project}.summary.Rmd
 ################################################################################
 #MultiQC
 #
-projectMultiQcHtml,${projectDir}/multiqc_report.html
-
+multiQcHtml,${projectDir}/multiqc_report.html
 
 #
 #

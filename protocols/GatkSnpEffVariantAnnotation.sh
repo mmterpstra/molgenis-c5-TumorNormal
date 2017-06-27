@@ -151,7 +151,7 @@ mkdir -p ${annotatorDir}
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
  -dataDir ${snpeffDataDir} \
- -stats ${snpEffStats} \
+ -stats ${snpEffStats} -csvStats \
  -v -o gatk \
  GRCh37.75 \
  ${haplotyperVcf} \
@@ -225,7 +225,7 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -formatEff \
  -canon \
  -hgvs \
- -stats ${snpEffStats} \
+ -stats ${snpEffStats} -csvStats \
  -v \
  GRCh37.75 \
  ${gatkAnnotVcf} \
@@ -238,7 +238,7 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -dataDir ${snpeffDataDir} \
  -hgvs \
  -lof \
- -stats ${snpEffStats} \
+ -stats ${snpEffStats} -csvStats\
  -v \
  GRCh37.75 \
  ${gatkAnnotVcf} | \

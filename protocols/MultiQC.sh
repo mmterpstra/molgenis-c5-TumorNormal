@@ -8,10 +8,10 @@
 #string checkStage
 
 
-#string projectMultiQcHtml
+#string multiQcHtml
 
 alloutputsexist \
- ${projectMultiQcHtml} \
+ ${multiQcHtml} \
 
 echo "## "$(date)" Start $0"
 
@@ -25,9 +25,14 @@ set -e
 
 
 cd ${projectDir}
+echo '
+snpeff:
+    contents: 'SnpEffVersion'
+    max_filesize: 1000000
+'> multiqc_config.yaml
 multiqc ./
 
-putFile ${projectMultiQcHtml}
+putFile ${multiQcHtml}
 
 echo "## "$(date)" Done $0"
 
