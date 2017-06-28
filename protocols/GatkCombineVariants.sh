@@ -40,10 +40,10 @@ set -e
 mkdir -p ${variantCombineDir}
 
 #
-java -Xmx4g -Djava.io.tmpdir=/scratch/umcg-mterpstra/projects/1703_Ferronika_Nugen_136_135_test//combinevariants/ \
+java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantsToAllelicPrimitives \
- -R /data/umcg-mterpstra/apps/data//ftp.broadinstitute.org/bundle/2.8/b37//human_g1k_v37_decoy.fasta \
+ -R ${onekgGenomeFasta} \
  -V  ${freebayesVcf} \
  -o ${freebayesVcf}.allelicprimitives.vcf
 

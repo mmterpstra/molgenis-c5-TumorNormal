@@ -9,12 +9,6 @@
 #string picardMod
 #string targetsList
 #string projectDir
-#string bamFiles
-#string reads1FqGz
-#string reads2FqGz
-#string reads1FqGzOriginal
-#string reads2FqGzOriginal
-#string sampleName
 #string targetsList
 
 echo -e "test ${reads1FqGz} ${reads2FqGz} 1: "

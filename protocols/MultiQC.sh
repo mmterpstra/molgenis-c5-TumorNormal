@@ -25,12 +25,10 @@ set -e
 
 
 cd ${projectDir}
-echo '
-snpeff:
-    contents: 'SnpEffVersion'
-    max_filesize: 1000000
-'> multiqc_config.yaml
+
 multiqc ./
+
+cd $OLDPWD
 
 putFile ${multiQcHtml}
 

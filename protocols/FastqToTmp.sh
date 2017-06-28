@@ -33,8 +33,8 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	cp ${reads1FqGz}.md5 $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz}).md5
 
 	perl -i.bak -wpe 's!'${reads1FqGz}'!'$(dirname ${reads1FqGz} | perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})'!g' ${rundir}/../*.input.csv
-	putFile $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp02/raw/!g')/$(basename ${reads1FqGz})
-	putFile $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp02/raw/!g')/$(basename ${reads1FqGz}).md5
+	putFile $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})
+	putFile $(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz}).md5
 else
 	echo "Not implemented"
 	exit 1
