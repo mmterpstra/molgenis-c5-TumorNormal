@@ -112,29 +112,35 @@ done
         echo
         echo "## Duplicate metrics"
         echo
-        echo "Result table of the Duplicates for all samples"
-        echo
 	#header differs between single end and paired end so first use the headerbase to grep the file do determine the real header
 	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
         HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
-	grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*Field/\| SAMPLE \| FIELD/;s/^\|  --- /\|  --- \|  --- /;'
-        for md in "${mdlist[@]}"; do
-                if [ -s "$md" ] ; then
-                        SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-			grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
-               	fi
-        done
+	if [ ! -z $HEADER ] ; then
+		echo "Result table of the Duplicates for all samples"
+	        echo
+
+		grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*Field/\| SAMPLE \| FIELD/;s/^\|  --- /\|  --- \|  --- /;'
+        	for md in "${mdlist[@]}"; do
+        		if [ -s "$md" ] ; then
+                        	SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
+				grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+               		fi
+        	done
+	else
+		echo "No Duplicate metrics found."
+	fi
 ) >>  ${projectMarkdown}
 
+#pemetrics?
 
 
 #hsmetrics
-
 (
 	echo
 	echo "## Hybrid selection metrics"
 	echo
-	echo "Result table of the hybrid selection for all samples"
+
+	echo "Result table of the hybrid selection for all samples."
 	echo
 	HEADER='| SAMPLE|TARGET_TERRITORY|PF_UQ_READS_ALIGNED|PF_UQ_BASES_ALIGNED|ON_TARGET_BASES|PCT_USABLE_BASES_ON_TARGET|MEAN_TARGET_COVERAGE|PCT_TARGET_BASES_2X|PCT_TARGET_BASES_10X|PCT_TARGET_BASES_20X|PCT_TARGET_BASES_30X|PCT_TARGET_BASES_40X|PCT_TARGET_BASES_50X|PCT_TARGET_BASES_100X |'
 	grep -A 1 "$HEADER" ${mdlist[1]}
@@ -145,7 +151,6 @@ done
 	done
 ) >>  ${projectMarkdown}
 #vcf metrics? entincity? gender? HLA type? CGH metrics?
-#pe metrics?
 
 #version
 (	echo
