@@ -48,8 +48,6 @@ TablesToXlsx,protocols/TablesToXlsx.sh,SNVVariantsToTable;SNVVariantsToDescripti
 Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
-SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam
-MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MarkDuplicates
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation

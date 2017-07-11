@@ -55,11 +55,11 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		#single end
 		alloutputsexist \
 		 ${nugeneReads1FqGz}
-		
+
 		bash $EBROOTBBMAP/bbduk.sh \
 		 in=${reads1FqGz} \
 		 out=${nugeneReads1FqGz} \
-		 literal='GAGAGCGATCCTTGC' \
+		 literal='GAGAGCGATCCTTGC,GGGGGGGGGGGGGGG' \
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
@@ -80,7 +80,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		 out=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
 		 in2=${reads2FqGz} \
 		 out2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
-		 literal='GAGAGCGATCCTTGC' \
+		 literal='GAGAGCGATCCTTGC,GGGGGGGGGGGGGGG' \
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
@@ -127,7 +127,7 @@ else
 		bash $EBROOTBBMAP/bbduk.sh \
 		 in=${nugeneReads1FqGz}.tmpmergefq.1.fq.gz \
 		 out=${nugeneReads1FqGz} \
-		 literal='GAGAGCGATCCTTGC' \
+		 literal='GAGAGCGATCCTTGC,GGGGGGGGGGGGGGG' \
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
@@ -154,7 +154,7 @@ else
 		 out=${nugeneReads1FqGz}.tmpbbduk.1.fq.gz \
 		 in2=${nugeneReads2FqGz}.tmpmergefq.2.fq.gz \
 		 out2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
-		 literal='GAGAGCGATCCTTGC' \
+		 literal='GAGAGCGATCCTTGC,GGGGGGGGGGGGGGG' \
 		 hdist=1 \
 		 ktrim=r \
 		 rcomp=f \
