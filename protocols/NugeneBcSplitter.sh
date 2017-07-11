@@ -50,15 +50,14 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 	cp -rv ${addOrReplaceGroupsBai} ${addOrReplaceGroupsBam} ${nugeneRgDir}
 
 else
-	
-	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl ${addOrReplaceGroupsBam} ${nugeneBam}
-	
+	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl -p -l 6 ${addOrReplaceGroupsBam} ${nugeneBam}
+
 	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
- INPUT=${nugeneBam}	
+	 INPUT=${nugeneBam}
 
 fi
 
-putFile ${nugeneBam} 
-putFile ${nugeneBai} 
+putFile ${nugeneBam}
+putFile ${nugeneBai}
 
 echo "## "$(date)" ##  $0 Done"

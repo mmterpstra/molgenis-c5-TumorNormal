@@ -14,7 +14,7 @@ projectDir,/groups/${group}/${tmp}/projects/${project}/
 #
 fastqcMod,FastQC/0.11.5-Java-1.7.0_80
 bwaMod,BWA/0.7.12-foss-2015b
-picardMod,picard/2.2.2-foss-2015b-Java-1.8.0_74
+picardMod,picard/2.10.0-foss-2015b-Java-1.8.0_74
 #picard/1.140-foss-2015b-Java-1.8.0_45
 RMod,R/3.2.2-foss-2015b-bioconductor
 #gatkMod,GATK/3.5-foss-2015b-Java-1.7.0_80
@@ -27,7 +27,7 @@ vcfToolsMod,VCFtools/0.1.12b-foss-2015b-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util/0.5.4-foss-2015b-Perl-5.20.2-bare
 #pipelineUtilMod,pipeline-util/0.2.2-foss-2016a-Perl-5.20.2-bare
 tableToXlsxMod,TableToXlsx/0.1.0-foss-2015b-Perl-5.20.2-bare
-digiRgMod,DigitalBarcodeReadgroups/0.1.5-foss-2015b-Perl-5.20.2-bare
+digiRgMod,DigitalBarcodeReadgroups/0.1.7-foss-2015b-Perl-5.20.2-bare
 nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.25.0-foss-2015b
