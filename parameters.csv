@@ -393,7 +393,7 @@ mantaConfigTypeExome,--exome
 snpeffMantaDir,${projectDir}/SnpEffManta/
 snpeffMantaVcf,${snpeffMantaDir}/${project}.${sampleName}.vcf
 snpeffMantaVcfIdx,${snpeffMantaVcf}.idx
-snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.html
+snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.csv
 #custom annotation?
 
 ################################################################################

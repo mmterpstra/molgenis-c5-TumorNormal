@@ -382,6 +382,7 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 		rm  ${sampleMarkdownDir}/${sampleName}_pemetrics.R
 else
 	(
+		echo
 		echo "Paired end metrics"
 		echo "=================="
 		echo
@@ -402,8 +403,6 @@ fi
  issues please report them to the github or by mailing the correct people. Also
  do not be afraid to contact if you have suggestions and improvements."
 	) >> ${sampleMarkdown}
-
-#yo, i heard you like html templates so ...
 
 htmlTemplate='<!DOCTYPE html>
 <html>

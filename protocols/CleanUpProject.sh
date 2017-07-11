@@ -20,6 +20,8 @@
 #string htseqDupsDir
 #string fusioncatcherDir
 #string projectSampleSheet
+#string multiQcHtml
+
 set -e
 set -x
 set -o pipefail
@@ -43,7 +45,7 @@ for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDi
 	fi
 done
 
-for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" "${projectMarkdown}.html" | sort -u); do
+for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" "${projectMarkdown}.html"  "multiQcHtml" | sort -u); do
 	if [ -n "$(ls -A $file*)" ]; then
                	$zipbase $(echo "$file*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
@@ -62,7 +64,7 @@ fi
 if [ -n "$(ls -A ${dir}/*.called.homdels)" ]; then
 	$zipbase $(echo "${varscanDir}/*.called.homdels" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
-if [ -n "$(ls -A ${dir}/*.pdf)" ]; then
+if [ -n "$(ls -A ${varscanDir}/*.pdf)" ]; then
         $zipbase $(echo "${varscanDir}/*.pdf" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 if [ -n "$(ls -A ${dir}/multi/*)" ]; then
