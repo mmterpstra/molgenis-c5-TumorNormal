@@ -50,7 +50,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 	cp -rv ${addOrReplaceGroupsBai} ${addOrReplaceGroupsBam} ${nugeneRgDir}
 
 else
-	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl -p -l 6 ${addOrReplaceGroupsBam} ${nugeneBam}
+	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl -p RX -l 6 ${addOrReplaceGroupsBam} ${nugeneBam}
 
 	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
 	 INPUT=${nugeneBam}
