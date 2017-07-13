@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=8gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=15gb nodes=1 ppn=4
 
 #string project
 
@@ -41,7 +41,7 @@ mkdir -p ${markDuplicatesDir}
 # test for specified FqGz with UMIs if not present do default markduplicats else do UmiAwareMarkDuplicatesWithMateCigar
 if [ ${#reads3FqGz[0]} -eq 0 ];then
 
-	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
+	java -Xmx14g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
 	 INPUT=${mergeBamFilesBam} \
 	 OUTPUT=${markDuplicatesBam} \
 	 CREATE_INDEX=true \
@@ -51,7 +51,7 @@ if [ ${#reads3FqGz[0]} -eq 0 ];then
 
 else
 	#umi aware
-	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar UmiAwareMarkDuplicatesWithMateCigar \
+	java -Xmx14g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar UmiAwareMarkDuplicatesWithMateCigar \
          INPUT=${mergeBamFilesBam} \
          OUTPUT=${markDuplicatesBam} \
          CREATE_INDEX=true \

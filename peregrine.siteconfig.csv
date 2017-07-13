@@ -14,6 +14,7 @@ projectDir,/scratch/${user}/projects/${project}/
 fastqcMod,FastQC/0.11.5-Java-1.7.0_80
 bwaMod,BWA/0.7.12-foss-2016a
 picardMod,picard/2.10.0-foss-2016a-Java-1.8.0_74
+picardOldMod,picard/1.140-foss-2016a-Java-1.8.0_74
 RMod,R/3.2.2-foss-2016a-bioconductor
 #gatkMod,GATK/3.5-foss-2016a-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
