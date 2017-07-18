@@ -12,6 +12,7 @@
 #string fastqcZipExt
 #string reads1FqGz
 #string reads2FqGz
+#string reads3FqGz
 #string reads1FqGzOriginal
 #string reads2FqGzOriginal
 #string sampleName
@@ -92,4 +93,7 @@ else
 	putFile ${fastqcDir}/$(basename ${pairedEndfastqcZip2} .zip)/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')${fastqcZipExt}
 fi
 
+if [ ${#reads3FqGz -ne 0 ] && [ ${reads1FqGz} == ${reads1FqGzOriginal} ] ; then
+	fastqc --noextract ${reads3FqGz} --outdir ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip)
+fi
 echo "## "$(date)" ##  $0 Done "

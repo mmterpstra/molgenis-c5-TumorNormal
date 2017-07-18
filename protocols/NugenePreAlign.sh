@@ -96,7 +96,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		 out=${nugeneReads1FqGz} \
 		 in2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
 		 out2=${nugeneReads2FqGz} \
-		 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC') \
+		 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC'),GGGGGGGGGGGGGGG \
 		 hdist=1 \
 		 ktrim=l \
 		 rcomp=f \
@@ -106,20 +106,20 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 		 trimq=20 \
 		 minlen=20 \
 		 skipr1=t
-		
+
 		#rm -v ${nugeneReads1FqGz}.tmpbbduk.1.fq.gz ${nugeneReads2FqGz}.tmpbbduk.2.fq.gz
-		
+
 	fi
 else
 	#umi
 	getFile ${reads3FqGz}
 
 	if [ ${#reads2FqGz} -eq 0 ]; then
-		
+
 		#single end + umi => get random barcode in read + trim nugene linker
 		alloutputsexist \
 		 ${nugeneReads1FqGz}
-		
+
 		perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles2.pl \
 		 ${reads3FqGz} \
 		 ${reads1FqGz} ${nugeneReads1FqGz}.tmpmergefq.1.fq.gz
@@ -143,7 +143,7 @@ else
 		getFile ${reads2FqGz}
 		alloutputsexist \
 		 ${nugeneReads1FqGz}  ${nugeneReads2FqGz}
-		
+
 	        perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneMergeFastqFiles2.pl \
 		 ${reads3FqGz} \
 		 ${reads1FqGz} ${nugeneReads1FqGz}.tmpmergefq.1.fq.gz \
@@ -170,7 +170,7 @@ else
 		 out=${nugeneReads1FqGz} \
 		 in2=${nugeneReads2FqGz}.tmpbbduk.2.fq.gz \
 		 out2=${nugeneReads2FqGz} \
-		 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC') \
+		 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC'),GGGGGGGGGGGGGGG \
 		 hdist=1 \
 		 ktrim=l \
 		 rcomp=f \
