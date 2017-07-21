@@ -36,4 +36,4 @@ TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;S
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
-Cleanup,protocols/CleanUpProject.sh,TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller;ProjectMarkdown;indelRealignmentDir=mergeBamFilesDir;
+Cleanup,protocols/CleanUpProject.sh,TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller;ProjectMarkdown;indelRealignmentDir=mergeBamFilesDir;MultiQC

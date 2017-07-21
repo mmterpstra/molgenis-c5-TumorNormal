@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=8gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=2 mem=6gb walltime=10:00:00
 
 #string project
 
@@ -52,7 +52,7 @@ if [ ${#reads3FqGz} -eq 0 ]; then
 else
 	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl -p RX -l 6 ${addOrReplaceGroupsBam} ${nugeneBam}
 
-	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
+	java -Xmx6g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
 	 INPUT=${nugeneBam}
 
 fi
