@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=26gb ppn=1 nodes=1 
+#MOLGENIS walltime=23:59:00 mem=26gb ppn=2 nodes=1 
 
 
 #string project
@@ -55,4 +55,3 @@ for inTable in "${indelMnpTable[@]}" "${indelMnpRawTable[@]}" "${indelMnpMinTabl
 		putFile ${xlsxDir}/$(basename $xlsx)
 	fi
 done
-

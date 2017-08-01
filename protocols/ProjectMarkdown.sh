@@ -113,7 +113,11 @@ done
         echo "## Duplicate metrics"
         echo
 	#header differs between single end and paired end so first use the headerbase to grep the file do determine the real header
-	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
+	#picard 1.140 header
+	#HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
+	#picard 2.10 header
+	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|SECONDARY_OR_SUPPLEMENTARY_RDS|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES'
+
         HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
 	if [ ! -z $HEADER ] ; then
 		echo "Result table of the Duplicates for all samples"
