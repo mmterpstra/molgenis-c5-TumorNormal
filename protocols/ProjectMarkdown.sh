@@ -119,7 +119,7 @@ done
 	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|SECONDARY_OR_SUPPLEMENTARY_RDS|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES'
 
         HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
-	if [ ! -z $HEADER ] ; then
+	if [ ! -z "$HEADER" ] ; then
 		echo "Result table of the Duplicates for all samples"
 	        echo
 
