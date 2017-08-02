@@ -10,6 +10,7 @@
 
 #string bedtoolsMod
 #string samtoolsMod
+#string onekgGenomeFasta
 #string addOrReplaceGroupsDir
 #string addOrReplaceGroupsBam
 #string addOrReplaceGroupsBai
@@ -47,7 +48,10 @@ echo "## "$(date)" Start $0"
 #-sorted = Use sorted input
 #tee for indexing on the fly / error checking
 
+cut -f 1,2 ${onekgGenomeFasta}.fai > ${spanningBam}.genome.file
+
 bedtools intersect \
+ -g ${spanningBam}.genome.file \
  -F 0.85 \
  -f 0.85 \
  -u \
@@ -56,6 +60,8 @@ bedtools intersect \
  -b ${ampliconsBed} \
  | tee  ${spanningBam} \
  | samtools index /dev/stdin ${spanningBai}
+
+rm ${spanningBam}.genome.file
 
 putFile ${spanningBam}
 putFile ${spanningBai}
