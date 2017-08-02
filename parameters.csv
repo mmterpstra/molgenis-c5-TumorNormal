@@ -330,7 +330,9 @@ freebayesVcf,${freebayesDir}${project}.vcf
 mutect2Dir,${projectDir}/mutect2/
 mutect2ScatVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
 mutect2ScatVcfIdx,${mutect2ScatVcf}.idx
-mutect2Vcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
+mutect2SampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
+mutect2SampleVcfIdx,${mutect2Vcf}.idx
+mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
 mutect2VcfIdx,${mutect2Vcf}.idx
 ################################################################################
 #variant combination (combine HG + freebayes)

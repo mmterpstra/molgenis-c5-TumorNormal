@@ -27,7 +27,7 @@ BQSR,protocols/GatkBQSR.sh,IndelRealignmentKnown
 AnalyseCovariants,protocols/GatkAnalyseCovariants.sh,BQSR
 ContEst,protocols/GatkContEst.sh,BQSR;indelRealignmentBam=bqsrBam;indelRealignmentBai=bqsrBai;
 Mutect2,protocols/GatkMutect2.sh,BQSR
-MergeVariantsMutect2,protocols/MergeVcfs.sh,Mutect2;haplotyperScatVcf=mutect2ScatVcf;haplotyperVcf=mutect2Vcf
+MergeMutect2Variants,protocols/MergeVcfs.sh,Mutect2;haplotyperScatVcf=mutect2ScatVcf;haplotyperVcf=mutect2SampleVcf
 HaplotypeCaller,protocols/GatkHaplotypeCaller.sh,BQSR;CreatePaddedTargets
 #Catvariants,protocols/CatVariants.sh,HaplotypeCaller
 MergeVariants,protocols/MergeVcfs.sh,HaplotypeCaller

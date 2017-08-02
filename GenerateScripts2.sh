@@ -31,7 +31,7 @@ projectname=$3
 
 	>&2 echo "## "$(date)" ## $0 ## Running on host '"$HOSTNAME"'."
 
-	if [ $HOSTNAME == "pg-interactive" ];then
+	if [[ "$HOSTNAME" =~ pg-interactive* ]] ;then
 		>&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 		runDir=/scratch/$USER/projects/$projectname
 		siteParam=$workflowDir/peregrine.siteconfig.csv

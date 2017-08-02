@@ -48,19 +48,23 @@ if [ ! -e ${indelRealignmentDir} ]; then
 	mkdir -p ${indelRealignmentDir}
 fi
 
+if [ ! "${indelRealignmentBam}" == "${controlSampleBam}" ] ;then
 
-java -Xmx8g -Djava.io.tmpdir=${contEstDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T ContEst \
- -R ${onekgGenomeFasta} \
- -I:eval ${indelRealignmentBam} \
- -I:genotype ${controlSampleBam} \
- --popfile ${popStratifiedVcf} \
- -L ${popStratifiedVcf} \
- -L ${targetsList} \
- -isr INTERSECTION \
- -o ${contEstLog}
+	java -Xmx8g -Djava.io.tmpdir=${contEstDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	 -T ContEst \
+	 -R ${onekgGenomeFasta} \
+	 -I:eval ${indelRealignmentBam} \
+	 -I:genotype ${controlSampleBam} \
+	 --popfile ${popStratifiedVcf} \
+	 -L ${popStratifiedVcf} \
+	 -L ${targetsList} \
+	 -isr INTERSECTION \
+	 -o ${contEstLog}
 
-cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
+else
+	touch ${contEstLog}
+fi
+#cp -v ${indelRealignmentBai} ${indelRealignmentBam}.bai
 
 putFile ${contEstLog}
 
