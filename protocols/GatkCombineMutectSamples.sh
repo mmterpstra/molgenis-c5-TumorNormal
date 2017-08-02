@@ -44,7 +44,7 @@ inputs = ""
 prio = ""
 
 for v in ${vcf[@]}; do 
-	$tumor = $(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v})
+	$tumor = $(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
 	inputs = $(echo -n "$inputs -V:$tumor $v")
 	if [ -z "$VAR" ]; then
 		prio = "$tumor"
