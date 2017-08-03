@@ -86,7 +86,7 @@ fqList=()
 
 for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
-		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)*.zip -d); do
+		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)_fastqc.zip -d); do
 			fqList+=($fq)
 			fastqcBasename=$(dirname ${fastqcBasename})
 			cd ${fastqcBasename}

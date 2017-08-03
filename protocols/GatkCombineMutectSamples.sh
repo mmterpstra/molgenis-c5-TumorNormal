@@ -40,16 +40,17 @@ set -e
 mkdir -p ${mutect2Dir}
 
 vcfs=($(printf '%s\n' "${mutect2SampleVcf[@]}" | sort -u ))
-inputs = ""
-prio = ""
+inputs=""
+prio=""
 
-for v in ${vcf[@]}; do 
-	$tumor = $(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
-	inputs = $(echo -n "$inputs -V:$tumor $v")
-	if [ -z "$VAR" ]; then
-		prio = "$tumor"
+for v in ${vcfs[@]}; do 
+	
+	tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
+	inputs=$(echo -n "$inputs -V:$tumor $v")
+	if [ -z "$prio" ]; then
+		prio="$tumor"
 	else
-		prio = ",$tumor"
+		prio="$prio,$tumor"
 	fi
 done
 
@@ -58,7 +59,7 @@ echo 'prio='$prio';'
  
 
 #merge gatk/freebayes
-java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
+java -Xmx4g -Djava.io.tmpdir=${mutect2Dir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T CombineVariants \
  -R ${onekgGenomeFasta} \
