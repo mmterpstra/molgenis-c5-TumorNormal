@@ -45,7 +45,7 @@ for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDi
 	fi
 done
 
-for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" "${projectMarkdown}.html"  "multiQcHtml" | sort -u); do
+for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" "${projectMarkdown}.html"  "${multiQcHtml}" | sort -u); do
 	if [ -n "$(ls -A $file*)" ]; then
                	$zipbase $(echo "$file*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
@@ -172,4 +172,3 @@ putFile "$(dirname "${projectDir}")/${project}.zip"
 
 
 cd $olddir
-
