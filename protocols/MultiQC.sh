@@ -26,7 +26,7 @@ set -e
 
 cd ${projectDir}
 
-multiqc ./
+multiqc --force ./
 
 cd $OLDPWD
 
