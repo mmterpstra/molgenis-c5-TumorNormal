@@ -13,6 +13,7 @@
 #string onekgGenomeFasta
 #string haplotyperVcf
 #string freebayesVcf
+#string mutect2Vcf
 
 #string variantCombineDir
 #string combineVcf
@@ -24,7 +25,7 @@ alloutputsexist \
 "${combineVcf}" \
 "${combineVcfIdx}" 
 
-for file in "${onekgGenomeFasta}" "${freebayesVcf}" "${haplotyperVcf}"; do
+for file in "${onekgGenomeFasta}" "${freebayesVcf}" "${haplotyperVcf}" "${mutect2Vcf}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -58,10 +59,11 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
  -T CombineVariants \
  -R ${onekgGenomeFasta} \
  --variant:GATK ${haplotyperVcf} \
+ --variant:MuTect2 ${mutect2Vcf} \
  --variant:freebayes  ${freebayesVcf}.allelicprimitives.vcf \
  -o ${combineVcf}.tmp.vcf \
  -genotypeMergeOptions PRIORITIZE \
- -priority GATK,freebayes \
+ -priority GATK,MuTect2,freebayes \
  --filteredrecordsmergetype KEEP_UNCONDITIONAL
 
 perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
