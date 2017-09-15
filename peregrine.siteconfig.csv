@@ -2,7 +2,7 @@
 ##General Parameters
 #
 #tmp,tmp04
-queue,nodes
+queue,regular
 group,umcg-gcc
 user,umcg-mterpstra
 data,/data/${user}/apps/data/

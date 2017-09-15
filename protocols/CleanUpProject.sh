@@ -22,9 +22,7 @@
 #string projectSampleSheet
 #string multiQcHtml
 
-set -e
-set -x
-set -o pipefail
+set -x -e -o pipefail
 
 alloutputsexist \
 "$(dirname "${projectDir}")/${project}_nobam.zip" \

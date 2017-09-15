@@ -56,8 +56,7 @@ ${stage} ${samtoolsMod}
 ${stage} ${bedtoolsMod}
 
 ${checkStage}
-set -x
-set -e
+set -x -e -o pipefail
 
 #this program performs data reduction of the bam files by selecting intervals and collecting statistics on the intervals
 

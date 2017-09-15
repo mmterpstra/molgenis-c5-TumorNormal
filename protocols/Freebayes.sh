@@ -33,8 +33,7 @@ done
 ${stage} ${freebayesMod}
 ${checkStage}
 
-set -x
-set -e
+set -x -e -o pipefail
 
 
 #if has targets use targets list

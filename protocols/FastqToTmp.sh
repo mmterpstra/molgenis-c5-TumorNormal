@@ -21,8 +21,7 @@ echo -e "test ${reads1FqGz} ${reads2FqGz} 1: "
 ${stage} ${picardMod}
 ${checkStage}
 
-set -x
-set -e
+set -x -e -o pipefail
 
 echo "## "$(date)" ##  $0 Started "
 	

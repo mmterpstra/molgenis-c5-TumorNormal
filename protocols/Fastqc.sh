@@ -25,8 +25,7 @@ echo -e "test ${reads1FqGz} ${reads2FqGz} 1: $(basename ${reads1FqGz} .gz)${fast
 ${stage} ${fastqcMod}
 ${checkStage}
 
-set -x
-set -e
+set -x -e -o pipefail
 
 echo "## "$(date)" ##  $0 Started "
 

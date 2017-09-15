@@ -34,8 +34,7 @@ ${stage} ${RMod}
 ${stage} ${RmarkMod}
 ${checkStage}
 
-set -x
-set -e
+set -x -e -o pipefail
 
 #main ceate dir and run programmes
 
