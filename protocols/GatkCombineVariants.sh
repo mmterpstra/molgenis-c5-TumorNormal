@@ -40,8 +40,6 @@ set -e
 
 mkdir -p ${variantCombineDir}
 
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl freebayes 
-
 #
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
