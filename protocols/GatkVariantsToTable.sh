@@ -44,7 +44,8 @@ mkdir -p ${tableDir}
 if [ $(grep -vP '^#'  ${vcf}| wc -l) -ge 1 ]; then
 
 	if [ ${#variantFields} -eq 0 ]; then
-		fields=$(perl $EBROOTPIPELINEMINUTIL/bin/DumpFieldsForVariantsToTable.pl ${vcf})
+		#all fields minus the -GF FT from manta
+		fields=$(perl $EBROOTPIPELINEMINUTIL/bin/DumpFieldsForVariantsToTable.pl ${vcf}| perl -wpe 's/\-GF\ FT//g' )
 	else
 		fields="${variantFields}"
 	fi

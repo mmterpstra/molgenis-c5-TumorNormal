@@ -8,6 +8,7 @@
 #string checkStage
 #string gatkMod
 #string samtoolsMod
+#string pipelineUtilMod
 #string onekgGenomeFasta
 #string targetsList
 #string cosmicVcf
@@ -20,14 +21,11 @@
 #string indelRealignmentBai
 #string controlSampleBam
 #string controlSampleBai
-
+#string sampleName
 #string mutect2ScatVcf
 #string mutect2ScatVcfIdx
 #string mutect2Dir
 
-
-#pseudo from gatk forum (link: http://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_sting_gatk_walkers_indels_IndelRealigner):
-#java -Xmx4g -jar GenomeAnalysisTK.jar -T IndelRealigner -R ref.fa -I input.bam -targetIntervals intervalListFromRTC.intervals -o realignedBam.bam [-known /path/to/indels.vcf] -U ALLOW_N_CIGAR_READS --allow_potentially_misencoded_quality_scores
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -35,8 +33,7 @@ alloutputsexist \
  ${mutect2ScatVcf} \
  ${mutect2ScatVcfIdx}
 
-${stage} ${samtoolsMod}
-${stage} ${gatkMod}
+${stage} ${samtoolsMod} ${gatkMod} ${pipelineUtilMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}
@@ -90,7 +87,14 @@ java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:Paralle
  -I:tumor ${indelRealignmentBam} \
  $Normalspec \
  $InterValOperand \
- -o ${mutect2ScatVcf}
+ -o ${mutect2ScatVcf}.tmp.vcf
+
+#cleans name of any not [a-zA-Z0-9_]. It is up to the human interpreter to interpret these names, if needed.
+
+sampleNameClean=$(echo "${sampleName}" | perl -wpe 'chomp;$_=uc;s/\W/_/g;')
+
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2_t_$sampleNameClean ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}
+
 
 
 #java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \

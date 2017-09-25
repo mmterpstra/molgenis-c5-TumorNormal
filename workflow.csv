@@ -31,7 +31,6 @@ Mutect2,protocols/GatkMutect2.sh,IndelRealignmentKnown
 #Mutect2,protocols/GatkMutect2.sh,ContEst;IndelRealignmentKnown
 MergeMutect2VariantsBySample,protocols/MergeVcfs.sh,Mutect2;haplotyperScatVcf=mutect2ScatVcf;haplotyperVcf=mutect2SampleVcf
 MergeMutect2VariantsByProject,protocols/GatkCombineMutectSamples.sh,MergeMutect2VariantsBySample
-#CombineVariants,protocols/GatkCombineVariants.sh,MergeVariants;MergeFreeBayesVariants;MergeMutect2VariantsByProject
 HaplotypeCaller,protocols/GatkHaplotypeCaller.sh,BQSR;CreatePaddedTargets
 #Catvariants,protocols/CatVariants.sh,HaplotypeCaller
 MergeVariants,protocols/MergeVcfs.sh,HaplotypeCaller

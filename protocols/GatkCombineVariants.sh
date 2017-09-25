@@ -55,6 +55,7 @@ rm ${freebayesVcf}.allelicprimitives.vcf.idx
 
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl freebayes ${freebayesVcf}.allelicprimitives.vcf > ${freebayesVcf}.callerised.vcf
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCcaller ${haplotyperVcf} > ${haplotyperVcf}.callerised.vcf
+#did this already on a per sample base maybe overkill to do it again
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} > ${mutect2Vcf}.callerised.vcf
 
 
