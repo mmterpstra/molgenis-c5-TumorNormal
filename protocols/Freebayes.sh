@@ -69,13 +69,14 @@ freebayes \
  --allele-balance-priors-off \
  --binomial-obs-priors-off \
  --hwe-priors-off \
+ --min-alternate-fraction 0.05 \
  --min-mapping-quality 20 \
+ --pooled-continuous \
  --strict-vcf \
  --vcf ${freebayesScatVcf} \
  $InterValOperand \
  -b ${freebayesProjectBam} \
- --use-best-n-alleles 4\
-
+ --use-best-n-alleles 0\
 
 # -dontUseSoftClippedBases \
 

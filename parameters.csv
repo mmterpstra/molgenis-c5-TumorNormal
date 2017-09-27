@@ -337,7 +337,7 @@ mutect2VcfIdx,${mutect2Vcf}.idx
 ################################################################################
 #variant combination (combine HG + freebayes)
 variantCombineDir,${projectDir}/combinevariants/
-combineVcf,${variantCombineDir}${project}.vcf
+combineVcf,${variantCombineDir}${project}.n_${controlSampleName}.vcf
 combineVcfIdx,${combineVcf}.idx
 
 ################################################################################
@@ -345,21 +345,21 @@ combineVcfIdx,${combineVcf}.idx
 
 annotatorDir,${projectDir}/VariantAnnotation/
 
-snpEffGatkAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+snpEffGatkAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 snpEffGatkAnnotVcfIdx,${snpEffGatkAnnotVcf}.idx
-gatkAnnotVcf,${annotatorDir}/${project}.annot.intermediate.vcf
+gatkAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.intermediate.vcf
 gatkAnnotVcfIdx,${gatkAnnotVcf}.idx
-snpEffAnnotVcf,${annotatorDir}/${project}.snpEff.intermediate.vcf
+snpEffAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEff.intermediate.vcf
 snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
 #
-#snpSiftAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+#snpSiftAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 #snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
 #
-annotVcf,${annotatorDir}/${project}.annot.vcf
+annotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.vcf
 annotVcfIdx,${annotVcf}.idx
 
 
-#custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
+#custAnnotVcf,${annotatorDir}/${project}.annot.cust.n_${controlSampleName}.vcf
 #custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
@@ -379,7 +379,7 @@ annotVcfIdx,${annotVcf}.idx
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
-custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
+custAnnotVcf,${annotatorDir}/${project}.annot.cust.n_${controlSampleName}.vcf
 custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
