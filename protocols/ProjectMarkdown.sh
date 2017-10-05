@@ -40,6 +40,19 @@ done
 
 
 #main and collect data
+(
+	echo "# ${project} Project info"
+	echo
+	echo "This contains the ${project} project info of all the samples in the project. This contains the following steps:"
+	echo
+	echo " - Fastq metrics"
+	echo " - Alignment metrics"
+	echo " - Duplicate metrics"
+	echo " - Hybrid selection (abbr. HS) metrics"
+
+) >  ${projectMarkdown}
+
+
 
 #fastq table
 
@@ -79,7 +92,15 @@ done
         for md in "${mdlist[@]}"; do
 		if [ -s "$md" ] ; then
 			SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-                	grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+                	#if [[ $(grep -A 2 "$HEADER" /scratch/umcg-mterpstra/projects/WES_novogene_path_P1_3/md/WES_novogene_path_P1_3.T11_21822_I.md | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1) =~ "FIRST_OF_PAIR" ]]; then grep -A 4 "$HEADER" /scratch/umcg-mterpstra/projects/WES_novogene_path_P1_3/md/WES_novogene_path_P1_3.T11_21822_I.md | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 3; else grep -A 2 "$HEADER" /scratch/umcg-mterpstra/projects/WES_novogene_path_P1_3/md/WES_novogene_path_P1_3.T11_21822_I.md | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1;fi
+			#grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+			if [[ $(grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1) =~ "FIRST_OF_PAIR" ]]; then 
+                       	        #pe
+                                grep -A 4 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 3
+                        else
+                                #se
+                                grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+                        fi
 		fi
         done
 ) >>  ${projectMarkdown}
@@ -91,29 +112,39 @@ done
         echo
         echo "## Duplicate metrics"
         echo
-        echo "Result table of the Duplicates for all samples"
-        echo
 	#header differs between single end and paired end so first use the headerbase to grep the file do determine the real header
-	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
+	#picard 1.140 header
+	#HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES|READ_PAIR_DUPLICATES|READ_PAIR_OPTICAL_DUPLICATES'
+	#picard 2.10 header
+	HEADERBASE='| Field|UNPAIRED_READS_EXAMINED|READ_PAIRS_EXAMINED|SECONDARY_OR_SUPPLEMENTARY_RDS|UNMAPPED_READS|UNPAIRED_READ_DUPLICATES'
+
         HEADER="$(grep -A 1 "$HEADERBASE" ${mdlist[1]} | head -1)"
-	grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*CATEGORY/\| SAMPLE \| CATEGORY/;s/^\|  --- /\|  --- \|  --- /;'
-        for md in "${mdlist[@]}"; do
-                if [ -s "$md" ] ; then
-                        SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
-                        grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
-               	fi
-        done
+	if [ ! -z "$HEADER" ] ; then
+		echo "Result table of the Duplicates for all samples"
+	        echo
+
+		grep -A 1 "$HEADER" ${mdlist[1]} | perl -wpe 's/^\|.*Field/\| SAMPLE \| FIELD/;s/^\|  --- /\|  --- \|  --- /;'
+        	for md in "${mdlist[@]}"; do
+        		if [ -s "$md" ] ; then
+                        	SAMPLENAME=$(perl -wne 'print $1 if /Sample Info on:(.*)/' $md)
+				grep -A 2 "$HEADER" "$md" | perl -wpe 's/^/\| '$SAMPLENAME' /;'|  tail -n 1
+               		fi
+        	done
+	else
+		echo "No Duplicate metrics found."
+	fi
 ) >>  ${projectMarkdown}
 
+#pemetrics?
 
 
 #hsmetrics
-
 (
 	echo
 	echo "## Hybrid selection metrics"
 	echo
-	echo "Result table of the hybrid selection for all samples"
+
+	echo "Result table of the hybrid selection for all samples."
 	echo
 	HEADER='| SAMPLE|TARGET_TERRITORY|PF_UQ_READS_ALIGNED|PF_UQ_BASES_ALIGNED|ON_TARGET_BASES|PCT_USABLE_BASES_ON_TARGET|MEAN_TARGET_COVERAGE|PCT_TARGET_BASES_2X|PCT_TARGET_BASES_10X|PCT_TARGET_BASES_20X|PCT_TARGET_BASES_30X|PCT_TARGET_BASES_40X|PCT_TARGET_BASES_50X|PCT_TARGET_BASES_100X |'
 	grep -A 1 "$HEADER" ${mdlist[1]}
@@ -127,7 +158,7 @@ done
 
 #version
 (	echo
-	cat generation.log
+	cat $(pwd)/../generation.log
 )>> ${projectMarkdown}
 
 #notes
@@ -135,8 +166,9 @@ done
 	echo
 	echo "Notes"
 	echo "====="
-
-	echo "This report was generated with this [source](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
+	echo
+	echo "This report was generated with the source present at the following
+ github repo: [github.com/mmterpstra/molgenis-c5-TumorNormal](https://github.com/mmterpstra/molgenis-c5-TumorNormal).
  This is used for research and may contain errors or typoos. So if you encounter
  issues please report them to the github or by mailing the correct people. Also
  do not be afraid to contact if you have suggestions and improvements."

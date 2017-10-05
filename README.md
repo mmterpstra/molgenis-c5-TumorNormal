@@ -4,6 +4,8 @@ The main goal is to detect variants in tumor-normal sample combinations.
 Build status
 ------------
 
+The build status at the moment reflects just test whether or not molgenis-compute is able to generate the scripts. A complete install/run of the workflow is not tested.
+
 branches
 
  - master ![alt master](https://travis-ci.org/mmterpstra/molgenis-c5-TumorNormal.svg?branch=master)
@@ -19,7 +21,7 @@ Prerequirements:
  - EasyBuild
  - Molgenis-Compute
  - All the other software: installs using Easybuild.
- - Slurm sheduler or large enough machine to run locally perferably ~30g mem & ~1t storage and 8 cpu's
+ - Slurm sheduler or large enough machine to run locally although not tested starting at about ~30g mem, ~1T storage and 8 (intel) cpu's
 
 Running
 ------- 
@@ -45,11 +47,9 @@ Methods
 Variant Calling
 ===============
 
-The variant calling pipeline is an implementation of a variant calling pipeline using the GATK tools and molgenis compute as workflow management software. As variant caller this pipeline uses the `HaplotypeCaller` instead of `Mutect` this because the sensitivity of `Mutect` needs multiple normal samples to correct for the senstivity if the caller.
-Alignment of reads was done using BWA [cite](http://arxiv.org/abs/1303.3997) and the Genome Analysis Toolkit (GATK) [cite](https://www.broadinstitute.org/gatk/about/citing-gatk).
-Using the GRCH37 decoy build from the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. Annotation of the variants was done using 
-SnpEff [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22728672) / SnpSift [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/22435069) with the ensembl release 75 gene annotations and the dbNSFP2.7 database ,
-the GATK was used with variant annotations of dbsnp 138, Cosmic v72, 1000 genomes phase 3 and Exac 0.3 databases. The data was filtered for quality metrics according to GATK recommendations (described below) and custom filters for population frequency and variant effect. 
+The variant calling pipeline is an adaptation of the GATK workflow (DePristo et al. 2011, Van der Auwera et al. 2013) and molgenis compute (Byelas, H et al. 2013) as workflow management software.
+
+Alignment of reads was done using BWA (Li, H. 2013) and the Genome Analysis Toolkit (abbr. GATK) (McKenna et al. 2010 ). Using the human genome reference build GRCH37 with decoys from the GATK bundle. Picard Tools was used for format conversion and Marking duplicates. As variant caller this pipeline uses the HaplotypeCaller to call all the samples of the same patient/cohort. Annotation of the variants was done using SnpEff (Cingolani P, Platts A, Wang le L et al. 2012, ) / SnpSift (Cingolani P, Patel VM, Coon M et al 2012) with the ensembl release 75 (Flicek, P et al 2014) gene annotations and the dbNSFP2.7 database (Liu, X et al. 2011, Liu, X et al. 2013), the GATK was used with variant annotations of dbsnp 138 (Sherry, ST et al. 2001), Cosmic v72 (Forbes et al. 2014), 1000 genomes phase 3 (1000 Genomes Project Consortium et al. 2012) and Exac 0.3 databases (Lek et al. 2016). The data was filtered for quality metrics similar to GATK recommendations (described below) and custom filters for population frequency and variant effect. For code and exact versioning see: https://github.com/mmterpstra/molgenis-c5-TumorNormal
 
 Cnv Analysis
 ============
@@ -81,8 +81,8 @@ These are the atlternate workflows and the change compared to the original.
     - WGS protocol (future work).
  - Iontorrent
     - Ion torrent workflow.... similar to nugene although work in progress.
- - With non polymorfic reads
-    - Does not filter for non polymorfic reads.
+ - With non-polymorfic variants
+    - Does not filter for non polymorfic variants.
 
 
 
@@ -162,11 +162,11 @@ The workflow is a multistep protocol including the following main steps.
 
  - Start with input reads in fastq format (from illumina sequencing)
  - (`RNA` / `NugeneRNA` ) Perform FusionCather on PE reads or else skip this analysis.
- - (`Nugene`/`NugeneRNA`) Add N6 barcode info into the read and trim by alignment position and quality. steps detailed below.
+ - (`Nugene`/`NugeneRNA`) Add N6 barcode info into the read and trim by linker sequence and quality. steps detailed below.
     - Add N6 barcode into read.
-    - Align reads (`DNA -> bwa`/ `RNA -> hisat2`) and trim on overlap with the landing probes.
-    - Use BBduk of the bbmap package for trimming the data on pred scaled base quality <20.
- - Do alignment on the grch refernce build v37 (`DNA -> bwa`/ `RNA -> hisat2`) for each fastq dataset.
+    - Trim on Linker sequence and on base qual < 20
+ - Align reads versus 1000g b37 reference genome using BWA or hisat for DNA or RNA respectively.
+ - (`Nugene`/`NugeneRNA`) hard trim alignment on overlap with the landing probes.
  - Use Picard tools AddOrReplaceGroups to covert the sam into properly sorted and indexed bam format.
  - (`Nugene`/`NugeneRNA`) Expand readgroups based on the N6 barcodes: for each unique N6 barcode create a new readgroup.
  - Use Picard tools MergeBamFiles merge the .bam into a single .bam file for each sample.
@@ -231,7 +231,7 @@ ${project}_nobam.zip
     - `varscan.${controlSampleName}/`
        - **Our CNV analysis** see the varscan.normals/*.pdf varscan.normals/*.seg files for results. This shows the copynumber ratios versus the normal samples.
     - `xlsx/`
-       - **The table dumps of the VCF files made for excel spreadsheet processing**. Tree types are present raw,min and filtered for viewing the raw variant calls (without filtering), the variant calls with a selected amount of columns and the variant calls filtered for population frequency and function. This for different type of calls: single nucletide variants (snv), small indels and multinucleotide polymorfisms (indelmnp) and structural variants called with manta (sv / work in progress).
+       - **The table dumps of the VCF files made for excel spreadsheet processing**. Four types are present description,raw,min and filtered for viewing description of the headers,the raw variant calls (without filtering), the variant calls with a selected amount of columns and the variant calls filtered for population frequency and function. This for different type of calls: single nucletide variants (snv), small indels and multinucleotide polymorfisms (indelmnp) and structural variants called with manta (sv / work in progress).
 
 
 
@@ -240,32 +240,8 @@ Variantcalling
 This is done with the haplotype caller using `-stand_call_conf 10.0` and `-stand_emit_conf 20.0` (call bases with QUAL > 10). 
 Instead of the default calling with a QUAL >= 30 (see also the 'Filtering of variant calls' paragraph).
 
+
 Filtering of variant calls
-==========================
-different filtering based on type:
-
- - snv
- - indel & mnp
-
-| name 		| expression 	| applied on  			| description |
-| ---- 		| ---------- 	| ----------- 			| ----------- |
-| "LowQual" 	| "QUAL < 30" 	| both (snv and indel & mnp) 	| Filter for the possibility (> 1/1000 or <30 pred scaled) that the variant call is wrong using a bayesian model. |
-| "QDlt2"	| "QD < 2.0"	| both 				| Filter for the pred scaled possibility that the variant call is wrong divided by the depth < 2.0 |
-| "MQlt40"	| "MQ < 40.0"	| snv				| Filter snv for the pred scaled possibility that a mapping is wrong, capped 60, calculated with secondary hits using the base quality scores at the different positions to call it 0 or higher. Filter for unique mappings. |
-| "MQRankSumlt-12_5" | "MQRankSum < -12.5" | snv		| Filter snv for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
-| "MQRankSumlt-20" | "MQRankSum < -20" | both                | Filter indel for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
-| "ReadPosRankSumlt-20" | "ReadPosRankSum < -20.0"| snv		|	|
-| "FSgt60"	| "FS > 60.0"   | snv                           |	|
-| "FSgt200"	| "FS > 200.0"   | indel                        |	|
-| "RPAgt8" 	| "vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8" | both |	|
-| "TeMeermanAlleleBiasgt5" | TeMeermanAlleleBias > 5.0 | both	| never filters anything -> legency artifact|
-| "NotPolymorfic" | all GT equal | both				|	|
-| "NotPutatativeHarmfulVariant" | see descr. | both		| everything that is not fuctional according the [snpeff documentation](http://snpeff.sourceforge.net/SnpEff_manual.html) under 'Effect prediction details' aka: "!((vc.hasAttribute('SNPEFF_IMPACT') && vc.getAttribute('SNPEFF_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" |
-| "1000gMAFgt0.02" | see descr. | both				| entire 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" |
-| "1000gEURMAFgt0.02" | see descr. | both			| european 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" |
-| "QDlt2andQdbyAflt8" | "QD < 2.0 && QD / AF < 8.0 | both	| having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data...)  |
-
-Filtering of variant calls V2
 ==========================
 
 The recommended filtering procedure depends on the sample size, sequencing method, target region size and depth these are general recommendations. The filtering might benefit from less stringent filtering of the variant statistics to increase sensitivity. The refiltering is best done on the raw data because these still contain the removed variance. Also consider adding exac.ac/exac.an <> 0.02 and adding the population(european/asian/american/african) specific filters for exac,esp6500 and 1000g. If you document your filtering I might add it to the filtering pipeline.
@@ -275,11 +251,9 @@ The table below shows the filtering steps that are automatically performed. Note
  - snv
  - indel & mnp
 
-
-
 | Name          		| Expression    		| Applied on                    | Description |
 | ----          		| ----------    		| -----------                   | ----------- |
-| "LowQual"     		| "QUAL < 30"   		| both (snv and indel & mnp)    | Variant statistic. Filter for the possibility (> 1/1000 or <30 pred scaled) that the variant call is wrong using a bayesian model. |
+| "LowQual"     		| "QUAL < 20"   		| both (snv and indel & mnp)    | Variant statistic. Filter for the possibility (> 1/1000 or <30 pred scaled or > 1/100 or <20 pred scaled) that the variant call is wrong using a bayesian model. |
 | "QDlt2"			| "QD < 2.0"    		| both                          | Variant statistic. Filter for the pred scaled possibility that the variant call is wrong divided by the depth < 2.0 |
 | "MQlt40"			| "MQ < 40.0"			| snv				| Variant statistic. Filter snv for the pred scaled possibility that a mapping is wrong, capped 60, calculated with secondary hits using the base quality scores at the different positions to call it 0 or higher. Filter for unique mappings. |
 | "MQRankSumlt-12_5"		| "MQRankSum < -12.5" 		| snv				| Variant statistic. Filter snv for mutations in which the mutation or the reference has difficulties mapping depending on one another. |
@@ -290,8 +264,7 @@ The table below shows the filtering steps that are automatically performed. Note
 | "RPAgt8" 			| "vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8" | both | Functional Annotation. Tandem repeat annotation of the region. The more repeats the less likely the indel call is true. Sequencing has difficulties with repeats (having about >=8 repeating units). |
 | "TeMeermanAlleleBiasgt5" 	| TeMeermanAlleleBias > 5.0	| both				| Variant statistic. Never filters anything -> legency artifact|
 | "NotPolymorfic" 		| all GT equal			| both				| Genotype annotation. All the genotypes are equal. If analysed with a proper control this variant is very unlikely to be harmful.|
-| "NotPutatativeHarmfulVariant" | see descr. 			| both				| Functional annotation. everything that is not fuctional according the [snpeff documentation](http://snpeff.sourceforge.net/SnpEff_manual.html) under 'Effect prediction details' aka: ###Should be updated for the SNPEFFANN FIELDS :"!((vc.hasAttribute('SNPEFFANN_ANNOTATION_IMPACT') && vc.getAttribute('SNPEFFANN_ANNOTATION_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" |
+| "NotPutatativeHarmfulVariant" | see descr. 			| both				| Functional annotation. everything that is not fuctional according the [snpeff documentation](http://snpeff.sourceforge.net/SnpEff_manual.html) under 'Effect prediction details' aka jexl expression :" "!((vc.hasAttribute('SNPEFFANN_ANNOTATION_IMPACT') && vc.getAttribute('SNPEFFANN_ANNOTATION_IMPACT').contains('HIGH'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('missense_variant'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('coding_sequence_variant'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('inframe_insertion'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('disruptive_inframe_insertion'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('inframe_deletion'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('disruptive_inframe_deletion')))" |
 | "1000gMAFgt0.02" 		| see descr.			| both				| Population annotation. entire 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" |
 | "1000gEURMAFgt0.02" 		| see descr. 			| both				| Population annotation. european 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" |
-| "QDlt2andQdbyAflt8" 		| "QD < 2.0 && QD / AF < 8.0	| both				| Variant statistic. having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data...)  |
-
+| "QDlt2andQdbyAflt8" 		| "QD < 2.0 && QD / AF < 8.0	| both				| Variant statistic. Having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data.). Also note the QD is already calculated by using samples containing the variant. |

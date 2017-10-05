@@ -2,7 +2,7 @@
 ##General Parameters
 #
 #tmp,tmp04
-queue,nodes
+queue,regular
 group,umcg-gcc
 user,umcg-mterpstra
 data,/data/${user}/apps/data/
@@ -13,28 +13,32 @@ projectDir,/scratch/${user}/projects/${project}/
 #
 fastqcMod,FastQC/0.11.5-Java-1.7.0_80
 bwaMod,BWA/0.7.12-foss-2016a
-picardMod,picard/1.140-foss-2016a-Java-1.8.0_74
+picardMod,picard/2.10.0-foss-2016a-Java-1.8.0_74
+picardOldMod,picard/1.140-foss-2016a-Java-1.8.0_74
 RMod,R/3.2.2-foss-2016a-bioconductor
-gatkMod,GATK/3.5-foss-2016a-Java-1.7.0_80
+#gatkMod,GATK/3.5-foss-2016a-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
+gatkMod,GATK/3.7-0-foss-2016a-Java-1.8.0_121
 snpEffMod,snpEff/4.1g-Java-1.7.0_80
-varScanMod,VarScan/2.4.0-Java-1.7.0_80
-samtoolsMod,SAMtools/0.1.18-foss-2016a
+varScanMod,VarScan/2.4.3-Java-1.7.0_80
+samtoolsMod,SAMtools/1.3.1-foss-2016a
 vcfToolsMod,VCFtools/0.1.12b-foss-2016a-Perl-5.20.2-bare
 #pipelineUtilMod,pipeline-util/0.2.1-foss-2016a-Perl-5.20.2-bare
-pipelineUtilMod,pipeline-util/0.4.7-foss-2016a-Perl-5.20.2-bare
-tableToXlsxMod,TableToXlsx
-digiRgMod,DigitalBarcodeReadgroups/0.1.5-foss-2016a-Perl-5.20.2-bare
+pipelineUtilMod,pipeline-util/0.5.8-foss-2016a-Perl-5.20.2-bare
+tableToXlsxMod,TableToXlsx/0.1.0-foss-2016a-Perl-5.20.2-bare
+digiRgMod,DigitalBarcodeReadgroups/0.1.10-foss-2016a-Perl-5.20.2-bare
 nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
 #digiRgMod,DigitalBarcodeReadgroups/0.1.3-foss-2016a-Perl-5.20.2-bare
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.25.0-foss-2016a
-hisat2Mod,hisat2/2.0.3-beta-foss-2016a
-htseqMod,HTSeq/0.6.1p1-goolfc-2.7.11-Python-2.7.9
+hisat2Mod,hisat2/2.0.4-foss-2016a-Python-2.7.11
+htseqMod,HTSeq/0.6.1p1-foss-2016a-Python-2.7.11
 #cmarkMod,cmark/0.25.2-foss-2016a
 fusioncatcherMod,FusionCatcher/0.99.6a-foss-2016a-Python-2.7.11
 RmarkMod,markdown/0.7.7-foss-2016a-R-3.2.2-bioconductor
-mantaMod,manta/1.0.2-foss-2016a
+mantaMod,manta/1.1.0-foss-2016a
+freebayesMod,freebayes/1.1.0-foss-2016a-961e5f3
+multiqcMod,multiqc/1.0-foss-2016a-Python-2.7.11
 ################################################################################
 ##user data
 #remap plz
@@ -44,3 +48,4 @@ probeFa,${data}/resources/probeSeq_RDonly_ET1262F_2_182.rc.fasta
 probeBed,${data}/resources/probeSeq_RDonly_ET1262F_2_182.bed
 probeRnaFa,${data}/resources/target_ET1508R_3a_782_3b_783_probeSeq.fasta
 probeRnaBed,${data}/resources/target_ET1508R_3a_782_3b_783_probeSeq.bed
+ampliconsBed,/groups/umcg-oncogenetics/tmp04/res/Iontorrent_target_regions.bed

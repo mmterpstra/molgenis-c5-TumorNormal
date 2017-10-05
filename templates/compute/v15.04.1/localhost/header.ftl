@@ -3,7 +3,7 @@
 #
 
 #highly recommended to use
-#set -e # exit if any subcommand or pipeline returns a non-zero status
+set -e # exit if any subcommand or pipeline returns a non-zero status
 #set -u # exit if any uninitialised variable is used
 
 # Set location of *.env and *.log files
@@ -45,6 +45,7 @@ getFile()
 putFile()
 {
         `getFile $@`
+	touch -- "$@".done
 }
 
 inputs()
@@ -79,21 +80,34 @@ alloutputsexist()
   all_exist=true
   for name in $@
   do
-    if test ! -e $name;
+    if [ ! -e $name ]|| [ ! -e $name.done ];
     then
         all_exist=false
+        if [ -e $name ];then
+            rm -r -v -- "${name}";
+        fi
+	if [ -e $name.done ];then
+            rm -r -v -- "${name}.done";
+        fi
+
     fi
   done
   if $all_exist;
   then
       echo "skipped"
-      echo "skipped" 1>&2
-      sleep 30
+      echo "skipped" >&2
+      touch ${taskId}.env
+      chmod 755 ${taskId}.env
+
+      touch ${taskId}.sh.finished
+      sleep 20s
       exit 0;
+
   else
       return 0;
   fi
 }
+
 </#noparse>
 
 #

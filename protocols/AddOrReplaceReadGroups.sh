@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=10gb nodes=1 ppn=8
+#MOLGENIS walltime=23:59:00 mem=10gb nodes=1 ppn=6
 
 #string project
 
@@ -43,7 +43,7 @@ mkdir -p ${addOrReplaceGroupsDir}
 
 echo "## "$(date)" Start $0"
 
-java -Xmx8g -XX:ParallelGCThreads=8 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
+java -Xmx8g -XX:ParallelGCThreads=6 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
  INPUT=${bwaSam} \
  OUTPUT=${addOrReplaceGroupsBam} \
  SORT_ORDER=coordinate \

@@ -14,6 +14,7 @@
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
 #list bqsrBam,bqsrBai
+#string targetsList
 
 #string haplotyperDir
 #string haplotyperVcf
@@ -151,7 +152,7 @@ mkdir -p ${annotatorDir}
 java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -c $EBROOTSNPEFF/snpEff.config \
  -dataDir ${snpeffDataDir} \
- -stats ${snpEffStats} \
+ -stats ${snpEffStats} -csvStats \
  -v -o gatk \
  GRCh37.75 \
  ${haplotyperVcf} \
@@ -172,6 +173,8 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  --excludeAnnotation DepthPerSampleHC \
  --excludeAnnotation PercentNBaseSolid \
  --excludeAnnotation PossibleDeNovo \
+ --excludeAnnotation ClusteredReadPosition \
+ --excludeAnnotation AS_RMSMappingQuality \
  --filter_bases_not_stored \
  --useAllAnnotations \
  --snpEffFile ${snpEffGatkAnnotVcf} \
@@ -223,7 +226,7 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -formatEff \
  -canon \
  -hgvs \
- -stats ${snpEffStats} \
+ -stats ${snpEffStats} -csvStats \
  -v \
  GRCh37.75 \
  ${gatkAnnotVcf} \
@@ -236,7 +239,7 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -dataDir ${snpeffDataDir} \
  -hgvs \
  -lof \
- -stats ${snpEffStats} \
+ -stats ${snpEffStats} -csvStats\
  -v \
  GRCh37.75 \
  ${gatkAnnotVcf} | \
@@ -248,8 +251,23 @@ java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar \
  dbnsfp -db ${dbnsfp}\
  -f genename,Uniprot_acc,Uniprot_id,Uniprot_aapos,Interpro_domain,cds_strand,refcodon,SLR_test_statistic,codonpos,fold-degenerate,Ancestral_allele,Ensembl_geneid,Ensembl_transcriptid,aapos,aapos_SIFT,aapos_FATHMM,SIFT_score,SIFT_converted_rankscore,SIFT_pred,Polyphen2_HDIV_score,Polyphen2_HDIV_rankscore,Polyphen2_HDIV_pred,Polyphen2_HVAR_score,Polyphen2_HVAR_rankscore,Polyphen2_HVAR_pred,LRT_score,LRT_converted_rankscore,LRT_pred,MutationTaster_score,MutationTaster_converted_rankscore,MutationTaster_pred,MutationAssessor_score,MutationAssessor_rankscore,MutationAssessor_pred,FATHMM_score,FATHMM_rankscore,FATHMM_pred,RadialSVM_score,RadialSVM_rankscore,RadialSVM_pred,LR_score,LR_rankscore,LR_pred,Reliability_index,VEST3_score,VEST3_rankscore,CADD_raw,CADD_raw_rankscore,CADD_phred,GERP++_NR,GERP++_RS,GERP++_RS_rankscore,phyloP46way_primate,phyloP46way_primate_rankscore,phyloP46way_placental,phyloP46way_placental_rankscore,phyloP100way_vertebrate,phyloP100way_vertebrate_rankscore,phastCons46way_primate,phastCons46way_primate_rankscore,phastCons46way_placental,phastCons46way_placental_rankscore,phastCons100way_vertebrate,phastCons100way_vertebrate_rankscore,SiPhy_29way_pi,SiPhy_29way_logOdds,SiPhy_29way_logOdds_rankscore,LRT_Omega,UniSNP_ids,1000Gp1_AC,1000Gp1_AF,1000Gp1_AFR_AC,1000Gp1_AFR_AF,1000Gp1_EUR_AC,1000Gp1_EUR_AF,1000Gp1_AMR_AC,1000Gp1_AMR_AF,1000Gp1_ASN_AC,1000Gp1_ASN_AF,ESP6500_AA_AF,ESP6500_EA_AF,ARIC5606_AA_AC,ARIC5606_AA_AF,ARIC5606_EA_AC,ARIC5606_EA_AF,clinvar_rs,clinvar_clnsig,clinvar_trait \
  ${snpEffAnnotVcf} \
- 1>${annotVcf} \
+ 1>${annotVcf}.snpsift.vcf \
  
+grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' >  ${annotVcf}.targets.bed
+
+bgzip ${annotVcf}.targets.bed
+tabix -p bed ${annotVcf}.targets.bed.gz
+
+#new format
+#vcf-annotate -a test.bed.gz -c CHROM,FROM,TO,INTARGETREGION -h hdr.file in.vcf
+
+#old .12 format
+vcf-annotate \
+ -d key=INFO,ID=INTARGETREGION,Number=0,Type=Flag,Description='In target region specified by capturing kit target intervals.' \
+ -c CHROM,FROM,TO,INFO/INTARGETREGION \
+ -a ${annotVcf}.targets.bed.gz \
+ ${annotVcf}.snpsift.vcf \
+ >${annotVcf}
 
 rm -v ${snpEffAnnotVcf}* ${gatkAnnotVcf}* ${snpEffGatkAnnotVcf}* 
 

@@ -10,6 +10,7 @@
 #string htseqDir
 #string htseqDupsDir
 #string sampleMarkdownDir
+#string projectMarkdown
 #string calculateHsMetricsDir
 #string collectMultipleMetricsDir
 #list varscanDir,snvVcf,indelMnpVcf
@@ -19,9 +20,9 @@
 #string htseqDupsDir
 #string fusioncatcherDir
 #string projectSampleSheet
-set -e
-set -x
-set -o pipefail
+#string multiQcHtml
+
+set -x -e -o pipefail
 
 alloutputsexist \
 "$(dirname "${projectDir}")/${project}_nobam.zip" \
@@ -36,14 +37,13 @@ zipbase='zip -n bam:xlsx:cram -ru '${project}'.zip '
 olddir=$(pwd)
 cd "$(dirname "${projectDir}")"
 
-
 for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}"; do
 	if [ -n "$(ls -A $dir/*)" ]; then
                	$zipbase $(echo "$dir/*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
 done
 
-for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" | sort -u); do
+for file in $(ls "${projectSampleSheet}" "${snvVcf[@]}*" "${indelMnpVcf[@]}" "${projectMarkdown}.html"  "${multiQcHtml}" | sort -u); do
 	if [ -n "$(ls -A $file*)" ]; then
                	$zipbase $(echo "$file*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
@@ -62,7 +62,7 @@ fi
 if [ -n "$(ls -A ${dir}/*.called.homdels)" ]; then
 	$zipbase $(echo "${varscanDir}/*.called.homdels" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
-if [ -n "$(ls -A ${dir}/*.pdf)" ]; then
+if [ -n "$(ls -A ${varscanDir}/*.pdf)" ]; then
         $zipbase $(echo "${varscanDir}/*.pdf" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 if [ -n "$(ls -A ${dir}/multi/*)" ]; then
@@ -77,14 +77,14 @@ fi
 if [ -n "$(ls -A ${dir}/*list)" ]; then
 	$zipbase $(echo "${projectDir}/*list" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
-	
+
 if [ -n "$(ls -A ${dir}/*list)" ]; then
 	$zipbase $(echo "${projectDir}/*list" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 #	if [ -n "$(ls -A ${dir}*)" ]; then
 #		$zipbase $(echo "${snvVcf}*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 #	fi
-	
+
 #	if [ -n "$(ls -A ${dir}*)" ]; then
 #		$zipbase $(echo "${indelMnpVcf}*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 #	fi
@@ -95,7 +95,7 @@ if [ -n "$(ls -A ${sampleMarkdownDir}/*.html)" ]; then
 fi
 
 #rna seq output of htseq-count
-if [ -e  "${htseqDir}" ]; then 
+if [ -e  "${htseqDir}" ]; then
 	$zipbase $(echo "${htseqDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 fi
 #rna seq output of htseq-count with dups?
@@ -170,4 +170,3 @@ putFile "$(dirname "${projectDir}")/${project}.zip"
 
 
 cd $olddir
-

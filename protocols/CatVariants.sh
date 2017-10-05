@@ -30,8 +30,7 @@ done
 ${stage} ${gatkMod}
 ${checkStage}
 
-set -x
-set -e
+set -x -e -o pipefail
 
 #pseudo
 #java -cp GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \

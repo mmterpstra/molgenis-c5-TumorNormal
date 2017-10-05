@@ -34,8 +34,7 @@ ${stage} ${RMod}
 ${stage} ${RmarkMod}
 ${checkStage}
 
-set -x
-set -e
+set -x -e -o pipefail
 
 #main ceate dir and run programmes
 
@@ -70,7 +69,7 @@ mkdir -p ${sampleMarkdownDir}
 	echo "Fastqc metrics"
 	echo "==============="
 	echo
-	echo "This part is made using the output of the fastq program. If you want to read
+	echo "This part is made using the output of the fastqc program. If you want to read
  the doc [here it is](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/)"
 )>>  ${sampleMarkdown}
 
@@ -82,65 +81,101 @@ baseNumberClean=0
 baseQ20pct=0
 baseQ30pct=0
 
-for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| sort -u ); do
+fqList=()
+
+for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
-		(
-			echo
-			echo "Raw fastqc data"
-        		echo "----------------"
-			echo
-			echo "Below this paragraph the results of the fastqc tool are shown."
-			echo
-
-			fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-
-			perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
-			${fastqcBasename}.html
-
-
-			echo
-			cd ${fastqcDir}
-			unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
-			#readNumberRaw
-			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)_fastqc.zip -d); do
+			fqList+=($fq)
+			fastqcBasename=$(dirname ${fastqcBasename})
+			cd ${fastqcBasename}
+			unzip -u -o ${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc.zip" \*/fastqc_data.txt -d ${fastqcBasename}
+			readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}//$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc"/fastqc_data.txt | cut  -f2)
 			let 'readNumberRaw=readNumberRaw+readnumberfastq'
-		)>>${sampleMarkdown}
+			(
+				echo
+				echo "Raw fastqc data"
+        			echo "----------------"
+				echo
+				echo "Below this paragraph the results of the fastqc tool are shown."
+				echo
+
+				#fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+
+				perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
+				${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc.html"
+
+
+				echo
+				cd ${fastqcDir}
+				#unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+				#readNumberRaw
+				#readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+				#let 'readNumberRaw=readNumberRaw+readnumberfastq'
+			)>>${sampleMarkdown}
+
+			cd $OLDPWD
+		done
 	fi
 done
 
+if [ $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u | wc -l) -ne ${#fqList[@]} ]; then
+	>&2 echo "[FATAL] length of fq files processed and fq files present is not equal."
+	>&2 echo -e "\tProcessed list:"
+	>&2 printf '\t%s\n' ${fqList[@]}
+	>&2 echo -e "\tComplete list:"
+        >&2 printf '\t%s\n' $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u )
+
+	exit 1
+fi
+
+readNumberClean=0
+
 if [ -e ${fastqcCleanDir} ] ; then
-	for fqClean in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| sort -u ); do
-		if [ -e $fqClean ] ;then
-			(
-				echo ""
+	for fq in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
+		if [ ${#fq} -ne 0 ] ; then
+			for fastqcBasename in $(ls ${fastqcCleanDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)*.zip -d); do
+				fqList+=($fq)
+				fastqcBasename=$(dirname ${fastqcBasename})
+				cd ${fastqcBasename}
+				unzip -u -o ${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc.zip" \*/fastqc_data.txt -d ${fastqcBasename}
+				readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}//$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc"/fastqc_data.txt | cut  -f2)
+				let 'readNumberClean=readNumberClean+readnumberfastq'
+				(
+					echo
+					echo "Raw fastqc data"
+        				echo "----------------"
+					echo
+					echo "Below this paragraph the results of the fastqc tool are shown."
+					echo
+	
+					#fastqcBasename=$(echo ${fastqcDir}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
+	
+					perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
+					${fastqcBasename}/$(echo -n $fq | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')"_fastqc.html"
+	
+	
+					echo
+					cd ${fastqcDir}
+					#unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
+					#readNumberRaw
+					#readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
+					#let 'readNumberRaw=readNumberRaw+readnumberfastq'
+				)>>${sampleMarkdown}
 
-	        		echo "Clean fastqc data"
-	        		echo "----------------------"
-
-				fastqcBasename=$(echo ${fastqcCleanDir}/$(echo -n $fqClean | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')'_fastqc')
-
-		        	perl -wne 'm/(\<div class\=\"main\"\>.*\<\/div\>)\<\/div\>/; print $1."\n" if defined $1;' \
-		        	 ${fastqcBasename}.html
-
-				cd ${fastqcCleanDir}
-
-				#this works \*/ yaay
-			        unzip -u -o ${fastqcBasename}.zip \*/fastqc_data.txt
-				#readNumberClean
-			        readnumberfastq=$(grep 'Total Sequences'  ${fastqcBasename}/fastqc_data.txt | cut  -f2)
-			        let 'readNumberClean=readNumberClean+readnumberfastq'
-			)>> ${sampleMarkdown}
-
+				cd $OLDPWD
+			done
 		fi
 	done
 fi
+
 
 ################################################################################
 ##
 #
 
 (
-	echo 
+	echo
 	echo "Fastq single sample summary data"
 	echo "==============="
 	echo
@@ -170,6 +205,10 @@ fi
 
 	echo -e "|\tsamplename\t|\tReads raw\t|\tReads clean\t|\tBases clean\t|\tClean bases Q20\t|\tClean bases Q30\t|"
 	echo -e "|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|\t---\t|"
+
+	if [ ! -e ${fastqcCleanDir} ] ; then
+		readNumberClean=${readNumberRaw}
+	fi
 
 	echo -e "|\t${sampleName}\t|\t${readNumberRaw}\t|\t${readNumberClean}\t|\t${baseNumberClean}\t|\t${baseQ20pct}\t|\t${baseQ30pct}\t|"
 )>>${sampleMarkdown}
@@ -210,7 +249,7 @@ fi
 	   "PCT_TARGET_BASES_20X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_40X", "PCT_TARGET_BASES_50X", "PCT_TARGET_BASES_100X"))
 	 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
 	Rscript ${sampleMarkdownDir}/${sampleName}_hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
-	rm -v ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
+	rm  ${sampleMarkdownDir}/${sampleName}_hsmetrics.R 
 )>> ${sampleMarkdown}
 ################################################################################
 ##
@@ -247,7 +286,7 @@ fi
 
 	Rscript  ${sampleMarkdownDir}/${sampleName}_alignmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
 
-	rm -v ${sampleMarkdownDir}/${sampleName}_alignmetrics.R
+	rm  ${sampleMarkdownDir}/${sampleName}_alignmetrics.R
 )>> ${sampleMarkdown}
 ################################################################################
 ##
@@ -280,7 +319,7 @@ if [ -e ${markDuplicatesMetrics} ] ; then
 		echo
 		perl -wne 'BEGIN{my $pr=0;};$pr=0 if($_ =~ m/^\n$/); $pr = 1 if($_ =~ m/LIBRARY/); print $_ if($pr); ' ${markDuplicatesMetrics} > ${markDuplicatesMetrics}.tmp
 		#just for logging
-		cat ${markDuplicatesMetrics}.tmp
+		cat ${markDuplicatesMetrics}.tmp >/dev/stderr
 		#create markduplicates table for a single sample. Note the recalculation of PCT_PCR_DUPs.
 		echo 'tabledup=read.table("'${markDuplicatesMetrics}.tmp'", header=TRUE, sep="\t", fill=NA);
 		 colsumstabledup<- colSums(tabledup[,(! is.na(tabledup[1,"ESTIMATED_LIBRARY_SIZE"]) | colnames(x=tabledup)!="ESTIMATED_LIBRARY_SIZE")&colnames(tabledup)!="LIBRARY"&colnames(tabledup)!="PERCENT_DUPLICATION"]);
@@ -289,7 +328,7 @@ if [ -e ${markDuplicatesMetrics} ] ; then
 		#java:PERCENT_DUPLICATION = (UNPAIRED_READ_DUPLICATES + READ_PAIR_DUPLICATES *2) /(double) (UNPAIRED_READS_EXAMINED + READ_PAIRS_EXAMINED *2);
 		 write.table(t(colsumstabledup) ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE, col.names=TRUE);' >  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R;
 		Rscript  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
-		rm -v  ${sampleMarkdownDir}/${sampleName}_dupmetrics.R
+		rm   ${sampleMarkdownDir}/${sampleName}_dupmetrics.R
 	)>> ${sampleMarkdown}
 else
 	(
@@ -339,9 +378,10 @@ if [ ${#reads2FqGz} -ne 0 ]; then
 
 		Rscript ${sampleMarkdownDir}/${sampleName}_pemetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
 	) >> ${sampleMarkdown}
-		rm -v ${sampleMarkdownDir}/${sampleName}_pemetrics.R
+		rm  ${sampleMarkdownDir}/${sampleName}_pemetrics.R
 else
 	(
+		echo
 		echo "Paired end metrics"
 		echo "=================="
 		echo
@@ -362,8 +402,6 @@ fi
  issues please report them to the github or by mailing the correct people. Also
  do not be afraid to contact if you have suggestions and improvements."
 	) >> ${sampleMarkdown}
-
-#yo, i heard you like html templates so ...
 
 htmlTemplate='<!DOCTYPE html>
 <html>

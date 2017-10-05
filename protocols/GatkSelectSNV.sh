@@ -47,6 +47,11 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  -L:VCF ${custAnnotVcf} \
  -selectType SNP
 
+##INFO=<ID=1000gPhase1Snps.AFR_AF,Number=A,Type=Float,Description="Allele frequency in the AFR populations calculated from AC and AN, in the range (0,1)">
+##INFO=<ID=1000gPhase1Snps.AMR_AF,Number=A,Type=Float,Description="Allele frequency in the AMR populations calculated from AC and AN, in the range (0,1)">
+##INFO=<ID=1000gPhase1Snps.ASN_AF,Number=.,Type=String,Description="Value transferred from another external VCF resource">
+
+
 java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T VariantFiltration \
@@ -61,10 +66,13 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --filterExpression "vc.hasAttribute('RPA') &&(vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8)" --filterName "RPAgt8" \
  --filterExpression "vc.hasAttribute('TeMeermanAlleleBias') && TeMeermanAlleleBias > 5.0" --filterName "TeMeermanAlleleBiasgt5"\
  --filterExpression "!( vc.hasAttribute('IsChangeInTumor'))" --filterName "NotPolymorfic" \
- --filterExpression "!((vc.hasAttribute('SNPEFF_IMPACT') && vc.getAttribute('SNPEFF_IMPACT').equals('HIGH'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('NON_SYNONYMOUS_CODING'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_INSERTION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_DELETION'))||(vc.hasAttribute('SNPEFF_EFFECT') && vc.getAttribute('SNPEFF_EFFECT').equals('CODON_CHANGE_PLUS_CODON_DELETION')))" \
+ --filterExpression "!((vc.hasAttribute('SNPEFFANN_ANNOTATION_IMPACT') && vc.getAttribute('SNPEFFANN_ANNOTATION_IMPACT').contains('HIGH'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('missense_variant'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('coding_sequence_variant'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('inframe_insertion'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('disruptive_inframe_insertion'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('inframe_deletion'))||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('disruptive_inframe_deletion')))" \
  --filterName "NotPutatativeHarmfulVariant" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" \
+ --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AFR_AF') && (vc.getAttribute('1000gPhase1Snps.AFR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AFR_AF') < 0.98))" --filterName "1000gAFRMAFgt0.02" \
+ --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AMR_AF') && (vc.getAttribute('1000gPhase1Snps.AMR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AMR_AF') < 0.98))" --filterName "1000gAMRMAFgt0.02" \
+ --filterExpression "(vc.hasAttribute('1000gPhase1Snps.ASN_AF') && (vc.getAttribute('1000gPhase1Snps.ASN_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.ASN_AF') < 0.98))" --filterName "1000gASNMAFgt0.02" \
  --filterExpression "QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8"
 
 putFile ${snvVcf}

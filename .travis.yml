@@ -24,7 +24,7 @@ before_install:
   - printf "y\n\n\t\n" | sudo apt-get install oracle-java8-installer
   - sudo update-java-alternatives --set /usr/lib/jvm/java-8-oracle
 #instal lua / lmod
-  - sudo apt-get install liblua5.1-0 liblua5.1-0-dev liblua5.1-filesystem-dev liblua5.1-filesystem liblua5.1-posix-dev liblua5.1-posix lua5.1
+  - sudo apt-get install liblua5.1-0 liblua5.1-0-dev lua-filesystem-dev lua-filesystem lua-posix lua-posix-dev lua5.1
   - wget https://github.com/TACC/Lmod/archive/6.4.5.tar.gz
   - tar -zxf 6.4.5.tar.gz
   - cd Lmod-*/ && sudo mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install && cd $OLDPWD

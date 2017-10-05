@@ -46,9 +46,14 @@ worksheet.csv
 parameters.molgenis.csv
 *.tmp.csv
 [Ss]amplesheet*.csv
-# gedit dirt             #
+.RunWorkFlowGeneration.sh
+.parameters.molgenis.csv
+.parameters.site.molgenis.csv
+
+# gedit backups          #
 ##########################
 *~
+
 # backups                #
 ##########################
 *.bak

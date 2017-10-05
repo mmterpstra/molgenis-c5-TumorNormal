@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=5gb nodes=1 ppn=4
 
 #string project
 
@@ -12,6 +12,8 @@
 #string collectMultipleMetricsDir
 #string collectMultipleMetricsPrefix
 #string onekgGenomeFasta
+#string dbsnpVcf
+#string targetsList
 #string markDuplicatesBam
 #string markDuplicatesBai
 
@@ -33,7 +35,8 @@ echo "## "$(date)" Start $0"
 getFile ${markDuplicatesBam}
 getFile ${markDuplicatesBai}
 getFile ${onekgGenomeFasta}
-
+getFile ${dbsnpVcf}
+getFile ${targetsList}
 
 #load modules
 ${stage} ${picardMod}
@@ -51,8 +54,16 @@ insertSizeMetrics=""
 if [ ${#reads2FqGz} -ne 0 ]; then
 	insertSizeMetrics="PROGRAM=CollectInsertSizeMetrics"
 fi
+intervals=""
+if [ ${#targetsList} -ne 0 ]; then 
+	intervals="INTERVALS=${targetsList}"
+fi
 
 #Run Picard CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution and MeanQualityByCycle
+#as of 2.10:
+#CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution, 
+#MeanQualityByCycle, CollectBaseDistributionByCycle, CollectGcBiasMetrics, RnaSeqMetrics, 
+#CollectSequencingArtifactMetrics, CollectQualityYieldMetrics
 java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
  I=${markDuplicatesBam} \
  O=${collectMultipleMetricsPrefix} \
@@ -61,6 +72,12 @@ java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipl
  PROGRAM=QualityScoreDistribution \
  PROGRAM=MeanQualityByCycle \
  $insertSizeMetrics \
+ PROGRAM=CollectBaseDistributionByCycle \
+ PROGRAM=CollectGcBiasMetrics \
+ PROGRAM=CollectSequencingArtifactMetrics \
+ PROGRAM=CollectQualityYieldMetrics \
+ DB_SNP=${dbsnpVcf}  \
+ $intervals \
  TMP_DIR=${collectMultipleMetricsDir}
 
 #VALIDATION_STRINGENCY=LENIENT \
@@ -73,7 +90,7 @@ putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
 
 if [ ${#reads2FqGz} -ne 0 ]; then
 	putFile ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf
-	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics 
+	putFile ${collectMultipleMetricsPrefix}.insert_size_metrics
 fi
 
 echo "## "$(date)" ##  $0 Done "

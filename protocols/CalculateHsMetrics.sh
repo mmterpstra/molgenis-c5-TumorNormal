@@ -6,7 +6,7 @@
 
 #string stage
 #string checkStage
-#string picardMod
+#string picardOldMod
 #string RMod
 #string onekgGenomeFasta
 #string markDuplicatesBam
@@ -31,7 +31,7 @@ getFile ${targetsList}
 
 
 #load modules
-${stage} ${picardMod}
+${stage} ${picardOldMod}
 ${stage} ${RMod}
 ${checkStage}
 

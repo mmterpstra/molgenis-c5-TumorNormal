@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=5gb ppn=1
+#MOLGENIS walltime=23:59:00 mem=9gb ppn=2
 
 #string project
 
@@ -21,7 +21,7 @@ echo "## "$(date)" ##  $0 Started "
 alloutputsexist \
 "${haplotyperVcf}"
 
-for file in "${haplotyperScatVcf[@]}" "${haplotyperScatVcfIdx[@]}" "${onekgGenomeFasta}"; do
+for file in "${haplotyperScatVcf[@]}"  "${onekgGenomeFasta}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -48,9 +48,9 @@ inputs=$(printf ' INPUT=%s ' $(printf '%s\n' ${vcflist[@]}))
 
 echo $inputs
 
-java -jar $EBROOTPICARD/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
+java -Xmx8g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
 
-java -jar $EBROOTPICARD/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
+java -Xmx8g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
 
 rm ${haplotyperVcf}.tmp.vcf
 rm ${haplotyperVcf}.tmp.vcf.idx

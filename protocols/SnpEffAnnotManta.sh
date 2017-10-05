@@ -73,7 +73,7 @@ if [ $(grep -v '^#' ${mantaVcf} | wc -l ) -ge 1 ]; then
 	 -dataDir ${snpeffDataDir} \
 	 -hgvs \
 	 -lof \
-	 -stats ${snpEffMantaStats} \
+	 -stats ${snpEffMantaStats} -csvStats \
 	 -v \
 	 GRCh37.75  | \
 	perl $EBROOTPIPELINEMINUTIL/bin/VcfSnpEffAsGatk.pl \

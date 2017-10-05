@@ -35,6 +35,11 @@ oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.idx
 oneKgPhase1IndelsVcf,${bundle}/1000G_phase1.indels.b37.vcf
 oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.idx
 
+oneKgPhase3v4Vcf,${bundle}/1000G_phase3_v4_20130502.sites.vcf.gz
+oneKgPhase3v4VcfIdx,${oneKgPhase3v4Vcf}.tbi
+
+popStratifiedVcf,${bundle}/hapmap_3.3_b37_pop_stratified_af.vcf.gz
+popStratifiedVcfIdx,${popStratifiedVcf}.idx
 #phase 3 indels / snps
 #${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
 
@@ -140,7 +145,7 @@ nugeneReads2FqGz,${nugeneFastqDir}/${internalId}_${sampleName}_2.fq.gz
 ##Nugene random fastq integration/bbduk trimming
 nugeneProbeMetricsDir,${projectDir}/nugeneProbeMetrics/
 nugeneProbeMetricsLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.tsv
-
+nugeneProbeMetricsDeDupLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.dedup.tsv
 
 ##################################
 ##remappable name for sample md generation
@@ -165,13 +170,31 @@ hisat2SpliceKnownTxt,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/h
 #--known-splicesite-infile ${hisat2SpliceKnownTxt} /data/umcg-mterpstra/apps/data/ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/Homo_sapiens.GRCh37.75.splicesites.txt
 gatkOpt,
 
+
+################################################################################
+##TrimBybed subdirs
+#
+trimByBedDir,${projectDir}/bedTrim/
+trimByBedBam,${trimByBedDir}${internalId}_${sampleName}.bam
+trimByBedBai,${trimByBedDir}${internalId}_${sampleName}.bai
+trimByBedMetrics,${trimByBedDir}${internalId}_${sampleName}.metrics.log
+
+
 ################################################################################
 ##AddOrReplaceGroups
 #
 addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
 addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
 addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+
+################################################################################
+## Iontorrent workflow SelectSpanningReads for selection of reads from bam matching end to end seq
 #
+spanningDir,${projectDir}/SelectSpanningReads/
+spanningBam,${spanningDir}${internalId}_${sampleName}.bam
+spanningBai,${spanningDir}${internalId}_${sampleName}.bai
+
+
 ################################################################################
 #Nugene Bc Splitter?
 #
@@ -228,6 +251,15 @@ collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
 calculateHsMetricsDir,${projectDir}/HsMetrics/
 calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
 calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
+
+################################################################################
+#Qc provided by samtools
+samQcDir,${projectDir}/SamtoolsQc
+samQcFlagStatLog,${samQcDir}/${sampleName}.flagstat.log
+samQcStatsLog,${samQcDir}/${sampleName}.stats.log
+samQcDupStatsLog,${samQcDir}/${sampleName}.dup.stats.log
+samQcIdxStatsLog,${samQcDir}/${sampleName}.idxstats.log
+
 ################################################################################
 #GatkSplitAndTrim
 
@@ -249,7 +281,14 @@ realignmentIntervals,${indelRealignmentDir}/realignmentIntervals.list
 ################################################################################
 #IndelRealigner
 indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
+indelRealignmentBamBai,${indelRealignmentBam}.bai
 indelRealignmentBai,${indelRealignmentDir}${sampleName}.bai
+################################################################################
+#ContEst
+contEstDir,${projectDir}/contEst/
+contEstLog,${contEstDir}${sampleName}.cont_${controlSampleName}.log
+
+
 ##############################################################################
 #BSQR(+PrintReads) default
 bqsrDir,${projectDir}/baseQualityScoreRecalibration/
@@ -258,6 +297,7 @@ bqsrBam,${bqsrDir}${sampleName}.bam
 bqsrBai,${bqsrDir}${sampleName}.bai
 bqsrBeforeGrp,${bqsrDir}${sampleName}.before.grp
 
+
 ################################################################################
 #(BSQR+)AnalyseCovariants default
 analyseCovarsDir,${projectDir}/CovariantAnalysis/
@@ -265,6 +305,7 @@ bqsrAfterGrp,${bqsrDir}${sampleName}.after.grp
 
 #analyseCovariatesPdf,${analyseCovarsDir}/${sampleName}.analysecovariates.pdf
 analyseCovariatesCsv,${analyseCovarsDir}/${sampleName}.analysecovariates.csv
+
 ################################################################################
 #haplotypecaller
 haplotyperDir,${projectDir}/haplotypeCaller/
@@ -274,26 +315,51 @@ haplotyperScatVcf,${haplotyperDir}${project}.${scatterIDs}.vcf
 haplotyperScatVcfIdx,${haplotyperScatVcf}.idx
 haplotyperVcf,${haplotyperDir}${project}.vcf
 haplotyperVcfIdx,${haplotyperVcf}.idx
+#gatkOpt=gatkDownSample1000; more lenient downsampling
+gatkDownSample1000," --maxReadsInRegionPerSample 1000 "
+################################################################################
+#freebayesMod
+freebayesDir,${projectDir}/freebayes/
+freebayesProjectBam,${projectDir}/freebayes/${project}.bam
+freebayesProjectBai,${projectDir}/freebayes/${project}.bai
+freebayesScatVcf,${freebayesDir}${project}.${scatterIDs}.vcf
+freebayesVcf,${freebayesDir}${project}.vcf
+#freebayesVcfIdx,${freebayesVcf}.idx ?
+################################################################################
+#mutect2
+mutect2Dir,${projectDir}/mutect2/
+mutect2ScatVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
+mutect2ScatVcfIdx,${mutect2ScatVcf}.idx
+mutect2SampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
+mutect2SampleVcfIdx,${mutect2Vcf}.idx
+mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
+mutect2VcfIdx,${mutect2Vcf}.idx
+################################################################################
+#variant combination (combine HG + freebayes)
+variantCombineDir,${projectDir}/combinevariants/
+combineVcf,${variantCombineDir}${project}.n_${controlSampleName}.vcf
+combineVcfIdx,${combineVcf}.idx
+
 ################################################################################
 #variant annotation
 
 annotatorDir,${projectDir}/VariantAnnotation/
 
-snpEffGatkAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+snpEffGatkAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 snpEffGatkAnnotVcfIdx,${snpEffGatkAnnotVcf}.idx
-gatkAnnotVcf,${annotatorDir}/${project}.annot.intermediate.vcf
+gatkAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.intermediate.vcf
 gatkAnnotVcfIdx,${gatkAnnotVcf}.idx
-snpEffAnnotVcf,${annotatorDir}/${project}.snpEff.intermediate.vcf
+snpEffAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEff.intermediate.vcf
 snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
 #
-#snpSiftAnnotVcf,${annotatorDir}/${project}.snpEffGatk.intermediate.vcf
+#snpSiftAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 #snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
 #
-annotVcf,${annotatorDir}/${project}.annot.vcf
+annotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.vcf
 annotVcfIdx,${annotVcf}.idx
 
 
-#custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
+#custAnnotVcf,${annotatorDir}/${project}.annot.cust.n_${controlSampleName}.vcf
 #custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
@@ -313,7 +379,7 @@ annotVcfIdx,${annotVcf}.idx
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
-custAnnotVcf,${annotatorDir}/${project}.annot.cust.${controlSampleName}.vcf
+custAnnotVcf,${annotatorDir}/${project}.annot.cust.n_${controlSampleName}.vcf
 custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
@@ -335,7 +401,7 @@ mantaConfigTypeExome,--exome
 snpeffMantaDir,${projectDir}/SnpEffManta/
 snpeffMantaVcf,${snpeffMantaDir}/${project}.${sampleName}.vcf
 snpeffMantaVcfIdx,${snpeffMantaVcf}.idx
-snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.html
+snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.csv
 #custom annotation?
 
 ################################################################################
@@ -354,7 +420,7 @@ snvVcfIdx,${snvVcf}.idx
 indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
 indelMnpVcfIdx,${indelMnpVcf}.idx
 #to be added
-svVcf,${variantFiltDir}/${project}.${controlSampleName}.sv.vcf
+svVcf,${variantFiltDir}/${project}.${sampleName}.sv.vcf
 svVcfIdx,${svVcf}.idx
 
 ################################################################################
@@ -362,22 +428,24 @@ svVcfIdx,${svVcf}.idx
 #
 tableDir,${projectDir}/tables/
 variantFields,
-variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AF -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AC -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AC -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AC -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AC -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AC -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AC -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AC -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Interpro_domain -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC -F GQ_MEAN -F GQ_STDDEV -F HRun -F IsChangeInTumor -F IsChangeInTumorGQnormal -F IsChangeInTumorGQtumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MeanDP -F MinDP -F MQ -F MQ0 -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFF_AMINO_ACID_CHANGE -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SNPEFF_CODON_CHANGE -F SNPEFF_EFFECT -F SNPEFF_EXON_ID -F SNPEFF_FUNCTIONAL_CLASS -F SNPEFF_GENE_BIOTYPE -F SNPEFF_GENE_NAME -F SNPEFF_IMPACT -F SNPEFF_TRANSCRIPT_ID -F SOR -F STR -F VariantType  -GF AD -GF DP -GF F -GF GQ -GF GT -GF MQ0 -GF Z -GF AB
+#variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AC -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AC -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AC -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AC -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AC -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AC -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AC -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC -F HRun -F IsChangeInTumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MeanDP -F MinDP -F MQ -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SOR -F STR -F VariantType  -GF AD -GF DP -GF F -GF GQ -GF GT -GF Z 
+variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Interpro_domain -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC  -F HRun -F IsChangeInTumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MQ -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SOR -F STR -F VariantType  -GF AD -GF GT
+
 #variantTable,${tableDir}/${project}.tsv
 snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
 snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
 indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
 indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
-svTable,${tableDir}/${project}.${controlSampleName}.sv.tsv
-svRawTable,${tableDir}/${project}.${controlSampleName}.sv.raw.tsv
+svTable,${tableDir}/${project}.${sampleName}.sv.tsv
+svRawTable,${tableDir}/${project}.${sampleName}.sv.raw.tsv
 
 #Minified tables (subset of the main table)
 snvMinTable,${tableDir}/${project}.${controlSampleName}.snv.min.tsv
 snvMinRawTable,${tableDir}/${project}.${controlSampleName}.snv.min.raw.tsv
 indelMnpMinTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.tsv
 indelMnpMinRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.raw.tsv
-svMinTable,${tableDir}/${project}.${controlSampleName}.sv.min.tsv
-svMinRawTable,${tableDir}/${project}.${controlSampleName}.sv.min.raw.tsv
+svMinTable,${tableDir}/${project}.${sampleName}.sv.min.tsv
+svMinRawTable,${tableDir}/${project}.${sampleName}.sv.min.raw.tsv
 
 ################################################################################
 #vcf to descriptiontable
@@ -398,8 +466,8 @@ indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
 indelMnpRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
 indelMnpDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
 
-svXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx
-svRawXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.raw.xlsx
+svXlsx,${xlsxDir}/${project}.${sampleName}.indelmnp.xlsx
+svRawXlsx,${xlsxDir}/${project}.${sampleName}.indelmnp.raw.xlsx
 svDescrXlsx,${xlsxDir}/${project}.indelmnp.description.xlsx
 
 
@@ -413,15 +481,15 @@ varscanCopycaller,${varscanCopynumberPrefix}.called
 varscanCopycallerHomdels,${varscanCopynumberPrefix}.called.homdels
 
 
-varscanInputBam,${indelRealignmentBam}
-varscanInputBai,${indelRealignmentBai}
-varscanInputBamBai,${indelRealignmentBam}
+#varscanInputBam,${indelRealignmentBam}
+#varscanInputBai,${indelRealignmentBai}
+#varscanInputBamBai,${indelRealignmentBam}
 
 #same as indelRealignmentBam,${indelRealignmentDir}${sampleName}.bam
 
-controlvarscanInputBam,${indelRealignmentDir}${controlSampleName}.bam
-controlvarscanInputBai,${indelRealignmentDir}${controlSampleName}.bai
-controlvarscanInputBamBai,${indelRealignmentDir}${controlSampleName}.bai
+controlSampleBam,${indelRealignmentDir}${controlSampleName}.bam
+controlSampleBai,${indelRealignmentDir}${controlSampleName}.bai
+controlSampleBamBai,${indelRealignmentDir}${controlSampleName}.bai
 
 #
 ################################################################################
@@ -474,6 +542,11 @@ sampleMarkdownDir,${projectDir}/md/
 sampleMarkdown,${sampleMarkdownDir}/${project}.${sampleName}.md
 
 projectMarkdown,${projectDir}/${project}.summary.Rmd
+################################################################################
+#MultiQC
+#
+multiQcHtml,${projectDir}/multiqc_report.html
+
 #
 #
 #test projectsamplesheet
