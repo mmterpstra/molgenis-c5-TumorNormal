@@ -19,6 +19,13 @@
 #string combineVcf
 #string combineVcfIdx
 
+#string gatkMod
+#string gatkOpt
+#string dbsnpVcf
+#string dbsnpVcfIdx
+#string onekgGenomeFasta
+#list bqsrBam,bqsrBai
+
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
@@ -68,18 +75,74 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
  --variant:GATK ${haplotyperVcf}.callerised.vcf \
  --variant:freebayes  ${freebayesVcf}.callerised.vcf \
  --variant:MuTect2 ${mutect2Vcf}.callerised.vcf \
- -o ${combineVcf}.tmp.vcf \
+ -o ${combineVcf}.tmp.combine.vcf \
  -genotypeMergeOptions PRIORITIZE \
  -priority GATK,freebayes,MuTect2 \
  --filteredrecordsmergetype KEEP_UNCONDITIONAL
 
+#fix genotype fields
+perl -i.bak -wpe 'if(not($_ =~ m/^#/)){ my @tnew; my @t=split("\t",$_); for my $f (@t[9..$#t]){$f =~ s!^\.$!./.! if($f =~ m/^\.$/); push(@tnew,$f);}; $_=join("\t", (@t[0..8],@tnew));}' ${combineVcf}.tmp.combine.vcf
+
+
 perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
- ${combineVcf}.tmp.vcf > ${combineVcf}
+ ${combineVcf}.tmp.combine.vcf > ${combineVcf}.tmp.selectGatk.vcf
 
-rm -v ${combineVcf}.tmp.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
+ ${combineVcf}.tmp.complex.vcf \
+ ${combineVcf}.tmp.selectGatk.vcf \
+ ${haplotyperVcf}.callerised.vcf \
+ ${freebayesVcf}.callerised.vcf \
+ ${mutect2Vcf}.callerised.vcf \
+ > ${combineVcf}.tmp.annotNoComplex.vcf
 
-perl -i.bak -wpe 'if(not($_ =~ m/^#/)){ my @tnew; my @t=split("\t",$_); for my $f (@t[9..$#t]){$f =~ s!^\.$!./.! if($f =~ m/^\.$/); push(@tnew,$f);}; $_=join("\t", (@t[0..8],@tnew));}' ${combineVcf}
+#java -jar ${EBROOTGATK}/GenomeAnalysisTK.jar \
+# -T HaplotypeCaller \
+# -R ftp.broadinstitute.org/bundle/2.8/b37/human_g1k_v37_decoy.fasta \
+# --activeRegionExtension 200 \
+# --activeRegionMaxSize 200 \
+# --genotyping_mode GENOTYPE_GIVEN_ALLELES \
+# --alleles complexmerge.vcf \
+# -o complexmerge.HCcalled.vcf \
+# --output_mode EMIT_ALL_SITES \
+# --forceActive \
+#-L complexmerge.vcf \
+#-I all.bam \
+# --standard_min_confidence_threshold_for_calling 0
 
+# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
+
+inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
+
+java -Xmx8g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+ -T HaplotypeCaller \
+ -R ${onekgGenomeFasta} \
+ --dbsnp ${dbsnpVcf}\
+ $inputs \
+ --activeRegionExtension 200 \
+ --activeRegionMaxSize 200 \
+ --genotyping_mode GENOTYPE_GIVEN_ALLELES \
+ --alleles ${combineVcf}.tmp.complex.vcf \
+ --output_mode EMIT_ALL_SITES \
+ --forceActive \
+ -stand_call_conf 0 \
+ -L ${combineVcf}.tmp.complex.vcf \
+ -o ${combineVcf}.tmp.complexHCregeno.vcf
+
+perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
+ ${combineVcf}.tmp.ReallyComplex.vcf \
+ ${combineVcf}.tmp.annotNoComplex.vcf \
+ ${combineVcf}.tmp.complexHCregeno.vcf \
+ > ${combineVcf}
+
+#fear the complex variants
+grep -vPc "^#" ${combineVcf}.tmp.ReallyComplex.vcf
+tail  ${combineVcf}.tmp.ReallyComplex.vcf
+
+mv ${combineVcf}.tmp.ReallyComplex.vcf ${combineVcf}.ReallyComplex.vcf
+mv ${combineVcf}.tmp.complex.vcf ${combineVcf}.complex.vcf
+
+rm -v ${combineVcf}.tmp.*.vcf
 
 putFile ${combineVcf}
 #putFile ${combineVcfIdx}
