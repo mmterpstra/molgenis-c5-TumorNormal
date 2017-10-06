@@ -12,6 +12,7 @@ env:
   matrix:
     - MOLGENISVERSION="v16.04.1"
     - MOLGENISVERSION="v16.08.1" 
+    - MOLGENISVERSION="v17.08.1"
 before_install:
 #note: might need cleanup here and there
 #install java
