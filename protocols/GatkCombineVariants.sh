@@ -53,17 +53,17 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
  -T VariantsToAllelicPrimitives \
  -R ${onekgGenomeFasta} \
  -V  ${freebayesVcf} \
- -o ${freebayesVcf}.allelicprimitives.vcf
+ -o ${combineVcf}.tmp.allelicprimitives.vcf
 
 perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex[;\t]/||m/TYPE=snp[;\t]/||m/TYPE=del[;\t]/||m/TYPE=ins[;\t]/||m/TYPE=mnp[;\t]/))){$_="";}' \
- ${freebayesVcf}.allelicprimitives.vcf
+ ${combineVcf}.tmp.allelicprimitives.vcf
 
-rm ${freebayesVcf}.allelicprimitives.vcf.idx
+rm ${combineVcf}.tmp.allelicprimitives.vcf.idx
 
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl freebayes ${freebayesVcf}.allelicprimitives.vcf > ${freebayesVcf}.callerised.vcf
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCcaller ${haplotyperVcf} > ${haplotyperVcf}.callerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl Freebayes ${combineVcf}.tmp.allelicprimitives.vcf > ${combineVcf}.tmp.freebayescallerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${combineVcf}.tmp.haplotypercallerised.vcf
 #did this already on a per sample base maybe overkill to do it again
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} > ${mutect2Vcf}.callerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} > ${combineVcf}.tmp.mutect2callerised.vcf
 
 
 
@@ -72,9 +72,9 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T CombineVariants \
  -R ${onekgGenomeFasta} \
- --variant:GATK ${haplotyperVcf}.callerised.vcf \
- --variant:freebayes  ${freebayesVcf}.callerised.vcf \
- --variant:MuTect2 ${mutect2Vcf}.callerised.vcf \
+ --variant:GATK ${combineVcf}.tmp.haplotypercallerised.vcf \
+ --variant:freebayes  ${combineVcf}.tmp.freebayescallerised.vcf \
+ --variant:MuTect2 ${combineVcf}.tmp.mutect2callerised.vcf \
  -o ${combineVcf}.tmp.combine.vcf \
  -genotypeMergeOptions PRIORITIZE \
  -priority GATK,freebayes,MuTect2 \
@@ -89,10 +89,10 @@ perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
 
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
  ${combineVcf}.tmp.complex.vcf \
- ${combineVcf}.tmp.selectGatk.vcf \
- ${haplotyperVcf}.callerised.vcf \
- ${freebayesVcf}.callerised.vcf \
- ${mutect2Vcf}.callerised.vcf \
+ ${combineVcf}.tmp.combine.vcf \
+ ${combineVcf}.tmp.haplotypercallerised.vcf \
+ ${combineVcf}.tmp.freebayescallerised.vcf \
+ ${combineVcf}.tmp.mutect2callerised.vcf \
  > ${combineVcf}.tmp.annotNoComplex.vcf
 
 #java -jar ${EBROOTGATK}/GenomeAnalysisTK.jar \
