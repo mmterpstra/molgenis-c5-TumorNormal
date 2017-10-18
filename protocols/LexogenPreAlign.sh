@@ -96,7 +96,7 @@ else
 	 out=${lexogenReads1FqGz} \
 	 in2=${lexogenReads2FqGz}.tmpbbduk.2.fq.gz \
 	 out2=${lexogenReads2FqGz} \
-	 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC'),GGGGGGGGGGGGGGG,AAAAAAAAAAAAAAA' \
+	 literal=$( perl -we '$_ = shift @ARGV or die "No Args";chomp; $_=reverse($_)."\n";tr/atcgnATCGN/tagcnTAGCN/; print' 'GAGAGCGATCCTTGC')',GGGGGGGGGGGGGGG,AAAAAAAAAAAAAAA' \
 	 hdist=1 \
 	 ktrim=l \
 	 rcomp=f \
