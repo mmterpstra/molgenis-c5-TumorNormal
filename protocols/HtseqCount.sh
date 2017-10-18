@@ -8,7 +8,7 @@
 #string picardMod
 #string samtoolsMod
 #string htseqMod
-
+#string htseqStranded
 #string ensemblAnnotationGtf
 #string markDuplicatesBam
 #string markDuplicatesBai
@@ -46,6 +46,8 @@ else
 	exit -1
 fi
 
+
+
 java -Xmx8g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=8 -jar $EBROOTPICARD/picard.jar SortSam \
  INPUT=${markDuplicatesBam} \
  OUTPUT=/dev/stdout \
@@ -53,7 +55,7 @@ java -Xmx8g -Djava.io.tmpdir=${htseqDir} -XX:ParallelGCThreads=8 -jar $EBROOTPIC
  SORT_ORDER=queryname \
  TMP_DIR=${htseqDir} | \
 samtools view -h -F 1024 - | \
-python $EBROOTHTSEQ/$htseqBinDir/htseq-count -m union -s no -t exon -i gene_id - ${ensemblAnnotationGtf} > ${htseqTsv}
+python $EBROOTHTSEQ/$htseqBinDir/htseq-count -m union ${htseqStranded} -t exon -i gene_id - ${ensemblAnnotationGtf} > ${htseqTsv}
 
 
 putFile ${htseqTsv}

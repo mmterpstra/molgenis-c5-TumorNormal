@@ -6,7 +6,7 @@ set -u
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
->&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList <nugeneProbebed>"
+>&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed>"
 backend="slurm"
 mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
 	###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
@@ -127,6 +127,9 @@ projectname=$3
 	elif [ $1 == "withpoly" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
 	        workflowBase="workflow_withPolymorfic.csv"
+	elif [ $1 == "lexo" ]; then
+		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen stranded 3prime mRNA-seq workflow"
+		workflowBase="workflow_lexogenrna.csv"
 	else
 	    	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
 	fi

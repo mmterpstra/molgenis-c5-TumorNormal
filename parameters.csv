@@ -150,6 +150,11 @@ nugeneProbeMetricsDeDupLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.d
 #
 fastqcCleanDir,${nugeneFastqDir}
 ################################################################################
+##Lexogen trimming
+lexogenFastqDir,${projectDir}/lexogenFastq/
+lexogenReads1FqGz,${lexogenFastqDir}/${internalId}_${sampleName}_1.fq.gz
+lexogenReads2FqGz,${lexogenFastqDir}/${internalId}_${sampleName}_2.fq.gz
+################################################################################
 ##General/bwa
 #
 nTreads,8
@@ -220,6 +225,8 @@ markDuplicatesMetrics,${markDuplicatesDir}${sampleName}.metrics.log
 #
 htseqDir,${projectDir}/htseq/
 htseqTsv,${htseqDir}${sampleName}.tsv
+htseqStranded,-s no
+htseqStrandedYes,-s yes
 #with duplicates
 htseqDupsDir,${projectDir}/htseqdups/
 htseqDupsTsv,${htseqDupsDir}${sampleName}.tsv
