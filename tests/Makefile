@@ -28,7 +28,7 @@ test-weave-nugrna:
 test-weave-exome-long:
 	bash weave_test_long.sh exome ../samplesheet.csv
 test-weave-lexo:
-        bash weave_test.sh lexo ../samplesheet.csv
+	bash weave_test.sh lexo ../samplesheet.csv
 
 	
 test-all: test-java test-perl test-bash test-python test-wfdups test-mlcompute test-weave-exome test-weave-rna test-weave-withpoly test-weave-iont test-weave-nugene test-weave-nuginc test-weave-nugrna test-weave-lexo
