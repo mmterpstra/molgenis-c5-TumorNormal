@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=10gb nodes=1 ppn=6
+#MOLGENIS walltime=23:59:00 mem=10gb nodes=1 ppn=4
 
 #string project
 
@@ -43,9 +43,9 @@ mkdir -p ${addOrReplaceGroupsDir}
 
 echo "## "$(date)" Start $0"
 
-java -Xmx8g -XX:ParallelGCThreads=6 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
+java -Xmx8g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
  INPUT=${bwaSam} \
- OUTPUT=${addOrReplaceGroupsBam} \
+ OUTPUT=/dev/stdout \
  SORT_ORDER=coordinate \
  RGID=${internalId} \
  RGLB=${sampleName}_${samplePrep} \
@@ -53,10 +53,16 @@ java -Xmx8g -XX:ParallelGCThreads=6 -jar $EBROOTPICARD/picard.jar AddOrReplaceRe
  RGPU=${seqType}_${sequencerId}_${flowcellId}_${run}_${lane}_${barcode} \
  RGSM=${sampleName} \
  RGDT=$(date --rfc-3339=date) \
- CREATE_INDEX=true \
  MAX_RECORDS_IN_RAM=4000000 \
+ TMP_DIR=${addOrReplaceGroupsDir} | 
+java -Xmx8g -XX:ParallelGCThreads=2 -Djava.io.tmpdir=${addOrReplaceGroupsDir} -jar $EBROOTPICARD/picard.jar FixMateInformation \
+ INPUT=/dev/stdin \
+ ADD_MATE_CIGAR=true \
+ IGNORE_MISSING_MATES=true \
+ ASSUME_SORTED=false \
+ CREATE_INDEX=true \
  TMP_DIR=${addOrReplaceGroupsDir} \
-
+ OUTPUT=${addOrReplaceGroupsBam}
 
 
 putFile ${addOrReplaceGroupsBam}
