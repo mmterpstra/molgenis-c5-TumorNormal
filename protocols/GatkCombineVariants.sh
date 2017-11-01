@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=4gb ppn=1
+\#MOLGENIS walltime=23:59:00 mem=4gb ppn=1
 
 #string project
 
@@ -55,8 +55,9 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
  -V  ${freebayesVcf} \
  -o ${combineVcf}.tmp.allelicprimitives.vcf
 
-perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex[;\t]/||m/TYPE=snp[;\t]/||m/TYPE=del[;\t]/||m/TYPE=ins[;\t]/||m/TYPE=mnp[;\t]/))){$_="";}' \
- ${combineVcf}.tmp.allelicprimitives.vcf
+#remove complex snps from freebayes: depeciated because larger project will combine adjecent overlapping indels/snps into one and mark them as complex. Missing variants. 
+#perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex[;\t]/||m/TYPE=snp[;\t]/||m/TYPE=del[;\t]/||m/TYPE=ins[;\t]/||m/TYPE=mnp[;\t]/))){$_="";}' \
+# ${combineVcf}.tmp.allelicprimitives.vcf
 
 rm ${combineVcf}.tmp.allelicprimitives.vcf.idx
 
@@ -84,8 +85,9 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
 perl -i.bak -wpe 'if(not($_ =~ m/^#/)){ my @tnew; my @t=split("\t",$_); for my $f (@t[9..$#t]){$f =~ s!^\.$!./.! if($f =~ m/^\.$/); push(@tnew,$f);}; $_=join("\t", (@t[0..8],@tnew));}' ${combineVcf}.tmp.combine.vcf
 
 
-perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
- ${combineVcf}.tmp.combine.vcf > ${combineVcf}.tmp.selectGatk.vcf
+cp ${combineVcf}.tmp.combine.vcf ${combineVcf}.tmp.selectGatk.vcf
+#perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
+# ${combineVcf}.tmp.combine.vcf > ${combineVcf}.tmp.selectGatk.vcf
 
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
  ${combineVcf}.tmp.complex.vcf \
@@ -142,7 +144,7 @@ tail  ${combineVcf}.tmp.ReallyComplex.vcf
 mv ${combineVcf}.tmp.ReallyComplex.vcf ${combineVcf}.ReallyComplex.vcf
 mv ${combineVcf}.tmp.complex.vcf ${combineVcf}.complex.vcf
 
-rm -v ${combineVcf}.tmp.*.vcf
+#rm -v ${combineVcf}.tmp.*.vcf
 
 putFile ${combineVcf}
 #putFile ${combineVcfIdx}
