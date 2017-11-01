@@ -1,4 +1,4 @@
-#!/bin/bash
+\#!/bin/bash
 
 set -e
 set -u
@@ -75,7 +75,7 @@ projectname=$3
 		cp $siteParam $workflowDir/.parameters.site.tmp.csv
 	        cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
 
-	elif [[ "$HOSTNAME" =~ testing-* ]] ; then
+	elif [[ "$HOSTNAME" =~ testing-* ]] || [[ "$HOSTNAME" =~ *worker-org* ]] ; then
 
 	        >&2 echo "## "$(date)" ## $0 ## Setting testing molgenis variables (2)"
 
@@ -85,6 +85,15 @@ projectname=$3
 	        cp $siteParam $workflowDir/.parameters.site.tmp.csv
 	       	cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
 
+
+	else
+		>&2 echo "## "$(date)" ## $0 ## Setting default variables, beause hostname not recognised. You can edit this script to put in your own hostname or edit existing ones."
+		
+		mlCmd="module load Molgenis-Compute"
+		runDir=/home/$USER/projects/$projectname
+		siteParam=$workflowDir/peregrine.siteconfig.csv
+		cp $siteParam $workflowDir/.parameters.site.tmp.csv
+		cp $workflowDir/parameters.csv  $workflowDir/.parameters.tmp.csv
 
 	fi
 
