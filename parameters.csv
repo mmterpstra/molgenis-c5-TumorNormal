@@ -256,6 +256,17 @@ collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
 calculateHsMetricsDir,${projectDir}/HsMetrics/
 calculateHsMetricsLog, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.log
 calculateHsMetricsPerTargetCov, ${calculateHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
+################################################################################
+##CollectHsMetrics bed files
+
+collectHsMetricsDir,${projectDir}/CollectHsMetrics/
+collectHsMetricsLog,${collectHsMetricsDir}/${sampleName}.hsmetrics.log
+collectHsMetricsPerTargetCov,${collectHsMetricsDir}/${sampleName}.hsmetrics.pertargetcov.tsv
+################################################################################
+##Gatk Depth of Coverage
+dcovDir,${projectDir}/DepthOfCoverage/
+dcovTsv,${dcovDir}/${sampleName}.dcovmetrics.tsv
+dcovRefflat,${dcovDir}/${sampleName}.dcov.refflat
 
 ################################################################################
 #Qc provided by samtools
