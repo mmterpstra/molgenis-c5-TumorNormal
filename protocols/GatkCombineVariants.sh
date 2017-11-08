@@ -1,4 +1,4 @@
-\#MOLGENIS walltime=23:59:00 mem=4gb ppn=1
+#MOLGENIS walltime=23:59:00 mem=4gb ppn=1
 
 #string project
 
@@ -10,6 +10,7 @@
 
 #string pipelineUtilMod
 #string gatkMod
+#string bcftoolsMod
 #string onekgGenomeFasta
 #string haplotyperVcf
 #string freebayesVcf
@@ -66,15 +67,19 @@ perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${com
 #did this already on a per sample base maybe overkill to do it again
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} > ${combineVcf}.tmp.mutect2callerised.vcf
 
-
+${stage} ${bcftoolsMod}
+bgzip ${combineVcf}.tmp.haplotypercallerised.vcf && bcftools norm  -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
+bgzip ${combineVcf}.tmp.freebayescallerised.vcf  && bcftools norm  -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
+#might crash because too many FORMAT fields
+#bgzip ${combineVcf}.tmp.mutect2callerised.vcf    && bcftools norm  -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
 
 #merge gatk/freebayes/mutect
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T CombineVariants \
  -R ${onekgGenomeFasta} \
- --variant:GATK ${combineVcf}.tmp.haplotypercallerised.vcf \
- --variant:freebayes  ${combineVcf}.tmp.freebayescallerised.vcf \
+ --variant:GATK ${combineVcf}.tmp.haplotypernorm.vcf \
+ --variant:freebayes  ${combineVcf}.tmp.freebayesnorm.vcf \
  --variant:MuTect2 ${combineVcf}.tmp.mutect2callerised.vcf \
  -o ${combineVcf}.tmp.combine.vcf \
  -genotypeMergeOptions PRIORITIZE \
@@ -86,6 +91,8 @@ perl -i.bak -wpe 'if(not($_ =~ m/^#/)){ my @tnew; my @t=split("\t",$_); for my $
 
 
 cp ${combineVcf}.tmp.combine.vcf ${combineVcf}.tmp.selectGatk.vcf
+
+#skip prio gatk
 #perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
 # ${combineVcf}.tmp.combine.vcf > ${combineVcf}.tmp.selectGatk.vcf
 
@@ -121,6 +128,7 @@ java -Xmx8g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf}\
  $inputs \
+ --max_alternate_alleles 9 \
  --activeRegionExtension 200 \
  --activeRegionMaxSize 200 \
  --genotyping_mode GENOTYPE_GIVEN_ALLELES \

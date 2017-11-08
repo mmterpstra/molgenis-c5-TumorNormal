@@ -63,9 +63,11 @@ if [ $(grep -vP '^#'  ${vcf}| wc -l) -ge 1 ]; then
 	 -T VariantsToTable \
 	 -R ${onekgGenomeFasta} \
 	 -V ${vcf} \
-	 -AMD \
 	 -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
 	 -o ${variantTable}
+	#Depreciated in gatk 3.8
+        #-AMD \
+
 else
 	touch ${variantTable}
 	touch ${variantRawTable}

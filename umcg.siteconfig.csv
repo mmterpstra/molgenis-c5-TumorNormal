@@ -20,10 +20,11 @@ picardOldMod,picard/1.140-foss-2015b-Java-1.8.0_45
 RMod,R/3.2.2-foss-2015b-bioconductor
 #gatkMod,GATK/3.5-foss-2015b-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
-gatkMod,GATK/3.7-0-foss-2015b-Java-1.8.0_74
+gatkMod,GATK/3.8-0-foss-2015b-Java-1.8.0_74
 snpEffMod,snpEff/4.1g-Java-1.7.0_80
 varScanMod,VarScan/2.4.3-Java-1.7.0_80
 samtoolsMod,SAMtools/1.3.1-foss-2015b
+bcftoolsMod,BCFtools/1.6-foss-2015b
 vcfToolsMod,VCFtools/0.1.12b-foss-2015b-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util/0.5.9-foss-2015b-Perl-5.20.2-bare
 #pipelineUtilMod,pipeline-util/0.2.2-foss-2016a-Perl-5.20.2-bare
