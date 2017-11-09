@@ -54,7 +54,6 @@ if [ $(grep -vP '^#'  ${vcf}| wc -l) -ge 1 ]; then
 	 -T VariantsToTable \
 	 -R ${onekgGenomeFasta} \
 	 -V ${vcf} \
-	 -AMD \
 	 -raw \
 	 -F CHROM -F POS -F REF -F ALT -F ID -F QUAL -F FILTER $fields \
 	 -o ${variantRawTable}
