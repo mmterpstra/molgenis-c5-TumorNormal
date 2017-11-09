@@ -99,8 +99,8 @@ cp ${combineVcf}.tmp.combine.vcf ${combineVcf}.tmp.selectGatk.vcf
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
  ${combineVcf}.tmp.complex.vcf \
  ${combineVcf}.tmp.combine.vcf \
- ${combineVcf}.tmp.haplotypercallerised.vcf \
- ${combineVcf}.tmp.freebayescallerised.vcf \
+ ${combineVcf}.tmp.haplotypernorm.vcf \
+ ${combineVcf}.tmp.freebayesnorm.vcf \
  ${combineVcf}.tmp.mutect2callerised.vcf \
  > ${combineVcf}.tmp.annotNoComplex.vcf
 
