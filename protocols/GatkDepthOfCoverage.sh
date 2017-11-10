@@ -81,6 +81,6 @@ java -Xmx6g -Djava.io.tmpdir="${dcovDir}"  -XX:+UseConcMarkSweepGC  -XX:Parallel
 
 
 
-putFile ${dcovTsv}
+putFile ${dcovTsv}.sample_interval_summary
 
 echo "## "$(date)" ##  $0 Done "
