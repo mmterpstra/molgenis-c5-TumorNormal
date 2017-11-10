@@ -19,8 +19,7 @@
 #string dbsnpVcfIdx
 
 #string bqsrDir
-#string bqsrBam
-#string bqsrBai
+#list bqsrBam,bqsrBai
 #string targetsList
 #string dcovDir
 #string dcovTsv
@@ -35,8 +34,10 @@ alloutputsexist \
  ${dcovTsv}
 
 getFile ${onekgGenomeFasta}
-getFile ${bqsrBam}
-getFile ${bqsrBai}
+for file in "${bqsrBam[@]}" "${bqsrBai[@]}" "${dbsnpVcf}" "${dbsnpVcfIdx}" "${onekgGenomeFasta}"; do
+	echo "getFile file='$file'"
+	getFile $file
+done
 
 ${stage} ${gatkMod}
 ${checkStage}
@@ -45,6 +46,10 @@ set -x
 set -e
 
 mkdir -p ${dcovDir}
+#input files
+# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
+inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
 #do bqsr for covariable determination then do print reads for valid bsqrbams
 #check the bqsr part and add known variants
@@ -56,13 +61,24 @@ java -Xmx6g -Djava.io.tmpdir="${dcovDir}"  -XX:+UseConcMarkSweepGC  -XX:Parallel
  -T DepthOfCoverage \
  --omitDepthOutputAtEachBase \
  --countType COUNT_FRAGMENTS \
- --calculateCoverageOverGenes "${dcovTsv}" \
- --outputFormat 'tsv' \
+ --calculateCoverageOverGenes "${dcovRefflat}" \
+ --outputFormat 'table' \
  --includeRefNSites \
  --printBaseCounts \
- -I "${bqsrBam}" \
+ $inputs \
  --out "${dcovTsv}" \
- -L "${targetsList}"
+ -L "${targetsList}" \
+ --summaryCoverageThreshold 10 \
+ --summaryCoverageThreshold 20 \
+ --summaryCoverageThreshold 50 \
+ --summaryCoverageThreshold 100 \
+ --summaryCoverageThreshold 200 \
+ --summaryCoverageThreshold 500 \
+ --summaryCoverageThreshold 1000 \
+ --summaryCoverageThreshold 2000 \
+ --summaryCoverageThreshold 5000 \
+ --summaryCoverageThreshold 10000 \
+
 
 
 putFile ${dcovTsv}
