@@ -45,8 +45,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --variant:vcf ${custAnnotVcf} \
  -o ${indelMnpRawVcf} \
  -L:VCF ${custAnnotVcf} \
- -selectType INDEL \
- -selectType MNP \
+ --selectTypeToExclude SNP 
 
 java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
