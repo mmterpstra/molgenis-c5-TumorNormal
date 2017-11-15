@@ -6,7 +6,7 @@
 
 #string stage
 #string checkStage
-#string picardOldMod
+#string picardMod
 #string RMod
 #string onekgGenomeFasta
 #string markDuplicatesBam

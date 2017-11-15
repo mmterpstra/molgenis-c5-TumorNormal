@@ -48,6 +48,8 @@ if [ ! -e ${indelRealignmentDir} ]; then
 	mkdir -p ${indelRealignmentDir}
 fi
 
+mkdir -p "${contEstDir}"
+
 if [ ! "${indelRealignmentBam}" == "${controlSampleBam}" ] ;then
 
 	java -Xmx8g -Djava.io.tmpdir=${contEstDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
