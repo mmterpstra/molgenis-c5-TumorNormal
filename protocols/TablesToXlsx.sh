@@ -49,7 +49,7 @@ for inTable in "${indelMnpTable[@]}" "${indelMnpRawTable[@]}" "${indelMnpMinTabl
 		echo "getFile file='$inTable'"
 		getFile $inTable
 		#just guess the output...
-		perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t $inTable
+		perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t $inTable
 		xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 		mv -v $xlsx ${xlsxDir}
 		putFile ${xlsxDir}/$(basename $xlsx)

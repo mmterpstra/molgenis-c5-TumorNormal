@@ -35,10 +35,8 @@ set -x -e -o pipefail
 
 mkdir -p ${nugeneProbeMetricsDir}
 
-#do bqsr for covariable determination then do print reads for valid bsqrbams
-#check the bqsr part and add known variants
-
-echo -e "chr\tstart\tend\tname\tscore\tstrand\tcount\tNotZeroCoverage\tLength\tpctNotZeroCoverage" > ${nugeneProbeMetricsLog}.counts300bp.dedup.log
+NUGLOG="${nugeneProbeMetricsLog}.counts300bp.dedup.log"
+echo -e "chr\tstart\tend\tname\tscore\tstrand\tcount\tNotZeroCoverage\tLength\tpctNotZeroCoverage" > "${NUGLOG}"
 
 bedtools coverage \
  -S \
@@ -48,9 +46,10 @@ bedtools coverage \
 		 -l 0 -r 300 -s \
 		 -g <(cut -f1,2 ${onekgGenomeFasta}.fai))) \
   -b <(samtools view -Sb -F 1024 -q 20 ${indelRealignmentBam}) \
- >> ${nugeneProbeMetricsLog}.counts300bp.nodup.log
+ >> "${NUGLOG}"
 
-echo -e "chr\tstart\tend\tname\tscore\tstrand\tcount\tNotZeroCoverage\tLength\tpctNotZeroCoverage" > ${nugeneProbeMetricsLog}.counts300bp.log
+NUGLOG="${nugeneProbeMetricsLog}.counts300bp.log"
+echo -e "chr\tstart\tend\tname\tscore\tstrand\tcount\tNotZeroCoverage\tLength\tpctNotZeroCoverage" > "${NUGLOG}"
 
 bedtools coverage \
  -S \
@@ -60,7 +59,7 @@ bedtools coverage \
                  -l 0 -r 300 -s \
                  -g <(cut -f1,2 ${onekgGenomeFasta}.fai))) \
  -b <(samtools view -Sb -q 20 ${indelRealignmentBam}) \
- >> ${nugeneProbeMetricsLog}.counts300bp.dup.log
+ >> "${NUGLOG}"
 
 
 # bedtools coverage -S -abam <(samtools view -Sb -F 1024 -q 20 /scratch/umcg-mterpstra/projects/NugeneInc2_Ferronika_10aug2017/indelRealignment/NUG_R5A3_500ng.bam) -b  <(bedtools sort -i <(bedtools flank -i <(bedtools sort -i /data/umcg-mterpstra/apps/data/resources/probeSeq_RDonly_ET1262F_2_182.bed) -l 0 -r 300 -s -g <(cut -f1,2 /data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/2.8/b37/human_g1k_v37_decoy.fasta.fai)))
