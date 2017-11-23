@@ -53,7 +53,8 @@ java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectHsMetri
  METRIC_ACCUMULATION_LEVEL=ALL_READS \
  TMP_DIR=${collectHsMetricsDir}
 
-rm ${calculateHsMetricsLog} -v
+#Just to be sure it does not complain
+rm ${collectHsMetricsLog} -v
 
 java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectHsMetrics\
  I=${markDuplicatesBam} \
