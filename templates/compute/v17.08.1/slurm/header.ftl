@@ -112,6 +112,88 @@ trap 'errorExitAndCleanUp TERM NA $?' TERM
 trap 'errorExitAndCleanUp EXIT NA $?' EXIT
 trap 'errorExitAndCleanUp ERR  $LINENO $?' ERR
 
+function makeTmpDir {
+        base=$(basename $1)
+        dir=$(dirname $1)
+        echo "dir $dir"
+        echo "base $base"
+        if [[ -d $1 ]]
+        then
+            	dir=$dir/$base
+        fi
+	myMD5=$(md5sum $0)
+        IFS=' ' read -a myMD5array <<< "$myMD5"
+        MC_tmpFolder=$dir/tmp_${taskId}_$myMD5array/
+        mkdir -p $MC_tmpFolder
+        if [[ -d $1 ]]
+        then
+            	MC_tmpFile="$MC_tmpFolder"
+        else
+            	MC_tmpFile="$MC_tmpFolder/$base"
+        fi
+}
+
+<#noparse>
+
+getFile()
+{
+        ARGS=($@)
+        NUMBER="${#ARGS[@]}";
+        if [ "$NUMBER" -eq "1" ]
+        then
+                myFile=${ARGS[0]}
+
+                if test ! -e $myFile;
+                then
+                                echo "WARNING in getFile/putFile: $myFile is missing" 1>&2
+                fi
+
+        else
+                echo "Example usage: getData \"\$TMPDIR/datadir/myfile.txt\""
+        fi
+}
+
+putFile()
+{
+        `getFile $@`
+	touch -- "$@".done
+}
+
+alloutputsexist()
+{
+  all_exist=true
+  for name in $@
+  do
+    if [ ! -e $name ]|| [ ! -e $name.done ];
+    then
+        all_exist=false
+        if [ -e $name ];then
+            rm -r -v -- "${name}";
+	fi
+	if [ -e $name.done ];then
+            rm -r -v -- "${name}.done";
+        fi
+
+    fi
+  done
+  if $all_exist;
+  then
+      echo "skipped"
+      echo "skipped" >&2
+      touch "${taskId}.env"
+      chmod u+rx "${taskId}.env"
+      chmod go+rX "${taskId}.env"
+
+      mv "${taskId}.sh.started" "${taskId}.sh.finished"
+      sleep 20s
+      exit 0;
+
+  else
+      return 0;
+  fi
+}
+
+
 touch ${MC_jobScript}.started
 
 </#noparse>
@@ -120,4 +202,5 @@ touch ${MC_jobScript}.started
 # When dealing with timing / synchronization issues of large parallel file systems,
 # you can uncomment the sleep statement below to allow for flushing of IO buffers/caches.
 #
-#sleep 10
+sleep 4
+

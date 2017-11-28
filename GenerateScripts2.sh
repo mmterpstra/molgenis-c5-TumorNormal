@@ -8,7 +8,12 @@ SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
 >&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed>"
 backend="slurm"
-mlCmd='module load Molgenis-Compute/v16.04.1-Java-1.8.0_74'
+
+javaver="1.8.0_74"
+computever="v16.04.1"
+#computever="v17.08.1"
+
+mlCmd="module load Molgenis-Compute/${computever}-Java-${javaver}"
 	###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
 
 
@@ -189,7 +194,7 @@ projectname=$3
 	cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet .csv).input.csv
 	cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv
 	#echo "$SCRIPTCALL" >>
-	molgenisBase=$workflowDir/templates/compute/v15.04.1/$backend/
+	molgenisBase=$workflowDir/templates/compute/${computever}/$backend/
 	
 	#git info tracking
 	>&2 echo "## "$(date)" ## $0 ## Generation info"

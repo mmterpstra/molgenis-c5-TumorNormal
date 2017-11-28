@@ -103,10 +103,10 @@ alloutputsexist()
   then
       echo "skipped"
       echo "skipped" >&2
-      touch "${taskId}.env"
-      chmod u+rx "${taskId}.env"
-      chmod go+rX "${taskId}.env"
-      mv "${taskId}.sh.started" "${taskId}.sh.finished"
+      touch ${taskId}.env
+      chmod u+rx ${taskId}.env
+      chmod go+rX ${taskId}.env
+      touch ${taskId}.sh.finished
       sleep 20s
       exit 0;
 
