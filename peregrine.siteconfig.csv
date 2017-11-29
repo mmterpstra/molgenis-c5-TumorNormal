@@ -7,7 +7,7 @@ group,umcg-gcc
 user,umcg-mterpstra
 data,/data/${user}/apps/data/
 projectDir,/scratch/${user}/projects/${project}/
-
+logsDir,/data/umcg-mterpstra/umcg-oncogenetics/git/molgenis-c5-TumorNormal/log/
 ################################################################################
 ##module parameters
 #

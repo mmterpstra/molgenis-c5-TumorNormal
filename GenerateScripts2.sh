@@ -10,8 +10,8 @@ SCRIPTCALL="$0 $@"
 backend="slurm"
 
 javaver="1.8.0_74"
-computever="v16.04.1"
-#computever="v17.08.1"
+#computever="v16.04.1"
+computever="v17.08.1"
 
 mlCmd="module load Molgenis-Compute/${computever}-Java-${javaver}"
 	###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45

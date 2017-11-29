@@ -1,3 +1,3 @@
-internalId,project,sampleName,samplePrep,sequencer,seqType,sequencerId,flowcellId,run,lane,barcode,reads1FqGz,reads2FqGz,controlSampleName,reads3FqGz
-1,projectNameHere,samplePE,000001,illumina,hiseq2500,SN163,BD0WDYACXX,0474,5,ACTGAT,/data/umcg-mterpstra/umcg-oncogenetics/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,/data/umcg-mterpstra/umcg-oncogenetics/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_2.fq.gz,sampleSE,
-2,projectNameHere,sampleSE,000002,illumina,hiseq2500,SN163,BD0WDYACXX,0474,6,NNNNNN,/data/umcg-mterpstra/umcg-oncogenetics/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,,samplePE,
+sequencingStartDate,internalId,project,sampleName,samplePrep,sequencer,seqType,sequencerId,flowcellId,run,lane,barcode,reads1FqGz,reads2FqGz,controlSampleName,reads3FqGz
+now,1,projectNameHere,samplePE,000001,illumina,hiseq2500,SN163,BD0WDYACXX,0474,5,ACTGAT,/data/umcg-mterpstra/umcg-oncogenetics/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,/data/umcg-mterpstra/umcg-oncogenetics/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_2.fq.gz,sampleSE,
+now,2,projectNameHere,sampleSE,000002,illumina,hiseq2500,SN163,BD0WDYACXX,0474,6,NNNNNN,/data/umcg-mterpstra/umcg-oncogenetics/raw/testing/head_40000_120830_SN163_0474_BD0WDYACXX_L5_ACTGAT_1.fq.gz,,samplePE,

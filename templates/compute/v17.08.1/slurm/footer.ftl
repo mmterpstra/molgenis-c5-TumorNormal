@@ -1,5 +1,5 @@
 
-<#noparse>
+#<#noparse>
 
 if [ -d ${MC_tmpFolder:-} ]; then
 	echo -n "INFO: Removing MC_tmpFolder ${MC_tmpFolder} ..."
@@ -20,7 +20,7 @@ sync
 
 mv "${MC_jobScript}.started" "${MC_jobScript}.finished"
 
-</#noparse>
+#</#noparse>
 
 trap - EXIT
 exit 0

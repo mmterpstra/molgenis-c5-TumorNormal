@@ -1,5 +1,5 @@
-<#noparse>#!/bin/bash
-
+#!/bin/bash
+#<#noparse>
 #
 # Bash sanity.
 #
@@ -121,18 +121,10 @@ echo -n "INFO: Changing working directory to ${MC_scriptsDir}... "
 cd "${MC_scriptsDir}"
 echo 'done.'
 
-#
-# Only for UMCG groups on UMCG clusters.
-# scriptsDir is:
-#	/groups/umcg-${group}/tmp*/projects/${project}/run*/jobs/
-# Central location for log files for all projects of a group is:
-#	/groups/umcg-${group}/tmp*/logs/
-# (Cannot get this from a parameters file; vars are not available in the submit template.)
-#
 project=$(basename $(dirname $(cd ../ && pwd)))
 baseDir=$(dirname $(cd ../../../ && pwd))
-logsDir="${baseDir}/logs"
-MC_failedFile="${logsDir}/${project}.pipeline.failed"
+#logsDir="${baseDir}/logs"
+MC_failedFile="${project}.pipeline.failed"
 
 if [ -f "${MC_failedFile}" ]; then
 	rm "${MC_failedFile}"
@@ -153,36 +145,29 @@ chmod g+w ${MC_submittedJobIDs}>>${MC_submittedJobIDs}
 
 touch molgenis.submit.started
 
-</#noparse>
+#Now the code below is readable in the place i want to edit it
 
-<#foreach t in tasks>
-#
+#</#noparse>
+#<#foreach t in tasks>
 ##${t.name}
 #
-
-#
-# Build dependency string.
-#
-MC_jobDependenciesExist=false
-MC_jobDependencies='--dependency=afterok'
-<#foreach d in t.previousTasks>
-	if [[ -n "$${d}" ]]; then
-		MC_jobDependenciesExist=true
-		MC_jobDependencies+=":$${d}"
+	# Build dependency string.
+	MC_jobDependenciesExist=false
+	MC_jobDependencies='--dependency=afterok';#<#foreach d in t.previousTasks>
+		if [[ -n "$${d}" ]]; then
+			MC_jobDependenciesExist=true
+			MC_jobDependencies+=":$${d}"
+		fi;#</#foreach><#noparse>
+	if ! ${MC_jobDependenciesExist}; then
+		MC_jobDependencies=''
 	fi
-</#foreach>
-<#noparse>
-if ! ${MC_jobDependenciesExist}; then
-	MC_jobDependencies=''
-fi
-</#noparse>
+	tname="";#</#noparse>
+	# ^workaround for parsing of freemarker template
 
-#
-# Process job: either skip if job previously finished successfully or submit job to batch scheduler.
-#
-processJob "${t.name}" <#noparse>"${MC_submitOptions}" "${MC_jobDependencies}"</#noparse>
-${t.name}=<#noparse>"${MC_jobID}"</#noparse>
-
-</#foreach>
+        # Process job:if job previously finished successfully skip or submit job to batch scheduler.
+	tname="${t.name}";#<#noparse>
+	processJob "${tname}" "${MC_submitOptions}" "${MC_jobDependencies}"
+	read ${tname} <<<"${MC_jobID}";#</#noparse>
+#</#foreach>
 
 mv molgenis.submit.{started,finished}

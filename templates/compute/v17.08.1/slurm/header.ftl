@@ -25,12 +25,11 @@ declare MC_jobScriptSTDOUT="${taskId}.out"
 # File to indicate failure of a complete workflow in
 # a central location for log files for all projects.
 #
+#
 
-logsDirectory="${logsDir}/${project}/"
-
-<#noparse>
+#<#noparse>
 runName=$(basename $(cd ../ && pwd ))
-MC_failedFile="${logsDirectory}/${runName}.pipeline.failed"
+MC_failedFile="${runName}.pipeline.failed"
 
 declare MC_singleSeperatorLine=$(head -c 120 /dev/zero | tr '\0' '-')
 declare MC_doubleSeperatorLine=$(head -c 120 /dev/zero | tr '\0' '=')
@@ -133,7 +132,7 @@ function makeTmpDir {
         fi
 }
 
-<#noparse>
+#<#noparse>
 
 getFile()
 {
@@ -196,7 +195,7 @@ alloutputsexist()
 
 touch ${MC_jobScript}.started
 
-</#noparse>
+#</#noparse>
 
 #
 # When dealing with timing / synchronization issues of large parallel file systems,
