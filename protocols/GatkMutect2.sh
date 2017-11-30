@@ -93,7 +93,8 @@ java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:Paralle
 
 sampleNameClean=$(echo "${sampleName}" | perl -wpe 'chomp;$_=uc;s/\W/_/g;')
 
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2_t_$sampleNameClean ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}
+#this should be better than callerise is this case
+perl $EBROOTPIPELINEMINUTIL/bin/MutectAnnotationsToSampleFormat.pl TLOD,NLOD,MIN_ED,MAX_ED,ECNT,HCNT ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}
 
 
 
