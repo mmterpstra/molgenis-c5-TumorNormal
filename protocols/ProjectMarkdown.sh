@@ -10,6 +10,7 @@
 
 #list sampleMarkdown
 #string projectMarkdown
+#string dcovTsv
 
 alloutputsexist \
  ${projectMarkdown} \
@@ -133,6 +134,19 @@ done
 	else
 		echo "No Duplicate metrics found."
 	fi
+) >>  ${projectMarkdown}
+
+#gatkDepthOfCoverage
+#dcovTsv}".sample_summary
+(
+        echo
+	echo "## Depth of Coverage Metrics"
+        echo
+	echo "Result table below for inspection at different coverages. Similar to Hybrid selection metrics."
+	echo
+	
+	grep -v 'Total' "${dcovTsv}".sample_summary | perl -wpe 's/^/| /;s/$/\t |/;s/\t/\t | /g; if($. == 1){print; s/[^\s|]/-/g;}'
+
 ) >>  ${projectMarkdown}
 
 #pemetrics?
