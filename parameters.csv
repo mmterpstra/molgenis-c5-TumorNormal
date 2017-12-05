@@ -145,6 +145,12 @@ nugeneProbeMetricsDir,${projectDir}/nugeneProbeMetrics/
 nugeneProbeMetricsLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.tsv
 nugeneProbeMetricsDeDupLog,${nugeneProbeMetricsDir}/${sampleName}.probemetrics.dedup.tsv
 
+nugeneCNRProbesTable,${tableDir}/${project}.nugeneCNRprobes.merged.tsv
+nugeneDedupCNRProbesTable,${tableDir}/${project}.nugeneDedupCNRprobes.merged.tsv
+
+nugeneCNRProbesXlsx,${xlsxDir}/${project}.nugeneCNRprobes.merged.xlsx
+nugeneDedupCNRProbesXlsx,${xlsxDir}/${project}.nugeneDedupCNRprobes.merged.xlsx
+
 ##################################
 ##remappable name for sample md generation
 #
