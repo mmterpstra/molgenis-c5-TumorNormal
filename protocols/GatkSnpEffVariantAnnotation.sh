@@ -253,9 +253,8 @@ java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar \
  ${snpEffAnnotVcf} \
  1>${annotVcf}.snpsift.vcf \
  
-grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));'| sort -k1,1g -k2,3n >  ${annotVcf}.targets.bed
+grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));'| sort -k1,1V -k2,3n| bgzip >  ${annotVcf}.targets.bed.gz
 
-bgzip ${annotVcf}.targets.bed
 tabix -p bed ${annotVcf}.targets.bed.gz
 
 #new format

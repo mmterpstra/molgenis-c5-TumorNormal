@@ -38,12 +38,32 @@ alloutputsexist \
 set -x
 set -e
 
-mkdir -p ${xlsxDir}
 
-for inTable in "${indelMnpTable[@]}" "${indelMnpRawTable[@]}" "${indelMnpMinTable[@]}" "${indelMnpMinRawTable[@]}"\
-               "${snvTable[@]}" "${snvRawTable[@]}" "${snvMinTable[@]}" "${snvMinRawTable[@]}" \
-               "${svTable[@]}" "${svRawTable[@]}" "${svMinTable[@]}" "${svMinRawTable[@]}" \
-               "${snvDescrTable}" "${indelMnpDescrTable}"  "${svDescrTable}"; do
+mkdir -p "${xlsxDir}"
+export TMPDIR="${xlsxDir}/tmp/"
+mkdir -p "${xlsxDir}/tmp/"
+
+#for memory issues first export the min and small tables to xlsx
+for inMinTable in  "${indelMnpMinTable[@]}" "${indelMnpMinRawTable[@]}" \
+		 "${snvMinTable[@]}" "${snvMinRawTable[@]}" "${svMinTable[@]}" \
+		 "${svMinRawTable[@]}" "${snvDescrTable}" "${indelMnpDescrTable}" \
+		 "${svDescrTable}";; do 
+	if [ -f $inMinTable ]; then
+                echo "getFile file='$inMinTable'"
+                getFile $inMinTable
+                #just guess the output...
+                perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t $inMinTable
+                xlsx=$(echo $inMinTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
+                mv -v $xlsx ${xlsxDir}
+                putFile ${xlsxDir}/$(basename $xlsx)
+        fi
+
+done
+
+
+for inTable in "${indelMnpTable[@]}" "${indelMnpRawTable[@]}" \
+		 "${snvTable[@]}" "${snvRawTable[@]}" \
+		 "${svTable[@]}" "${svRawTable[@]}"; do
 
 	if [ -f $inTable ]; then
 		echo "getFile file='$inTable'"

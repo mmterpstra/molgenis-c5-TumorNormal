@@ -10,6 +10,7 @@
 
 #string picardMod
 #string freebayesMod
+#string pipelineUtilMod
 #string onekgGenomeFasta
 ##list bqsrBam,bqsrBai
 #string freebayesProjectBam
@@ -31,6 +32,8 @@ done
 
 #Load gatk module
 ${stage} ${freebayesMod}
+${stage} ${pipelineUtilMod}
+
 ${checkStage}
 
 set -x -e -o pipefail
@@ -73,10 +76,14 @@ freebayes \
  --min-mapping-quality 20 \
  --pooled-continuous \
  --strict-vcf \
- --vcf ${freebayesScatVcf} \
+ --vcf /dev/stdout \
  $InterValOperand \
  -b ${freebayesProjectBam} \
- --use-best-n-alleles 0\
+ --use-best-n-alleles 0 | \
+FilterFreeBayes.pl \
+ 0.1 \
+ /dev/stdin > \
+ ${freebayesScatVcf}
 
 # -dontUseSoftClippedBases \
 
