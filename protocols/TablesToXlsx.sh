@@ -47,7 +47,7 @@ mkdir -p "${xlsxDir}/tmp/"
 for inMinTable in  "${indelMnpMinTable[@]}" "${indelMnpMinRawTable[@]}" \
 		 "${snvMinTable[@]}" "${snvMinRawTable[@]}" "${svMinTable[@]}" \
 		 "${svMinRawTable[@]}" "${snvDescrTable}" "${indelMnpDescrTable}" \
-		 "${svDescrTable}";; do 
+		 "${svDescrTable}"; do 
 	if [ -f $inMinTable ]; then
                 echo "getFile file='$inMinTable'"
                 getFile $inMinTable
