@@ -530,6 +530,13 @@ scriptDir,/gcc/tools/scripts/
 #gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
 
 ################################################################################
+#CnvKit/lib
+
+cnvDir,${projectDir}/cnv.${controlSampleName}/
+cnvTargetBed,${cnvDir}/targets.bed
+controlSampleTargetcoverageCnn,${cnvDir}/${controlSampleName}.targetcoverage.cnn
+
+################################################################################
 #Misc
 snvWithPolymorficVcf,${variantFiltDir}/${project}.${controlSampleName}.withpoly.snv.vcf
 snvWithPolymorficVcfIdx,${snvWithPolymorficVcf}.idx

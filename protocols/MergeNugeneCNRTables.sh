@@ -19,8 +19,13 @@
 #string nugeneDedupCNRProbesXlsx
 
 alloutputsexist \
-"${htseqTable}" \
-"${htseqXlsx}"
+"${nugeneCNRProbesTable}" \
+"${nugeneCNRProbesXlsx}" \
+"${nugeneCNRProbesXlsx}"".probecounts.xlsx" \
+"${nugeneDedupCNRProbesTable}" \
+"${nugeneDedupCNRProbesXlsx}" \
+"${nugeneDedupCNRProbesXlsx}"".probecounts.xlsx" \
+
 
 echo "## "$(date)" ##  $0 Started "
 
