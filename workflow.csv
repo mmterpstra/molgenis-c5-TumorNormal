@@ -53,6 +53,7 @@ SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvV
 TablesToXlsx,protocols/TablesToXlsx.sh,SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToTable;IndelVariantsToDescriptionTable
 Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
+CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MarkDuplicates

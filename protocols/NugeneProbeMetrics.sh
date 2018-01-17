@@ -8,6 +8,7 @@
 #string checkStage
 #string bedtoolsMod
 #string samtoolsMod
+#string pipelineUtilMod
 
 #string probeBed
 #string onekgGenomeFasta
@@ -27,6 +28,7 @@ getFile ${probeBed}
 getFile ${indelRealignmentBam}
 getFile ${indelRealignmentBai}
 
+${stage} ${pipelineUtilMod}
 ${stage} ${bedtoolsMod}
 ${stage} ${samtoolsMod}
 ${checkStage}
@@ -112,6 +114,8 @@ cat - \
                  -g <(cut -f1,2 ${onekgGenomeFasta}.fai))) | \
 sort | \
 uniq -c  > ${nugeneProbeMetricsDeDupLog}
+
+samtools view -F 1024   ${indelRealignmentBam} | CollectNugeneLandingProbeMetrics.pl > ${nugeneProbeMetricsDeDupLog}.probecounts.log
 
 putFile ${nugeneProbeMetricsLog} 
 putFile ${nugeneProbeMetricsDeDupLog}

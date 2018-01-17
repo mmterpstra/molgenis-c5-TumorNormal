@@ -59,10 +59,10 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --variant:VCF ${snvRawVcf} \
  -o ${snvVcf} \
  --filterExpression "QUAL < 20" --filterName "LowQual" \
- --filterExpression "MQ < 20.0" --filterName "MQlt40" \
+ --filterExpression "vc.hasAttribute('MQ') && (vc.getAttribute('MQ').contains('nan') || MQ < 20.0)" --filterName "MQlt40" \
  --filterExpression "vc.hasAttribute('MQRankSum') && MQRankSum < -12.5" --filterName "MQRankSumlt-12_5" \
  --filterExpression "vc.hasAttribute('ReadPosRankSum') && ReadPosRankSum < -20.0" --filterName "ReadPosRankSumlt-20" \
- --filterExpression "FS > 60.0" --filterName "FSgt60" \
+ --filterExpression "vc.hasAttribute('FS') && FS > 60.0" --filterName "FSgt60" \
  --filterExpression "vc.hasAttribute('RPA') &&(vc.getAttribute('RPA').0 > 8||vc.getAttribute('RPA').1 > 8||vc.getAttribute('RPA').2 > 8)" --filterName "RPAgt8" \
  --filterExpression "vc.hasAttribute('TeMeermanAlleleBias') && TeMeermanAlleleBias > 5.0" --filterName "TeMeermanAlleleBiasgt5"\
  --filterExpression "!( vc.hasAttribute('IsChangeInTumor'))" --filterName "NotPolymorfic" \
@@ -73,7 +73,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantFiltDir} \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AFR_AF') && (vc.getAttribute('1000gPhase1Snps.AFR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AFR_AF') < 0.98))" --filterName "1000gAFRMAFgt0.02" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.AMR_AF') && (vc.getAttribute('1000gPhase1Snps.AMR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AMR_AF') < 0.98))" --filterName "1000gAMRMAFgt0.02" \
  --filterExpression "(vc.hasAttribute('1000gPhase1Snps.ASN_AF') && (vc.getAttribute('1000gPhase1Snps.ASN_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.ASN_AF') < 0.98))" --filterName "1000gASNMAFgt0.02" \
- --filterExpression "QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8"
+ --filterExpression "vc.hasAttribute('QD') && QD < 2.0 && vc.hasAttribute('AF') && QD / AF < 8.0"  --filterName "QDlt2andQdbyAflt8"
 
 putFile ${snvVcf}
 putFile ${snvVcfIdx}

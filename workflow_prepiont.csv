@@ -1,4 +1,5 @@
 step,protocol,dependencies
 IontBamToFastq,protocols/IontBamToFastq.sh,
 FastqToTmp,protocols/FastqToTmp.sh,IontBamToFastq
-GenerateCluster,protocols/GenerateCluster.sh,FastqToTmp
+FilterWorkflow,protocols/FilterWorkflow.sh,IontBamToFastq
+GenerateCluster,protocols/GenerateCluster.sh,FastqToTmp;FilterWorkflow

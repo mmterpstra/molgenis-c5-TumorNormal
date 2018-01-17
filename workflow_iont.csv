@@ -21,6 +21,7 @@ Freebayes,protocols/Freebayes.sh,MergeBamFilesFreebayes;CreatePaddedTargets
 MergeFreeBayesVariants,protocols/MergeVcfs.sh,Freebayes;haplotyperScatVcf=freebayesScatVcf;haplotyperVcf=freebayesVcf
 HaplotypeCaller,protocols/GatkHaplotypeCaller.sh,IndelRealignmentKnown;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai;gatkOpt=gatkDownSampleNone;CreatePaddedTargets
 MergeVariants,protocols/MergeVcfs.sh,HaplotypeCaller
+CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai;
 ContEst,protocols/GatkContEst.sh,IndelRealignmentKnown
 Mutect2,protocols/GatkMutect2.sh,IndelRealignmentKnown
 #Mutect2,protocols/GatkMutect2.sh,ContEst;IndelRealignmentKnown

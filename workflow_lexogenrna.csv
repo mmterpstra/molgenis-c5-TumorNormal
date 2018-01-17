@@ -38,10 +38,11 @@ SNVVariantsToMinTable,protocols/GatkVariantsToTable.sh,SelectSNV;vcf=snvVcf;vari
 IndelVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectIndels;vcf=indelMnpVcf;descrTable=indelMnpDescrTable
 SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvVcf;descrTable=snvDescrTable
 TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToDescriptionTable
+CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;IndelRealignmentKnown;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai
 Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
-SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam
+SamQC,protocols/SamQc.sh,MergeBamFiles;MarkDuplicates
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller
