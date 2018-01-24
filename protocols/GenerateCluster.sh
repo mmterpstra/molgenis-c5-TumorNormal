@@ -20,9 +20,9 @@ echo "## "$(date)" ##  $0 Started "
 
 cd /groups/umcg-oncogenetics/prm02/data/git/molgenis-c5-TumorNormal
 if [ ${#targetsList} -eq 0 ]; then
-        bash GenerateScripts2.sh iont $(ls ${rundir}/../*.input.csv | grep -v 'input.input.csv' ) $(basename $(dirname ${rundir})) none && bash .RunWorkFlowGeneration.sh
+        bash GenerateScripts2.sh iont $(ls ${rundir}/../*.filtered.csv ) $(basename $(dirname ${rundir})) none && bash .RunWorkFlowGeneration.sh
 else
-	bash GenerateScripts2.sh iont $(ls ${rundir}/../*.input.csv | grep -v 'input.input.csv' ) $(basename $(dirname ${rundir})) ${targetsList} && bash .RunWorkFlowGeneration.sh	
+	bash GenerateScripts2.sh iont $(ls ${rundir}/../*.filtered.csv ) $(basename $(dirname ${rundir})) ${targetsList} && bash .RunWorkFlowGeneration.sh	
 fi
 #run submit script again
 

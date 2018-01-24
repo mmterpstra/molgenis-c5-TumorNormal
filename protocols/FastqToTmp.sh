@@ -37,7 +37,8 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	#might go wrong if done twice in fast sucession best is to run this local & not parallel.
 	perl -i.bak -wpe 's!'${reads1FqGz}'!'"$(dirname ${reads1FqGz} | perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"'!g' ${rundir}/../*.input.csv
 	
-	SampleSheetAddVal.pl "${rundir}"/../*.input.csv project=projectname,sampleName=sample1,count=1000000 > "${rundir}"/../*.input.tmp.csv
+	SampleSheetAddVal.pl "${rundir}"/../*.input.csv \
+		project=projectname,sampleName=sample1,count="$(tail -n 1 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".linecount.log)")" > "${rundir}"/../*.input.tmp.csv
 	mv "${rundir}"/../*.input.tmp.csv "${rundir}"/../*.input.csv
 	
 	putFile "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"
