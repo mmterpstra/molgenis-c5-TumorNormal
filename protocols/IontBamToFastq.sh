@@ -26,6 +26,9 @@ set -e
 echo "## "$(date)" ##  $0 Started "
 	
 if [ ${#reads2FqGzOriginal} -eq 0 ]; then
+	alloutputsexist \
+	 ${reads1FqGz}
+	
 	inputs=$(printf ' I=%s' $(echo ${bamFiles}| tr ';' '\n' ))
 	
 	java -Xmx6g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MergeSamFiles \

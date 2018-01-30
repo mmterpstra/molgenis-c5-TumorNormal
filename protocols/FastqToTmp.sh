@@ -8,6 +8,7 @@
 #string group
 #string checkStage
 #string picardMod
+#string pipelineUtilMod
 #string projectDir
 #string bamFiles
 #string reads1FqGz
@@ -18,7 +19,7 @@
 
 echo -e "test ${reads1FqGz} ${reads2FqGz} 1: "
 
-${stage} ${picardMod}
+${stage} ${picardMod} ${pipelineUtilMod}
 ${checkStage}
 
 set -x -e -o pipefail
@@ -26,6 +27,11 @@ set -x -e -o pipefail
 echo "## "$(date)" ##  $0 Started "
 	
 if [ ${#reads2FqGzOriginal} -eq 0 ]; then
+	alloutputsexist \
+		 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})" \
+		 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".md5 \
+		 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".linecount.log
+
 	getFile ${reads1FqGz}
 	mkdir -p "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!')"
 	cp ${reads1FqGz} "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"
@@ -38,7 +44,7 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	perl -i.bak -wpe 's!'${reads1FqGz}'!'"$(dirname ${reads1FqGz} | perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"'!g' ${rundir}/../*.input.csv
 	
 	SampleSheetAddVal.pl "${rundir}"/../*.input.csv \
-		project=projectname,sampleName=sample1,count="$(tail -n 1 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".linecount.log)")" > "${rundir}"/../*.input.tmp.csv
+		project=${project},sampleName=${sampleName},count="$(tail -n 1 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".linecount.log)" > "${rundir}"/../*.input.tmp.csv
 	mv "${rundir}"/../*.input.tmp.csv "${rundir}"/../*.input.csv
 	
 	putFile "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"
