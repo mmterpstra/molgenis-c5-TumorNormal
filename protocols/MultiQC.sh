@@ -23,12 +23,12 @@ ${checkStage}
 set -x
 set -e
 
-
-cd ${projectDir}
-
-multiqc --force ./
-
-cd $OLDPWD
+#bracket execution is safer
+(
+	cd ${projectDir}
+	
+	multiqc --force ./
+)
 
 putFile ${multiQcHtml}
 
