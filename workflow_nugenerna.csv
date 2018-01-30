@@ -55,5 +55,5 @@ PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MergeBamFiles;MarkDuplicates
-MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
-Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller
+MultiQC,protocols/MultiQC.sh,ProjectMarkdown;;SelectIndels;SelectSNV;SamQC;VariantAnnotation
+Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;TablesToXlsx;HaplotypeCaller
