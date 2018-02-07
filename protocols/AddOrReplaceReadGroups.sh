@@ -46,7 +46,7 @@ echo "## "$(date)" Start $0"
 java -Xmx5g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
  INPUT=${bwaSam} \
  OUTPUT=/dev/stdout \
- SORT_ORDER=coordinate \
+ SORT_ORDER=unsorted \
  RGID=${internalId} \
  RGLB=${sampleName}_${samplePrep} \
  RGPL=${sequencer} \
@@ -60,6 +60,7 @@ java -Xmx5g -XX:ParallelGCThreads=2 -Djava.io.tmpdir=${addOrReplaceGroupsDir} -j
  ADD_MATE_CIGAR=true \
  IGNORE_MISSING_MATES=true \
  ASSUME_SORTED=false \
+ SORT_ORDER=coordinate \
  CREATE_INDEX=true \
  TMP_DIR=${addOrReplaceGroupsDir} \
  OUTPUT=${addOrReplaceGroupsBam}

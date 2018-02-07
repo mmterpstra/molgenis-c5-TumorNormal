@@ -61,7 +61,6 @@ java -Xmx6g -Djava.io.tmpdir="${dcovDir}"  -XX:+UseConcMarkSweepGC  -XX:Parallel
  -T DepthOfCoverage \
  --omitDepthOutputAtEachBase \
  --countType COUNT_FRAGMENTS \
- --calculateCoverageOverGenes "${dcovRefflat}" \
  --outputFormat 'table' \
  --includeRefNSites \
  --printBaseCounts \

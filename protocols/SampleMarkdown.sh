@@ -194,11 +194,13 @@ fi
 
 	baseNumberClean=$(awk '{if($1 >= 0){sum += $2}}; END { print sum }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
 	echo -e "|\t${sampleName}\t|\tBases clean\t|\t${baseNumberClean}\t|\tCount\t|"
-
-	baseQ20pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 20){sumQ20 += $2}}; END { print sumQ20/sum*100 }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
+	
+	#maybe add exeption for no reads q>20 and no reads q>30
+	
+	baseQ20pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 20){sumQ20 += $2}}; END { if(sum > 0 ){print sumQ20/sum*100}else{print "No reads present"} }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
 	echo -e "|\t${sampleName}\t|\tClean bases Q20\t|\t${baseQ20pct}\t|\tPercent\t|"
 
-	baseQ30pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 30){sumQ30 += $2}}; END { print sumQ30/sum*100 }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
+	baseQ30pct=$(awk '{if($1 >= 0){sum += $2}if($1 >= 30){sumQ30 += $2}}; END { if(sum > 0 ){print sumQ30/sum*100}else{print "No reads present"} }'  ${collectMultipleMetricsPrefix}.quality_distribution_metrics)
 
 	echo -e "|\t${sampleName}\t|\tClean bases Q30\t|\t${baseQ30pct}\t|\tPercent\t|"
 	echo
