@@ -199,6 +199,10 @@ projectname=$3
 	#git info tracking
 	>&2 echo "## "$(date)" ## $0 ## Generation info"
 	
+	#if not present create file
+	touch "$runDir/generation.log"	
+	
+	#block of text to append to file
 	(
 		if which git &>/dev/null; then
 			>&2 echo "## "$(date)" ## $0 ## Command 'git' present"
@@ -207,7 +211,7 @@ projectname=$3
 			ml git
 		fi
 		echo
-		echo "## "$(date)" ## $0 ## Generation info"
+		echo "## "$(date)" # $0 # Generation info"
 		echo
 		echo "### Version info"
 		echo
@@ -229,7 +233,37 @@ compiler / devtools /etc ).\`suffix\`: mainly to indicate a \
 specific language version the tool uses."
 		echo
 		grep "^[a-zA-Z].*Mod"  $workflowDir/.parameters.site.tmp.csv | perl -wpe 's/.*Mod,/ - /g'
-	) > $runDir/generation.log
+		echo
+		echo "### Used host for acknowledgements"
+		echo
+		echo "The used host is $HOSTNAME.
+
+Relevant method of acknowledgement if host looks like "calculon.hpc.rug.nl, boxy.hpc.rug.nl, umcg.hpc.rug.nl or gearshift.hpc.rug.nl": 
+
+> This cluster is offered to you by the Genomics Coordination Center (UMCG, Groningen, NL) and its partners & sponsors.
+> Please acknowledge us in your scientific publications as follows:
+>  "We thank the UMCG Genomics Coordination center, the UG Center for Information Technology
+>  and their sponsors BBMRI-NL & TarGet for storage and compute infrastructure."
+> from old calculon.hpc.rug.nl:/etc/motd 
+
+Relevant method	of acknowledgement if host looks like "peregrine.hpc.rug.nl or pg-interactive.hpc.rug.nl":
+
+> If you want to acknowledge the use of the Peregrine cluster and the support of the CIT in your papers you can use the following acknowledgement:
+>    "We would like to thank the Center for Information Technology of the University of Groningen for their support
+>    and for providing access to the Peregrine high performance computing cluster."
+> from https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+
+"
+                echo "### Generation tries"
+		echo
+		echo -n 'Here goes nothing nr 1+' 
+		grep -c  'Generation info' $runDir/generation.log
+		echo
+		echo '------------------'
+		echo '------------------'
+		echo
+		
+	) >> $runDir/generation.log
 	
 	
 	>&2 echo  "## "$(date)" ## $0 ## Generate scripts"
