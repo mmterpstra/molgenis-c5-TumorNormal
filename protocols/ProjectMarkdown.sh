@@ -8,9 +8,8 @@
 #string stage
 #string checkStage
 
-#list sampleMarkdown
+#list sampleMarkdown,dcovTsv
 #string projectMarkdown
-#string dcovTsv
 
 alloutputsexist \
  ${projectMarkdown} \
@@ -144,8 +143,10 @@ done
         echo
 	echo "Result table below for inspection at different coverages. Similar to Hybrid selection metrics."
 	echo
-	
-	grep -v 'Total' "${dcovTsv}".sample_summary | perl -wpe 's/^/| /;s/$/\t |/;s/\t/\t | /g; if($. == 1){print; s/[^\s|]/-/g;}'
+	grep -v 'Total' "${dcovTsv[1]}".sample_summary |head -n 1 | perl -wpe 's/^/| /;s/$/\t |/;s/\t/\t | /g; if($. == 1){print; s/[^\s|]/-/g;}'
+	for dcov in "${dcovTsv[@]}"; do
+		grep -v 'Total' "${dcov}".sample_summary | tail -n+2 | perl -wpe 's/^/| /;s/$/\t |/;s/\t/\t | /g;'
+	done
 
 ) >>  ${projectMarkdown}
 

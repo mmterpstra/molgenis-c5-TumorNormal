@@ -242,15 +242,15 @@ Relevant method of acknowledgement if host looks like "calculon.hpc.rug.nl, boxy
 
 > This cluster is offered to you by the Genomics Coordination Center (UMCG, Groningen, NL) and its partners & sponsors.
 > Please acknowledge us in your scientific publications as follows:
->  "We thank the UMCG Genomics Coordination center, the UG Center for Information Technology
->  and their sponsors BBMRI-NL & TarGet for storage and compute infrastructure."
+>  'We thank the UMCG Genomics Coordination center, the UG Center for Information Technology
+>  and their sponsors BBMRI-NL & TarGet for storage and compute infrastructure.'
 > from old calculon.hpc.rug.nl:/etc/motd 
 
 Relevant method	of acknowledgement if host looks like "peregrine.hpc.rug.nl or pg-interactive.hpc.rug.nl":
 
 > If you want to acknowledge the use of the Peregrine cluster and the support of the CIT in your papers you can use the following acknowledgement:
->    "We would like to thank the Center for Information Technology of the University of Groningen for their support
->    and for providing access to the Peregrine high performance computing cluster."
+>    'We would like to thank the Center for Information Technology of the University of Groningen for their support
+>    and for providing access to the Peregrine high performance computing cluster.'
 > from https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
 
 "
