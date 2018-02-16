@@ -13,7 +13,7 @@ MergeBamFiles,protocols/MergeBamFiles.sh,NugeneBcSplitter;addOrReplaceGroupsBam=
 HtseqCountDups,protocols/HtseqCount.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam;markDuplicatesBai=mergeBamFilesBai;htseqDir=htseqDupsDir;htseqTsv=htseqDupsTsv
 MergeExpressionDupTables,protocols/MergeExpressionTables.sh,HtseqCountDups;htseqTsv=htseqDupsTsv;htseqTable=htseqDupsTable;htseqXlsx=htseqDupsXlsx
 MarkDuplicates,protocols/MarkDuplicates.sh,MergeBamFiles
-NugeneProbeMetrics,protocols/NugeneProbeMetrics.sh,IndelRealignmentKnown;probeBed=probeRnaBed;indelRealignmentBam=markDuplicatesBam;indelRealignmentBai=markDuplicatesBai
+NugeneProbeMetrics,protocols/NugeneProbeMetrics.sh,IndelRealignmentKnown;MarkDuplicates;probeBed=probeRnaBed;indelRealignmentBam=markDuplicatesBam;indelRealignmentBai=markDuplicatesBai
 MergeNugeneCNRTables,protocols/MergeNugeneCNRTables.sh,NugeneProbeMetrics
 MantaSV,protocols/MantaSV.sh,MarkDuplicates;mantaConfigType=mantaConfigTypeRna
 SnpEffManta,protocols/SnpEffAnnotManta.sh,MantaSV
@@ -55,5 +55,5 @@ PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MergeBamFiles;MarkDuplicates
-MultiQC,protocols/MultiQC.sh,ProjectMarkdown;;SelectIndels;SelectSNV;SamQC;VariantAnnotation
+MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;TablesToXlsx;HaplotypeCaller

@@ -49,14 +49,19 @@ declare -a bams
 
 for bam in "${bamsu[@]}" ; do
 	if [ $(samtools view -c -f 1  $bam) -ge 1 ]; then
-		bams+=($bam)
+		#bams+=($bam)
+		nohardclipbam=${mantaRunDir}/$(basename $bam)
+		samtools view -F 1024 -h $bam | perl -wlane 'if(not(m/^[@]/)&& defined($F[5])){$F[5] =~ s/\d*H//g;print join("\t",@F);}else{print $_;}' | samtools view -Sb > $nohardclipbam
+		samtools index $nohardclipbam
+		bams+=($nohardclipbam)
 	else
 		echo "SE, Skipped "$bam"'"
 	fi;
 done
 
 if [ ${#bams[*]} -ge 1 ]; then
-
+	
+	
 	inputs=$(printf ' --bam=%s ' $(printf '%s\n' ${bams[@]}))
 
 	mkdir -p ${mantaDir}
