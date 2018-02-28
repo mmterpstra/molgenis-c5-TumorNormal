@@ -107,57 +107,57 @@ projectname=$3
 	elif [ $1 == "exome" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
 	        workflowBase="workflow.csv"
-		cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "rna" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
 	        workflowBase="workflow_rnaseq.csv"
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "lexorat" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen Rat workflow"
 		workflowBase="workflow_lexogenrnarat.csv"
-		cat  rat_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		cat  $workflowDir/rat_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "nugene" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene workflow"
 	        workflowBase="workflow_nugene.csv"
 	        nugeneProbeBed=$5
-		cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	        perl -i.bak  -wpe 's!(probeBed,).*!$1'"$nugeneProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	
 	elif [ $1 == "nuginc" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
 	        workflowBase="workflow_nugeneinc.csv"
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "nugincbybed" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
 	        workflowBase="workflow_nugeneinctrimbybed.csv"
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 
 	elif [ $1 == "nugrna" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
 	        workflowBase="workflow_nugenerna.csv"
 		nugeneRnaProbeBed=$5
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	
 	        perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	
 	elif [ $1 == "iont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
 	        workflowBase="workflow_iont.csv"
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "prepiont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
 	        workflowBase="workflow_prepiont.csv"
 	        backend="localhost"
 
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "withpoly" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
 	        workflowBase="workflow_withPolymorfic.csv"
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "lexo" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen stranded 3prime mRNA-seq workflow"
 		workflowBase="workflow_lexogenrna.csv"
-                cat  human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	else
 	    	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
 	fi
