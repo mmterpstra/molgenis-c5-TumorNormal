@@ -16,77 +16,6 @@ checkStage,module list
 ################################################################################
 ##Reference Data
 #
-genomeLatSpecies,Homo_sapiens
-genomeSpecies,human
-genomeBuild,b37
-genomeGrchBuild,GRCh37
-ensemblVersion,75
-bundle,${data}/ftp.broadinstitute.org/bundle/2.8/${genomeBuild}/
-#onekgGgenomeDecoyFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37_decoy.fasta
-onekgGenomeFasta,${bundle}/human_g1k_v37_decoy.fasta
-onekgGenomeFastaIdxBase,${bundle}/BWA/0.7.12-goolf-1.7.20/human_g1k_v37_decoy.fasta
-onekgGenomeFastaDict,${bundle}/human_g1k_v37_decoy.dict
-
-goldStandardVcf,${bundle}/Mills_and_1000G_gold_standard.indels.b37.vcf
-goldStandardVcfIdx,${goldStandardVcf}.idx
-
-oneKgPhase1SnpsVcf,${bundle}/1000G_phase1.snps.high_confidence.b37.vcf
-oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.idx
-oneKgPhase1IndelsVcf,${bundle}/1000G_phase1.indels.b37.vcf
-oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.idx
-
-oneKgPhase3v4Vcf,${bundle}/1000G_phase3_v4_20130502.sites.vcf.gz
-oneKgPhase3v4VcfIdx,${oneKgPhase3v4Vcf}.tbi
-
-popStratifiedVcf,${bundle}/hapmap_3.3_b37_pop_stratified_af.vcf.gz
-popStratifiedVcfIdx,${popStratifiedVcf}.idx
-#phase 3 indels / snps
-#${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
-
-dbsnpVcf,${bundle}/dbsnp_138.b37.vcf
-dbsnpVcfIdx,${dbsnpVcf}.idx
-
-exacVcf,${data}/ExAC/release0.3/ExAC.r0.3.sites.vep.vcf.gz
-exacVcfIdx,${exacVcf}.tbi
-
-#limit to known realignment when using haplotype caller because the haplotypecaller will consider multiple haplotypes instead of one when the GatkRealignerTargetCreator step is used.
-#indelRealignmentTargets,${data}/intervals/1000G_phase1.indels_Mills_and_1000G_gold_standard.indels.b37.human_g1k_v37.intervals
-indelRealignmentTargets,${bundle}/Mills_and_1000G_gold_standard.indels.b37.vcf
-#snpEff / snipsift
-#snpEff database resources...
-snpeffDataDir,${data}/snpEff/
-snpeffGrcData,${snpeffDataDir}/GRCh37.75/
-motifBin,${snpeffGrcData}/motif.bin
-nextProtBin,${snpeffGrcData}/nextProt.bin
-pwmsBin,${snpeffGrcData}/pwms.bin
-regulation_CD4Bin,${snpeffGrcData}/regulation_CD4.bin
-regulation_GM06990Bin,${snpeffGrcData}/regulation_GM06990.bin
-regulation_GM12878Bin,${snpeffGrcData}/regulation_GM12878.bin
-regulation_H1ESCBin,${snpeffGrcData}/regulation_H1ESC.bin
-regulation_HeLaS3Bin,${snpeffGrcData}/regulation_HeLa-S3.bin
-regulation_HepG2Bin,${snpeffGrcData}/regulation_HepG2.bin
-regulation_HMECBin,${snpeffGrcData}/regulation_HMEC.bin
-regulation_HSMMBin,${snpeffGrcData}/regulation_HSMM.bin
-regulation_HUVECBin,${snpeffGrcData}/regulation_HUVEC.bin
-regulation_IMR90Bin,${snpeffGrcData}/regulation_IMR90.bin
-#regulation_K562bBin,${snpeffGrcData}/regulation_K562b.bin
-regulation_K562Bin,${snpeffGrcData}/regulation_K562.bin
-regulation_NHABin,${snpeffGrcData}/regulation_NH-A.bin
-regulation_NHEKBin,${snpeffGrcData}/regulation_NHEK.bin
-snpEffectPredictorBin,${snpeffGrcData}/snpEffectPredictor.bin
-
-#snpSift database resources
-dbnsfp,${data}/dbNSFP/2.7/dbNSFP2.7.txt.gz
-dbnsfpTbi,${dbnsfp}.tbi
-
-#vcf
-oneKgP1wgsVcf,${data}/ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz
-oneKgP1wgsVcfIdx,${oneKgP1wgsVcf}.tbi
-cosmicDir,${data}/sftp-cancer.sanger.ac.uk/files/grch37/cosmic/
-
-cosmicVersion,v72
-cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts.bundle_2.8_b37.vcf.gz
-cosmicVcfIdx,${cosmicVcf}.tbi
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
@@ -99,8 +28,8 @@ nugBcSplitterPl,NugeneDigitalSplitter.pl
 #
 GenerateTableDescriptionByVcfHeaderPl,GenerateTableDescriptionByVcfHeader.pl
 
-RVersion,3.0.2
-vcfToolsVersion,0.1.12a
+#RVersion,3.0.2
+#vcfToolsVersion,0.1.12a
 
 plotScriptPl,PlotFloatsOnInterVals.pl
 
@@ -111,10 +40,7 @@ slopTargetsList,${projectDir}/targets.slop100.list
 #targetsList,/gcc/groups/oncogenetics/tmp01/resources/cancerPanel_target.ensembl.gatksort.list
 scatterIntervallistDir,${projectDir}/scatter/
 scatterList,${projectDir}/scatter/temp_${scatterIDs}_of_*/scattered.interval_list
-#rna
-genesRefFlat,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
-rRnaIntervalList,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
-ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.gtf
+
 ################################################################################
 ##Fastqc
 #
@@ -174,8 +100,7 @@ reads2FqGzOriginal,${reads2FqGz}
 #
 hisat2AlignmentDir,${projectDir}/hisat2/
 hisat2Sam,${hisat2AlignmentDir}${internalId}_${sampleName}.sam
-hisat2IdxBase,${bundle}/hisat2/2.0.3-beta-goolf-1.7.20/human_g1k_v37_decoy
-hisat2SpliceKnownTxt,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.splicesites.txt
+
 #--known-splicesite-infile ${hisat2SpliceKnownTxt} /data/umcg-mterpstra/apps/data/ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/Homo_sapiens.GRCh37.75.splicesites.txt
 gatkOpt,
 
@@ -202,7 +127,6 @@ addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
 spanningDir,${projectDir}/SelectSpanningReads/
 spanningBam,${spanningDir}${internalId}_${sampleName}.bam
 spanningBai,${spanningDir}${internalId}_${sampleName}.bai
-
 
 ################################################################################
 #Nugene Bc Splitter?
@@ -243,6 +167,20 @@ htseqTable,${tableDir}/${project}.htseq.merged.tsv
 htseqDupsTable,${tableDir}/${project}.htseqdups.merged.tsv
 htseqXlsx,${xlsxDir}/${project}.htseq.merged.xlsx
 htseqDupsXlsx,${xlsxDir}/${project}.htseqdups.merged.xlsx
+
+#tes500
+htseqTes500Dir,${projectDir}/htseqtes500/
+htseqTes500Tsv,${htseqTes500Dir}${sampleName}.tsv
+#with duplicates
+htseqTes500DupsDir,${projectDir}/htseqtes500dups/
+htseqTes500DupsTsv,${htseqTes500DupsDir}${sampleName}.tsv
+#merging the tables
+#htseqTsv
+#htseqDupsTsv
+htseqTable,${tableDir}/${project}.htseqTes500.merged.tsv
+htseqDupsTable,${tableDir}/${project}.htseqTes500dups.merged.tsv
+htseqXlsx,${xlsxDir}/${project}.htseqTes500.merged.xlsx
+htseqDupsXlsx,${xlsxDir}/${project}.htseqTes500dups.merged.xlsx
 
 ################################################################################
 ##CollectRnaSeqMetrics

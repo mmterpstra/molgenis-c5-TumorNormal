@@ -19,22 +19,22 @@
 #string snpeffMantaVcfIdx
 #string snpEffMantaStats
 
-#string motifBin
-#string nextProtBin
-#string pwmsBin
-#string regulation_CD4Bin
-#string regulation_GM06990Bin
-#string regulation_GM12878Bin
-#string regulation_H1ESCBin
-#string regulation_HeLaS3Bin
-#string regulation_HepG2Bin
-#string regulation_HMECBin
-#string regulation_HSMMBin
-#string regulation_HUVECBin
-#string regulation_IMR90Bin
-#string regulation_K562Bin
-#string regulation_NHABin
-#string regulation_NHEKBin
+##string motifBin
+##string nextProtBin
+##string pwmsBin
+##string regulation_CD4Bin
+##string regulation_GM06990Bin
+##string regulation_GM12878Bin
+##string regulation_H1ESCBin
+##string regulation_HeLaS3Bin
+##string regulation_HepG2Bin
+##string regulation_HMECBin
+##string regulation_HSMMBin
+##string regulation_HUVECBin
+##string regulation_IMR90Bin
+##string regulation_K562Bin
+##string regulation_NHABin
+##string regulation_NHEKBin
 #string snpEffectPredictorBin
 
 

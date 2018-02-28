@@ -8,10 +8,10 @@
 #string stage
 #string tableToXlsxMod
 
-#list indelMnpTable,indelMnpRawTable,indelMnpMinTable,indelMnpMinRawTable,snvTable,snvRawTable,snvMinTable,snvMinRawTable,svTable,svRawTable,svMinTable,svMinRawTable
+#list indelMnpTable,indelMnpRawTable,indelMnpMinTable,indelMnpMinRawTable,snvTable,snvRawTable,snvMinTable,snvMinRawTable,svTable,svRawTable,svMinTable,svMinRawTable,svDescrTable
 #string snvDescrTable
 #string indelMnpDescrTable
-#string svDescrTable
+##string svDescrTable
 
 #outXlsx
 #string xlsxDir
@@ -47,7 +47,7 @@ mkdir -p "${xlsxDir}/tmp/"
 for inMinTable in  "${indelMnpMinTable[@]}" "${indelMnpMinRawTable[@]}" \
 		 "${snvMinTable[@]}" "${snvMinRawTable[@]}" "${svMinTable[@]}" \
 		 "${svMinRawTable[@]}" "${snvDescrTable}" "${indelMnpDescrTable}" \
-		 "${svDescrTable}"; do 
+		 "${svDescrTable[@]}"; do 
 	if [ -f $inMinTable ]; then
                 echo "getFile file='$inMinTable'"
                 getFile $inMinTable

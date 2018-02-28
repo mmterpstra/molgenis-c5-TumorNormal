@@ -64,6 +64,7 @@ fi
 #CollectAlignmentSummaryMetrics, CollectInsertSizeMetrics, QualityScoreDistribution, 
 #MeanQualityByCycle, CollectBaseDistributionByCycle, CollectGcBiasMetrics, RnaSeqMetrics, 
 #CollectSequencingArtifactMetrics, CollectQualityYieldMetrics
+
 java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
  I=${markDuplicatesBam} \
  O=${collectMultipleMetricsPrefix} \
@@ -79,6 +80,7 @@ java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipl
  DB_SNP=${dbsnpVcf}  \
  $intervals \
  TMP_DIR=${collectMultipleMetricsDir}
+
 
 #VALIDATION_STRINGENCY=LENIENT \
 
