@@ -177,10 +177,10 @@ htseqTes500DupsTsv,${htseqTes500DupsDir}${sampleName}.tsv
 #merging the tables
 #htseqTsv
 #htseqDupsTsv
-htseqTable,${tableDir}/${project}.htseqTes500.merged.tsv
-htseqDupsTable,${tableDir}/${project}.htseqTes500dups.merged.tsv
-htseqXlsx,${xlsxDir}/${project}.htseqTes500.merged.xlsx
-htseqDupsXlsx,${xlsxDir}/${project}.htseqTes500dups.merged.xlsx
+htseqTes500Table,${tableDir}/${project}.htseqTes500.merged.tsv
+htseqTes500DupsTable,${tableDir}/${project}.htseqTes500dups.merged.tsv
+htseqTes500Xlsx,${xlsxDir}/${project}.htseqTes500.merged.xlsx
+htseqTes500DupsXlsx,${xlsxDir}/${project}.htseqTes500dups.merged.xlsx
 
 ################################################################################
 ##CollectRnaSeqMetrics
