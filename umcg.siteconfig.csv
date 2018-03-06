@@ -47,6 +47,7 @@ cnvlibMod,cnvlib/0.9.1-foss-2015b-Python-2.7.11
 #remap plz
 #
 #124
+resDir,/groups/umcg-oncogenetics/tmp04/res
 fusioncatcherDataDir,/groups/umcg-oncogenetics/tmp04/res/fusioncatcher/ensembl_v84-fusioncatcher0.99.6a/
 probeFa,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.rc.fasta
 probeBed,/groups/umcg-oncogenetics/tmp04/res/probeSeq_RDonly_ET1262F_2_182.bed
