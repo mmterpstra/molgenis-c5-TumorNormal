@@ -11,9 +11,9 @@
 #string pipelineUtilMod
 #string gatkMod
 #string onekgGenomeFasta
-#list mutect2SampleVcf
-#string mutect2Vcf
 
+##the following parameters select for control samples also. To remove this bias cleaner merging needs to be done
+#list mutect2SampleVcf
 #string mutect2Dir
 #string mutect2Vcf
 #string mutect2VcfIdx

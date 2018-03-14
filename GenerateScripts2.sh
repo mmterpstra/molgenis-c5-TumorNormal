@@ -144,12 +144,16 @@ projectname=$3
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
 	        workflowBase="workflow_iont.csv"
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		ampliconsBed=$5
+		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "prepiont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
 	        workflowBase="workflow_prepiont.csv"
 	        backend="localhost"
-
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		
+		ampliconsBed=$5
+		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "withpoly" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
 	        workflowBase="workflow_withPolymorfic.csv"

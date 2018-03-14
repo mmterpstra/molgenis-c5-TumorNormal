@@ -29,7 +29,8 @@ echo "## "$(date)" ##  $0 Started "
 
 getFile ${addOrReplaceGroupsBam}
 getFile ${addOrReplaceGroupsBai}
-
+getFile ${onekgGenomeFasta}
+getFile ${ampliconsBed}
 
 ${stage} ${bedtoolsMod}
 ${stage} ${samtoolsMod}

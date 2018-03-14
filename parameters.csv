@@ -127,7 +127,8 @@ addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
 spanningDir,${projectDir}/SelectSpanningReads/
 spanningBam,${spanningDir}${internalId}_${sampleName}.bam
 spanningBai,${spanningDir}${internalId}_${sampleName}.bai
-
+ampliconsBed,none
+#ampliconsBed,/groups/umcg-oncogenetics/tmp04/res/Iontorrent_target_regions.bed
 ################################################################################
 #Nugene Bc Splitter?
 #
@@ -293,7 +294,8 @@ mutect2ScatVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.$
 mutect2ScatVcfIdx,${mutect2ScatVcf}.idx
 mutect2SampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
 mutect2SampleVcfIdx,${mutect2Vcf}.idx
-mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
+#mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
+mutect2Vcf,,${mutect2Dir}/${project}.vcf
 mutect2VcfIdx,${mutect2Vcf}.idx
 ################################################################################
 #variant combination (combine HG + freebayes)
