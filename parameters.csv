@@ -127,8 +127,6 @@ addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
 spanningDir,${projectDir}/SelectSpanningReads/
 spanningBam,${spanningDir}${internalId}_${sampleName}.bam
 spanningBai,${spanningDir}${internalId}_${sampleName}.bai
-ampliconsBed,none
-#ampliconsBed,/groups/umcg-oncogenetics/tmp04/res/Iontorrent_target_regions.bed
 ################################################################################
 #Nugene Bc Splitter?
 #

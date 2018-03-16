@@ -47,6 +47,10 @@ bamsu=($(printf '%s\n' "${markDuplicatesBam[@]}" | sort -u ))
 
 declare -a bams
 
+mkdir -p ${mantaDir}
+mkdir -p ${mantaRunDir}
+
+
 for bam in "${bamsu[@]}" ; do
 	if [ $(samtools view -c -f 1  $bam) -ge 1 ]; then
 		#bams+=($bam)

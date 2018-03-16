@@ -6,7 +6,15 @@ set -u
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
->&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed>"
+>&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
+>&2 echo "## "$(date)" ## $0 ##     [none|exome|rna|nugene|nugrna|iont|withpoly|lexo]   "
+>&2 echo "## "$(date)" ## $0 ##                    Application to use for sequencing."
+>&2 echo "## "$(date)" ## $0 ##     samplesheet    Csv file describing the fastq and samples to be analysed."
+>&2 echo "## "$(date)" ## $0 ##     projectname    Name to tag the project: this decides the header in your batchfiles and location to generate the jobs files."
+>&2 echo "## "$(date)" ## $0 ##     targetsList    Interval_list formatted file describing the target regions to report mutations in and near these regions."
+>&2 echo "## "$(date)" ## $0 ##     <nugeneProbebed/iontAmpliconBed>"
+>&2 echo "## "$(date)" ## $0 ##                    Specific files for special workflow."
+
 backend="slurm"
 
 javaver="1.8.0_74"
@@ -174,7 +182,7 @@ projectname=$3
 	if [ -d $SAMPLESHEETFOLDER ]; then
 		>&2 echo "## "$(date)" ## $0 ## Copying samplesheet to samplesheets folder '$SAMPLESHEETFOLDER'"
 		cp -v "${samplesheet}" "$SAMPLESHEETFOLDER/${HOSTNAME}_"$(basename ${samplesheet})
-		>&2 echo "## "$(date)",${0},${HOSTNAME},${SCRIPTCALL}" >> $SAMPLESHEETFOLDER/"${HOSTNAME}"_all_generated.log
+		>&2 echo "## "$(date)",${0},${HOSTNAME},bash ${SCRIPTCALL}" >> $SAMPLESHEETFOLDER/"${HOSTNAME}"_all_generated.log
 	fi
 	echo "## "$(date)" ## $0 ## Creating rundir/jobsdir"
 
@@ -240,6 +248,12 @@ projectname=$3
 		echo "### Branch info"
 		echo
 		git branch
+		echo
+		echo "### Workflow image"
+		echo 
+		echo "workflow used as shown below"
+		echo
+		echo -n '<img src="data:image/svg+xml;base64,'$(python workflow2dot.py $workflowDir/$workflowBase | dot -Tsvg /dev/stdin| base64)'"\>'
 		echo
 		echo "### Used software versions"
 		echo

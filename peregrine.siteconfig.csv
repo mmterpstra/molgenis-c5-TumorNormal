@@ -25,7 +25,7 @@ samtoolsMod,SAMtools/1.3.1-foss-2016a
 bcftoolsMod,BCFtools/1.6-foss-2016a
 vcfToolsMod,VCFtools/0.1.12b-foss-2016a-Perl-5.20.2-bare
 #pipelineUtilMod,pipeline-util/0.2.1-foss-2016a-Perl-5.20.2-bare
-pipelineUtilMod,pipeline-util/0.8.2-foss-2016a-Perl-5.20.2-bare
+pipelineUtilMod,pipeline-util/0.8.3-foss-2016a-Perl-5.20.2-bare
 tableToXlsxMod,TableToXlsx/0.2.1-foss-2016a-Perl-5.20.2-bare
 digiRgMod,DigitalBarcodeReadgroups/0.1.10-foss-2016a-Perl-5.20.2-bare
 nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
@@ -51,3 +51,7 @@ probeFa,${data}/resources/probeSeq_RDonly_ET1262F_2_182.rc.fasta
 probeBed,${data}/resources/probeSeq_RDonly_ET1262F_2_182.bed
 probeRnaFa,${data}/resources/target_ET1508R_3a_782_3b_783_probeSeq.fasta
 probeRnaBed,${data}/resources/target_ET1508R_3a_782_3b_783_probeSeq.bed
+
+ampliconsBed,none
+#ampliconsBed,/groups/umcg-oncogenetics/tmp04/res/Iontorrent_target_regions.bed
+
