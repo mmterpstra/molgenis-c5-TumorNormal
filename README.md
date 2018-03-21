@@ -29,16 +29,17 @@ Running
 Prepare a samplesheet similar to `Samplesheet.csv` update the setting to match your dataset and run it using:
 
 ```
-bash GenerateScripts2.sh [none|exome|rna|nugene|nugrna|iont|withpoly] samplesheet projectname targetsList
 
-[none|exome|rna|nugene|nugrna|iont|withpoly]
-	workflow selection
-samplesheet
-	Samplesheet describing your data
-projectname
-	Project name. Will generate the data below /path/to/projects/${project} and some main project files are using this variable.
-targetsList
-	interval_list file to limit/split your datasets.
+ Use:bash GenerateScripts.sh [none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>
+     [none|exome|rna|nugene|nugrna|iont|withpoly|lexo]   
+                    Application to use for sequencing.
+     samplesheet    Csv file describing the fastq and samples to be analysed.
+     projectname    Name to tag the project: this decides the header in your batchfiles and location to generate the jobs files.
+
+     targetsList    Interval_list formatted file describing the target regions to report mutations in and near these regions.
+     <nugeneProbebed/iontAmpliconBed>
+                    Specific files for special workflow.
+
 ``` 
 
 Methods

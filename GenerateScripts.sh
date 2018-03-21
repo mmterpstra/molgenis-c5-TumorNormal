@@ -1,12 +1,12 @@
 #!/bin/bash
 
-set -e
+set -ex
 set -u
 
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
->&2 echo "## "$(date)" ## $0 ## Use:[none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
+>&2 echo "## "$(date)" ## $0 ## Use:$0 [none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
 >&2 echo "## "$(date)" ## $0 ##     [none|exome|rna|nugene|nugrna|iont|withpoly|lexo]   "
 >&2 echo "## "$(date)" ## $0 ##                    Application to use for sequencing."
 >&2 echo "## "$(date)" ## $0 ##     samplesheet    Csv file describing the fastq and samples to be analysed."
@@ -29,7 +29,7 @@ mlCmd="module load Molgenis-Compute/${computever}-Java-${javaver}"
 	#main thing to remember when working with molgenis "/full/paths" ALWAYS!
 	#here some parameters for customisation
 
-workflowDir=$(dirname $(which GenerateScripts2.sh 2> /dev/null) 2>/dev/null || readlink -f $(dirname $0))
+workflowDir=$(dirname $(which $0 2> /dev/null) 2>/dev/null || readlink -f $(dirname $0))
 samplesheet=$(readlink -f $2)
 projectname=$3
 (

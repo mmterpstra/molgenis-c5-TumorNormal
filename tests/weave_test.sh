@@ -9,7 +9,7 @@ if [ $1 == "nugene" ] ; then
 elif [ $1 == "nugrna" ] ; then
 	probe="data/resource/probe.bed"
 fi
-touch dummy.interval_list && bash ../GenerateScripts2.sh $1 $2 exome dummy.interval_list $probe
+touch dummy.interval_list && bash ../GenerateScripts.sh $1 $2 exome dummy.interval_list $probe
 bash .RunWorkFlowGeneration.sh
 for i in  /home/travis/projects/exome/jobs/*.sh; do
 	>&2 echo  "## "$(date)" ## $0 ## checking $i"

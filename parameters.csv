@@ -293,7 +293,7 @@ mutect2ScatVcfIdx,${mutect2ScatVcf}.idx
 mutect2SampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
 mutect2SampleVcfIdx,${mutect2Vcf}.idx
 #mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
-mutect2Vcf,,${mutect2Dir}/${project}.vcf
+mutect2Vcf,${mutect2Dir}/${project}.vcf
 mutect2VcfIdx,${mutect2Vcf}.idx
 ################################################################################
 #variant combination (combine HG + freebayes)

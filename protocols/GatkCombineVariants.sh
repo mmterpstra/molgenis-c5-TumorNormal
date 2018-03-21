@@ -68,10 +68,10 @@ perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${com
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} > ${combineVcf}.tmp.mutect2callerised.vcf
 
 ${stage} ${bcftoolsMod}
-bgzip ${combineVcf}.tmp.haplotypercallerised.vcf && bcftools norm  -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
-bgzip ${combineVcf}.tmp.freebayescallerised.vcf  && bcftools norm  -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
+bgzip ${combineVcf}.tmp.haplotypercallerised.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
+bgzip ${combineVcf}.tmp.freebayescallerised.vcf  && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
 #might crash because too many FORMAT fields
-#bgzip ${combineVcf}.tmp.mutect2callerised.vcf    && bcftools norm  -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
+#bgzip ${combineVcf}.tmp.mutect2callerised.vcf    && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
 
 #merge gatk/freebayes/mutect
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
