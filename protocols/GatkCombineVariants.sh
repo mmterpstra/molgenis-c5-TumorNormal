@@ -70,8 +70,7 @@ perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} > ${combin
 ${stage} ${bcftoolsMod}
 bgzip ${combineVcf}.tmp.haplotypercallerised.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
 bgzip ${combineVcf}.tmp.freebayescallerised.vcf  && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
-#might crash because too many FORMAT fields
-#bgzip ${combineVcf}.tmp.mutect2callerised.vcf    && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
+bgzip ${combineVcf}.tmp.mutect2callerised.vcf    && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
 
 #merge gatk/freebayes/mutect
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
@@ -80,7 +79,7 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
  -R ${onekgGenomeFasta} \
  --variant:GATK ${combineVcf}.tmp.haplotypernorm.vcf \
  --variant:freebayes  ${combineVcf}.tmp.freebayesnorm.vcf \
- --variant:MuTect2 ${combineVcf}.tmp.mutect2callerised.vcf \
+ --variant:MuTect2 ${combineVcf}.tmp.mutect2norm.vcf \
  -o ${combineVcf}.tmp.combine.vcf \
  -genotypeMergeOptions PRIORITIZE \
  -priority GATK,freebayes,MuTect2 \
@@ -101,7 +100,7 @@ perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl 
  ${combineVcf}.tmp.combine.vcf \
  ${combineVcf}.tmp.haplotypernorm.vcf \
  ${combineVcf}.tmp.freebayesnorm.vcf \
- ${combineVcf}.tmp.mutect2callerised.vcf \
+ ${combineVcf}.tmp.mutect2norm.vcf \
  > ${combineVcf}.tmp.annotNoComplex.vcf
 
 #java -jar ${EBROOTGATK}/GenomeAnalysisTK.jar \
