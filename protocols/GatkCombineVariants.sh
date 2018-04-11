@@ -138,10 +138,12 @@ java -Xmx8g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:
  -L ${combineVcf}.tmp.complex.vcf \
  -o ${combineVcf}.tmp.complexHCregeno.vcf
 
+bgzip ${combineVcf}.tmp.complexHCregeno.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexHCregeno.vcf    > ${combineVcf}.tmp.complexHCregeno.norm.vcf
+
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
  ${combineVcf}.tmp.ReallyComplex.vcf \
  ${combineVcf}.tmp.annotNoComplex.vcf \
- ${combineVcf}.tmp.complexHCregeno.vcf \
+ ${combineVcf}.tmp.complexHCregeno.norm.vcf \
  > ${combineVcf}
 
 #fear the complex variants

@@ -28,7 +28,7 @@ bcftoolsMod,BCFtools/1.6-foss-2015b
 vcfToolsMod,VCFtools/0.1.12b-foss-2015b-Perl-5.20.2-bare
 pipelineUtilMod,pipeline-util/0.8.5-foss-2015b-Perl-5.20.2-bare
 #pipelineUtilMod,pipeline-util/0.2.2-foss-2016a-Perl-5.20.2-bare
-tableToXlsxMod,TableToXlsx/0.2.1-foss-2015b-Perl-5.20.2-bare
+tableToXlsxMod,TableToXlsx/0.2.2-foss-2015b-Perl-5.20.2-bare
 digiRgMod,DigitalBarcodeReadgroups/0.1.10-foss-2015b-Perl-5.20.2-bare
 nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
 bbmapMod,BBMap/35.69-Java-1.7.0_80

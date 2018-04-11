@@ -236,6 +236,12 @@ projectname=$3
 			>&2 echo "## "$(date)" ## $0 ## Commmand 'git' not present, trying module load."
 			ml git
 		fi
+		if which dot &>/dev/null; then
+			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
+		else
+			>&2 echo "## "$(date)" ## $0 ## Commmand 'dot' not present, trying module load."
+			ml Graphviz
+		fi
 		echo
 		echo "## "$(date)" # $0 # Generation info"
 		echo

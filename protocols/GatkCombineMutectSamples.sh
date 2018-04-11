@@ -56,7 +56,6 @@ done
 
 echo "inputs="$inputs";"
 echo 'prio='$prio';'
- 
 
 #merge gatk/freebayes
 java -Xmx4g -Djava.io.tmpdir=${mutect2Dir} \
