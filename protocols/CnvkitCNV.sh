@@ -28,7 +28,7 @@ alloutputsexist \
 "${controlSampleTargetcoverageCnn}" \
 "${cnvDir}"
 
-for file in "${bqsrBam[@]}" "${bqsrBai[@]}" "${haplotyperVcf}" "${haplotyperVcfIdx}" "${onekgGenomeFasta}"; do
+for file in "${bqsrBam[@]}" "${bqsrBai[@]}" "${haplotyperVcf}" "${onekgGenomeFasta}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done

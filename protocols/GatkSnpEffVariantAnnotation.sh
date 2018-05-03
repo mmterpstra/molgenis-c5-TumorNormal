@@ -73,8 +73,9 @@
 #string dbnsfpTbi
 
 alloutputsexist \
-"${annotVcf}" \
-"${annotVcfIdx}"
+"${annotVcf}"
+
+#"${annotVcfIdx}"
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -275,6 +276,6 @@ rm -v ${snpEffAnnotVcf}* ${gatkAnnotVcf}* ${snpEffGatkAnnotVcf}*
 # -U ALLOW_N_CIGAR_READS
 
 putFile ${annotVcf}
-putFile ${annotVcfIdx}
+#putFile ${annotVcfIdx}
 
 echo "## "$(date)" ##  $0 Done "

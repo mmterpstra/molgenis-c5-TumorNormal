@@ -39,7 +39,7 @@ getFile ${indelRealignmentBai}
 getFile ${controlSampleBam}
 getFile ${controlSampleBai}
 getFile ${popStratifiedVcf}
-getFile ${popStratifiedVcfIdx}
+#getFile ${popStratifiedVcfIdx}
 
 set -x
 set -e

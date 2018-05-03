@@ -69,7 +69,7 @@ if [ ${#bams[*]} -ge 1 ]; then
 	inputs=$(printf ' --bam=%s ' $(printf '%s\n' ${bams[@]}))
 
 	mkdir -p ${mantaDir}
-	mkdir ${mantaRunDir}
+	mkdir -p ${mantaRunDir}
 	#pseudo: 
 	#configManta.py --bam=FILE --exome --referenceFasta=FILE --runDir=DIR 
 	#python ${mantaDir}/runWorkflow.py -m local -j 1 -g 20
