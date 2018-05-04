@@ -24,7 +24,7 @@ alloutputsexist \
 "${indelMnpVcf}" \
 "${indelMnpVcfIdx}"
 
-for file in "${onekgGenomeFasta}" "${custAnnotVcf}" "${custAnnotVcfIdx}"; do
+for file in "${onekgGenomeFasta}" "${custAnnotVcf}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
