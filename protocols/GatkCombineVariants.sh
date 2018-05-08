@@ -65,7 +65,7 @@ rm ${combineVcf}.tmp.allelicprimitives.vcf.idx
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl Freebayes ${combineVcf}.tmp.allelicprimitives.vcf > ${combineVcf}.tmp.freebayescallerised.vcf
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${combineVcf}.tmp.haplotypercallerised.vcf
 #did this already on a per sample base maybe overkill to do it again
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} |perl  $(which VcfQssFix.pl ) - > ${combineVcf}.tmp.mutect2callerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} |perl  $(which VcfQssFix.pl ) /dev/stdin > ${combineVcf}.tmp.mutect2callerised.vcf
 
 ${stage} ${bcftoolsMod}
 bgzip ${combineVcf}.tmp.haplotypercallerised.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
