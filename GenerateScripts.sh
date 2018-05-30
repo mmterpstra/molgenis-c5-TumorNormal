@@ -150,7 +150,7 @@ projectname=$3
 	
 	elif [ $1 == "iont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
-	        workflowBase="workflow_iont.csv"
+	        workflowBase="workflow_iont_scat.csv"
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 		ampliconsBed=$5
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $workflowDir/.parameters.site.tmp.csv

@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=4gb ppn=1
+#MOLGENIS walltime=71:59:00 mem=30gb ppn=1
 
 #string project
 
@@ -26,6 +26,8 @@
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
 #list bqsrBam,bqsrBai
+#string freebayesProjectBam
+#string freebayesMod
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -40,6 +42,7 @@ done
 
 #Load gatk module
 ${stage} ${pipelineUtilMod}
+${stage} ${freebayesMod}
 ${stage} ${gatkMod}
 ${checkStage}
 
@@ -95,6 +98,11 @@ cp ${combineVcf}.tmp.combine.vcf ${combineVcf}.tmp.selectGatk.vcf
 #perl $EBROOTPIPELINEMINUTIL/bin/filterCombinedVariantsForGatk.pl \
 # ${combineVcf}.tmp.combine.vcf > ${combineVcf}.tmp.selectGatk.vcf
 
+if [ -e "${combineVcf}.tmp.complex.vcf" ] ; then
+	echo "## INFO ## Cleaning up old run file ${combineVcf}.tmp.complex.vcf" 
+	rm -v ${combineVcf}.tmp.complex.vcf
+fi
+
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
  ${combineVcf}.tmp.complex.vcf \
  ${combineVcf}.tmp.combine.vcf \
@@ -122,7 +130,9 @@ bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
 
 inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
-java -Xmx8g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+#freebayes -f ${onekgGenomeFasta} -@  ${combineVcf}.tmp.complex.vcf ${freebayesProjectBam} > ${combineVcf}.tmp.complexregeno.vcf
+# or
+java -Xmx16g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T HaplotypeCaller \
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf}\
@@ -136,14 +146,19 @@ java -Xmx8g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:
  --forceActive \
  -stand_call_conf 0 \
  -L ${combineVcf}.tmp.complex.vcf \
- -o ${combineVcf}.tmp.complexHCregeno.vcf
+ -o ${combineVcf}.tmp.complexregeno.vcf
 
-bgzip ${combineVcf}.tmp.complexHCregeno.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexHCregeno.vcf.gz    > ${combineVcf}.tmp.complexHCregeno.norm.vcf
+bgzip ${combineVcf}.tmp.complexregeno.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexregeno.vcf.gz    > ${combineVcf}.tmp.complexregeno.norm.vcf
+
+if [ -e "${combineVcf}.tmp.ReallyComplex.vcf" ] ; then 
+        echo "## INFO ## Cleaning up old run file ${combineVcf}.tmp.ReallyComplex.vcf"
+        rm -v ${combineVcf}.tmp.ReallyComplex.vcf
+fi
 
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
  ${combineVcf}.tmp.ReallyComplex.vcf \
  ${combineVcf}.tmp.annotNoComplex.vcf \
- ${combineVcf}.tmp.complexHCregeno.norm.vcf \
+ ${combineVcf}.tmp.complexregeno.norm.vcf \
  > ${combineVcf}
 
 #fear the complex variants

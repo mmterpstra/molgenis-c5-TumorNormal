@@ -295,11 +295,16 @@ mutect2SampleVcfIdx,${mutect2Vcf}.idx
 #mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
 mutect2Vcf,${mutect2Dir}/${project}.vcf
 mutect2VcfIdx,${mutect2Vcf}.idx
+mutect2ProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
+mutect2ProjectScatVcfIdx,${mutect2ProjectScatVcf}.idx
 ################################################################################
 #variant combination (combine HG + freebayes)
 variantCombineDir,${projectDir}/combinevariants/
 combineVcf,${variantCombineDir}${project}.n_${controlSampleName}.vcf
 combineVcfIdx,${combineVcf}.idx
+combineScatVcf,${variantCombineDir}${project}.n_${controlSampleName}.${scatterIDs}.vcf
+combineScatVcfIdx,${combineScatVcf}.idx
+
 
 ################################################################################
 #variant annotation
@@ -309,7 +314,6 @@ annotatorDir,${projectDir}/VariantAnnotation/
 snpEffGatkAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 snpEffGatkAnnotVcfIdx,${snpEffGatkAnnotVcf}.idx
 snpEffStats,${annotatorDir}/${project}.n_${controlSampleName}.snpEff.summary.html
-
 gatkAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.intermediate.vcf
 gatkAnnotVcfIdx,${gatkAnnotVcf}.idx
 snpEffAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEff.intermediate.vcf
