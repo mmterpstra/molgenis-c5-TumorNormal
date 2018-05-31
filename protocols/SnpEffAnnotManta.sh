@@ -45,7 +45,7 @@ alloutputsexist \
 echo "## "$(date)" ##  $0 Started "
 
 
-for file in "${mantaVcf}" "${mantaVcfIdx}" "${snpEffectPredictorBin}" ; do
+for file in "${mantaVcf}" "${snpEffectPredictorBin}" ; do
 #"${regulation_CD4Bin}"  "${regulation_GM06990Bin}"  "${regulation_GM12878Bin}"  "${regulation_H1ESCBin}"  "${regulation_HeLaS3Bin}"  "${regulation_HepG2Bin}"  "${regulation_HMECBin}"  "${regulation_HSMMBin}"  "${regulation_HUVECBin}"  "${regulation_IMR90Bin}"  "${regulation_K562Bin}"  "${regulation_NHABin}"  "${regulation_NHEKBin}"
 
 	echo "getFile file='$file'"
