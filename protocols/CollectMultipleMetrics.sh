@@ -8,6 +8,7 @@
 #string checkStage
 #string picardMod
 #string RMod
+#string samtoolsMod
 #list reads2FqGz
 #string collectMultipleMetricsDir
 #string collectMultipleMetricsPrefix
@@ -41,6 +42,7 @@ getFile ${targetsList}
 #load modules
 ${stage} ${picardMod}
 ${stage} ${RMod}
+${stage} ${samtoolsMod}
 ${checkStage}
 
 set -x
@@ -65,22 +67,36 @@ fi
 #MeanQualityByCycle, CollectBaseDistributionByCycle, CollectGcBiasMetrics, RnaSeqMetrics, 
 #CollectSequencingArtifactMetrics, CollectQualityYieldMetrics
 
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
- I=${markDuplicatesBam} \
- O=${collectMultipleMetricsPrefix} \
- R=${onekgGenomeFasta} \
- PROGRAM=CollectAlignmentSummaryMetrics \
- PROGRAM=QualityScoreDistribution \
- PROGRAM=MeanQualityByCycle \
- $insertSizeMetrics \
- PROGRAM=CollectBaseDistributionByCycle \
- PROGRAM=CollectGcBiasMetrics \
- PROGRAM=CollectSequencingArtifactMetrics \
- PROGRAM=CollectQualityYieldMetrics \
- DB_SNP=${dbsnpVcf}  \
- $intervals \
- TMP_DIR=${collectMultipleMetricsDir}
+if [ `samtools view -c /groups/umcg-oncogenetics/tmp04/projects/iontorrent_D1_batch14_29may18/MergeBams/2015-43a_Horizon_2015-43a.bam` == 0 ] ; then 
+	"## INFO ## No reads skipping analysis"
+	touch  ${collectMultipleMetricsPrefix}.alignment_summary_metrics
+	touch ${collectMultipleMetricsPrefix}.quality_by_cycle_metrics
+	touch ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf
+	touch ${collectMultipleMetricsPrefix}.quality_distribution_metrics
+	touch ${collectMultipleMetricsPrefix}.quality_distribution.pdf
+	if [ ${#reads2FqGz} -ne 0 ]; then
+		touch ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf
+		touch ${collectMultipleMetricsPrefix}.insert_size_metrics
+	fi
+else 
 
+	java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
+	 I=${markDuplicatesBam} \
+	 O=${collectMultipleMetricsPrefix} \
+	 R=${onekgGenomeFasta} \
+	 PROGRAM=CollectAlignmentSummaryMetrics \
+	 PROGRAM=QualityScoreDistribution \
+	 PROGRAM=MeanQualityByCycle \
+	 $insertSizeMetrics \
+	 PROGRAM=CollectBaseDistributionByCycle \
+	 PROGRAM=CollectGcBiasMetrics \
+	 PROGRAM=CollectSequencingArtifactMetrics \
+	 PROGRAM=CollectQualityYieldMetrics \
+	 DB_SNP=${dbsnpVcf}  \
+	 $intervals \
+	 TMP_DIR=${collectMultipleMetricsDir}
+
+fi
 
 #VALIDATION_STRINGENCY=LENIENT \
 
