@@ -71,9 +71,9 @@ perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${com
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} |perl  $(which VcfQssFix.pl ) /dev/stdin > ${combineVcf}.tmp.mutect2callerised.vcf
 
 ${stage} ${bcftoolsMod}
-bgzip ${combineVcf}.tmp.haplotypercallerised.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
-bgzip ${combineVcf}.tmp.freebayescallerised.vcf  && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
-bgzip ${combineVcf}.tmp.mutect2callerised.vcf    && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
+bgzip -c ${combineVcf}.tmp.haplotypercallerised.vcf > ${combineVcf}.tmp.haplotypercallerised.vcf.gz && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
+bgzip -c ${combineVcf}.tmp.freebayescallerised.vcf  > ${combineVcf}.tmp.freebayescallerised.vcf.gz  && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
+bgzip -c ${combineVcf}.tmp.mutect2callerised.vcf    > ${combineVcf}.tmp.mutect2callerised.vcf.gz    && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
 
 #merge gatk/freebayes/mutect
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
@@ -148,7 +148,7 @@ java -Xmx16g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX
  -L ${combineVcf}.tmp.complex.vcf \
  -o ${combineVcf}.tmp.complexregeno.vcf
 
-bgzip ${combineVcf}.tmp.complexregeno.vcf && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexregeno.vcf.gz    > ${combineVcf}.tmp.complexregeno.norm.vcf
+bgzip -c  ${combineVcf}.tmp.complexregeno.vcf > ${combineVcf}.tmp.complexregeno.vcf.gz && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexregeno.vcf.gz    > ${combineVcf}.tmp.complexregeno.norm.vcf
 
 if [ -e "${combineVcf}.tmp.ReallyComplex.vcf" ] ; then 
         echo "## INFO ## Cleaning up old run file ${combineVcf}.tmp.ReallyComplex.vcf"

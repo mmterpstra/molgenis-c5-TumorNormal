@@ -34,6 +34,7 @@ nudupMod,nudup.py/740d9fe-foss-2016a-Python-2.7.11
 bbmapMod,BBMap/35.69-Java-1.7.0_80
 bedtoolsMod,BEDTools/2.25.0-foss-2015b
 hisat2Mod,hisat2/2.0.4-foss-2015b-Python-2.7.11
+STARMod,STAR/2.5.1b-foss-2015b
 #htseqMod,HTSeq/0.6.1p1
 htseqMod,HTSeq/0.6.1p1-foss-2015b-Python-2.7.11
 RmarkMod,markdown/0.7.7-foss-2015b-R-3.2.2-bioconductor

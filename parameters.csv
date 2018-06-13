@@ -103,7 +103,13 @@ hisat2Sam,${hisat2AlignmentDir}${internalId}_${sampleName}.sam
 
 #--known-splicesite-infile ${hisat2SpliceKnownTxt} /data/umcg-mterpstra/apps/data/ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/Homo_sapiens.GRCh37.75.splicesites.txt
 gatkOpt,
-
+################################################################################
+##STAR
+#
+starIndexDir,${projectDir}/starIndex/
+starAlignmentDir,${projectDir}/star/
+starSampleDir,${starAlignmentDir}/${internalId}_${sampleName}
+starSam,${starSampleDir}/Aligned.out.sam
 
 ################################################################################
 ##TrimBybed subdirs

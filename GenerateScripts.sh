@@ -147,7 +147,14 @@ projectname=$3
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	
 	        perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
-	
+	elif [ $1 == "nugrnastar" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA STAR workflow"
+		workflowBase="workflow_nugenerna_star.csv"
+		nugeneRnaProbeBed=$5
+		cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+
+		perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
+
 	elif [ $1 == "iont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
 	        workflowBase="workflow_iont_scat.csv"
