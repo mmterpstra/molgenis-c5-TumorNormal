@@ -39,54 +39,62 @@ ${checkStage}
 set -x
 set -e
 
-# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
-bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u | grep -v "$(basename "${controlSampleBam}")"))
 
-#inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
+if [ `printf '%s\n' "${bqsrBam[@]}" | sort -u | grep -v -c  "$(basename "${controlSampleBam}")"` == 0 ] ; then
 
-#cnv.controlsamplename
-mkdir -p ${cnvDir}
+	echo "Skipping because no controls"
+	touch "${controlSampleTargetcoverageCnn}"
+	touch "${cnvDir}"
 
-if [ ${#targetsList} -ne 0 ]; then
-	grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' >  "${cnvTargetBed}"
 else
-	echo "Error only works on capturing, for now..."
-	exit 1
-fi
+	# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+	bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u | grep -v "$(basename "${controlSampleBam}")"))
 
-cnvkit.py batch \
- --output-dir "${cnvDir}" \
- -n ${controlSampleBam} \
- --method hybrid \
- --drop-low-coverage \
- --processes 10 \
- --fasta "${onekgGenomeFasta}" \
- --targets "${cnvTargetBed}" \
- --scatter \
- --diagram \
- $(printf ' %s' ${bams[@]})
+	#inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
-normalid="$(basename "${controlSampleBam}" .bam )"
+	#cnv.controlsamplename
+	mkdir -p ${cnvDir}
 
-for cnr in ${cnvDir}/*.cnr; do 
-	name="$(basename "$cnr" .cnr)"
-	cnvkit.py segment \
-	 "${cnvDir}/${name}.cnr" \
-	 --normal-id "${normalid}" \
-	 --sample-id "${name}" \
-	 --vcf "${haplotyperVcf}" \
-	 -o "${cnvDir}/${name}.cns"
+	if [ ${#targetsList} -ne 0 ]; then
+		grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' >  "${cnvTargetBed}"
+	else
+		echo "Error only works on capturing, for now..."
+		exit 1
+	fi
+
+	cnvkit.py batch \
+	 --output-dir "${cnvDir}" \
+	 -n ${controlSampleBam} \
+	 --method hybrid \
+	 --drop-low-coverage \
+	 --processes 10 \
+	 --fasta "${onekgGenomeFasta}" \
+	 --targets "${cnvTargetBed}" \
+	 --scatter \
+	 --diagram \
+	 $(printf ' %s' ${bams[@]})
+
+	normalid="$(basename "${controlSampleBam}" .bam )"
+
+	for cnr in ${cnvDir}/*.cnr; do 
+		name="$(basename "$cnr" .cnr)"
+		cnvkit.py segment \
+		 "${cnvDir}/${name}.cnr" \
+		 --normal-id "${normalid}" \
+		 --sample-id "${name}" \
+		 --vcf "${haplotyperVcf}" \
+		 -o "${cnvDir}/${name}.cns"
 	
-	cnvkit.py scatter \
-	 "${cnvDir}/${name}.cnr" \
-	 -s "${cnvDir}/${name}.cns" \
-	 -o "${cnvDir}/${name}-scatter.pdf" \
+		cnvkit.py scatter \
+		 "${cnvDir}/${name}.cnr" \
+		 -s "${cnvDir}/${name}.cns" \
+		 -o "${cnvDir}/${name}-scatter.pdf" \
 	 --normal-id "${normalid}" \
 	 --sample-id "${name}" \
 	 -m 20 \
 	 --vcf "${haplotyperVcf}"
-done
-
+done	
+fi 
 putFile "${controlSampleTargetcoverageCnn}"
 putFile "${cnvDir}"
 
