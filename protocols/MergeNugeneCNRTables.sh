@@ -66,7 +66,7 @@ for i in "${nugene300bpCountsCNRTables[@]}"; do
 done
 
 #convert to xlsx and mv to target file
-perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t "${nugeneCNRProbesTable}"
+tableToXlsx.pl \\t "${nugeneCNRProbesTable}"
 xlsx="$(echo "${nugeneCNRProbesTable}"| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')"
 mv -v "$xlsx" "${nugeneCNRProbesXlsx}"
 putFile "${nugeneCNRProbesXlsx}"
@@ -83,7 +83,7 @@ for i in "${nugeneCNRTables[@]}"; do
 done
 
 #convert to xlsx and mv to target file
-perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t "${nugeneCNRProbesTable}"".probecounts.tsv"
+tableToXlsx.pl \\t "${nugeneCNRProbesTable}"".probecounts.tsv"
 xlsx="$(echo "${nugeneCNRProbesTable}"".probecounts.tsv" | perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')"
 mv -v "$xlsx" "${nugeneCNRProbesXlsx}"".probecounts.xlsx"
 putFile "${nugeneCNRProbesXlsx}"".probecounts.xlsx"
@@ -105,7 +105,7 @@ done
 
 #nugeneCNRProbesXlsx
 #convert to xlsx and mv to target file
-perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t "${nugeneDedupCNRProbesTable}"
+tableToXlsx.pl \\t "${nugeneDedupCNRProbesTable}"
 xlsx="$(echo "${nugeneDedupCNRProbesTable}"| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')"
 mv -v "$xlsx" "${nugeneDedupCNRProbesXlsx}"
 
@@ -124,7 +124,7 @@ for i in "${nugeneCNRDedupTables[@]}"; do
 done
 
 #convert to xlsx and mv to target file
-perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t "${nugeneDedupCNRProbesTable}"".probecounts.tsv"
+tableToXlsx.pl \\t "${nugeneDedupCNRProbesTable}"".probecounts.tsv"
 xlsx="$(echo "${nugeneDedupCNRProbesTable}"".probecounts.tsv" | perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')"
 mv -v "$xlsx" "${nugeneDedupCNRProbesXlsx}"".probecounts.xlsx"
 

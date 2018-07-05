@@ -60,7 +60,7 @@ mkdir -p "${xlsxDir}/tmp/"
 #                echo "getFile file='$inMinTable'"
 #                getFile $inMinTable
 #                #just guess the output...
-#                perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t $inMinTable
+#                tableToXlsxAsStrings.pl \\t $inMinTable
 #                xlsx=$(echo $inMinTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 #                mv -v $xlsx ${xlsxDir}
 #                putFile ${xlsxDir}/$(basename $xlsx)
@@ -77,7 +77,7 @@ mkdir -p "${xlsxDir}/tmp/"
 #		echo "getFile file='$inTable'"
 #		getFile $inTable
 #		#just guess the output...
-#		perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t $inTable
+#		tableToXlsxAsStrings.pl \\t $inTable
 #		xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 #		mv -v $xlsx ${xlsxDir}
 #		putFile ${xlsxDir}/$(basename $xlsx)
@@ -86,7 +86,7 @@ mkdir -p "${xlsxDir}/tmp/"
 
 
 for t in ${tableDir}/*.tsv; do
-	$EBROOTPERL/bin/perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t $t;
+	tableToXlsxAsStrings.pl \\t $t;
 	xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 	mv -v $xlsx ${xlsxDir}
 	putFile ${xlsxDir}/$(basename $xlsx)

@@ -22,12 +22,14 @@
 alloutputsexist \
  ${collectMultipleMetricsPrefix}.alignment_summary_metrics \
  ${collectMultipleMetricsPrefix}.quality_by_cycle_metrics \
- ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf \
  ${collectMultipleMetricsPrefix}.quality_distribution_metrics \
- ${collectMultipleMetricsPrefix}.quality_distribution.pdf 
+
+# ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf \
+# ${collectMultipleMetricsPrefix}.quality_distribution.pdf 
 # ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf \
 # ${collectMultipleMetricsPrefix}.insert_size_metrics 
 #
+
 
 echo "## "$(date)" Start $0"
 
@@ -102,9 +104,9 @@ fi
 
 putFile  ${collectMultipleMetricsPrefix}.alignment_summary_metrics 
 putFile ${collectMultipleMetricsPrefix}.quality_by_cycle_metrics 
-putFile ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf 
+#putFile ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf 
 putFile ${collectMultipleMetricsPrefix}.quality_distribution_metrics 
-putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
+#putFile ${collectMultipleMetricsPrefix}.quality_distribution.pdf
 
 if [ ${#reads2FqGz} -ne 0 ]; then
 	putFile ${collectMultipleMetricsPrefix}.insert_size_histogram.pdf

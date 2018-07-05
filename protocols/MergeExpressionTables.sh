@@ -56,7 +56,7 @@ done
 #
 perl -F\\t -wlane 'my @t;if($. == 1){push @t, $F[0];for my $IDX (1..(scalar(@F)-1)){push(@t,$F[$IDX]) if($IDX % 2 == 1 )};}else{push @t, $F[1]; for my $IDX (1..(scalar(@F)-1)){push(@t,$F[$IDX]) if($IDX % 2 == 0 );}} print join("\t",@t);' ${htseqTable}.tmp > ${htseqTable}
 
-perl $EBROOTTABLETOXLSX/tableToXlsx.pl \\t ${htseqTable}
+tableToXlsx.pl \\t ${htseqTable}
 xlsx=$(echo ${htseqTable}| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 mv -v $xlsx ${htseqXlsx}
 

@@ -53,7 +53,7 @@ else
 
 	python $EBROOTFUSIONCATCHER/bin/fusioncatcher.py --input=$input --output=${fusioncatcherOutDir} --data=${fusioncatcherDataDir} --threads=1 --visualization-sam --skip-conversion-grch37 --paranoid-sensitive --keep --keep-preliminary --reads-preliminary-fusions
 
-	perl $EBROOTTABLETOXLSX/tableToXlsxAsStrings.pl \\t ${fusioncatcherTsv}
+	tableToXlsxAsStrings.pl \\t ${fusioncatcherTsv}
 fi
 
 putFile ${fusioncatcherTsv}

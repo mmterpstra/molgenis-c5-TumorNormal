@@ -420,6 +420,8 @@ indelMnpMinRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.raw
 svMinTable,${tableDir}/${project}.${sampleName}.sv.min.tsv
 svMinRawTable,${tableDir}/${project}.${sampleName}.sv.min.raw.tsv
 
+splitTableDir,${projectDir}/splittables/
+
 ################################################################################
 #vcf to descriptiontable
 #
