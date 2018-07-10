@@ -12,6 +12,7 @@
 #string splitTableDir
 #string pipelineUtilMod
 #string parallelMod
+#string tableToXlsxMod
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -20,6 +21,7 @@ alloutputsexist \
 
 #Load modules
 ${stage} ${parallelMod}
+${stage} ${tableToXlsxMod}
 ${stage} ${pipelineUtilMod}
 ${checkStage}
 
@@ -35,7 +37,7 @@ for tsv in ${tableDir}/*.tsv; do
 
 	tsvbase="$(basename $tsv .tsv)"
 
-	parallel -a "$tsv" --header ".*$" -j 4 --block 100m  --pipepart "set -ex && VcfTableExportOneVariantPerSample.pl >  ${splitTableDir}$(basename $tsv .tsv)_split_{#}.tsv"
+	parallel -a "$tsv" --header ".*\n" -j 4 --block 10m  --pipepart "cat |VcfTableExportOneVariantPerSample.pl /dev/stdin>  ${splitTableDir}$(basename $tsv .tsv)_split_{#}.tsv"
 	tableToXlsxAsStrings.pl \\t ${splitTableDir}$(basename $tsv .tsv)_split_*.tsv
 	
 done
