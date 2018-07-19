@@ -68,20 +68,14 @@ echo -n ""> ${varscanCopycaller}
  grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' |bedtools slop -b 300 -g <(cut -f1,2 ${onekgGenomeFasta}.fai) -i ->  ${varscanCopynumberPrefix}.intervals.bed
 
 
-#run the pipeline: select the regions not in the targeted sequencing and do cnv data collection
+# cnv data collection
 samtools mpileup \
- -B -R -q 40 -f ${onekgGenomeFasta} \
- <( bedtools intersect -v -a ${controlSampleBam} -b  ${varscanCopynumberPrefix}.intervals.bed) <( bedtools intersect -v -a ${indelRealignmentBam} -b  ${varscanCopynumberPrefix}.intervals.bed) | \
-	java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
-	  - ${varscanCopynumberPrefix} \
-	  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
-#old command
-#samtools mpileup \
-# -B -R -q 40 -f ${onekgGenomeFasta} \
-# ${controlSampleBam} ${indelRealignmentBam}  | \
-#        java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
-#          - ${varscanCopynumberPrefix} \
-#          --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
+ -R -q 40 -f ${onekgGenomeFasta} \
+ ${controlSampleBam} ${indelRealignmentBam} | \
+ java -Xmx4g -jar $EBROOTVARSCAN/VarScan.*.jar copynumber \
+  - ${varscanCopynumberPrefix} \
+  --mpileup --min-segment-size 2000 --max-segment-size 5000 --min-coverage 1 2> ${varscanCopynumberPrefix}.err.log
+cat ${varscanCopynumberPrefix}.err.log >&2
 
 
 cat ${varscanCopynumberPrefix}.err.log >&2

@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=7 mem=24gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=7 mem=40gb walltime=10:00:00
 
 #string project
 
@@ -8,10 +8,10 @@
 #string stage
 #string checkStage
 #string starMod
-##string picardMod
 #string samtoolsMod
 #string onekgGenomeFasta
 #string onekgGenomeFastaIdxBase
+#string ensemblAnnotationGtf
 #string starIndexDir
 #string nTreads
 #list reads1FqGz,reads2FqGz,reads1FqGzOriginal,reads2FqGzOriginal
@@ -31,8 +31,7 @@ alloutputsexist \
 getFile ${onekgGenomeFasta}
 
 #Load modules
-${stage} ${STARMod}
-${stage} ${picardMod}
+${stage} ${starMod}
 ${stage} ${samtoolsMod}
 
 #check modules
@@ -56,6 +55,7 @@ for fq in ${reads1FqGz[@]} ${reads2FqGz[@]} ${reads1FqGzOriginal[@]} ${reads2FqG
 		
 		if [ ! -e ${starIndexDir}/sjdboverhang_$sjdbOverhang ] ; then
 	                echo "## "$(date)" ## Genome index not present generating it now"
+			mkdir -p ${starIndexDir}/sjdboverhang_$sjdbOverhang
 			STAR \
 			 --runMode genomeGenerate \
 			 --genomeDir ${starIndexDir}/sjdboverhang_$sjdbOverhang \
