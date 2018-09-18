@@ -8,7 +8,7 @@ except:
     exit
 
 
-print "digraph "+ sys.argv[1].strip(".csv")+ " {"
+print "digraph "+ sys.argv[1].strip(".csv").split('/')[-1] + " {"
 
 try:
     for i, line in enumerate(input_file):
