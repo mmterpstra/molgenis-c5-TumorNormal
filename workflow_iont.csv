@@ -42,6 +42,6 @@ TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;S
 #Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 #PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
-SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam
+SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam;markDuplicatesBai=mergeBamFilesBai
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 Cleanup,protocols/CleanUpProject.sh,TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller;ProjectMarkdown;indelRealignmentDir=mergeBamFilesDir;MultiQC

@@ -16,13 +16,14 @@ set -x
 set -e
 
 echo "## "$(date)" ##  $0 Started "
-
-cd /groups/umcg-oncogenetics/prm02/data/git/molgenis-c5-TumorNormal
-if [ ${#targetsList} -eq 0 ]; then
-        bash GenerateScripts2.sh iont $(ls ${rundir}/../*.filtered.csv |head -n 1 ) $(basename $(dirname ${rundir})) none none && bash .RunWorkFlowGeneration.sh
-else
-	bash GenerateScripts2.sh iont $(ls ${rundir}/../*.filtered.csv | head -n 1 ) $(basename $(dirname ${rundir})) ${targetsList} ${ampliconsBed} && bash .RunWorkFlowGeneration.sh	
-fi
+(
+	cd /groups/umcg-oncogenetics/prm02/data/git/molgenis-c5-TumorNormal
+	if [ ${#targetsList} -eq 0 ]; then
+	        bash GenerateScripts.sh iont $(ls ${rundir}/../*.filtered.csv |head -n 1 ) $(basename $(dirname ${rundir})) none none && bash .RunWorkFlowGeneration.sh
+	else
+		bash GenerateScripts.sh iont $(ls ${rundir}/../*.filtered.csv | head -n 1 ) $(basename $(dirname ${rundir})) ${targetsList} ${ampliconsBed} && bash .RunWorkFlowGeneration.sh
+	fi
+)
 #run submit script again
 
 

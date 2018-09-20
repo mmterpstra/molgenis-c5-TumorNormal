@@ -336,7 +336,7 @@ Relevant method	of acknowledgement if host looks like "peregrine.hpc.rug.nl or p
 		echo -e "echo -e bash $jobsDir/submit.sh"
 	)| tee .RunWorkFlowGeneration.sh
 
-	if [ $(find $jobsDir -iname *.finished| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
+	if [ $(find $jobsDir -iname '*.finished'| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
 	        >&2 echo "## "$(date)" ## $0 ## Already generated removing finished."
 	       	echo 'rm $jobsDir/*.finished' >> .RunWorkFlowGeneration.sh
 	fi

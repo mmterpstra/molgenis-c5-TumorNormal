@@ -21,7 +21,7 @@ Freebayes,protocols/Freebayes.sh,MergeBamFilesFreebayes;CreatePaddedTargets
 #MergeFreeBayesVariants,protocols/MergeVcfs.sh,Freebayes;haplotyperScatVcf=freebayesScatVcf;haplotyperVcf=freebayesVcf
 HaplotypeCaller,protocols/GatkHaplotypeCaller.sh,IndelRealignmentKnown;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai;gatkOpt=gatkDownSampleNone;CreatePaddedTargets
 #MergeVariants,protocols/MergeVcfs.sh,HaplotypeCaller
-CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai;
+CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR;CombineVariants;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai;haplotyperVcf=combineVcf
 #ContEst,protocols/GatkContEst.sh,IndelRealignmentKnown
 Mutect2,protocols/GatkMutect2.sh,IndelRealignmentKnown
 #Mutect2,protocols/GatkMutect2.sh,ContEst;IndelRealignmentKnown
@@ -44,6 +44,6 @@ TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;S
 #Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 #PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
-SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam
+SamQC,protocols/SamQc.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam;markDuplicatesBai=mergeBamFilesBai
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 Cleanup,protocols/CleanUpProject.sh,TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;TablesToXlsx;HaplotypeCaller;ProjectMarkdown;indelRealignmentDir=mergeBamFilesDir;MultiQC

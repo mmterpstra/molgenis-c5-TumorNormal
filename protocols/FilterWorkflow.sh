@@ -15,10 +15,13 @@ ${checkStage}
 set -x -e -o pipefail
 
 echo "## "$(date)" ##  $0 Started "	
-	
-Rscript -e 'args <- commandArgs(trailingOnly = TRUE); sampledf=read.table(args[1], header=TRUE, na.string=c("","NA"), sep=","); sampledffilt=sampledf[which(sampledf$count >= 5000 ), ]; write.table(sampledffilt,file=stdout(),sep=",", row.names=FALSE, quote=FALSE, na="");' ${rundir}"/../*.input.csv  > "${rundir}/../samplesheet.filtered.csv"
+
+#bash error (count not defined)
+count=0
+
+Rscript -e 'args <- commandArgs(trailingOnly = TRUE); sampledf=read.table(args[1], header=TRUE, na.string=c("","NA"), sep=","); sampledffilt=sampledf[which(sampledf$count >= 5000 ), ]; write.table(sampledffilt,file=stdout(),sep=",", row.names=FALSE, quote=FALSE, na="");' "${rundir}"/../*.input.csv  > "${rundir}/../samplesheet.filtered.csv"
 #'args <- commandArgs(trailingOnly = TRUE); sampledf=read.table(args[1], header=TRUE, fill=NA,  sep=","); sampledffilt=sampledf[which(sampledf$count >= 5000 ), ]; write.table(sampledffilt,file=stdout(),sep=",", row.names=FALSE, quote=FALSE);' ${rundir}"/../*.input.csv  > "${rundir}/../samplesheet.filtered.csv"
 
-  putFile "${rundir}"/../*.input.csv
-	
+ putFile "${rundir}"/../*.input.csv
+
 echo "## "$(date)" ##  $0 Done "

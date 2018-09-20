@@ -44,26 +44,26 @@ mkdir -p ${addOrReplaceGroupsDir}
 echo "## "$(date)" Start $0"
 
 java -Xmx5g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
- INPUT=${bwaSam} \
- OUTPUT=/dev/stdout \
+ INPUT="${bwaSam}" \
+ OUTPUT="/dev/stdout" \
  SORT_ORDER=unsorted \
- RGID=${internalId} \
- RGLB=${sampleName}_${samplePrep} \
- RGPL=${sequencer} \
- RGPU=${seqType}_${sequencerId}_${flowcellId}_${run}_${lane}_${barcode} \
- RGSM=${sampleName} \
- RGDT=$(date --rfc-3339=date) \
+ RGID="${internalId}" \
+ RGLB="${sampleName}_${samplePrep}" \
+ RGPL="${sequencer}" \
+ RGPU="${seqType}_${sequencerId}_${flowcellId}_${run}_${lane}_${barcode}" \
+ RGSM="${sampleName}" \
+ RGDT="$(date --rfc-3339=date)" \
  MAX_RECORDS_IN_RAM=1000000 \
- TMP_DIR=${addOrReplaceGroupsDir} | 
-java -Xmx5g -XX:ParallelGCThreads=2 -Djava.io.tmpdir=${addOrReplaceGroupsDir} -jar $EBROOTPICARD/picard.jar FixMateInformation \
- INPUT=/dev/stdin \
+ TMP_DIR="${addOrReplaceGroupsDir}" | 
+java -Xmx5g -XX:ParallelGCThreads=2 -Djava.io.tmpdir="${addOrReplaceGroupsDir}" -jar $EBROOTPICARD/picard.jar FixMateInformation \
+ INPUT="/dev/stdin" \
  ADD_MATE_CIGAR=true \
  IGNORE_MISSING_MATES=true \
  ASSUME_SORTED=false \
  SORT_ORDER=coordinate \
  CREATE_INDEX=true \
- TMP_DIR=${addOrReplaceGroupsDir} \
- OUTPUT=${addOrReplaceGroupsBam}
+ TMP_DIR="${addOrReplaceGroupsDir}" \
+ OUTPUT="${addOrReplaceGroupsBam}"
 
 
 putFile ${addOrReplaceGroupsBam}

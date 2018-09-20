@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=2gb ppn=1
+#MOLGENIS walltime=23:59:00 mem=6gb ppn=1
 
 #string project
 
@@ -31,7 +31,7 @@ set -e
 mkdir -p ${splitTableDir}
 touch "${splitTableDir}".run
 
-for tsv in ${tableDir}/*.tsv; do
+for tsv in $(ls ${tableDir}/*{snv,indel}*.tsv| grep -v 'description'); do
 
 	#parallel + split for 1 sample a row
 
