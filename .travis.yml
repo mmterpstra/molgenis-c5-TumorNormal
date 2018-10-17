@@ -1,6 +1,8 @@
 language: perl
 perl:
   - "5.18"
+jdk:
+  - oraclejdk8
 env:
   global:
     - LMODVERSION="7.7.39"
@@ -14,14 +16,8 @@ env:
 #    - MOLGENISVERSION="v16.08.1" 
     - MOLGENISVERSION="v17.08.1"
 before_install:
-#note: might need cleanup here and there
-#install java
-  - sudo apt-get install debconf-utils
-  - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-  - printf "y\n\n\t\n" | sudo apt-get install oracle-java8-installer
-  - sudo update-java-alternatives --set /usr/lib/jvm/java-8-oracle
 #instal lua / lmod
-  - sudo apt-get install liblua5.1-0 liblua5.1-0-dev lua-filesystem-dev lua-filesystem lua-posix lua-posix-dev lua5.1 graphviz
+  - sudo apt-get install -q liblua5.1-0 liblua5.1-0-dev lua-filesystem-dev lua-filesystem lua-posix lua-posix-dev lua5.1 graphviz
   - wget "https://github.com/TACC/Lmod/archive/${LMODVERSION}.tar.gz"
   - tar -zxf "${LMODVERSION}.tar.gz"
   - cd Lmod-*/ && sudo mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install && cd $OLDPWD
