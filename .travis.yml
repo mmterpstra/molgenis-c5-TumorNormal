@@ -3,14 +3,14 @@ perl:
   - "5.18"
 env:
   global:
-    - LMODVERSION="6.4.5"
+    - LMODVERSION="7.7.39"
     - LMODPREFIX="/opt/apps"
     - LMODPATH="/opt/apps/lmod/lmod/libexec"
     - EASYBUILD_PREFIX=~/.local/easybuild
     - EASYBUILDMODS=~/.local/easybuild/modules/all
     - EASYBUILD_MODULES_TOOL='Lmod'
   matrix:
-    - MOLGENISVERSION="v16.04.1"
+#    - MOLGENISVERSION="v16.04.1"
 #    - MOLGENISVERSION="v16.08.1" 
     - MOLGENISVERSION="v17.08.1"
 before_install:
@@ -22,8 +22,8 @@ before_install:
   - sudo update-java-alternatives --set /usr/lib/jvm/java-8-oracle
 #instal lua / lmod
   - sudo apt-get install liblua5.1-0 liblua5.1-0-dev lua-filesystem-dev lua-filesystem lua-posix lua-posix-dev lua5.1 graphviz
-  - wget https://github.com/TACC/Lmod/archive/6.4.5.tar.gz
-  - tar -zxf 6.4.5.tar.gz
+  - wget "https://github.com/TACC/Lmod/archive/${LMODVERSION}.tar.gz"
+  - tar -zxf "${LMODVERSION}.tar.gz"
   - cd Lmod-*/ && sudo mkdir -p /opt/apps && ./configure --prefix=/opt/apps && sudo make install && cd $OLDPWD
   - export PATH=$PATH:$LMODPATH && . /opt/apps/lmod/lmod/init/profile
   - module av && module list
@@ -31,7 +31,7 @@ before_install:
   - wget https://raw.githubusercontent.com/hpcugent/easybuild-framework/develop/easybuild/scripts/bootstrap_eb.py
   - python --version
   - echo "travis-env:" $EASYBUILD_PREFIX $EASYBUILDMODS $EASYBUILD_MODULES_TOOL $MOLGENISVERSION $LMODVERSION $LMODPREFIX $LMODPATH 
-  - export EASYBUILD_PREFIX=$HOME/.local/easybuild && mkdir -p $HOME/.local/easybuild && python bootstrap_eb.py $HOME/.local/easybuild && module use $HOME/.local/easybuild/modules/all
+  - export EASYBUILD_PREFIX=$HOME/.local/easybuild && mkdir -p $HOME/.local/easybuild &&python bootstrap_eb.py $HOME/.local/easybuild && module use $HOME/.local/easybuild/modules/all
   - export EASYBUILD_MODULES_TOOL='Lmod' && module load EasyBuild && eb -l eb/Molgenis-Compute-${MOLGENISVERSION}.eb
 
 #easybuild
