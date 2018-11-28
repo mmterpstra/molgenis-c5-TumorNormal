@@ -162,7 +162,7 @@ perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl 
  > ${combineVcf}
 
 #fear the complex variants
-grep -vPc "^#" ${combineVcf}.tmp.ReallyComplex.vcf
+grep -vPc "^#" ${combineVcf}.tmp.ReallyComplex.vcf|| echo "## no errors here!! Yaay!!"
 tail  ${combineVcf}.tmp.ReallyComplex.vcf
 
 mv ${combineVcf}.tmp.ReallyComplex.vcf ${combineVcf}.ReallyComplex.vcf
