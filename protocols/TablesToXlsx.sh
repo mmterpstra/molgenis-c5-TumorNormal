@@ -91,7 +91,7 @@ mkdir -p "${xlsxDir}/tmp/"
 for t in ${tableDir}/*.tsv; do
 	descr="description"
 	#if contains description then do not split
-	if[ -z "${t##*$descr*}" ]; then
+	if [ -z "${t##*$descr*}" ]; then
 		tableToXlsxAsStrings.pl \\t $t
 		xlsxpart=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_part1.xlsx/g')
 		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
