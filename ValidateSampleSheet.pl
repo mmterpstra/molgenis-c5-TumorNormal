@@ -117,8 +117,14 @@ sub ValidateControlSampleNames {
 	
 	#my $samplesh	
 	return if (not(defined($samplesheet -> [0] -> {'controlSampleName'})));
-	my @s;#sample
-	map{push(@s, $_ -> {'project'}."|".$_ -> {'sampleName'})}(@{$samplesheet});
+	my %combihash;
+	my $s;#sample
+	#gather array for checking the controlsample per project and one for checking amount of combinations
+	map{push(@{$s}, $_ -> {'project'}."|".$_ -> {'sampleName'});
+		$combihash{ $_ -> {'project'} }{'samples'}{ $_ -> {'sampleName'} }++;
+		$combihash{ $_ -> {'project'} }{'controlsampleNames'}{ $_ -> {'controlSampleName'} }++;
+		$combihash{ $_ -> {'project'} }{'samplecontrol'}{ $_ -> {'sampleName'} . '|' . $_ -> {'controlSampleName'} }++;
+	}(@{$samplesheet});
 	my $i=1;
 	my $cs;	#controlsample
 	map{push(@{$cs}, {'project' => $_ -> {'project'}, 'controlSampleName' => $_ -> {'controlSampleName'}, 'line' =>  $i}); $i++;}(@{$samplesheet});
@@ -130,11 +136,24 @@ sub ValidateControlSampleNames {
 		my $seen = 0;
 		map{
 			$seen++ if($_ eq $csproject.'|'.$csname);
-		}(@s);
+		}(@{$s});
 		$error = "'".$csname."' in project '".$csproject."' at $csline," if(not($seen));
 	}(@{$cs});
+	
+	#reduce the amount of normals
+	my $maxcontrol = 3;
+	for my $project (keys %combihash){
+		warn "[VALIDATIONWARNING] project '".$project.
+			"' has amount of samples '".scalar(keys(%{$combihash{$project}{'samples'}})).
+			"' has amount of controls '".scalar(keys(%{$combihash{$project}{'controlsampleNames'}})).
+			"' amount of controlsamples/sample combinations '".scalar(keys(%{$combihash{$project}{'samplecontrol'}}))."'\n";
+		die "[VALIDATIONERROR] in project '$project' amount of controlsamples '".scalar(keys(%{$combihash{$project}{'controlsampleName'}}))."' exceeds '$maxcontrol'" if( scalar(keys(%{$combihash{$project}{'controlsampleName'}})) > $maxcontrol); 
+	}
+	
 	chop $error;
 	die "[VALIDATIONERROR] The following samplename(s) are seen in the controlsamplenames row but not seen in the samplenames row for the project (format'controlsaplename' at \$lineno) : \n".$error if($error ne "");
+	
+	
 }
 sub ValidateFqFiles {
 	my $samplesheet = shift @_;
