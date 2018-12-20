@@ -59,3 +59,5 @@ perl $EBROOTPIPELINEMINUTIL/bin/multiIntersectSeg.pl ${onekgGenomeFastaDict} ${v
 putFile ${varscanDir}/multi
 # $vcf
 
+echo "## "$(date)" ##  $0 Done "
+

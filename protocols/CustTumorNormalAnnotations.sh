@@ -35,3 +35,6 @@ perl $EBROOTPIPELINEMINUTIL/bin/${normalAnnotPl} \
  >${custAnnotVcf}
 
 putFile ${custAnnotVcf}
+
+echo "## "$(date)" ##  $0 Done "
+

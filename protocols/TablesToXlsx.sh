@@ -108,3 +108,5 @@ for t in ${tableDir}/*.tsv; do
 
 	fi
 done
+echo "## "$(date)" ##  $0 Done "
+
