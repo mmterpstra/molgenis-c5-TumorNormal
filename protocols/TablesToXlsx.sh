@@ -7,7 +7,7 @@
 #inTable
 #string stage
 #string tableToXlsxMod
-
+#string parallelMod
 #list indelMnpTable,indelMnpRawTable,indelMnpMinTable,indelMnpMinRawTable,snvTable,snvRawTable,snvMinTable,snvMinRawTable,svTable,svRawTable,svMinTable,svMinRawTable,svDescrTable
 #string snvDescrTable
 #string indelMnpDescrTable
@@ -27,7 +27,7 @@ outXlsx=""
 
 for inTable in "${indelMnpRawTable[@]}" "${snvRawTable[@]}"  \
  "${snvDescrTable}" "${indelMnpDescrTable}"  "${svDescrTable}"; do
- xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_part1.xlsx/g')
+ xlsx=$(echo $inTable| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split1.xlsx/g')
  outXlsx="$outXlsx ${xlsxDir}/"$(basename $xlsx)
 done
 
@@ -93,7 +93,7 @@ for t in ${tableDir}/*.tsv; do
 	#if contains description then do not split
 	if [ -z "${t##*$descr*}" ]; then
 		tableToXlsxAsStrings.pl \\t $t
-		xlsxpart=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_part1.xlsx/g')
+		xlsxpart=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split1.xlsx/g')
 		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
 		mv -v $xlsx ${xlsxDir}
 		touch ${xlsxDir}/$(basename $xlsxpart)
@@ -102,7 +102,7 @@ for t in ${tableDir}/*.tsv; do
 	else
 		parallel -a "$t" --header ".*\n" -j 4 --block 100m --pipepart "cat /dev/stdin> $(dirname $t)/$(basename $t .tsv)_split_{#}.tsv";
 		tableToXlsxAsStrings.pl \\t "$(dirname $t)"/"$(basename $t .tsv)"_split_*.tsv
-		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_part\*.xlsx/g')
+		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split\*.xlsx/g')
 		mv -v $xlsx ${xlsxDir}
 		putFile ${xlsxDir}/$(basename $xlsx)
 
