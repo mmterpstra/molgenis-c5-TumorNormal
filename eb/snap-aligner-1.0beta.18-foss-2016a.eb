@@ -1,0 +1,37 @@
+
+easyblock = 'MakeCp'
+
+#because of ubuntu snappy
+name = 'snap-aligner'
+version = '1.0beta.18'
+
+homepage = "http://snap.cs.berkeley.edu"
+description = """Scalable Nucleotide Alignment Program - http://snap.cs.berkeley.edu. 
+ SNAP is a fast and accurate aligner for short DNA reads. It is optimized for modern
+ read lengths of 100 bases or higher, and takes advantage of these reads to align data
+ quickly through a hash-based indexing scheme."""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+source_urls = ['https://github.com/amplab/snap/archive/']
+sources = ['v%(version)s.tar.gz']
+
+dependencies = [
+    ('zlib', '1.2.8'),
+]
+
+parallel = 1
+
+files_to_copy = [(["snap-aligner"], "bin/"),
+]
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in ['snap-aligner']],
+    'dirs': ['bin'],
+}
+
+#sanity_check_commands = [('snap-aligner',' -h')]
+
+#checksums = ['7db21d1c1b8eb5c0572237b280cc1dab']
+
+moduleclass = 'bio'

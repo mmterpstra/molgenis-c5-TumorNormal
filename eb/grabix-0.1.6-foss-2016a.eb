@@ -1,0 +1,36 @@
+
+easyblock = 'MakeCp'
+
+name = 'grabix'
+version = '0.1.6'
+
+homepage = "https://github.com/arq5x/grabix"
+description = """The tool grabix leverages the fantastic BGZF library in samtools to provide
+ random access into text files that have been compressed with bgzip."""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+source_urls = ['https://github.com/arq5x/grabix/archive/']
+sources = ['%(version)s.tar.gz']
+
+dependencies = [
+    ('zlib', '1.2.8'),
+    ('bzip2','1.0.6'),
+]
+
+parallel = 1
+
+files_to_copy = [(["grabix"], "bin/"),
+    (['bgzf.h', 'grabix.h', 'khash.h'], 'include/')
+]
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in ['grabix']],
+    'dirs': ['bin', 'include'],
+}
+
+sanity_check_commands = [('grabix',' -h')]
+
+checksums = ['7db21d1c1b8eb5c0572237b280cc1dab']
+
+moduleclass = 'bio'

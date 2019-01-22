@@ -1,0 +1,39 @@
+name = 'CoNVaDING'
+version = '1.3.5'
+
+homepage = 'https://github.com/mmterpstra/CoNVaDING_reload/releases/tag/1.3.2'
+description = """CNV detection in targeted gene panels."""
+
+toolchain = {'name': 'foss', 'version': '2015b'}
+easyblock = 'PerlModule'
+
+#
+# Example URL: https://github.com/molgenis/CoNVaDING/archive/1.1.6.zip
+#  
+#
+
+perl = 'Perl'
+perlver = '5.22.0'
+versionsuffix = '-%s-%s' % (perl, perlver)
+
+source_urls = [('https://github.com/mmterpstra/CoNVaDING_reload/archive/')]
+sources = [('%s.zip' % (version))]
+
+dependencies = [ 
+    ('PerlPlus' ,'5.22.0','-v17.08.1'),
+    ('SAMtools', '1.5'),
+]
+
+#('Log-Log4perl', '1.46')
+
+#postinstallcmds = [
+#    'chmod -R 775 %(installdir)s/*.pl', 
+#    'chmod -R g+rwX,o+rX,o-w %(installdir)s/*'
+#]
+
+sanity_check_paths = {
+    'files': ['bin/CoNVaDING.pl'],
+    'dirs': []
+}
+
+moduleclass = 'bio'

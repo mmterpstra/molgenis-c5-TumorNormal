@@ -1,0 +1,45 @@
+# This file is an EasyBuild reciPY as per https://github.com/easybuilders/easybuild
+# Author: Pablo Escobar Lopez
+# sciCORE - University of Basel
+# SIB Swiss Institute of Bioinformatics
+
+easyblock = "CMakeMake"
+
+name = 'bamtools'
+version = '2.3.0'
+
+homepage = 'https://github.com/pezmaster31/bamtools'
+description = """Bam tools"""
+
+toolchain = {'name': 'foss', 'version': '2015b'}
+#toolchainopts = {'pic': True, 'usempi': True}
+
+source_urls = ['https://github.com/pezmaster31/bamtools/archive/']
+sources = ['v%(version)s.tar.gz']
+
+builddependencies = [('CMake', '3.7.2')]
+
+dependencies = [
+    ('zlib', '1.2.8'),
+    ('bzip2', '1.0.6'),
+]
+
+skipsteps = ['install']
+#buildopts = ' && mkdir -p %(installdir)s && cp -r * %(installdir)s/'
+#prebuildopts = 'mkdir build && cd build && '
+buildopts = '&&  make install'
+
+
+separate_build_dir = True
+
+executables = ['bamtools']
+#files_to_copy = [(executables,'bin')]
+
+sanity_check_paths = {
+    'files': ["bin/bamtools"],
+    'dirs': [],
+}
+
+modextrapaths = {'LIBRARY_PATH': ['lib/bamtools/']}
+
+moduleclass = 'bio'

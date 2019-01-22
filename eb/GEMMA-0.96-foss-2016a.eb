@@ -1,0 +1,44 @@
+# Author: Maxime Schmitt, University of Luxembourg
+# Author: Adam Huffman, The Francis Crick Institute
+#
+# Based on the work of: Pablo Escobar Lopez
+# Swiss Institute of Bioinformatics (SIB)
+# Biozentrum - University of Basel
+
+easyblock = 'MakeCp'
+
+name = 'GEMMA'
+version = '0.96'
+
+homepage = "https://github.com/genetics-statistics/GEMMA"
+description = """GEMMA is a software toolkit for fast application of linear mixed models (LMMs) and 
+related models to genome-wide association studies (GWAS) and other large-scale data sets."""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+# https://github.com/genetics-statistics/GEMMA/archive/v0.96.tar.gz
+source_urls = ['https://github.com/genetics-statistics/GEMMA/archive/']
+sources = ['v%(version)s.tar.gz']
+
+dependencies = [
+    ('zlib', '1.2.8'),
+    ('Eigen','3.2.8'),
+    ('GSL','1.16'),
+#
+#    ('HDF5', '1.8.18'),
+]
+
+parallel = 1
+
+#buildopts = ' WITH_OPENBLAS=1  '
+buildopts = 'WITH_OPENBLAS=1 FORCE_DYNAMIC=1 LIBS_LNX_D_LAPACK="-lscalapack -lopenblas"'
+#$(printf " -I %s" $(echo $INCLUDE &>/dev/stderr;echo $INCLUDE | tr ":" " " ))" 
+
+files_to_copy = ["bin"]
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in ['gemma']],
+    'dirs': files_to_copy,
+}
+
+moduleclass = 'bio'

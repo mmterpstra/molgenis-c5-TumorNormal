@@ -1,0 +1,47 @@
+##
+# University Medical Center Groningen, Groningen, The Netherlands
+# Homepage: http://www.rug.nl/research/genetics/
+#
+# Authors::	https://github.com/mmterpstra/
+# License::	MIT 
+#
+##
+
+easyblock = 'JAR'
+
+name = 'cromwell'
+version = '28.2'
+
+homepage = 'http://sourceforge.net/projects/picard'
+description = """A Workflow Management System geared towards scientific workflows.
+ Cromwell is open sourced under the BSD 3-Clause license."""
+
+toolchain = {'name': 'dummy', 'version': 'dummy'}
+
+source_urls = ['https://github.com/broadinstitute/%(name)s/releases/download/%(version)s']
+
+cromwellversionjar='%s-%s.jar' % (name, version.replace('.', '_'))
+cromwelljar='%s.jar' % (name)
+sources = [cromwellversionjar]
+checksums = ['de11a878f44429a8aefead9e2bf7a463']
+
+java = 'Java'
+javaver = '1.8.0_121'
+versionsuffix = '-%s-%s' % (java, javaver)
+
+dependencies = [(java, javaver)]
+
+postinstallcmds	= ["mv -v %(installdir)s/"+ cromwellversionjar + " %(installdir)s/" + cromwelljar ]
+
+modloadmsg = "To execute %s run: java -jar $EBROOT%s/%s.jar" % (name, name.upper(), name)
+#modaliases = { 'cromwell': "'opts='';if [ \"$XMX\" == \"\" ]; then opts=\"$opts -Xmx4g\"; else opts=\"$opts -Xmx$XMX\"; fi; java $opts -jar $EBROOT%s/%s.jar '" % (name.upper(), name)}
+
+sanity_check_paths = {
+    'files': [cromwelljar],
+    'dirs': [],
+}
+
+sanity_check_commands = [("java -jar " + cromwelljar ,'--help')]
+
+moduleclass = 'tools'
+

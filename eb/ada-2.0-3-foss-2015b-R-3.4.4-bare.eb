@@ -1,0 +1,55 @@
+easyblock = 'Bundle'
+
+name = 'ada'
+version = '2.0-3'
+rver = '3.4.4'
+versionsuffix = '-R-%s-bare' % rver
+
+homepage = 'http://www.r-project.org/'
+description = """R is a free software environment for statistical computing and graphics."""
+
+toolchain = {'name': 'foss', 'version': '2015b'}
+
+# these are extensions for R
+exts_defaultclass = 'RPackage'
+exts_filter = ("R -q --no-save", "library(%(ext_name)s)")
+
+dependencies = [('R', rver, '-bare')]
+
+name_tmpl = '%(name)s_%(version)s.tar.gz'
+ext_options = {
+    'source_urls': [
+        'http://cran.r-project.org/src/contrib/Archive/%(name)s',  # package archive
+        'http://cran.r-project.org/src/contrib/',  # current version of packages
+        'http://cran.freestatistics.org/src/contrib',  # mirror alternative for current packages
+    ],
+    'source_tmpl': name_tmpl,
+}
+bioconductor_options = {
+    'source_urls': [
+        'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+        'http://www.bioconductor.org/packages/3.1/bioc/src/contrib/',
+        'http://www.bioconductor.org/packages/3.1/data/annotation/src/contrib/',
+        'http://www.bioconductor.org/packages/3.1/data/experiment/src/contrib/',
+    ],
+    'source_tmpl': name_tmpl,
+}
+
+# CRAN packages on which these Bioconductor packages depend are available in R module on which this depends
+# !! order of packages is important !!
+exts_list = [
+    ('rpart', '4.1-13', ext_options),
+    ('ada', '2.0-3', ext_options),
+]
+
+modextrapaths = {'R_LIBS': ''}
+
+sanity_check_paths = {
+    'files':  [ '%(installdir)s/' + name + '/R/' + name, ],
+    'dirs': [],
+}
+
+moduleclass = 'bio'
+
