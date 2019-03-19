@@ -32,5 +32,5 @@ set -e
 
 putFile ${multiQcHtml}
 
-echo "## "$(date)" Done $0"
+echo "## "$(date)" ##  $0 Done "
 

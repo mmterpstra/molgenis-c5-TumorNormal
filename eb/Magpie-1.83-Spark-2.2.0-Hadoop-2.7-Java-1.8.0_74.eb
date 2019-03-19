@@ -1,0 +1,33 @@
+easyblock = 'Tarball'
+
+name = 'Magpie'
+version = '1.83'
+versionsuffix = '-Spark-2.2.0-Hadoop-2.7-Java-%(javaver)s'
+
+homepage = 'http://spark.apache.org'
+description = """Magpie contains a number of scripts for running Big Data software
+in HPC environments, including Hadoop and Spark. There is support for Lustre,
+Slurm, Moab, Torque. and LSF.
+"""
+
+toolchain = {'name': 'dummy', 'version': ''}
+
+sources = ['%(version)s.tar.gz']
+source_urls = [
+    'https://github.com/LLNL/magpie/archive/',
+]
+checksums = ['31338277941f12904a1a5033cc39952c']
+
+dependencies = [
+    ('Java', '1.8.0_74'),
+    ('Spark','2.2.0','-Hadoop-2.7-Java-%(javaver)s')
+]
+
+sanity_check_paths = {
+    'files': ['magpie-run', 'magpie-setup-core'],
+    'dirs': ['']
+}
+
+modextrapaths = {'PATH': ''}
+
+moduleclass = 'devel'

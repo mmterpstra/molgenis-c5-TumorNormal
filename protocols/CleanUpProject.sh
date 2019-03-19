@@ -170,3 +170,6 @@ putFile "$(dirname "${projectDir}")/${project}.zip"
 
 
 cd $olddir
+
+echo "## "$(date)" ##  $0 Done "
+

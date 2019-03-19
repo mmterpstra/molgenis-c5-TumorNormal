@@ -114,3 +114,5 @@ for t in ${tableDir}/*.tsv; do
 	fi
 	echo $t' is already split because it contians the '_split_[0123456789]' part'
 done
+echo "## "$(date)" ##  $0 Done "
+

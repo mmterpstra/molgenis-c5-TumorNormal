@@ -1,0 +1,34 @@
+easyblock = 'Tarball'
+
+name = 'FastQ_Screen'
+version = 'v0.11.4'
+
+homepage = 'http://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/'
+description = """ FastQ Screen allows you to screen a library of sequences in
+ FastQ format against a set of sequence databases so you can see if the
+ composition of the library matches with what you expect. """
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+source_urls = [('http://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/' )]
+sources = [ 'fastq_screen_v0.11.4.tar.gz' ]
+
+perl = 'Perl'
+perlver = '5.20.2'
+perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (perl, perlver, perlversuffix)
+
+dependencies = [
+    (perl, perlver, perlversuffix),
+    ('BWA','0.7.12'),
+]
+#
+# Check if all binaries are present.
+#
+
+sanity_check_paths = {
+    'files': [ 'fastq_screen' ],
+    'dirs': [ ],
+}
+
+moduleclass = 'bio'

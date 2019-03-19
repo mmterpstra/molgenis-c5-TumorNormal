@@ -1,0 +1,30 @@
+name = 'VarScan'
+version = '2.4.3'
+
+homepage = 'http://varscan.sourceforge.net/'
+description = """VarScan is a platform-independent software tool developed at the Genome Institute at Washington University to detect variants in NGS data."""
+
+toolchain = {'name': 'dummy', 'version': 'dummy'}
+easyblock = 'JAR'
+
+sources = ['%(name)s.v%(version)s.jar']
+#source_urls = ['https://github.com/dkoboldt/varscan/releases/download/%(version)s/']
+#new and ugly download link 'https://github.com/dkoboldt/varscan/raw/master/VarScan.v2.4.3.jar'
+source_urls = ['https://github.com/dkoboldt/varscan/raw/master/']
+checksums = ['a89466fcf270fffdab6cf0555087d48b']
+
+java = 'Java'
+javaver = '1.7.0_80'
+versionsuffix = '-%s-%s' % (java, javaver)
+dependencies = [(java, javaver)]
+
+install_cmd = 'cp %(name)s.v%(version)s.jar  %(installdir)s/%(name)s.jar && cp %(name)s.v%(version)s.jar  %(installdir)s/'
+
+modloadmsg = """To execute Varscan2 run: java -jar \${EBROOTVARSCAN}/%(name)s.jar"""
+
+sanity_check_paths = {
+    'files': ['%(name)s.jar'],
+    'dirs': [],
+}
+
+moduleclass = 'bio'

@@ -200,3 +200,6 @@ else
 		putFile ${nugeneReads2FqGz}
 	fi
 fi
+
+echo "## "$(date)" ##  $0 Done "
+

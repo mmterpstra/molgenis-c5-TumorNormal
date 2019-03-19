@@ -1,0 +1,53 @@
+easyblock = 'CMakeMake'
+
+name = "Graphtyper"
+version = '1.2'
+
+homepage = 'https://github.com/DecodeGenetics/graphtyper'
+description = """Graphtyper is a highly scalable genotyping software. It represents a reference
+ genome and known variants of a genomic region using an acyclic mathematical graph structure (a
+ "pangenome reference"), which high-throughput sequence reads are re-aligned to for the purpose
+ of discovering and genotyping SNPs and small indels."""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+#git clone recursive and create your own tar file (tar -zcf name-version-commit.tar.gz)
+#source_urls = ['https://github.com/DecodeGenetics/graphtyper/releases']
+sources = [('%s-%s-319e11f41c4cb82e0eea9f59b1211453921e94c2.tar.gz' % (name, version))]
+
+
+#builddependencies = [
+#    ('CMake', '3.6.1'),
+#    ('Boost', '1.58.0','-Python-2.7.9'),
+#]
+
+boostopts = 'export BOOST_ROOT=$EBROOTBOOST &&'
+boostopts += 'export BOOST_INCLUDEDIR=$EBROOTBOOST/include &&'
+boostopts += 'export BOOST_LIBRARYDIR=$EBROOTBOOST/lib &&'
+
+preconfigopts = boostopts + "mkdir -p %(installdir)s && cd %(installdir)s && "
+configopts = " $OLDPWD "
+
+prebuildopts = preconfigopts;
+buildopts = " graphtyper "
+
+skipsteps = ['install']
+
+#configopts = '  --prefix=%(installdir)s/ &>> $(pwd)/bcl2fastq2.config.log'
+
+
+dependencies = [
+    ('CMake', '3.6.1'),
+    ('Boost', '1.58.0','-Python-2.7.11'),
+    ('bzip2', '1.0.6'),
+    ('zlib', '1.2.8'),
+    ('XZ','5.2.2'),
+]
+
+#files_to_copy = ["bin", "src","easybuild","etc","lib"]
+
+sanity_check_paths = {
+    'files': ['bin/graphtyper'],
+    'dirs': ['bin'],
+}
+

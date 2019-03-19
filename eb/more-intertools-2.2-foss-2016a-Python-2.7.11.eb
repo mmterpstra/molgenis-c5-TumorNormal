@@ -1,0 +1,34 @@
+easyblock = "PythonPackage"
+
+name = 'more-itertools'
+version = '2.2'
+
+python = 'Python'
+pyver = '2.7.11'
+pyshortver = '.'.join(pyver.split('.')[:2])
+
+
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = 'https://pypi.python.org/pypi/shove'
+description = """Common object storage frontend that supports dictionary-style
+ access, object serialization and compression, and multiple storage and caching
+ backends."""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+source_urls = ['https://pypi.python.org/packages/source/%s/%s/' % (name[0],name) ]
+sources = ['%s-%s.tar.gz' % (name, version)]
+
+options = {'modulename': 'more_itertools'}
+
+dependencies = [
+    (python, pyver),
+]
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['lib/python' + pyshortver + '/site-packages/' + name.replace('-','_') + '-' + version + '-py' + pyshortver + '.egg'],
+}
+
+moduleclass = 'lib'

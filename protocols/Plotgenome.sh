@@ -74,3 +74,5 @@ fi
 putFile "${segFile}"
 putFile "${cnvPlotPdf}"
 
+echo "## "$(date)" ##  $0 Done "
+
