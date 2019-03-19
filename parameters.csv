@@ -49,6 +49,9 @@ fastqcZipExt,_fastqc.zip
 singleEndfastqcZip,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
 pairedEndfastqcZip1,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
 pairedEndfastqcZip2,${fastqcDir}/${internalId}_${sampleName}${fastqcZipExt}
+lnFq1Name,${fastqcDir}/${internalId}_${sampleName}_R1.fastq.gz
+lnFq2Name,${fastqcDir}/${internalId}_${sampleName}_R2.fastq.gz
+lnFq3Name,${fastqcDir}/${internalId}_${sampleName}_R3.fastq.gz
 #################################################################################
 ##FusionCatcher
 

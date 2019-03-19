@@ -92,19 +92,25 @@ for t in ${tableDir}/*.tsv; do
 	descr="description"
 	#if contains description then do not split
 	if [ -z "${t##*$descr*}" ]; then
-		tableToXlsxAsStrings.pl \\t $t
-		xlsxpart=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split1.xlsx/g')
-		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')
-		mv -v $xlsx ${xlsxDir}
-		touch ${xlsxDir}/$(basename $xlsxpart)
-		putFile ${xlsxDir}/$(basename $xlsxpart)
+		tableToXlsxAsStrings.pl \\t "$t"
+		xlsxpart="$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split1.xlsx/g')"
+		xlsx="$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/.xlsx/g')"
+		mv -v "$xlsx" "${xlsxDir}"
+		touch "${xlsxDir}/$(basename $xlsxpart)"
+		putFile "${xlsxDir}/$(basename $xlsxpart)"
 		
-	else
+	#if does not contain _split_[0123456789] then split
+	elif [ ! -z "${t##*_split_[0123456789]*.tsv}" ]; then
 		parallel -a "$t" --header ".*\n" -j 4 --block 100m --pipepart "cat /dev/stdin> $(dirname $t)/$(basename $t .tsv)_split_{#}.tsv";
-		tableToXlsxAsStrings.pl \\t "$(dirname $t)"/"$(basename $t .tsv)"_split_*.tsv
+		#this below might not be safe
+		tableToXlsxAsStrings.pl \\t $(dirname $t)/$(basename $t .tsv)_split_*.tsv
 		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split\*.xlsx/g')
-		mv -v $xlsx ${xlsxDir}
-		putFile ${xlsxDir}/$(basename $xlsx)
+		#the $xlsx part depends on globbing so the files shuold be present of else vague errors occur
+		for xlsxtoput in $xlsx; do
+			mv -v $xlsxtoput "${xlsxDir}" 
+			putFile "${xlsxDir}/$(basename "$xlsxtoput")"
+		done
 
 	fi
+	echo $t' is already split because it contians the '_split_[0123456789]' part'
 done

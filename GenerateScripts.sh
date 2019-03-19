@@ -164,7 +164,11 @@ projectname=$3
 	elif [ $1 == "prepiont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
 	        workflowBase="workflow_prepiont.csv"
-	        backend="localhost"
+	        if [ $HOSTNAME == "peregrine.hpc.rug.nl" ] ; then 
+			backend="slurm"
+		else
+			backend="localhost"
+		fi
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 		
 		ampliconsBed=$5
@@ -338,7 +342,7 @@ Relevant method	of acknowledgement if host looks like "peregrine.hpc.rug.nl or p
 
 	if [ $(find $jobsDir -iname '*.finished'| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
 	        >&2 echo "## "$(date)" ## $0 ## Already generated removing finished."
-	       	echo 'rm $jobsDir/*.finished' >> .RunWorkFlowGeneration.sh
+	       	#echo 'rm $jobsDir/*.finished' >> .RunWorkFlowGeneration.sh
 	fi
 
 #GenerateScripts2.sh

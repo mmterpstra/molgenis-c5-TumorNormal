@@ -19,6 +19,9 @@
 #string singleEndfastqcZip
 #string pairedEndfastqcZip1
 #string pairedEndfastqcZip2
+#string lnFq1Name
+#string lnFq2Name
+#string lnFq3Name
 
 echo -e "test ${reads1FqGz} ${reads2FqGz} 1: $(basename ${reads1FqGz} .gz)${fastqcZipExt} \n2: $(basename ${reads2FqGz} .gz)${fastqcZipExt} "
 
@@ -41,10 +44,12 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	mkdir -p ${fastqcDir}  ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/
 	cd ${fastqcDir}
 	
+	ln -s ${reads1FqGz} ${lnFq1Name}
 	##################################################################
 	echo
 	echo "## "$(date)" reads1FqGz"
 	fastqc --noextract ${reads1FqGz} --outdir ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/
+	fastqc --noextract ${lnFq1Name}
 	echo
 	cp -v ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} ${singleEndfastqcZip}
 
@@ -70,15 +75,20 @@ else
 	mkdir -p ${fastqcDir} ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip) ${fastqcDir}/$(basename ${pairedEndfastqcZip2} .zip)
 	cd ${fastqcDir}
 	
+	ln -s ${reads1FqGz} ${lnFq1Name}
+	ln -s ${reads2FqGz} ${lnFq2Name}
+
+
 	##################################################################
 	echo
 	echo "## "$(date)" reads1FqGz"
 	fastqc --noextract ${reads1FqGz} --outdir ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip)
-	
+	fastqc --noextract ${lnFq1Name}
 	cp -v ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip)/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g')${fastqcZipExt} ${pairedEndfastqcZip1}
 	echo
 	echo "## "$(date)" reads2FqGz"
 	fastqc --noextract ${reads2FqGz} --outdir ${fastqcDir}/$(basename ${pairedEndfastqcZip2} .zip)
+	fastqc --noextract ${lnFq2Name}
 	echo
 	cp -v ${fastqcDir}/$(basename ${pairedEndfastqcZip2} .zip)/$(echo -n ${reads2FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} ${pairedEndfastqcZip2}
 
@@ -93,6 +103,10 @@ else
 fi
 
 if [ ${#reads3FqGz} -ne 0 ] && [ ${reads1FqGz} == ${reads1FqGzOriginal} ] ; then
+	getFile ${reads3FqGz}
+	ln -s ${reads3FqGz} ${lnFq3Name}
+	
 	fastqc --noextract ${reads3FqGz} --outdir ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip)
+	fastqc --noextract ${lnFq3Name}
 fi
 echo "## "$(date)" ##  $0 Done "

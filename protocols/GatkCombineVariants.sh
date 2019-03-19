@@ -103,7 +103,7 @@ if [ -e "${combineVcf}.tmp.complex.vcf" ] ; then
 	rm -v ${combineVcf}.tmp.complex.vcf
 fi
 
-perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
+perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
  ${combineVcf}.tmp.complex.vcf \
  ${combineVcf}.tmp.combine.vcf \
  ${combineVcf}.tmp.haplotypernorm.vcf \
@@ -111,63 +111,72 @@ perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl 
  ${combineVcf}.tmp.mutect2norm.vcf \
  > ${combineVcf}.tmp.annotNoComplex.vcf
 
-#java -jar ${EBROOTGATK}/GenomeAnalysisTK.jar \
-# -T HaplotypeCaller \
-# -R ftp.broadinstitute.org/bundle/2.8/b37/human_g1k_v37_decoy.fasta \
-# --activeRegionExtension 200 \
-# --activeRegionMaxSize 200 \
-# --genotyping_mode GENOTYPE_GIVEN_ALLELES \
-# --alleles complexmerge.vcf \
-# -o complexmerge.HCcalled.vcf \
-# --output_mode EMIT_ALL_SITES \
-# --forceActive \
-#-L complexmerge.vcf \
-#-I all.bam \
-# --standard_min_confidence_threshold_for_calling 0
 
-# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
-bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
 
-inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
+if [ -s ${combineVcf}.tmp.complex.vcf ] ; then
+	#${combineVcf}.tmp.annotNoComplex.vcf
+	
+	#java -jar ${EBROOTGATK}/GenomeAnalysisTK.jar \
+	# -T HaplotypeCaller \
+	# -R ftp.broadinstitute.org/bundle/2.8/b37/human_g1k_v37_decoy.fasta \
+	# --activeRegionExtension 200 \
+	# --activeRegionMaxSize 200 \
+	# --genotyping_mode GENOTYPE_GIVEN_ALLELES \
+	# --alleles complexmerge.vcf \
+	# -o complexmerge.HCcalled.vcf \
+	# --output_mode EMIT_ALL_SITES \
+	# --forceActive \
+	#-L complexmerge.vcf \
+	#-I all.bam \
+	# --standard_min_confidence_threshold_for_calling 0
 
-#freebayes -f ${onekgGenomeFasta} -@  ${combineVcf}.tmp.complex.vcf ${freebayesProjectBam} > ${combineVcf}.tmp.complexregeno.vcf
-# or
-java -Xmx16g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T HaplotypeCaller \
- -R ${onekgGenomeFasta} \
- --dbsnp ${dbsnpVcf}\
- $inputs \
- --max_alternate_alleles 9 \
- --activeRegionExtension 200 \
- --activeRegionMaxSize 200 \
- --genotyping_mode GENOTYPE_GIVEN_ALLELES \
- --alleles ${combineVcf}.tmp.complex.vcf \
- --output_mode EMIT_ALL_SITES \
- --forceActive \
- -stand_call_conf 0 \
- -L ${combineVcf}.tmp.complex.vcf \
- -o ${combineVcf}.tmp.complexregeno.vcf
+	# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+	bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
 
-bgzip -c  ${combineVcf}.tmp.complexregeno.vcf > ${combineVcf}.tmp.complexregeno.vcf.gz && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexregeno.vcf.gz    > ${combineVcf}.tmp.complexregeno.norm.vcf
+	inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
-if [ -e "${combineVcf}.tmp.ReallyComplex.vcf" ] ; then 
-        echo "## INFO ## Cleaning up old run file ${combineVcf}.tmp.ReallyComplex.vcf"
-        rm -v ${combineVcf}.tmp.ReallyComplex.vcf
+	#freebayes -f ${onekgGenomeFasta} -@  ${combineVcf}.tmp.complex.vcf ${freebayesProjectBam} > ${combineVcf}.tmp.complexregeno.vcf
+	# or
+	java -Xmx16g -Djava.io.tmpdir=${variantCombineDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	 -T HaplotypeCaller \
+	 -R ${onekgGenomeFasta} \
+	 --dbsnp ${dbsnpVcf}\
+	 $inputs \
+	 --max_alternate_alleles 9 \
+	 --activeRegionExtension 200 \
+	 --activeRegionMaxSize 200 \
+	 --genotyping_mode GENOTYPE_GIVEN_ALLELES \
+	 --alleles ${combineVcf}.tmp.complex.vcf \
+	 --output_mode EMIT_ALL_SITES \
+	 --forceActive \
+	 -stand_call_conf 0 \
+	 -L ${combineVcf}.tmp.complex.vcf \
+	 -o ${combineVcf}.tmp.complexregeno.vcf
+	
+	bgzip -c  ${combineVcf}.tmp.complexregeno.vcf > ${combineVcf}.tmp.complexregeno.vcf.gz && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.complexregeno.vcf.gz    > ${combineVcf}.tmp.complexregeno.norm.vcf
+	
+	if [ -e "${combineVcf}.tmp.ReallyComplex.vcf" ] ; then 
+	        echo "## INFO ## Cleaning up old run file ${combineVcf}.tmp.ReallyComplex.vcf"
+	        rm -v ${combineVcf}.tmp.ReallyComplex.vcf
+	fi
+
+	perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
+	 ${combineVcf}.tmp.ReallyComplex.vcf \
+	 ${combineVcf}.tmp.annotNoComplex.vcf \
+	 ${combineVcf}.tmp.complexregeno.norm.vcf \
+	 > ${combineVcf}
+
+	#fear the complex variants
+	grep -vPc "^#" ${combineVcf}.tmp.ReallyComplex.vcf|| echo "## no errors here!! Yaay!!"
+	tail  ${combineVcf}.tmp.ReallyComplex.vcf
+
+	mv ${combineVcf}.tmp.ReallyComplex.vcf ${combineVcf}.ReallyComplex.vcf
+
+	mv ${combineVcf}.tmp.complex.vcf ${combineVcf}.complex.vcf
+else
+	#the poswalk script cannot produce complex subfile so this is a shorter workaround
+	mv ${combineVcf}.tmp.annotNoComplex.vcf  ${combineVcf}
 fi
-
-perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariants.pl \
- ${combineVcf}.tmp.ReallyComplex.vcf \
- ${combineVcf}.tmp.annotNoComplex.vcf \
- ${combineVcf}.tmp.complexregeno.norm.vcf \
- > ${combineVcf}
-
-#fear the complex variants
-grep -vPc "^#" ${combineVcf}.tmp.ReallyComplex.vcf|| echo "## no errors here!! Yaay!!"
-tail  ${combineVcf}.tmp.ReallyComplex.vcf
-
-mv ${combineVcf}.tmp.ReallyComplex.vcf ${combineVcf}.ReallyComplex.vcf
-mv ${combineVcf}.tmp.complex.vcf ${combineVcf}.complex.vcf
-
 #rm -v ${combineVcf}.tmp.*.vcf
 
 putFile ${combineVcf}
