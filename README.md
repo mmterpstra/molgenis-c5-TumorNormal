@@ -114,6 +114,7 @@ References
 | BBMap		| [sourceforge](https://sourceforge.net/projects/bbmap/)				    | na |
 | BEDTools2	| [github](https://github.com/arq5x/bedtools2)						    | [pubmed](http://www.ncbi.nlm.nih.gov/pubmed/20110278) 
 | Hisat2	| [project home](http://ccb.jhu.edu/software/hisat2/index.shtml) [github](https://github.com/infphilo/hisat2/)     | [nature](http://www.nature.com/nprot/journal/v11/n9/full/nprot.2016.095.html)
+| CoNVaDING	| [github](https://github.com/mmterpstra/CoNVaDING_reload)				    | [pubmed](https://www.ncbi.nlm.nih.gov/pubmed/26864275)
 
 
 Versions

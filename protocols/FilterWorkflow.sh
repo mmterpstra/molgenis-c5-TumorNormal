@@ -5,6 +5,7 @@
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
 #string group
+#string project
 #string checkStage
 #string RMod
 #string projectDir

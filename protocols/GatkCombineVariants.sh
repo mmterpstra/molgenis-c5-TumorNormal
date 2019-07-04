@@ -52,20 +52,20 @@ set -e
 mkdir -p ${variantCombineDir}
 
 #
-java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
-  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T VariantsToAllelicPrimitives \
- -R ${onekgGenomeFasta} \
- -V  ${freebayesVcf} \
- -o ${combineVcf}.tmp.allelicprimitives.vcf
+#java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
+#  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+# -T VariantsToAllelicPrimitives \
+# -R ${onekgGenomeFasta} \
+# -V  ${freebayesVcf} \
+# -o ${combineVcf}.tmp.allelicprimitives.vcf
 
 #remove complex snps from freebayes: depeciated because larger project will combine adjecent overlapping indels/snps into one and mark them as complex. Missing variants. 
 #perl -i.bak -wpe 'if(not((m/^#/) ||  (m/TYPE=complex[;\t]/||m/TYPE=snp[;\t]/||m/TYPE=del[;\t]/||m/TYPE=ins[;\t]/||m/TYPE=mnp[;\t]/))){$_="";}' \
 # ${combineVcf}.tmp.allelicprimitives.vcf
 
-rm ${combineVcf}.tmp.allelicprimitives.vcf.idx
+#rm ${combineVcf}.tmp.allelicprimitives.vcf.idx
 
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl Freebayes ${combineVcf}.tmp.allelicprimitives.vcf > ${combineVcf}.tmp.freebayescallerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl Freebayes ${freebayesVcf} > ${combineVcf}.tmp.freebayescallerised.vcf
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${combineVcf}.tmp.haplotypercallerised.vcf
 #did this already on a per sample base maybe overkill to do it again
 perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} |perl  $(which VcfQssFix.pl ) /dev/stdin > ${combineVcf}.tmp.mutect2callerised.vcf

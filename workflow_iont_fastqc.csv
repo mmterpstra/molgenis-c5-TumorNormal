@@ -1,0 +1,5 @@
+step,protocol,dependencies
+Fastqc,protocols/Fastqc.sh,
+SampleMarkdown,protocols/SampleMarkdown.sh,Fastqc;fastqcCleanDir=fastqcDir;reads1FqGzClean=reads1FqGz;reads2FqGzClean=reads2FqGz
+ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
+MultiQC,protocols/MultiQC.sh,ProjectMarkdown;

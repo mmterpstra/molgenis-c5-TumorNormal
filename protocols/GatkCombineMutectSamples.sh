@@ -43,15 +43,19 @@ vcfs=($(printf '%s\n' "${mutect2SampleVcf[@]}" | sort -u ))
 inputs=""
 prio=""
 
-for v in ${vcfs[@]}; do 
-	
-	tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
-	inputs=$(echo -n "$inputs -V:$tumor $v")
-	if [ -z "$prio" ]; then
-		prio="$tumor"
-	else
-		prio="$prio,$tumor"
-	fi
+for v in ${vcfs[@]}; do
+
+        tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
+        inputs=$(echo -n "$inputs -V:$tumor $v")
+        if [ -z "$prio" ]; then
+                prio="$tumor"
+        else
+                if [ $(echo $prio| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -gt 0 ] ; then
+                        prio="$prio,${tumor}2"
+                else
+                    	prio="$prio,${tumor}"
+                fi
+        fi
 done
 
 echo "inputs="$inputs";"

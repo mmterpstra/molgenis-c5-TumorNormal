@@ -189,6 +189,10 @@ htseqTes500Table,${tableDir}/${project}.htseqTes500.merged.tsv
 htseqTes500DupsTable,${tableDir}/${project}.htseqTes500dups.merged.tsv
 htseqTes500Xlsx,${xlsxDir}/${project}.htseqTes500.merged.xlsx
 htseqTes500DupsXlsx,${xlsxDir}/${project}.htseqTes500dups.merged.xlsx
+################################################################################
+## CoNVaDING after markduplicates
+#
+convadingDir,${projectDir}/CoNVaDING/
 
 ################################################################################
 ##CollectRnaSeqMetrics
@@ -300,12 +304,24 @@ mutect2Dir,${projectDir}/mutect2/
 mutect2ScatVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
 mutect2ScatVcfIdx,${mutect2ScatVcf}.idx
 mutect2SampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
-mutect2SampleVcfIdx,${mutect2Vcf}.idx
+mutect2SampleVcfIdx,${mutect2SampleVcf}.idx
 #mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
 mutect2Vcf,${mutect2Dir}/${project}.vcf
 mutect2VcfIdx,${mutect2Vcf}.idx
 mutect2ProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
 mutect2ProjectScatVcfIdx,${mutect2ProjectScatVcf}.idx
+#Pon Panel of Normals creation
+mutect2PonDir,${projectDir}/mutect2Pon/
+mutect2PonScatVcf,${mutect2PonDir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
+mutect2PonScatVcfIdx,${mutect2PonScatVcf}.idx
+mutect2PonSampleVcf,${mutect2PonDir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
+mutect2PonSampleVcfIdx,${mutect2PonSampleVcf}.idx
+mutect2PonVcf,${mutect2PonDir}/${project}.vcf
+mutect2PonVcfIdx,${mutect2PonVcf}.idx
+mutect2PonProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
+mutect2PonProjectScatVcfIdx,${mutect2PonProjectScatVcf}.idx
+
+
 ################################################################################
 #variant combination (combine HG + freebayes)
 variantCombineDir,${projectDir}/combinevariants/
@@ -482,6 +498,12 @@ scriptDir,/gcc/tools/scripts/
 #lazyAnnotScriptPl,${scriptDir}//PlotVarscan/VcfaddAdBasedZScores.pl
 #gCustomAnnotVcf,${varscanDir}/${project}.custannot.vcf
 
+################################################################################
+#IchorCNA
+
+ichorcnaDir,${projectDir}/ichorcna.${controlSampleName}/
+ichorcnaPdf,${projectDir}/ichorcna.${controlSampleName}/t_${sampleName}_n_${controlSampleName}.pdf
+coverageWig,${projectDir}/ichorcna.${controlSampleName}/${sampleName}.wig
 ################################################################################
 #CnvKit/lib
 

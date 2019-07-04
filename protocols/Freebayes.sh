@@ -66,23 +66,29 @@ mkdir -p ${freebayesDir}
 #freebayes -t targets.bed --allele-balance-priors-off --binomial-obs-priors-off --hwe-priors-off --strict-vcf --vcf out.vcf  -b b1.bam --fasta-reference fsata  
 #freebayes/1.1.0-foss-2016a
 
+minAlternateFraction="0.03"
+if [ $(perl -wane 'use POSIX;BEGIN{our $sum;} next if(m/^#|^track/);$sum += $F[2] - $F[1];END{print (floor($sum / 10000000 *20)."\n");}' ${scatterList}.bed ) -ge 1 ];then 
+	minAlternateFraction="0.1"
+else 
+	minAlternateFraction="0.03"
+fi
+#-C 3 #min read depth
 
 freebayes \
  --fasta-reference ${onekgGenomeFasta} \
  --allele-balance-priors-off \
  --binomial-obs-priors-off \
  --hwe-priors-off \
- --min-alternate-fraction 0.05 \
+ --min-alternate-fraction $minAlternateFraction \
  --min-mapping-quality 20 \
+ --max-complex-gap 20\
+ --min-alternate-count 3 \
  --pooled-continuous \
  --strict-vcf \
  --vcf /dev/stdout \
  $InterValOperand \
  -b ${freebayesProjectBam} \
- --use-best-n-alleles 0 | \
-FilterFreeBayes.pl \
- 0.1 \
- /dev/stdin > \
+ --use-best-n-alleles 0 > \
  ${freebayesScatVcf}
 
 # -dontUseSoftClippedBases \

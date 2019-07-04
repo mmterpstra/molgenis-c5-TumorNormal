@@ -71,13 +71,17 @@ mkdir -p ${haplotyperDir}
 java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T HaplotypeCaller \
  -R ${onekgGenomeFasta} \
- --dbsnp ${dbsnpVcf}\
+ --dbsnp ${dbsnpVcf} \
  $inputs \
  -stand_call_conf 10.0 \
  -o ${haplotyperScatVcf} \
  $InterValOperand \
  ${gatkOpt}
 
+#since we are working with batches of 100 --max-alternate-alleles 10 should catch everything
+#--max-mnp-distance 2 cause i dont like the output of gatk
+#--max-assembly-region-size == 500 cause intorrent?
+# --max-alternate-alleles 10 #tooldocs are messy why do the generic commands fail?
 # -dontUseSoftClippedBases \
 
 putFile ${haplotyperScatVcf}

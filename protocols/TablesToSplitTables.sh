@@ -37,7 +37,8 @@ for tsv in $(ls ${tableDir}/*{snv,indel}*.tsv| grep -v 'description'); do
 
 	tsvbase="$(basename $tsv .tsv)"
 
-	parallel -a "$tsv" --header ".*\n" -j 4 --block 20m  --pipepart "cat |VcfTableExportOneVariantPerSample.pl /dev/stdin>  ${splitTableDir}$(basename $tsv .tsv)_split_{#}.tsv"
+	parallel -a "$tsv" --header ".*\n" -j 4 --block 10m  \
+		--pipepart "cat |VcfTableExportOneVariantPerSample.pl /dev/stdin>  ${splitTableDir}$(basename $tsv .tsv)_split_{#}.tsv"
 	tableToXlsxAsStrings.pl \\t ${splitTableDir}$(basename $tsv .tsv)_split_*.tsv	
 done
 

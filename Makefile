@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 
-test : 
+test :
 	make -C tests/ test
 
 

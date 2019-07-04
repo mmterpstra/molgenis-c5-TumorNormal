@@ -14,14 +14,14 @@
 #string cosmicVcf
 #string dbsnpVcf
 #string scatterList
-
+#string mutect2PonProjectScatVcf
+#string mutect2PonProjectScatVcfIdx
 
 #string indelRealignmentDir
 #string indelRealignmentBam
 #string indelRealignmentBai
 #string controlSampleBam
 #string controlSampleBai
-#string sampleName
 #string mutect2ScatVcf
 #string mutect2ScatVcfIdx
 #string mutect2Dir
@@ -75,9 +75,23 @@ fi
 
 Normalspec=""
 
+#normalspec run only when they aren't the same bam/sample
 if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
-	normalspec="-I:normal ${controlSampleBam} "
+	#run with controlsample
+        echo "## "$(date)" ##  $0 Running with controlsample '${controlSampleBam}'."
+
+	Normalspec="-I:normal ${controlSampleBam} "
 fi
+
+#this should override the normalspec and the data should be ran only when using Panel Of Normals generation
+if [ ! -e ${mutect2PonProjectScatVcf} ]; then
+	
+	echo "## "$(date)" ##  $0 Running in panel of normals mode."
+
+	Normalspec='--artifact_detection_mode '
+	
+fi
+
 
 java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T MuTect2 \
@@ -91,11 +105,14 @@ java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:Paralle
 
 #cleans name of any not [a-zA-Z0-9_]. It is up to the human interpreter to interpret these names, if needed.
 
-sampleNameClean=$(echo "${sampleName}" | perl -wpe 'chomp;$_=uc;s/\W/_/g;')
+#sampleNameClean=$(echo "${sampleName}" | perl -wpe 'chomp;$_=uc;s/\W/_/g;')
 
 #this should be better than callerise is this case
 perl $EBROOTPIPELINEMINUTIL/bin/MutectAnnotationsToSampleFormat.pl TLOD,NLOD,MIN_ED,MAX_ED,ECNT,HCNT ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}
 
+NORMAL="$(perl -wne 'if(s/.*NORMAL,SampleName=(.*?),.*/$1/){print};' ${mutect2ScatVcf})"
+TUMOR="$(perl -wne 'if(s/.*TUMOR,SampleName=(.*?),.*/$1/){print};' ${mutect2ScatVcf})"
+perl -i.tumornormal.bak -wpe 's/\tNORMAL/\t'"$NORMAL"'/;s/\tTUMOR/\t'"$TUMOR"'/;' ${mutect2ScatVcf}
 
 
 #java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \

@@ -8,6 +8,7 @@ BwaMemAlignment,protocols/BwaMem.sh,
 AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,BwaMemAlignment
 MergeBamFiles,protocols/MergeBamFiles.sh,AddOrReplaceReadGroups
 MarkDuplicates,protocols/MarkDuplicates.sh,MergeBamFiles
+CoNVaDING,protocols/CoNVaDING.sh,MarkDuplicates;ampliconsBed=targetsList
 MantaSV,protocols/MantaSV.sh,MarkDuplicates;mantaConfigType=mantaConfigTypeExome
 SnpEffManta,protocols/SnpEffAnnotManta.sh,MantaSV
 SvVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SnpEffManta;vcf=snpeffMantaVcf;descrTable=svDescrTable
@@ -27,7 +28,9 @@ BQSR,protocols/GatkBQSR.sh,IndelRealignmentKnown
 AnalyseCovariants,protocols/GatkAnalyseCovariants.sh,BQSR
 #ContEst,protocols/GatkContEst.sh,BQSR;indelRealignmentBam=bqsrBam;indelRealignmentBai=bqsrBai;
 ContEst,protocols/GatkContEst.sh,IndelRealignmentKnown
-Mutect2,protocols/GatkMutect2.sh,IndelRealignmentKnown;CreatePaddedTargets
+Mutect2Pon,protocols/GatkMutect2.sh,IndelRealignmentKnown;mutect2Dir=mutect2PonDir;mutect2ScatVcf=mutect2PonScatVcf;mutect2ScatVcfIdx=mutect2PonScatVcfIdx;indelRealignmentBam=controlSampleBam;indelRealignmentBai=controlSampleBai
+MergeMutect2PonVariantsByProject,protocols/GatkCombineMutectSamples.sh,Mutect2Pon;mutect2SampleVcf=mutect2PonScatVcf;mutect2Vcf=mutect2PonProjectScatVcf;mutect2SampleVcfIdx=mutect2PonScatVcfIdx;mutect2VcfIdx=mutect2PonProjectScatVcfIdx
+Mutect2,protocols/GatkMutect2.sh,Mutect2Pon;MergeMutect2PonVariantsByProject;IndelRealignmentKnown;CreatePaddedTargets
 #Mutect2,protocols/GatkMutect2.sh,ContEst;IndelRealignmentKnown
 #MergeMutect2VariantsBySample,protocols/MergeVcfs.sh,Mutect2;haplotyperScatVcf=mutect2ScatVcf;haplotyperVcf=mutect2SampleVcf
 #MergeMutect2VariantsByProject,protocols/GatkCombineMutectSamples.sh,MergeMutect2VariantsBySample
@@ -57,7 +60,7 @@ TablesToSplitTables,protocols/TablesToSplitTables.sh,SNVVariantsToDescriptionTab
 TablesToXlsx,protocols/TablesToXlsx.sh,SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToTable;IndelVariantsToDescriptionTable
 Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
-CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR
+CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR;haplotyperVcf=combineVcf
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MarkDuplicates
@@ -67,3 +70,4 @@ Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;C
 #MergeGvcfs,protocols/GatkMergeGvcfs.sh,HaplotypeCallerGvcf
 #GenotypeGvcfs,protocols/GatkGenotypeGvcfs.sh,MergeGvcfs
 #GVariantAnnotation,protocols/GatkSnpEffVariantAnnotation.sh,GenotypeGvcfs;BSQR;haplotyperVcf=genotypedVcf;haplotyperVcfIdx=genotypedVcfIdx;annotatorDir=gannotatorDir;snpEffVcf=gsnpEffVcf;snpEffVcfIdx=gsnpEffVcfIdx;annotVcf=gannotVcf;annotVcfIdx=gannotVcfIdx;
+IchorCNA,protocols/IchorCNA.sh,IndelRealignmentKnown;MergeBamFilesFreebayes
