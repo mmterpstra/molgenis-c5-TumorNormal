@@ -16,6 +16,7 @@
 #list varscanDir,snvVcf,indelMnpVcf
 #string fastqcDir
 #string xlsxDir
+#string splitTableDir
 #string htseqDir
 #string htseqDupsDir
 #string fusioncatcherDir
@@ -37,7 +38,7 @@ zipbase='zip -n bam:xlsx:cram -ru '${project}'.zip '
 olddir=$(pwd)
 cd "$(dirname "${projectDir}")"
 
-for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}"; do
+for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}"; do
 	if [ -n "$(ls -A $dir/*)" ]; then
                	$zipbase $(echo "$dir/*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi

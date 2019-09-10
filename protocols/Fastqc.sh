@@ -61,8 +61,9 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	fastqc --noextract ${lnFq1Name}
 	echo
 	
-	if [ $(zcat ${reads1FqGz} | wc -l) -eq 0 ]; then 
-		echo -e "Total Sequences\t0\n" > ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )"_fastqc"/fastqc_data.txt
+	if [ $(zcat ${reads1FqGz} | wc -l) -eq 0 ]; then
+		mkdir -p ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )"_fastqc"/ 
+		echo -e "Total Sequences\t1\n" > ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )"_fastqc"/fastqc_data.txt
 		rm -v ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt}
 		zip -ru ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz} | perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )${fastqcZipExt} \
 			${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/$(echo -n ${reads1FqGz}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g' )"_fastqc"/fastqc_data.txt

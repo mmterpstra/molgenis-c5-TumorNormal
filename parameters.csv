@@ -500,9 +500,9 @@ scriptDir,/gcc/tools/scripts/
 
 ################################################################################
 #IchorCNA
-
+#/scratch/umcg-mterpstra/projects/GdeVries/ichorcna.103467-001-001/t_103467-001-001_n_103467-001-001/t_103467-001-001_n_103467-001-001_genomeWide.pdf
 ichorcnaDir,${projectDir}/ichorcna.${controlSampleName}/
-ichorcnaPdf,${projectDir}/ichorcna.${controlSampleName}/t_${sampleName}_n_${controlSampleName}.pdf
+ichorcnaPdf,${projectDir}/ichorcna.${controlSampleName}/t_${sampleName}_n_${controlSampleName}/t_${sampleName}_n_${controlSampleName}_genomeWide.pdf
 coverageWig,${projectDir}/ichorcna.${controlSampleName}/${sampleName}.wig
 ################################################################################
 #CnvKit/lib

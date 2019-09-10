@@ -65,7 +65,7 @@ MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MarkDuplicates
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
-Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;HaplotypeCaller;ProjectMarkdown;MultiQC
+Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;HaplotypeCaller;ProjectMarkdown;MultiQC;TablesToSplitTables
 #HaplotypeCallerGvcf,protocols/GatkHaplotypeCallerGvcf.sh,IndelRealignmentKnown;
 #MergeGvcfs,protocols/GatkMergeGvcfs.sh,HaplotypeCallerGvcf
 #GenotypeGvcfs,protocols/GatkGenotypeGvcfs.sh,MergeGvcfs

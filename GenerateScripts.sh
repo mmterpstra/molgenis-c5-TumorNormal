@@ -3,6 +3,7 @@
 set -ex
 set -u
 
+ml purge 
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
@@ -260,7 +261,7 @@ projectname=$3
 		echo
 		echo -n "This is generated based on the git "
 		git log | head -n 1
-		echo ". Althought this is software in developent and also the next commit should also be considered."
+		echo "with command '"$SCRIPTCALL"'. Althought this is software in development and also the next commit should also be considered."
 	        echo
 		echo "### Branch info"
 		echo
