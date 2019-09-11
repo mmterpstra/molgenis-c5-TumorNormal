@@ -9,8 +9,9 @@ computational workflow management in a distributed execution environment."""
 toolchain = {'name': 'dummy', 'version': 'dummy'}
 easyblock = 'PackedBinary'
 
-java = 'oracle-java8-installer'
-osdependencies = [java,]
+#travis does some original way of supplying java
+#java = 'oracle-java8-installer'
+#osdependencies = [java,]
 
 #
 # Example URL:
