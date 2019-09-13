@@ -49,7 +49,7 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	mkdir -p ${fastqcDir}  ${fastqcDir}/$(basename ${singleEndfastqcZip} .zip)/
 	cd ${fastqcDir}
 	
-	if [ "${reads1FqGz}" != "${lnFq1Name}" ]; then 
+	if [ "${reads1FqGz}" != "${lnFq1Name}" ] && [ ! -e "${lnFq1Name}" ]; then 
 	
 		cp -v ${reads1FqGz} ${lnFq1Name}
 
@@ -97,12 +97,12 @@ else
 	mkdir -p ${fastqcDir} ${fastqcDir}/$(basename ${pairedEndfastqcZip1} .zip) ${fastqcDir}/$(basename ${pairedEndfastqcZip2} .zip)
 	cd ${fastqcDir}
 	
-        if [ "${reads1FqGz}" != "${lnFq1Name}" ]; then
+        if [ "${reads1FqGz}" != "${lnFq1Name}" ] && [ ! -e "${lnFq1Name}" ]; then
 
                 cp -v ${reads1FqGz} ${lnFq1Name}
 
         fi
-        if [ "${reads2FqGz}" != "${lnFq2Name}" ]; then
+        if [ "${reads2FqGz}" != "${lnFq2Name}" ] && [ ! -e "${lnFq2Name}" ]; then
 
                 cp -v ${reads2FqGz} ${lnFq2Name}
 

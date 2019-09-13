@@ -193,7 +193,7 @@ htseqTes500DupsXlsx,${xlsxDir}/${project}.htseqTes500dups.merged.xlsx
 ## CoNVaDING after markduplicates
 #
 convadingDir,${projectDir}/CoNVaDING/
-
+convadingNormalisedCoverageDir,${projectDir}/CoNVaDING/NormalisedCoverage
 ################################################################################
 ##CollectRnaSeqMetrics
 #

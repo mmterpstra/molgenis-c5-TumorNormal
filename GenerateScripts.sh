@@ -2,6 +2,7 @@
 
 set -ex
 set -u
+set -o pipefail
 
 ml purge 
 
@@ -260,7 +261,7 @@ projectname=$3
 		echo "### Version info"
 		echo
 		echo -n "This is generated based on the git "
-		git log | head -n 1
+		git log -1| head -n 1
 		echo "with command '"$SCRIPTCALL"'. Althought this is software in development and also the next commit should also be considered."
 	        echo
 		echo "### Branch info"
