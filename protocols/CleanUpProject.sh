@@ -22,6 +22,7 @@
 #string fusioncatcherDir
 #string projectSampleSheet
 #string multiQcHtml
+#string convadingDir
 
 set -x -e -o pipefail
 
@@ -38,7 +39,7 @@ zipbase='zip -n bam:xlsx:cram -ru '${project}'.zip '
 (	
 	cd "$(dirname "${projectDir}")"
 	
-	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}"; do
+	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}" "${convadingDir}"; do
 		if [ -n "$(ls -A $dir/*)" ]; then
 	               	$zipbase $(echo "$dir/*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 		fi
@@ -49,28 +50,39 @@ zipbase='zip -n bam:xlsx:cram -ru '${project}'.zip '
 	               	$zipbase $(echo "$file*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 		fi
 	done
-	
-	dir="${projectDir}"'/*'
-	if [ -n "$(ls -A ${dir}/*.seg)" ]; then
-		$zipbase $(echo "${varscanDir}/*.seg" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+
+	#varscan results
+	##dir="${projectDir}"'/*'
+	#if [ -n "$(ls -A ${dir}/*.seg)" ]; then
+	#	$zipbase $(echo "${varscanDir}/*.seg" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#fi
+	#if [ -n "$(ls -A ${dir}/*.called)" ]; then
+	#	$zipbase $(echo "${varscanDir}/*.called" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#fi
+	#if [ -n "$(ls -A ${dir}/*.called.gc)" ]; then
+	#	$zipbase $(echo "${varscanDir}/*.called.gc" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#fi
+	#if [ -n "$(ls -A ${dir}/*.called.homdels)" ]; then
+	#	$zipbase $(echo "${varscanDir}/*.called.homdels" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#fi
+	#if [ -n "$(ls -A ${dir}/*.pdf)" ]; then
+	#        $zipbase $(echo "${varscanDir}/*.pdf" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#fi
+	#if [ -n "$(ls -A ${dir}/multi/*)" ]; then
+	#        $zipbase $(echo "${varscanDir}/multi/*.[tps][esd][gvf]" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#fi
+	if [ -n "$(ls -A ${projectDir}/varscan.*)" ]; then
+		for i in ${projectDir}/varscan.*; do
+			$zipbase $(echo "${i}/*.pdf ${i}/*.seg ${i}/*.table" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+		done
 	fi
-	if [ -n "$(ls -A ${dir}/*.called)" ]; then
-		$zipbase $(echo "${varscanDir}/*.called" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+	#cnvkit results
+	if [ -n "$(ls -A ${projectDir}/cnv.*)" ]; then
+		for i in ${projectDir}/cnv.*; do
+			$zipbase $(echo "${i}/*.pdf ${i}/*.cn[rsn]" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+		done
 	fi
-	if [ -n "$(ls -A ${dir}/*.called.gc)" ]; then
-		$zipbase $(echo "${varscanDir}/*.called.gc" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
-	fi
-	if [ -n "$(ls -A ${dir}/*.called.homdels)" ]; then
-		$zipbase $(echo "${varscanDir}/*.called.homdels" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
-	fi
-	if [ -n "$(ls -A ${varscanDir}/*.pdf)" ]; then
-	        $zipbase $(echo "${varscanDir}/*.pdf" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
-	fi
-	if [ -n "$(ls -A ${dir}/multi/*)" ]; then
-	        $zipbase $(echo "${varscanDir}/multi/*.[tps][esd][gvf]" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
-	fi
-	
-	
+		
 	dir="${projectDir}"'/*'
 	if [ -n "$(ls -A ${dir}/*.csv)" ]; then
 		$zipbase $(echo "${dir}/*.csv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')

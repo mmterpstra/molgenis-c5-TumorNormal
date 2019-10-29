@@ -31,7 +31,7 @@ set -e
 mkdir -p ${splitTableDir}
 touch "${splitTableDir}".run
 
-for tsv in $(ls ${tableDir}/*{snv,indel}*.tsv| grep -v 'description'); do
+for tsv in $(ls ${tableDir}/*{snv,indel}*.tsv| grep -v 'description\|split_'); do
 
 	#parallel + split for 1 sample a row
 

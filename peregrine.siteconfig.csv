@@ -39,7 +39,9 @@ htseqMod,HTSeq/0.6.1p1-foss-2016a-Python-2.7.11
 fusioncatcherMod,FusionCatcher/0.99.6a-foss-2016a-Python-2.7.11
 RmarkMod,markdown/0.7.7-foss-2016a-R-3.2.2-bioconductor
 mantaMod,manta/1.1.0-foss-2016a
+lancetMod,Lancet/v1.0.5-foss-2016a
 freebayesMod,freebayes/1.1.0-foss-2016a-961e5f3
+lofreqMod,LoFreq/2.1.3.1-foss-2016a-Python-2.7.12
 multiqcMod,multiqc/1.0-foss-2016a-Python-2.7.11
 cnvlibMod,cnvlib/0.9.1-foss-2016a-Python-2.7.11
 ichorcnaMod,R-bundle-ichorCNA/0.2.0-foss-2016a-R-3.3.3-bioconductor

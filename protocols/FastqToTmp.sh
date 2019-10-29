@@ -33,10 +33,11 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 		 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".linecount.log
 
 	getFile ${reads1FqGz}
-	mkdir -p "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!')"
-	cp ${reads1FqGz} "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"
-	cp ${reads1FqGz}.md5 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".md5
-
+	if [ "${reads1FqGz}" -ne "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})" ]; then
+		mkdir -p "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!')"
+		cp ${reads1FqGz} "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})"
+		cp ${reads1FqGz}.md5 "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".md5
+	fi
 	#count lines for filtering
 	gzip -dc ${reads1FqGz} | wc -l > "$(dirname ${reads1FqGz}| perl -wpe 's!prm\d\d/data/raw/!tmp04/raw/!g')/$(basename ${reads1FqGz})".linecount.log
 	

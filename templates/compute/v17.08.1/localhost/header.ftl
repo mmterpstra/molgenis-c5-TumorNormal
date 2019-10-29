@@ -187,7 +187,7 @@ alloutputsexist()
       chmod go+rX "${taskId}.env"
 
       mv "${taskId}.sh.started" "${taskId}.sh.finished"
-      sleep 20s
+      sleep 2s
       exit 0;
 
   else

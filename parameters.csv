@@ -99,6 +99,14 @@ reads1FqGzOriginal,${reads1FqGz}
 reads2FqGzOriginal,${reads2FqGz}
 
 ################################################################################
+##optional trimminginsertsize ater addorreplacereadgroups
+#
+
+sizeSelectionDir,${projectDir}/sizeselect/
+sizeSelectionBam,${sizeSelectionDir}${internalId}_${sampleName}.bam
+sizeSelectionBai,${sizeSelectionBam}.bai
+
+################################################################################
 ##hisat2
 #
 hisat2AlignmentDir,${projectDir}/hisat2/
@@ -298,6 +306,36 @@ freebayesProjectBai,${projectDir}/freebayes/${project}.bai
 freebayesScatVcf,${freebayesDir}${project}.${scatterIDs}.vcf
 freebayesVcf,${freebayesDir}${project}.vcf
 #freebayesVcfIdx,${freebayesVcf}.idx ?
+################################################################################
+#lancetMod,
+#->tncombi/scat-> scat > single.vcf
+
+lancetScatVcf,${lancetDir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
+lancetScatVcfIdx,${lancetScatVcf}.idx
+lancetDir,${projectDir}/lancet/
+lancetSampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
+lancetSampleVcfIdx,${mutect2SampleVcf}.idx
+lancetProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
+lancetProjectScatVcfIdx,${mutect2ProjectScatVcf}.idx
+lancetVcf,${lancetDir}/${project}.vcf
+lancetVcfIdx,${lancetVcf}.idx
+
+################################################################################
+#LoFreq
+#
+viterbiDir,${projectDir}/viterbi
+viterbiBam,${viterbiDir}/${sampleName}.bam
+viterbiBai,${viterbiBam}.bai
+viterbiControlBam,${viterbiDir}/${controlSampleName}.bam
+viterbiControlBai,${viterbiControlBam}.bai
+
+lofreqDir,${projectDir}/lofreq
+lofreqScatVcf,${lofreqDir}/${project}_t_${sampleName}_n_${controlSampleName}.${scatterIDs}.vcf
+lofreqScatVcfIdx,${lofreqVcf}.idx
+lofreqVcf,${lofreqDir}/${project}_t_${sampleName}_n_${controlSampleName}.vcf
+lofreqVcfIdx,${lofreqVcf}.idx
+
+
 ################################################################################
 #mutect2
 mutect2Dir,${projectDir}/mutect2/

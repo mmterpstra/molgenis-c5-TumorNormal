@@ -62,7 +62,7 @@ runIchorCNA.R \
  --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/map_hg19_1000kb.wig
 
 putFile ${ichorcnaDir}
-putFile ${ichorcnapdf}
+#putFile ${ichorcnaDir}
 
 
 echo "## "$(date)" ##  $0 Done "

@@ -44,18 +44,26 @@ inputs=""
 prio=""
 
 for v in ${vcfs[@]}; do
-
-        tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
-        inputs=$(echo -n "$inputs -V:$tumor $v")
-        if [ -z "$prio" ]; then
-                prio="$tumor"
-        else
-                if [ $(echo $prio| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -gt 0 ] ; then
-                        prio="$prio,${tumor}2"
-                else
-                    	prio="$prio,${tumor}"
-                fi
-        fi
+	tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
+	normal=$(perl -wpe  's/.*.t_.*.n_(.*).00.*/$1/g' <(echo ${v}))
+	inputs=$(echo -n "$inputs -V:$tumor $v")
+	if [ -z "$prio" ]; then
+		prio="$tumor"
+	else
+		if [ $(echo $prio| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -gt 0 ] ; then
+			if [ "x$tumor" -eq "x$normal" ]; then
+				prio="$prio,${tumor}2"
+			else
+				prio="${tumor}2,$prio"
+			fi
+		else
+			if [ "x$tumor" -eq "x$normal" ]; then
+				prio="$prio,${tumor}"
+			else
+				prio="${tumor},$prio"
+			fi
+		fi
+	fi
 done
 
 echo "inputs="$inputs";"
@@ -67,12 +75,19 @@ java -Xmx4g -Djava.io.tmpdir=${mutect2Dir} \
  -T CombineVariants \
  -R ${onekgGenomeFasta} \
  $inputs \
- -o ${mutect2Vcf} \
+ -o ${mutect2Vcf}.tmp.vcf \
  -genotypeMergeOptions PRIORITIZE \
  -priority $prio \
  --filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED
 
+perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
+         ${mutect2Vcf}.tmp.ReallyComplex.vcf \
+         ${mutect2Vcf}.tmp.vcf \
+         $(printf '%s\n' "${mutect2SampleVcf[@]}" | sort -u ) \
+         > ${mutect2Vcf}
+
+
 putFile ${mutect2Vcf}
-putFile ${mutect2VcfIdx}
+#putFile ${mutect2VcfIdx}
 
 echo "## "$(date)" ##  $0 Done "

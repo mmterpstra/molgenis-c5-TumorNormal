@@ -30,7 +30,7 @@ for file in "${freebayesProjectBam}" "${freebayesProjectBam}" "${onekgGenomeFast
 	getFile $file
 done
 
-#Load gatk module
+#Load modules
 ${stage} ${freebayesMod}
 ${stage} ${pipelineUtilMod}
 
