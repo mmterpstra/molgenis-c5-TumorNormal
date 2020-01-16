@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=3 mem=16gb walltime=47:59:00
+#MOLGENIS nodes=1 ppn=2 mem=6gb walltime=47:59:00
 
 #string project
 
@@ -17,8 +17,8 @@
 #string bqsrBam
 #string bqsrBai
 #string viterbiDir
-#string	viterbiBam
-#string	viterbiBai
+#string viterbiBam
+#string viterbiBai
 
 
 echo "## "$(date)" ##  $0 Started "

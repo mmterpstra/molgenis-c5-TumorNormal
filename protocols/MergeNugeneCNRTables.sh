@@ -50,7 +50,7 @@ mkdir -p ${tableDir}
 #############################################################################################
 #with dups part
 
-#${addOrReplaceGroupsBam} sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+#${addOrReplaceReadGroupsBam} sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
 nugeneCNRTables=($(printf '%s\n' "${nugeneProbeMetricsLog[@]}" | sort -u ))
 nugene300bpCountsCNRTables=($(printf '%s.counts300bp.log\n' "${nugeneProbeMetricsLog[@]}" | sort -u ))
 

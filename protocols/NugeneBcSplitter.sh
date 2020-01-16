@@ -11,8 +11,8 @@
 #string samtoolsMod
 #string digiRgMod
 #string reads3FqGz
-#string addOrReplaceGroupsBam
-#string addOrReplaceGroupsBai
+#string addOrReplaceReadGroupsBam
+#string addOrReplaceReadGroupsBai
 
 #string nugeneRgDir
 #string nugeneBam
@@ -26,8 +26,8 @@ alloutputsexist \
  
 #getFile functions
 
-getFile ${addOrReplaceGroupsBam}
-getFile ${addOrReplaceGroupsBai}
+getFile ${addOrReplaceReadGroupsBam}
+getFile ${addOrReplaceReadGroupsBai}
 
 #Load modules
 ${stage} ${samtoolsMod}
@@ -47,10 +47,10 @@ echo "## "$(date)" Start $0"
 
 if [ ${#reads3FqGz} -eq 0 ]; then
 
-	cp -rv ${addOrReplaceGroupsBai} ${addOrReplaceGroupsBam} ${nugeneRgDir}
+	cp -rv ${addOrReplaceReadGroupsBai} ${addOrReplaceReadGroupsBam} ${nugeneRgDir}
 
 else
-	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl -p RX -l 6 ${addOrReplaceGroupsBam} ${nugeneBam}
+	perl $EBROOTDIGITALBARCODEREADGROUPS/src/NugeneDigitalSplitter.pl -p RX -l 6 ${addOrReplaceReadGroupsBam} ${nugeneBam}
 
 	java -Xmx6g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar BuildBamIndex \
 	 INPUT=${nugeneBam}

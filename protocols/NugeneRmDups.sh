@@ -29,7 +29,7 @@
 
 alloutputsexist \
  ${nugeneOutputPrefix}_n6dupsRemoved_sorted.bam 
-# ${addOrReplaceGroupsBai}
+# ${addOrReplaceReadGroupsBai}
 
 echo "## "$(date)" ##  $0 Started "
 

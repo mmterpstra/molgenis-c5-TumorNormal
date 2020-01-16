@@ -76,6 +76,13 @@ zipbase='zip -n bam:xlsx:cram -ru '${project}'.zip '
 			$zipbase $(echo "${i}/*.pdf ${i}/*.seg ${i}/*.table" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 		done
 	fi
+	#ichorcna results
+	if [ -n "$(ls -A ${projectDir}/ichorcna.*)" ]; then
+		for i in ${projectDir}/ichorcna.*; do
+			$zipbase $(echo "${i}/*/*.pdf ${i}/*.seg" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+		done
+	fi
+
 	#cnvkit results
 	if [ -n "$(ls -A ${projectDir}/cnv.*)" ]; then
 		for i in ${projectDir}/cnv.*; do

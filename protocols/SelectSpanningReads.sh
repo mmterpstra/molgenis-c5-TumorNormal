@@ -11,13 +11,13 @@
 #string bedtoolsMod
 #string samtoolsMod
 #string onekgGenomeFasta
-#string addOrReplaceGroupsDir
-#string addOrReplaceGroupsBam
-#string addOrReplaceGroupsBai
+#string addOrReplaceReadGroupsDir
+#string addOrReplaceReadGroupsBam
+#string addOrReplaceReadGroupsBai
 #string ampliconsBed
 
 #string spanningBam
-#string	spanningBai
+#string spanningBai
 #string spanningDir
 
 
@@ -27,8 +27,8 @@ alloutputsexist \
 
 echo "## "$(date)" ##  $0 Started "
 
-getFile ${addOrReplaceGroupsBam}
-getFile ${addOrReplaceGroupsBai}
+getFile ${addOrReplaceReadGroupsBam}
+getFile ${addOrReplaceReadGroupsBai}
 getFile ${onekgGenomeFasta}
 getFile ${ampliconsBed}
 
@@ -57,7 +57,7 @@ bedtools intersect \
  -f 0.85 \
  -u \
  -sorted \
- -a ${addOrReplaceGroupsBam} \
+ -a ${addOrReplaceReadGroupsBam} \
  -b ${ampliconsBed} \
  | tee  ${spanningBam} \
  | samtools index /dev/stdin ${spanningBai}

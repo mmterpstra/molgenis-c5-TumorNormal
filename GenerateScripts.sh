@@ -237,6 +237,7 @@ projectname=$3
 	perl -wpe 's!projectNameHere!'$projectname'!g' $samplesheet > $samplesheet.tmp.csv
 	if [ $1 != "prepiont" ];then
 		perl $workflowDir/ValidateSampleSheet.pl $samplesheet
+		perl $workflowDir/SampleSheetTool.pl valid $samplesheet
 	fi
 	cp $samplesheet.tmp.csv $runDir/$(basename $samplesheet .csv).input.csv
 	cp $workflowDir/.parameters.tmp.csv $runDir/parameters.csv

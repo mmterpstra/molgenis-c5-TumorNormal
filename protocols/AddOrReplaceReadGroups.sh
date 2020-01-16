@@ -20,14 +20,14 @@
 #string samplePrep
 #string internalId
 #string bwaSam
-#string addOrReplaceGroupsDir
-#string addOrReplaceGroupsBam
-#string addOrReplaceGroupsBai
+#string addOrReplaceReadGroupsDir
+#string addOrReplaceReadGroupsBam
+#string addOrReplaceReadGroupsBai
 
 
 alloutputsexist \
- ${addOrReplaceGroupsBam} \
- ${addOrReplaceGroupsBai}
+ ${addOrReplaceReadGroupsBam} \
+ ${addOrReplaceReadGroupsBai}
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -39,7 +39,7 @@ ${checkStage}
 set -x
 set -e
 
-mkdir -p ${addOrReplaceGroupsDir}
+mkdir -p ${addOrReplaceReadGroupsDir}
 
 echo "## "$(date)" Start $0"
 
@@ -54,20 +54,20 @@ java -Xmx5g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar AddOrReplaceRe
  RGSM="${sampleName}" \
  RGDT="$(date --rfc-3339=date)" \
  MAX_RECORDS_IN_RAM=1000000 \
- TMP_DIR="${addOrReplaceGroupsDir}" | 
-java -Xmx5g -XX:ParallelGCThreads=2 -Djava.io.tmpdir="${addOrReplaceGroupsDir}" -jar $EBROOTPICARD/picard.jar FixMateInformation \
+ TMP_DIR="${addOrReplaceReadGroupsDir}" | 
+java -Xmx5g -XX:ParallelGCThreads=2 -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" -jar $EBROOTPICARD/picard.jar FixMateInformation \
  INPUT="/dev/stdin" \
  ADD_MATE_CIGAR=true \
  IGNORE_MISSING_MATES=true \
  ASSUME_SORTED=false \
  SORT_ORDER=coordinate \
  CREATE_INDEX=true \
- TMP_DIR="${addOrReplaceGroupsDir}" \
- OUTPUT="${addOrReplaceGroupsBam}"
+ TMP_DIR="${addOrReplaceReadGroupsDir}" \
+ OUTPUT="${addOrReplaceReadGroupsBam}"
 
 
-putFile ${addOrReplaceGroupsBam}
-putFile ${addOrReplaceGroupsBai}
+putFile ${addOrReplaceReadGroupsBam}
+putFile ${addOrReplaceReadGroupsBai}
 
 
 echo "## "$(date)" ##  $0 Done "

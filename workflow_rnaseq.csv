@@ -7,7 +7,7 @@ AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,Hisat2Alignment;bwaSa
 MergeBamFiles,protocols/MergeBamFiles.sh,AddOrReplaceReadGroups
 HtseqCountDups,protocols/HtseqCount.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam;markDuplicatesBai=mergeBamFilesBai;htseqDir=htseqDupsDir;htseqTsv=htseqDupsTsv
 MarkDuplicates,protocols/MarkDuplicates.sh,MergeBamFiles
-Manta,protocols/MantaSV.sh,MarkDuplicates;mantaConfigType=mantaConfigTypeRna
+#Manta,protocols/MantaSV.sh,MarkDuplicates;mantaConfigType=mantaConfigTypeRna
 HtseqCount,protocols/HtseqCount.sh,MarkDuplicates
 CollectMultipleMetrics,protocols/CollectMultipleMetrics.sh,MarkDuplicates
 CalculateHsMetrics,protocols/CalculateHsMetrics.sh,MarkDuplicates

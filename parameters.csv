@@ -134,9 +134,9 @@ trimByBedMetrics,${trimByBedDir}${internalId}_${sampleName}.metrics.log
 ################################################################################
 ##AddOrReplaceGroups
 #
-addOrReplaceGroupsDir,${projectDir}/addOrReplaceReadGroups/
-addOrReplaceGroupsBam,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bam
-addOrReplaceGroupsBai,${addOrReplaceGroupsDir}${internalId}_${sampleName}.bai
+addOrReplaceReadGroupsDir,${projectDir}/addOrReplaceReadGroups/
+addOrReplaceReadGroupsBam,${addOrReplaceReadGroupsDir}${internalId}_${sampleName}.bam
+addOrReplaceReadGroupsBai,${addOrReplaceReadGroupsDir}${internalId}_${sampleName}.bai
 
 ################################################################################
 ## Iontorrent workflow SelectSpanningReads for selection of reads from bam matching end to end seq
@@ -313,10 +313,10 @@ freebayesVcf,${freebayesDir}${project}.vcf
 lancetScatVcf,${lancetDir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
 lancetScatVcfIdx,${lancetScatVcf}.idx
 lancetDir,${projectDir}/lancet/
-lancetSampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
-lancetSampleVcfIdx,${mutect2SampleVcf}.idx
-lancetProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
-lancetProjectScatVcfIdx,${mutect2ProjectScatVcf}.idx
+lancetSampleVcf,${lancetDir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
+lancetSampleVcfIdx,${lancetSampleVcf}.idx
+lancetProjectScatVcf,${lancetDir}/${project}.${scatterIDs}.vcf
+lancetProjectScatVcfIdx,${lancetProjectScatVcf}.idx
 lancetVcf,${lancetDir}/${project}.vcf
 lancetVcfIdx,${lancetVcf}.idx
 
@@ -356,7 +356,7 @@ mutect2PonSampleVcf,${mutect2PonDir}/${project}.t_${sampleName}.n_${controlSampl
 mutect2PonSampleVcfIdx,${mutect2PonSampleVcf}.idx
 mutect2PonVcf,${mutect2PonDir}/${project}.vcf
 mutect2PonVcfIdx,${mutect2PonVcf}.idx
-mutect2PonProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
+mutect2PonProjectScatVcf,${mutect2PonDir}/${project}.${scatterIDs}.vcf
 mutect2PonProjectScatVcfIdx,${mutect2PonProjectScatVcf}.idx
 
 
@@ -384,6 +384,16 @@ snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
 #
 #snpSiftAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 #snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
+gnomadDir,${data}/storage.googleapis.com/gnomad-public/release/2.1.1/vcf/
+gnomadExomeVcf,${gnomadDir}/exomes/gnomad.exomes.r2.1.1.sites.vcf.gz
+gnomadExomeVcfIdx,${gnomadExomeVcf}.tbi
+#/data/umcg-mterpstra/apps/data/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
+clinvarDir,${data}/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
+clinvarVcf,${clinvarDir}/clinvar_20191202.vcf.gz
+clinvarVcfIdx,${clinvarVcf}.tbi
+clinvarPapuVcf,${clinvarDir}/clinvar_20191202_papu.vcf.gz
+clinvarPapuVcfIdx,${clinvarVcf}.tbi
+
 #
 annotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.vcf
 annotVcfIdx,${annotVcf}.idx

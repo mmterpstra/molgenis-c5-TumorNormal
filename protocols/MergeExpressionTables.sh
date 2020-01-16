@@ -38,7 +38,7 @@ set -o pipefail
 set -x
 set -e
 
-#${addOrReplaceGroupsBam} sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+#${addOrReplaceReadGroupsBam} sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
 tsvs=($(printf '%s\n' "${htseqTsv[@]}" | sort -u ))
 #inputs=$(printf 'INPUT=%s ' $(printf '%s\n' ${tsvs[@]}))
 

@@ -20,7 +20,7 @@
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
- ${ichorcnaDir} ${ichorcnaPdf}
+ ${ichorcnaDir}/t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam) 
 
 ${stage} ${ichorcnaMod} 
 ${checkStage}
@@ -59,9 +59,12 @@ runIchorCNA.R \
  --gcWig ${onekgGenomeFasta}.gc.wig \
  --id t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam) \
  --outDir=${ichorcnaDir} \
- --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/map_hg19_1000kb.wig
+ --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/map_hg19_1000kb.wig \
+ --estimateScPrevalence FALSE --scStates "c()" \
+ --chrs "c(1:22)" --chrTrain "c(1:,18,20-22)" \
+ --normal "c(0.5,0.75,0.85,0.9,0.95)" 
 
-putFile ${ichorcnaDir}
+putFile ${ichorcnaDir}/t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam)
 #putFile ${ichorcnaDir}
 
 

@@ -15,6 +15,7 @@
 ##the following parameters select for control samples also. To remove this bias cleaner merging needs to be done
 #list mutect2SampleVcf
 #string mutect2Dir
+#string mutect2PonDir
 #string mutect2Vcf
 #string mutect2VcfIdx
 
@@ -69,6 +70,12 @@ done
 echo "inputs="$inputs";"
 echo 'prio='$prio';'
 
+minimumNOption=""
+if [ "$(dirname ${mutect2Vcf})" -eq  "${mutect2PonDir}" ]; then
+	echo "## INFO ## Assumed to be working on mutect pon files so setting the minimumN option";
+	minimumNOption="--minimumN 3"
+
+fi
 #merge gatk/freebayes
 java -Xmx4g -Djava.io.tmpdir=${mutect2Dir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
@@ -78,14 +85,19 @@ java -Xmx4g -Djava.io.tmpdir=${mutect2Dir} \
  -o ${mutect2Vcf}.tmp.vcf \
  -genotypeMergeOptions PRIORITIZE \
  -priority $prio \
- --filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED
+ --filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED \
+ ${minimumNOption}
 
+
+if grep -v '^#' ${mutect2Vcf}.tmp.vcf -c ; then
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
          ${mutect2Vcf}.tmp.ReallyComplex.vcf \
          ${mutect2Vcf}.tmp.vcf \
          $(printf '%s\n' "${mutect2SampleVcf[@]}" | sort -u ) \
          > ${mutect2Vcf}
-
+else
+	cp ${mutect2Vcf}.tmp.vcf ${mutect2Vcf}
+fi
 
 putFile ${mutect2Vcf}
 #putFile ${mutect2VcfIdx}

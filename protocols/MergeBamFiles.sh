@@ -11,8 +11,8 @@
 #string picardMod
 
 
-#string addOrReplaceGroupsDir
-#list addOrReplaceGroupsBam,addOrReplaceGroupsBai,scatterIDs
+#string addOrReplaceReadGroupsDir
+#list addOrReplaceReadGroupsBam,addOrReplaceReadGroupsBai,scatterIDs
 
 #string mergeBamFilesDir
 #string mergeBamFilesBam
@@ -25,7 +25,7 @@ alloutputsexist \
 
 echo "## "$(date)" ##  $0 Started "
 
-for file in "${addOrReplaceGroupsBam[@]}" "${addOrReplaceGroupsBai[@]}" ; do
+for file in "${addOrReplaceReadGroupsBam[@]}" "${addOrReplaceReadGroupsBai[@]}" ; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -39,8 +39,8 @@ set -o posix
 set -x
 set -e
 
-#${addOrReplaceGroupsBam} sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
-bams=($(printf '%s\n' "${addOrReplaceGroupsBam[@]}" | sort -u ))
+#${addOrReplaceReadGroupsBam} sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '
+bams=($(printf '%s\n' "${addOrReplaceReadGroupsBam[@]}" | sort -u ))
 inputs=$(printf 'INPUT=%s ' $(printf '%s\n' ${bams[@]}))
 
 mkdir -p ${mergeBamFilesDir}
