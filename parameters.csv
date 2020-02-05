@@ -384,15 +384,6 @@ snpEffAnnotVcfIdx,${snpEffAnnotVcf}.idx
 #
 #snpSiftAnnotVcf,${annotatorDir}/${project}.n_${controlSampleName}.snpEffGatk.intermediate.vcf
 #snpSiftAnnotVcfIdx,${snpSiftAnnotVcf}.idx
-gnomadDir,${data}/storage.googleapis.com/gnomad-public/release/2.1.1/vcf/
-gnomadExomeVcf,${gnomadDir}/exomes/gnomad.exomes.r2.1.1.sites.vcf.gz
-gnomadExomeVcfIdx,${gnomadExomeVcf}.tbi
-#/data/umcg-mterpstra/apps/data/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
-clinvarDir,${data}/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
-clinvarVcf,${clinvarDir}/clinvar_20191202.vcf.gz
-clinvarVcfIdx,${clinvarVcf}.tbi
-clinvarPapuVcf,${clinvarDir}/clinvar_20191202_papu.vcf.gz
-clinvarPapuVcfIdx,${clinvarVcf}.tbi
 
 #
 annotVcf,${annotatorDir}/${project}.n_${controlSampleName}.annot.vcf

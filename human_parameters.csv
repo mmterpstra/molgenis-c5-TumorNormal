@@ -64,6 +64,15 @@ snpEffectPredictorBin,${snpeffGrcData}/snpEffectPredictor.bin
 #snpSift database resources
 dbnsfp,${data}/dbNSFP/2.7/dbNSFP2.7.txt.gz
 dbnsfpTbi,${dbnsfp}.tbi
+gnomadDir,${data}/storage.googleapis.com/gnomad-public/release/2.1.1/vcf/
+gnomadExomeVcf,${gnomadDir}/exomes/gnomad.exomes.r2.1.1.sites.vcf.gz
+gnomadExomeVcfIdx,${gnomadExomeVcf}.tbi
+#/data/umcg-mterpstra/apps/data/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
+clinvarDir,${data}/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
+clinvarVcf,${clinvarDir}/clinvar_20191202.vcf.gz
+clinvarVcfIdx,${clinvarVcf}.tbi
+clinvarPapuVcf,${clinvarDir}/clinvar_20191202_papu.vcf.gz
+clinvarPapuVcfIdx,${clinvarVcf}.tbi
 
 #vcf
 oneKgP1wgsVcf,${data}/ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz

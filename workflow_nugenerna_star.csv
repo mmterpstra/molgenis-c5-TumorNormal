@@ -2,13 +2,13 @@ step,protocol,dependencies
 CreatePaddedTargets,protocols/CreatePaddedTargets.sh,
 Fastqc,protocols/Fastqc.sh,
 #FusionCatcher,protocols/FusionCatcher.sh,
-NugenePreRnaAlign,protocols/NugenePreAlign.sh,probeBed=probeRnaBed;probeFa=probeRnaFa
+NugenePreRnaAlign,protocols/NugenePreAlign.sh,probeBed=probeRnaBed
 FusionCatcher,protocols/FusionCatcher.sh,NugenePreRnaAlign;reads1FqGz=nugeneReads1FqGz;reads2FqGz=nugeneReads2FqGz
 FastqcNugene,protocols/Fastqc.sh,NugenePreRnaAlign;fastqcDir=nugeneFastqDir;reads1FqGz=nugeneReads1FqGz;reads2FqGz=nugeneReads2FqGz
 StarIndex,protocols/STARindex.sh,
 StarAlign,protocols/STAR.sh,NugenePreRnaAlign;StarIndex;reads1FqGz=nugeneReads1FqGz;reads2FqGz=nugeneReads2FqGz
 #Hisat2Alignment,protocols/Hisat2.sh,onekgGenomeFastaIdxBase=hisat2IdxBase;NugenePreRnaAlign;reads1FqGz=nugeneReads1FqGz;reads2FqGz=nugeneReads2FqGz
-TrimByBed,protocols/TrimByBed.sh,StarAlign;probeBed=probeRnaBed;probeFa=probeRnaFa;bwaSam=starSam
+TrimByBed,protocols/TrimByBed.sh,StarAlign;probeBed=probeRnaBed;bwaSam=starSam
 AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,TrimByBed;bwaSam=trimByBedBam
 AddMateCigar,protocols/AddMateCigar.sh,AddOrReplaceReadGroups;bwaSam=addOrReplaceReadGroupsBam
 NugeneBcSplitter,protocols/NugeneBcSplitter.sh,AddMateCigar;addOrReplaceReadGroupsBam=mateCigarBam

@@ -9,6 +9,8 @@ test-python:
 	python --version
 test-wfdups:
 	bash test_wfdups.sh	
+test-wfremap:
+	bash test_wfremap.sh
 test-mlcompute:
 	ml Molgenis-Compute && molgenis_compute.sh
 test-weave-exome:
@@ -30,5 +32,5 @@ test-weave-exome-long:
 test-weave-lexo:
 	bash weave_test.sh lexo ../samplesheet.csv
 
-test-all: test-java test-perl test-bash test-python test-wfdups test-mlcompute test-weave-exome test-weave-rna test-weave-withpoly test-weave-iont test-weave-nugene test-weave-nuginc test-weave-nugrna test-weave-lexo
+test-all: test-java test-perl test-bash test-python test-wfdups test-wfremap test-mlcompute test-weave-exome test-weave-rna test-weave-withpoly test-weave-iont test-weave-nugene test-weave-nuginc test-weave-nugrna test-weave-lexo
 test: test-all

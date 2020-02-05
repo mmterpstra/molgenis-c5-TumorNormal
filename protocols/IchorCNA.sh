@@ -61,7 +61,7 @@ runIchorCNA.R \
  --outDir=${ichorcnaDir} \
  --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/map_hg19_1000kb.wig \
  --estimateScPrevalence FALSE --scStates "c()" \
- --chrs "c(1:22)" --chrTrain "c(1:,18,20-22)" \
+ --chrs "c(1:22)" --chrTrain "c(1:18,20-22)" \
  --normal "c(0.5,0.75,0.85,0.9,0.95)" 
 
 putFile ${ichorcnaDir}/t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam)
