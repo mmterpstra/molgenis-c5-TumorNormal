@@ -139,6 +139,19 @@ addOrReplaceReadGroupsBam,${addOrReplaceReadGroupsDir}${internalId}_${sampleName
 addOrReplaceReadGroupsBai,${addOrReplaceReadGroupsDir}${internalId}_${sampleName}.bai
 
 ################################################################################
+##RevertSamAddOrReplaceReadGroups step
+#
+revertSamAddOrReplaceReadGroupsDir,${projectDir}/revertSamAddOrReplaceReadGroupsDir/
+revertSamAddOrReplaceReadGroupsBam,${revertSamAddOrReplaceReadGroupsDir}${internalId}_${sampleName}.bam
+#not created: revertSamAddOrReplaceReadGroupsBai,${revertSamAddOrReplaceReadGroupsDir}${internalId}_${sampleName}.bai
+################################################################################
+##MergeBamAlignment or MergeBamAlignmentSetNmMdandUqTags
+#
+mergeBamAlignmentDir,${projectDir}/MergeBamAlignment/
+mergeBamAlignmentBam,${mergeBamAlignmentDir}${internalId}_${sampleName}.bam
+mergeBamAlignmentBai,${mergeBamAlignmentDir}${internalId}_${sampleName}.bai
+
+################################################################################
 ## Iontorrent workflow SelectSpanningReads for selection of reads from bam matching end to end seq
 #
 spanningDir,${projectDir}/SelectSpanningReads/

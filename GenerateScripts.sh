@@ -118,6 +118,10 @@ projectname=$3
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
 	        workflowBase="workflow.csv"
 		cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+        elif [ $1 == "exomehuman38" ];then
+                >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+                workflowBase="workflow_grch38.csv"
+                cat  $workflowDir/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
         elif [ $1 == "exomele150" ];then
                 >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental le150 workflow"
                 workflowBase="workflow_le150.csv"

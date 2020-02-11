@@ -270,3 +270,19 @@ The table below shows the filtering steps that are automatically performed. Note
 | "1000gMAFgt0.02" 		| see descr.			| both				| Population annotation. entire 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.AF') &&(vc.getAttribute('1000gPhase1Snps.AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.AF') < 0.98))" --filterName "1000gMAFgt0.02" |
 | "1000gEURMAFgt0.02" 		| see descr. 			| both				| Population annotation. european 1000g phase 1 alelle fequency of 2% aka "(vc.hasAttribute('1000gPhase1Snps.EUR_AF') && (vc.getAttribute('1000gPhase1Snps.EUR_AF') > 0.02&&vc.getAttribute('1000gPhase1Snps.EUR_AF') < 0.98))" --filterName "1000gEURMAFgt0.02" |
 | "QDlt2andQdbyAflt8" 		| "QD < 2.0 && QD / AF < 8.0	| both				| Variant statistic. Having both QD < 2 and QD/ AF < 8 in tekst:the qual divided by depth less then 2 and the qual divided by depth divided by allele frequency less than 8. The second parameter(QDAF is to avoid removing low AF (read like: rare) variant calls from the data.). Also note the QD is already calculated by using samples containing the variant. |
+
+Testing
+=======
+
+
+simple syntax /generation checking
+```
+make test
+
+```
+
+testdata from the broadinstitute from [here](https://gatk.broadinstitute.org/hc/en-us/articles/360037498992--How-to-Map-reads-to-a-reference-with-alternate-contigs-like-GRCH38)
+
+```
+bash GenerateScripts.sh exomehuman38 samplesheet_tutorial_801.csv testgrch38 /data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/bundle17jan2020/hg38/wgs_calling_regions.hg38.interval_list && bash .RunWorkFlowGeneration.sh && bash /scratch/umcg-mterpstra/projects/testgrch38/jobs/submit.sh)
+```
