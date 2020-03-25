@@ -467,7 +467,7 @@ sub ReadSamplesheetIllumina {
 			$c[$i]=join(",",@h);
 			#ReadFileNameConstructor(\%d);
 			my $ret;
-			@{$ret} = CmdRunner('ls $(dirname '."$samplesheetf".')/'.$d{'Sample_Project'}.'/'.$d{'Sample_Name'}.'_*_R[1234]_*.fastq.gz');
+			@{$ret} = CmdRunner('ls $(dirname '."$samplesheetf".')/'.$d{'Sample_Project'}.'/'.$d{'Sample_ID'}.'_*_R[1234]_*.fastq.gz');
 			if(scalar(@{$ret})){
 				my @lanes;
 				for my $file (@{$ret}){
@@ -846,7 +846,8 @@ sub ReformatHashIlluminaToSampleSheet {
 		"index"	=>	"barcode",
 		"index1"	=>	"barcode1",
 		"index2"	=>	"barcode2", 
-		"Sample_Name"	=>	["sampleName","controlSampleName"],
+		"Sample_ID"  =>      ["sampleName","controlSampleName"],
+		#"Sample_Name"	=>	["sampleName","controlSampleName"],
 		"IEMFileVersion"	=>	"IEMFileVersion",
 		"Experiment Name"	=>	"project",
 		"contact"	=>	"contact",

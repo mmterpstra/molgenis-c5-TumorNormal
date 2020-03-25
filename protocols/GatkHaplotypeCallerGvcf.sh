@@ -18,13 +18,13 @@
 #string slopTargetsList
 
 #string haplotyperDir
-#string haplotyperGvcf
-#string haplotyperGvcfIdx
+#string haplotyperScatGvcf
+#string haplotyperScatGvcfIdx
 
 
 alloutputsexist \
-"${haplotyperGvcf}" \
-"${haplotyperGvcfIdx}"
+"${haplotyperScatGvcf}" \
+"${haplotyperScatGvcfIdx}"
 
 echo "## "$(date)" ##  $0 Started "
 
@@ -53,6 +53,7 @@ if [ ${#targetsList} -ne 0 ]; then
 
 fi
 
+
 java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T HaplotypeCaller \
  -R ${onekgGenomeFasta} \
@@ -60,9 +61,7 @@ java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:Par
  $inputs \
  -o ${haplotyperGvcf} \
  --emitRefConfidence GVCF \
- --variant_index_type LINEAR \
- --variant_index_parameter 128000 \
- $InterValOperand
+ $InterValOperand \
 
 #dem original
 # -recoverDanglingHeads \
@@ -70,7 +69,7 @@ java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:Par
 # -stand_call_conf 10.0 \
 # -stand_emit_conf 20.0 \
 
-putFile ${haplotyperGvcf}
-putFile ${haplotyperGvcfIdx}
+putFile ${haplotyperScatGvcf}
+putFile ${haplotyperScatGvcfIdx}
 
 echo "## "$(date)" ##  $0 Done "

@@ -61,10 +61,10 @@ qualAction=$(samtools view ${markDuplicatesBam} | \
  $_=ord($_);
  print $_."\n"if(not($_=~/10/));' | \
  sort -n | \
- perl -wne '
+ perl -we '
  use strict;
  use List::Util qw/max min/;
- my @ords=<STDIN>;
+ my @ords; while(<STDIN>){chomp $_ ; push(@ords, $_)};
  if(min(@ords) >= 59 && max(@ords) <=104 ){
 	print " --fix_misencoded_quality_scores ";
 	warn "Illumina <= 1.7 scores detected using:--fix_misencoded_quality_scores.\n";

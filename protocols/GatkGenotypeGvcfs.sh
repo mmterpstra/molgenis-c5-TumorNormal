@@ -11,21 +11,22 @@
 #string dbsnpVcfIdx
 
 #string gatkMod
-#string haplotyperDir
+#string gHaplotyperDir
 #string onekgGenomeFasta
 
-#Array reference because it's possible
-#list mergeGvcf,mergeGvcfIdx
+#string combinedScatGvcf
+#string combinedScatGvcfIdx
 
-#string genotypedVcf,genotypedVcfIdx
+#string genotypedScatVcf
+#string genotypedScatVcfIdx
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
-"${genotypedVcf}" \
-"${genotypedVcfIdx}"
+"${genotypedScatVcf}" \
+"${genotypedScatVcfIdx}"
 
-for file in "${mergeGvcf[@]}" "${mergeGvcfIdx[@]}" "${onekgGenomeFasta}"; do
+for file in "${combinedScatGvcf[@]}" "${onekgGenomeFasta}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -39,26 +40,26 @@ set -e
 
 
 # sort unique and print like ' --variant file1.vcf --variant file2.vcf '
-gvcfs=($(printf '%s\n' "${mergeGvcf[@]}" | sort -u ))
+gvcfs=($(printf '%s\n' "${combinedScatGvcf[@]}" | sort -u ))
 
 inputs=$(printf ' --variant %s ' $(printf '%s\n' ${gvcfs[@]}))
 
-mkdir -p ${haplotyperDir}
+mkdir -p ${gHaplotyperDir}
 
 #pseudo: java -jar GenomeAnalysisTK.jar -T HaplotypeCaller -R ref.fasta -I input.bam -recoverDanglingHeads -dontUseSoftClippedBases -stand_call_conf 20.0 -stand_emit_conf 20.0 -o output.vcf from http://gatkforums.broadinstitute.org/discussion/3891/calling-variants-in-rnaseq
 
-java -Xmx12g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+java -Xmx12g -Djava.io.tmpdir=${gHaplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T GenotypeGVCFs \
  -R ${onekgGenomeFasta} \
- --dbsnp ${dbsnpVcf}\
- -o ${genotypedVcf} \
+ --dbsnp ${dbsnpVcf} \
+ -o ${genotypedScatVcf} \
  $inputs \
- -stand_call_conf 20.0 \
- -stand_emit_conf 10.0 \
- -nt 4
+ -stand_call_conf 10.0 \
+ -nt 4 \
+ -newQual
 
 
-putFile ${genotypedVcf}
-putFile ${genotypedVcfIdx}
+putFile ${genotypedScatVcf}
+putFile ${genotypedScatVcfIdx}
 
 echo "## "$(date)" ##  $0 Done "I

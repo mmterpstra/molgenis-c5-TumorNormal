@@ -1,7 +1,5 @@
 SHELL := /bin/bash
 
-
-test :
-	make -C tests/ test
-
-
+test-all:
+	$(MAKE) -C tests/ $@
+test: test-all

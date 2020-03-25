@@ -13,8 +13,6 @@
 
 #string goldStandardVcf
 #string goldStandardVcfIdx
-#string oneKgPhase1IndelsVcf
-#string oneKgPhase1IndelsVcfIdx
 
 #string dbsnpVcf
 #string dbsnpVcfIdx
@@ -35,8 +33,6 @@ alloutputsexist \
  ${analyseCovariatesCsv} 
 
 getFile ${onekgGenomeFasta}
-getFile ${oneKgPhase1IndelsVcf}
-getFile ${oneKgPhase1IndelsVcfIdx}
 getFile ${dbsnpVcf}
 getFile ${dbsnpVcfIdx}
 getFile ${goldStandardVcf} 
@@ -63,7 +59,6 @@ java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGC
  -o ${bqsrAfterGrp} \
  -knownSites ${dbsnpVcf} \
  -knownSites ${goldStandardVcf}\
- -knownSites ${oneKgPhase1IndelsVcf}\
  -nct 8
 
 java -Xmx4g -Djava.io.tmpdir=${bqsrDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \

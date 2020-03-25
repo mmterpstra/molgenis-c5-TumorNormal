@@ -24,7 +24,7 @@ while(<>){
 	warn "## ".localtime(time)." ## WARN ## char '=' found try char ','" if(/=/);
 	chomp;
 	my $param; my $val;
-	($param, $val)=split(",");
+	($param, $val)=splitsafe(",",$_);
 	push(@param, $param);
 	push(@val,$val);
 	die "Duplicate parameter '$param' detected!\nPlease remove and restart.\nold value is '$h{$param}' and new value is '$val'" if(defined($h{$param}));
@@ -34,3 +34,29 @@ while(<>){
 warn "## ".localtime(time)." ## INFO ## Used $lc lines of $. \n";
 print join(",",@param)."\n";
 print join(",",@val)."\n";
+
+sub splitsafe {
+	my $sep = shift @_;
+	my $tosplit  = shift @_;
+	my $unqouted = 1;
+	my $append;
+	my @splitres;
+	for my $char (split("",$tosplit)){
+		if( $char eq "\""){
+			if($unqouted == 0){
+				$unqouted = 1;
+			}elsif($unqouted == 1){
+				$unqouted = 0;
+			}
+			$append.=$char;
+		}elsif($char eq $sep && $unqouted == 1){
+			push (@splitres, $append);
+			$append="";
+		}else{
+			$append.=$char;
+		}
+	}
+	push (@splitres, $append);
+	return @splitres;
+}
+

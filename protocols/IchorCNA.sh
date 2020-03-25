@@ -14,9 +14,12 @@
 #string controlSampleBam
 #string controlSampleBai
 #string ichorcnaDir
+#string ichorcnaChromosomes
+#string ichorcnaChrs
+#string ichorcnaChrtrain
 #string coverageWig
 #string ichorcnaPdf
-
+#string mapability1000kbWig
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
@@ -37,18 +40,17 @@ set -e
 
 mkdir -p ${ichorcnaDir}
 
-
 Normalspec=""
 
 readCounter\
  --window 1000000 \
  --quality 20 \
- --chromosome "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y" \
+ --chromosome $(echo "${ichorcnaChromosomes}"| perl -wpe 's/\t/,/g') \
  ${indelRealignmentBam} > ${coverageWig}
 readCounter\
  --window 1000000 \
  --quality 20 \
- --chromosome "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y" \
+ --chromosome $(echo "${ichorcnaChromosomes}"| perl -wpe 's/\t/,/g') \
  ${controlSampleBam} > ${coverageWig}_norm.wig
 
 
@@ -59,9 +61,11 @@ runIchorCNA.R \
  --gcWig ${onekgGenomeFasta}.gc.wig \
  --id t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam) \
  --outDir=${ichorcnaDir} \
- --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/map_hg19_1000kb.wig \
+ --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/${mapability1000kbWig} \
  --estimateScPrevalence FALSE --scStates "c()" \
- --chrs "c(1:22)" --chrTrain "c(1:18,20:22)" \
+ --chrs $(echo "${ichorcnaChrs}"| perl -wpe 's/\t/,/g') \
+ --chrTrain $(echo "${ichorcnaChrtrain}"| perl -wpe 's/\t/,/g') \
+ --chrNormalize $(echo "${ichorcnaChrs}"| perl -wpe 's/\t/,/g') \
  --normal "c(0.5,0.75,0.85,0.9,0.95)" 
 
 putFile ${ichorcnaDir}/t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam)

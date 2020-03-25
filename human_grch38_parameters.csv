@@ -6,21 +6,21 @@ genomeLatSpecies,Homo_sapiens
 genomeSpecies,human
 genomeBuild,hg38
 genomeGrchBuild,GRCh38
-ensemblVersion,
+ensemblVersion,86
 #/data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/bundle17jan2020/hg38/Homo_sapiens_assembly38.fasta
 bundle,${data}/ftp.broadinstitute.org/bundle/bundle17jan2020/${genomeBuild}/
 #onekgGgenomeDecoyFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37_decoy.fasta
 onekgGenomeFasta,${bundle}/Homo_sapiens_assembly38.fasta
 onekgGenomeFastaIdxBase,${bundle}/BWA/0.7.15-foss-2016a/Homo_sapiens_assembly38.fasta
-onekgGenomeFastaDict,${onekgGenomeFasta}.dict
+onekgGenomeFastaDict,${bundle}/Homo_sapiens_assembly38.dict
 
 goldStandardVcf,${bundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
 goldStandardVcfIdx,${goldStandardVcf}.tbi
 
 oneKgPhase1SnpsVcf,${bundle}/1000G_phase1.snps.high_confidence.hg38.vcf.gz
 oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.tbi
-#oneKgPhase1IndelsVcf,${bundle}/1000G_phase1.indels.b37.vcf
-#oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.idx
+oneKgPhase1IndelsVcf,${bundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.tbi
 
 #oneKgPhase3v4Vcf,${bundle}/1000G_phase3_v4_20130502.sites.vcf.gz
 #oneKgPhase3v4VcfIdx,${oneKgPhase3v4Vcf}.tbi
@@ -31,9 +31,9 @@ popStratifiedVcfIdx,${popStratifiedVcf}.tbi
 #${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
 
 dbsnp138Vcf,${bundle}/dbsnp_138.hg38.vcf.gz
-dbsnp138VcfIdx,${dbsnpVcf}.idx
+dbsnp138VcfIdx,${dbsnpVcf}.tbi
 dbsnpVcf,${bundle}/dbsnp_146.hg38.vcf.gz
-dbsnpVcfIdx,${dbsnpVcf}.idx
+dbsnpVcfIdx,${dbsnpVcf}.tbi
 
 #see gnomad v3
 #exacVcf,${data}/ExAC/release0.3/ExAC.r0.3.sites.vep.vcf.gz
@@ -41,11 +41,13 @@ dbsnpVcfIdx,${dbsnpVcf}.idx
 
 #limit to known realignment when using haplotype caller because the haplotypecaller will consider multiple haplotypes instead of one when the GatkRealignerTargetCreator step is used.
 #indelRealignmentTargets,${data}/intervals/1000G_phase1.indels_Mills_and_1000G_gold_standard.indels.b37.human_g1k_v37.intervals
-indelRealignmentTargets,${bundle}/Mills_and_1000G_gold_standard.indels.b37.vcf
+indelRealignmentTargets,${bundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+
 #snpEff / snipsift
 #snpEff database resources...
-snpeffDataDir,${data}/snpEff/
-#snpeffGrcData,${snpeffDataDir}/GRCh37.75/
+#/data/umcg-mterpstra/apps/data/snpEff/4.3/GRCh38.86/
+snpeffDataDir,${data}/snpEff/4.3/
+snpeffGrcData,${snpeffDataDir}/${genomeGrchBuild}.${ensemblVersion}/
 motifBin,${snpeffGrcData}/motif.bin
 nextProtBin,${snpeffGrcData}/nextProt.bin
 pwmsBin,${snpeffGrcData}/pwms.bin
@@ -68,27 +70,38 @@ snpEffectPredictorBin,${snpeffGrcData}/snpEffectPredictor.bin
 #snpSift database resources
 dbnsfp,${data}/dbNSFP/4.0a/dbNSFP4.0a.txt.gz
 dbnsfpTbi,${dbnsfp}.tbi
+
 #gnomad genome data
 gnomadDir,${data}/storage.googleapis.com/gnomad-public/release/3.0/vcf/
-gnomadVcf,${gnomadDir}/genomes/genomes/gnomad.genomes.r3.0.sites.vcf.gz
+gnomadVcf,${gnomadDir}/genomes/gnomad.genomes.r3.0.sites.snpsift.vcf.gz
 gnomadVcfIdx,${gnomadVcf}.tbi
-#/data/umcg-mterpstra/apps/data/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
+
+#clinvar
+#ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar_20200210_Homo_sapiens_assembly38.vcf.gz 
 #
-#clinvarDir,${data}/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
-#clinvarVcf,${clinvarDir}/clinvar_20191202.vcf.gz
-#clinvarVcfIdx,${clinvarVcf}.tbi
-#clinvarPapuVcf,${clinvarDir}/clinvar_20191202_papu.vcf.gz
-#clinvarPapuVcfIdx,${clinvarVcf}.tbi
+clinvarDir,${data}/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/
+clinvarVcf,${clinvarDir}/clinvar_20200210_Homo_sapiens_assembly38.vcf.gz
+clinvarVcfIdx,${clinvarVcf}.tbi
+clinvarPapuVcf,${clinvarDir}/clinvar_20200210_Homo_sapiens_assembly38.vcf.gz
+clinvarPapuVcfIdx,${clinvarPapuVcf}.tbi
 
 #vcf
 #oneKgP1wgsVcf,${data}/ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz
 #oneKgP1wgsVcfIdx,${oneKgP1wgsVcf}.tbi
 
-#cosmicDir,${data}/sftp-cancer.sanger.ac.uk/files/grch37/cosmic/
-#cosmicVersion,v72
-#cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts.bundle_2.8_b37.vcf.gz
-#cosmicVcfIdx,${cosmicVcf}.tbi
+#Cosmic 
+cosmicDir,${data}/sftp-cancer.sanger.ac.uk/files/grch38/cosmic/
+cosmicVersion,v90
+cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts_Homo_sapiens_assembly38.vcf.gz
+cosmicVcfIdx,${cosmicVcf}.tbi
 
+#ichorCNA
+#tabs cause comma's crash things
+ichorcnaChromosomes,"chr1	chr2	chr3	chr4	chr5	chr6	chr7	chr8	chr9	chr10	chr11	chr12	chr13	chr14	chr15	chr16	chr17	chr18	chr19	chr20	chr21	chr22	chrX	chrY"
+ichorcnaChrs,"c('chr1'	'chr2'	'chr3'	'chr4'	'chr5'	'chr6'	'chr7'	'chr8'	'chr9'	'chr10'	'chr11'	'chr12'	'chr13'	'chr14'	'chr15'	'chr16'	'chr17'	'chr18'	'chr19'	'chr20'	'chr21'	'chr22')"
+#no chromosome 19
+ichorcnaChrtrain,"c('chr1'	'chr2'	'chr3'	'chr4'	'chr5'	'chr6'	'chr7'	'chr8'	'chr9'	'chr10'	'chr11'	'chr12'	'chr13'	'chr14'	'chr15'	'chr16'	'chr17'	'chr18'	'chr20'	'chr21'	'chr22')"
+mapability1000kbWig,map_hg38_1000kb.wig
 #rna
 genesRefFlat,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
 rRnaIntervalList,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
@@ -100,6 +113,5 @@ ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/h
 #/groups/umcg-oncogenetics/prm02/data/resources/gff/Homo_sapiens.GRCh37.75.tes1000.gff
 #/groups/umcg-oncogenetics/prm02/data/resources/gff/Homo_sapiens.GRCh37.75.tes500.gff
 #hisat2
-#hisat2IdxBase,${bundle}/hisat2/2.0.3-beta-goolf-1.7.20/human_g1k_v37_decoy
-#hisat2SpliceKnownTxt,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/hisat2-2.0.3-beta-foss-2016a/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.splicesites.txt
-
+hisat2IdxBase,${bundle}/hisat2/2.2.0-foss-2018a/Homo_sapiens_assembly38
+hisat2SpliceKnownTxt,${bundle}/hisat2/2.2.0-foss-2018a/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.hisat2_extract_splice_sites.tsv

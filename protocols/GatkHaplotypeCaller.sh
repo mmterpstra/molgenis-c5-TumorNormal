@@ -75,6 +75,7 @@ java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:Para
  $inputs \
  -stand_call_conf 10.0 \
  -o ${haplotyperScatVcf} \
+ -newQual \
  $InterValOperand \
  ${gatkOpt}
 

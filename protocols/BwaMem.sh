@@ -45,7 +45,6 @@ mkdir -p ${bwaAlignmentDir}
 if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	getFile ${reads1FqGz}
 	bwa mem \
-	 -M \
 	 -t ${nTreads} \
 	 ${onekgGenomeFastaIdxBase} \
 	 ${reads1FqGz} \
@@ -54,7 +53,6 @@ else
 	getFile ${reads1FqGz}
 	getFile ${reads2FqGz}
         bwa mem \
-	 -M \
 	 -t ${nTreads} \
 	 ${onekgGenomeFastaIdxBase} \
 	 ${reads1FqGz} \

@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=5gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=6gb nodes=1 ppn=4
 
 #string project
 
@@ -44,7 +44,7 @@ mkdir -p ${calculateHsMetricsDir}
 
 
 #Run Picard
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMetrics\
+java -jar -Xmx5g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMetrics\
  I=${markDuplicatesBam} \
  O=${calculateHsMetricsLog} \
  R=${onekgGenomeFasta} \
@@ -56,7 +56,7 @@ java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMet
 
 rm ${calculateHsMetricsLog} -v
 
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMetrics\
+java -jar -Xmx5g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CalculateHsMetrics\
  I=${markDuplicatesBam} \
  O=${calculateHsMetricsLog} \
  R=${onekgGenomeFasta} \

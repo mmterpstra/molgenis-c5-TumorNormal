@@ -48,6 +48,12 @@ if [ -n "$(ls -A ${lofreqScatVcf}*)" ]; then
 	rm -v ${lofreqScatVcf}*
 fi 
 
+suffix=""
+#try to run on gzipped input if possible
+if [ $(basename ${dbsnpVcf} .gz) == $(basename ${dbsnpVcf}) ]; then 
+	suffix=".gz"
+fi
+
 mkdir -p ${lofreqDir}
 #if has targets use targets list
 if [ ${#targetsList} -ne 0 ]; then
@@ -83,7 +89,6 @@ if [ ${viterbiBam} !=  ${viterbiControlBam} ]; then
 fi
 
 
-
 #lofreq somatic -n n.bam -t t.bam -o out.pref -f ref.fa --cal-indels -l reg.bed -d DBSNP.vcf --threads NUM_THREADS
 lofreq somatic \
  ${Normalspec} \
@@ -92,7 +97,7 @@ lofreq somatic \
  -f ${onekgGenomeFasta} \
  --call-indels \
  ${InterValOperand} \
- -d ${dbsnpVcf}.gz \
+ -d ${dbsnpVcf}${suffix} \
  --threads 1
 
 touch ${lofreqScatVcf}

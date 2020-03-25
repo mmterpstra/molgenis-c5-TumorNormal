@@ -158,7 +158,7 @@ projectname=$3
 	        >&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
 	        workflowBase="workflow_nugenerna.csv"
 		nugeneRnaProbeBed=$5
-                cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	
 	        perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "nugrnastar" ];then
@@ -258,10 +258,30 @@ projectname=$3
 	(
 		if which git &>/dev/null; then
 			>&2 echo "## "$(date)" ## $0 ## Command 'git' present"
+			if git status &>dev/null; then
+                		GITCMD='git log -1'
+			else
+				>&2 echo "## "$(date)" ## $0 ## Command 'git' present but no git repo..."
+				GITCMD='echo "$(pwd) $(date)"'
+			fi
 		else
 			>&2 echo "## "$(date)" ## $0 ## Commmand 'git' not present, trying module load."
 			ml git
+			if which git &>/dev/null; then
+				>&2 echo "## "$(date)" ## $0 ## Command 'git' present after 'ml git'"
+				if git status &>dev/null; then
+					GITCMD='git log -1'
+				else
+					>&2 echo "## "$(date)" ## $0 ## Command 'git' present but no git repo..."
+					GITCMD=echo "$(pwd) $(date)"
+				fi
+			else
+				>&2 echo "## "$(date)" ## $0 ## Command 'git' not present after 'ml git'"
+				GITCMD=echo "$(pwd) $(date)"
+			fi
+		
 		fi
+
 		if which dot &>/dev/null; then
 			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
 		else
@@ -273,9 +293,9 @@ projectname=$3
 		echo
 		echo "### Version info"
 		echo
-		echo -n "This is generated based on the git "
-		git log -1| head -n 1
-		echo "with command '"$SCRIPTCALL"'. Althought this is software in development and also the next commit should also be considered."
+		echo -n "This is generated based on the git or path+date '"
+		$GITCMD | head -n 1
+		echo "' with command '"$SCRIPTCALL"'. Althought this is software in development and also the next commit should also be considered."
 	        echo
 		echo "### Branch info"
 		echo
