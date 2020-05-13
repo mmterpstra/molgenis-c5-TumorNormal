@@ -40,6 +40,8 @@ sub ToolRunner {
 		BatchSamplesheet($tool);
  	}elsif($tool eq 'split'){
 		SplitSamplesheetByProject($tool);
+	}elsif($tool eq 'arch'){
+		ArchiveDataSamplesheet($tool);
  	}elsif($tool eq 'help'){
 		Help($tool);
  	}else{
@@ -399,8 +401,40 @@ END
 		close $fh;
 	}
 }
+
+################################
+
+sub ArchiveDataSamplesheet {
+	my $tool = shift @_;
+	my $opts;%{$opts}=();
+	getopts('i:a:', $opts);
+	my $samplesheetfile = shift @ARGV;
+	my $use .=<<"END";
+WIP use: perl $0 $tool -i inputdir -a archivedir samplesheet.csv
+	Gets all samples/fastqs using the samplesheet and puts em into the archive 
+	dir with the samplesheets. Also does adding samplesheets , checking md5sums and making 
+	the struture read only. 
+END
+	die "ERROR: At least one of these missing -p PREFIX . $use." if(not( $opts -> {'p'}));	
+	
+	my $samplesheet = ReadSamplesheet($samplesheetfile);
+	#my @splitss = SplitByProject($samplesheet);
+	
+	for my $s (@{$samplesheet}){
+		warn "INFO: Checking and archiving ".$s -> {sampleName}." to ".$opts -> {'a'} . "\n";
+		open(my $fh, ">", $opts -> {'a'}."/".".samplesheet.csv"	);
+		print $fh SamplesheetAsString($s);
+		close $fh;
+	}
+}
+
+
 #################################
 #Subroutines
+####
+##
+#
+#
 
 sub ReadSamplesheet {
 	my $samplesheetf = shift @_;

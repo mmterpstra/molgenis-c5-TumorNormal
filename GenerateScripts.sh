@@ -124,11 +124,11 @@ projectname=$3
                 cat  $workflowDir/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
         elif [ $1 == "exomele150" ];then
                 >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental le150 workflow"
-                workflowBase="workflow_le150.csv"
+                workflowBase="workflow_grch38_le150.csv"
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
         elif [ $1 == "exomegt150" ];then
                 >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental gt150 workflow"
-                workflowBase="workflow_gt150.csv"
+                workflowBase="workflow_grch38_gt150.csv"
                 cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "rna" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
@@ -208,6 +208,7 @@ projectname=$3
 		>&2 echo "## "$(date)" ## $0 ## Copying samplesheet to samplesheets folder '$SAMPLESHEETFOLDER'"
 		cp -v "${samplesheet}" "$SAMPLESHEETFOLDER/${HOSTNAME}_"$(basename ${samplesheet})
 		>&2 echo "## "$(date)",${0},${HOSTNAME},bash ${SCRIPTCALL}" >> $SAMPLESHEETFOLDER/"${HOSTNAME}"_all_generated.log
+		>&2 echo "## "$(date)",${0},${HOSTNAME},bash ${SCRIPTCALL},"$((git log -1 || echo "$(pwd)" "$(date)") | head -n 1 ) >> "$SAMPLESHEETFOLDER""/""${HOSTNAME}""_all_generated.log"
 	fi
 	echo "## "$(date)" ## $0 ## Creating rundir/jobsdir"
 
@@ -273,11 +274,11 @@ projectname=$3
 					GITCMD='git log -1'
 				else
 					>&2 echo "## "$(date)" ## $0 ## Command 'git' present but no git repo..."
-					GITCMD=echo "$(pwd) $(date)"
+					GITCMD='echo "$(pwd) $(date)"'
 				fi
 			else
 				>&2 echo "## "$(date)" ## $0 ## Command 'git' not present after 'ml git'"
-				GITCMD=echo "$(pwd) $(date)"
+				GITCMD='echo "$(pwd) $(date)"'
 			fi
 		
 		fi

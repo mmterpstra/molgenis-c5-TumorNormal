@@ -43,7 +43,11 @@ mkdir -p ${addOrReplaceReadGroupsDir}
 
 echo "## "$(date)" Start $0"
 
-java -Xmx5g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
+java \
+ -Xmx5g \
+ -XX:ParallelGCThreads=2 \
+ -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups\
  INPUT="${bwaSam}" \
  OUTPUT="/dev/stdout" \
  SORT_ORDER=unsorted \
@@ -55,7 +59,11 @@ java -Xmx5g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar AddOrReplaceRe
  RGDT="$(date --rfc-3339=date)" \
  MAX_RECORDS_IN_RAM=1000000 \
  TMP_DIR="${addOrReplaceReadGroupsDir}" | 
-java -Xmx5g -XX:ParallelGCThreads=2 -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" -jar $EBROOTPICARD/picard.jar FixMateInformation \
+java \
+ -Xmx5g \
+ -XX:ParallelGCThreads=2 \
+ -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -jar $EBROOTPICARD/picard.jar FixMateInformation \
  INPUT="/dev/stdin" \
  ADD_MATE_CIGAR=true \
  IGNORE_MISSING_MATES=true \

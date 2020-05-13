@@ -55,7 +55,7 @@ sub ValidateColvalues {
 	if(scalar(@{$header}) ne scalar(@{$columns})){
 		die "[VALIDATIONERROR] number of columns (".scalar(@{$columns}).") in line $. are not equal to columns in header ".scalar(@{$columns})
 			.".\nArray dump of header".Dumper($header)
-			.".\nArray dump of $. columns".Dumper($columns)." ";
+			.".\nArray dump of columns on line $. : ".Dumper($columns)." ";
 	}
 }
 sub ValidateSpecialChars {

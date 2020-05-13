@@ -125,6 +125,7 @@ zipbase='zip -n bam:xlsx:cram -ru '${project}'.zip '
 	#rna seq output of fusions of fusioncather
 	if [ -e "${fusioncatcherDir}" ]; then
 		$zipbase $(echo "${fusioncatcherDir}/*/final-list_candidate-fusion-genes.txt" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
+		$zipbase $(echo "${fusioncatcherDir}/*/final-list_candidate-fusion-genes.xlsx" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
 	
 	#for markduplicates results log

@@ -579,21 +579,28 @@ indelMnpWithPolymorficVcfIdx,${indelMnpWithPolymorficVcf}.idx
 gHaplotyperDir,${projectDir}/haplotypeCallerGvf/
 haplotyperGvcf,${gHaplotyperDir}${sampleName}.g.vcf
 haplotyperGvcfIdx,${haplotyperGvcf}.idx
+haplotyperScatGvcf,${gHaplotyperDir}/${sampleName}_${scatterIDs}.g.vcf
+haplotyperScatGvcfIdx,${haplotyperScatGvcf}.idx
+
 ################################################################################
-#mergeGvcfs
-mergeGvcf,${gHaplotyperDir}${project}.g.vcf
-mergeGvcfIdx,${mergeGvcf}.idx
+#combineGvcfs
+combinedScatGvcf,${gHaplotyperDir}${project}_${scatterIDs}.g.vcf
+combinedScatGvcfIdx,${combinedScatGvcf}.idx
+
 ################################################################################
 #genotypeGvcf
-genotypedVcf,${gHaplotyperDir}${project}.gg.vcf
+genotypedVcf,${gHaplotyperDir}${project}_gg.vcf
 genotypedVcfIdx,${genotypedVcf}.idx
+genotypedScatVcf,${gHaplotyperDir}/${project}_${scatterIDs}_gg.vcf
+genotypedScatVcfIdx,${genotypedScatVcf}.idx
+
 ################################################################################
 #gvcf variant annotation extra parameters
-gannotatorDir,${projectDir}/GVariantAnnotation/
-gsnpEffVcf,${gannotatorDir}/${project}.snpEff.vcf
-gsnpEffVcfIdx,${gsnpEffVcf}.idx
-gannotVcf,${gannotatorDir}/${project}.annot.vcf
-gannotVcfIdx,${gannotVcf}.idx
+#gannotatorDir,${projectDir}/GVariantAnnotation/
+#gsnpEffVcf,${gannotatorDir}/${project}.snpEff.vcf
+#gsnpEffVcfIdx,${gsnpEffVcf}.idx
+#gannotVcf,${gannotatorDir}/${project}.annot.vcf
+#gannotVcfIdx,${gannotVcf}.idx
 ################################################################################
 #CreateProjectMd aka CreateProjectMarkdown
 #

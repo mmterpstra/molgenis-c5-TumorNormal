@@ -65,6 +65,8 @@ snpEffectPredictorBin,${snpeffGrcData}/snpEffectPredictor.bin
 dbnsfp,${data}/dbNSFP/2.7/dbNSFP2.7.txt.gz
 dbnsfpTbi,${dbnsfp}.tbi
 gnomadDir,${data}/storage.googleapis.com/gnomad-public/release/2.1.1/vcf/
+gnomadVcf,${gnomadDir}/genomes/gnomad.genomes.r2.1.1.sites.vcf.bgz
+gnomadVcfIdx,${gnomadVcf}.tbi
 gnomadExomeVcf,${gnomadDir}/exomes/gnomad.exomes.r2.1.1.sites.vcf.gz
 gnomadExomeVcfIdx,${gnomadExomeVcf}.tbi
 #/data/umcg-mterpstra/apps/data/ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/
@@ -83,6 +85,12 @@ cosmicVersion,v72
 cosmicVcf,${cosmicDir}/${cosmicVersion}/VCF/CosmicCodingMuts.bundle_2.8_b37.vcf.gz
 cosmicVcfIdx,${cosmicVcf}.tbi
 
+#ichorCNA
+ichorcnaChromosomes,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y
+ichorcnaChrs,c(1:22)
+#no chromosome 19
+ichorcnaChrtrain,c(1:18,20:22)
+mapability1000kbWig,map_hg19_1000kb.wig
 #rna
 genesRefFlat,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
 rRnaIntervalList,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list

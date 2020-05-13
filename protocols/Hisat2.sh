@@ -43,6 +43,7 @@ ${checkStage}
 
 set -x
 set -e
+set -o pipefail
 
 mkdir -p ${hisat2AlignmentDir}
 
@@ -66,14 +67,23 @@ hisat2 \
  --score-min L,0,-0.6 \
  --sp 1,1.5 -D 20 -R 3 -S \
  /dev/stdout --threads 1 | \
-java -Xmx4g -XX:ParallelGCThreads=2 -jar \
- $EBROOTPICARD/picard.jar CleanSam \
+java \
+ -Xmx4g \
+ -XX:ParallelGCThreads=2 \
+ -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -jar $EBROOTPICARD/picard.jar CleanSam \
  I=/dev/stdin O=/dev/stdout | \
-java -Xmx4g -XX:ParallelGCThreads=2 -jar \
- $EBROOTPICARD/picard.jar SortSam \
+java \
+ -Xmx4g \
+ -XX:ParallelGCThreads=2 \
+ -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -jar $EBROOTPICARD/picard.jar SortSam \
  SORT_ORDER=queryname I=/dev/stdin O=/dev/stdout | \
-java -Xmx4g -XX:ParallelGCThreads=2 -jar \
- $EBROOTPICARD/picard.jar FixMateInformation \
+java \
+ -Xmx4g \
+ -XX:ParallelGCThreads=2 \
+ -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -jar $EBROOTPICARD/picard.jar FixMateInformation \
  ADD_MATE_CIGAR=true \
  I=/dev/stdin O=/dev/stdout | \
  samtools view -h - > ${hisat2Sam}
