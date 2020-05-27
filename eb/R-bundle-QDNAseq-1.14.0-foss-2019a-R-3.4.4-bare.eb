@@ -1,0 +1,724 @@
+#
+# This EasyBuild config file for RPlus was generated with generateEasyConfig.R
+#
+easyblock = 'Bundle'
+name = 'R-bundle-QDNAseq'
+version = '1.14.0'
+versionsuffix = '-R-3.4.4'
+local_rver = '3.4.4'
+homepage = 'http://www.r-project.org/'
+description = """R is a free software environment for statistical computing and graphics."""
+moduleclass = 'lang'
+modextrapaths = {'R_LIBS': ['library', '']}
+toolchain = {'name': 'foss', 'version': '2019a'}
+
+#
+# You may need to include a more recent Python to download R packages from HTTPS based URLs
+# when the Python that comes with your OS is too old and you encounter:
+#     SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
+# In that case make sure to include a Python as builddependency. 
+# This Python should not be too new either: it's dependencies like for example on ncursus should be compatible with R's dependencies.
+# The alternative is to replace the https URLs with http URLs in the generated EasyConfig.
+#
+#builddependencies = [
+#    ('Python', '3.7.4')
+#]
+
+dependencies = [
+    ('R', local_rver, '-bare'),
+    ('GMP', '6.1.2'),		
+    ('UDUNITS', '2.2.26'),
+    ('ImageMagick', '7.0.8-46'),	
+    ('MariaDB-connector-c', '2.3.7'),
+    ('NLopt', '2.6.1'),
+]
+
+#
+# The '.' is a silly workaround to check for whatever current dir as workaround
+# until an updated RPackage is available, which installs extension R packages in a library subdir.
+#
+sanity_check_paths = {
+    'files': [],
+    'dirs': [('library', '.')],
+}
+
+local_package_name_tmpl = '%(name)s_%(version)s.tar.gz'
+exts_defaultclass = 'RPackage'
+exts_filter = ('R -q --no-save', 'library(%(ext_name)s)')
+
+local_cran_options = {
+    'source_urls': [
+        'http://cran.r-project.org/src/contrib/',
+        'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+    ],
+    'source_tmpl': local_package_name_tmpl,
+}
+local_bioconductor_options = {
+    'source_urls': [
+        'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+        'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+        'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+        'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+        'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+        'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+        'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+        'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+        'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+        'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+    ],
+    'source_tmpl': local_package_name_tmpl,
+}
+
+#
+# R package list.
+#   * Order of packages is important!
+#   * Packages should be specified with fixed versions!
+#
+exts_list = [
+    ('BH', '1.72.0-3', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['888ec1a3316bb69e1ba749b08ba7e0903ebc4742e3a185de8d148c13cddac8ab'],
+    }),
+    ('BiocGenerics', '0.24.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['517d31c47d7d807170031e116af3ffeba57baca3980ef4d85b37c2ec3bdc9d0f'],
+    }),
+    ('Biobase', '2.38.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['6fa2f0dc214d42f2d0afcc42d2f4da2223ebe67a2f79ff69fba6dc19940cf5b1'],
+    }),
+    ('BiocInstaller', '1.28.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['2d853625dd369d1c7acb6340f1eee6b64245cdf1e4d0786bd9099bbd8e50cfa5'],
+    }),
+    ('BiocManager', '1.30.10', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['f3b7a412b42be0ab8df5fcd9bf981876ba9e5c55bc5faaca7af7ede3b6d0c90e'],
+    }),
+    ('formatR', '1.7', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['a366621b3ff5f8e86a499b6f87858ad47eefdace138341b1377ecc307a5e5ddb'],
+    }),
+    ('lambda.r', '1.2.4', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['d252fee39065326c6d9f45ad798076522cec05e73b8905c1b30f95a61f7801d6'],
+    }),
+    ('futile.options', '1.0.1', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['7a9cc974e09598077b242a1069f7fbf4fa7f85ffe25067f6c4c32314ef532570'],
+    }),
+    ('futile.logger', '1.4.3', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['5e8b32d65f77a86d17d90fd8690fc085aa0612df8018e4d6d6c1a60fa65776e4'],
+    }),
+    ('snow', '0.4-3', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['8512537daf334ea2b8074dbb80cf5e959a403a78d68bc1e97664e8a4f64576d8'],
+    }),
+    ('BiocParallel', '1.12.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['0de25aa5c7a1b1cce8da0d5f42a00eaccc50de1edf4ab30174833ecd851dcf8e'],
+    }),
+    ('S4Vectors', '0.16.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['8043a0a9f76e00ab96d4214a0ac888d7cf26c0917bb5b3e48ed5503bc6df480f'],
+    }),
+    ('IRanges', '2.12.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['a51e7219a9adedcc3ec708db570dbe8ed1156b0bd2bc882fbf5577cad3fa0cef'],
+    }),
+    ('zlibbioc', '1.24.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['22f9bb05a415ae3ce828a904abc0f290aede5ae5fdb212fc75f4c152e08229ff'],
+    }),
+    ('XVector', '0.18.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['b36e985344cc3d033d567e2206029e272e1fc23dc5e0ce66c8149ddcdb1c91c4'],
+    }),
+    ('Biostrings', '2.46.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['f353f6c1fdbc520a685b880ef05f61245f04397adfcaae4c1395e14e1b06e56d'],
+    }),
+    ('bitops', '1.0-6', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['9b731397b7166dd54941fb0d2eac6df60c7a483b2e790f7eb15b4d7b79c9d69c'],
+    }),
+    ('RCurl', '1.98-1.2', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['5d74a0cdc3c5684b0348b959f67039e3c2a5da2bbb6176f6800a94124895a7a8'],
+    }),
+    ('GenomeInfoDbData', '1.0.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['d7bb73db4a76960e65c5f6d8ccdcb9480a48cea529a30ea2399f8e4c9887e876'],
+    }),
+    ('GenomeInfoDb', version, {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['d7db65fe2a494c3a1a0a087a2776eb69cca914024476b920db8f30356b0415ca'],
+    }),
+    ('GenomicRanges', '1.30.3', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['c122cfdf18733682c1b23bff6c21bb06c64384d4963bd7c8fc96a49813fb9a1d'],
+    }),
+    ('XML', '3.99-0.3', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['81b7a76308f3b7378dff525eff0180bba73b31117483a26cc3aa172d15c7f753'],
+    }),
+    ('Rsamtools', '1.30.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['ba2a6f2c13e7d001fb8e1a00bd73130a6a748c8d9daf41a16fceae2d5df1565e'],
+    }),
+    ('matrixStats', '0.56.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['39e34a3dc480b9df05bb1a555eaef1dc1971a53f3ea6e01eb3a68bd1d3760f27'],
+    }),
+    ('DelayedArray', '0.4.1', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['8b7ca552d391c58c5899480bbab5bdb975c8ef5f6b2222cc6304fcede313f068'],
+    }),
+    ('lattice', '0.20-41', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['54ca557f0cb33df60eb10b883c2ed2847e061ddd57ed9b5dd7695149609d57b5'],
+    }),
+    ('Matrix', '1.2-18', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['f7ff018c2811946767ffd4c96d3987e859b82786ff72e1c211ab18bc03cb6119'],
+    }),
+    ('SummarizedExperiment', '1.8.1', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['50bad6422a3cdcb12c0abdd2dd733d7eed07fedb76774d6396d80de497e574a7'],
+    }),
+    ('GenomicAlignments', '1.14.2', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['bb8a262cd74add5a4180ae811fac092e6f687a28b194547ca4fbe8db83b4a998'],
+    }),
+    ('rtracklayer', '1.38.3', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['93584e9d01405e9d908e4623e8e5bf5aa41000ce984a0013a66596513f731fce'],
+    }),
+    ('BSgenome', '1.46.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['98126e5cb970b113a8ca158c8cdf6e2e4da0f5b4ddc525ac54524551e9c17fc9'],
+    }),
+    ('BSgenome.Hsapiens.UCSC.hg38', '1.4.1', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['71d7e4557666e2ff76ffc6c637331bfab0c0b59f4963f2b6f5606f12f74580e2'],
+    }),
+    ('limma', '3.34.9', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['ac4d09c4532c6c0f5a589f5bc2e65d89f39f20df3d0c3a24b00ec4f282a94ef8'],
+    }),
+    ('marray', '1.56.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['2caad6eab11df6f58022ebbfb357e03af6b4cd07945cd415b1f2306f501c8991'],
+    }),
+    ('CGHbase', '1.38.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['9562f906d128261bd2b2239799fa0c0b6654a2452c770b6232f7ad2635dbd63b'],
+    }),
+    ('impute', '1.52.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['5654e732d607c22ad7e5c36af76e888bfecb2cb01ef92918936c74bfb926192d'],
+    }),
+    ('DNAcopy', '1.52.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['51f192baca80ba98965893a5760306e0a250ede8c468c821951f864773a1f188'],
+    }),
+    ('snowfall', '1.84-6.1', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['5c446df3a931e522a8b138cf1fb7ca5815cc82fcf486dbac964dcbc0690e248d'],
+    }),
+    ('CGHcall', '2.40.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['90515a55d93af4e828798148459ab9afe9cae670787ca0c9f2a8a0f1b932f186'],
+    }),
+    ('glue', '1.4.1', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['f8b687d35cacb5ee7fcada6e9c26ea20c04d0bdc9d37e919a03abd1137513bc8'],
+    }),
+    ('logging', '0.10-108', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['85c91aa5a313f5f9fbb0394cda3f924a2495cca3cc5cd68dde0695fe3c20ed8d'],
+    }),
+    ('magrittr', '1.5', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['05c45943ada9443134caa0ab24db4a962b629f00b755ccf039a2a2a7b2c92ae8'],
+    }),
+    ('R.methodsS3', '1.8.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['e005f5ee21bfb6fbbf415de957a9ca0ed6e9f2800b95d98d76a9acb3c14185a5'],
+    }),
+    ('R.oo', '1.23.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['f5124ce3dbb0a62e8ef1bfce2de2d1dc2f776e8c48fd8cac358f7f5feb592ea1'],
+    }),
+    ('R.utils', '2.9.2', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['ac6b3b8e814fbb855c38fbdb89a4f0cf0ed65ce7fa308445bd74107fbc0d32cf'],
+    }),
+    ('QDNAseq', version, {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+            'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+            'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/',
+            'http://bioconductor.org/packages/3.6/bioc/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/annotation/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/data/experiment/src/contrib/Archive/%(name)s/',
+            'http://bioconductor.org/packages/3.6/workflows/src/contrib/Archive/%(name)s/',
+        ],
+        'checksums': ['1eea2f1478e507bc5546ccca506ef6f7383d8e6063596ff0d1f9e10e34d9eb51'],
+    }),
+    ('stringi', '1.4.6', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['633f67da5bd7bcb611764e4f478b0da050d22a715bbcbdd67aed0300dcef6fd6'],
+    }),
+    ('stringr', '1.4.0', {
+        'source_tmpl': '%(name)s_%(version)s.tar.gz',
+        'source_urls': [
+            'http://cran.r-project.org/src/contrib/',
+            'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+        ],
+        'checksums': ['87604d2d3a9ad8fd68444ce0865b59e2ffbdb548a38d6634796bbd83eeb931dd'],
+    }),
+]

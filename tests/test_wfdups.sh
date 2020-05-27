@@ -1,5 +1,5 @@
 set -e;
-for wf in $(ls ../workflow*.csv); do 
+for wf in $(ls ../workflows/workflow*.csv); do 
 	if [ $(grep -v '^#' $wf |sort -t, | wc -l) -eq $(grep -v '^#' $wf |sort -k1,1 -u -t, | wc -l) ]; then 
 		echo "## INFO ## No dups in "$wf;
 	else 

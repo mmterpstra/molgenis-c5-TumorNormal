@@ -1,0 +1,50 @@
+easyblock = 'MakeCp'
+
+name = 'hisat2'
+version = '2.2.0'
+
+homepage = 'http://ccb.jhu.edu/software/hisat/index.shtml'
+description = """HISAT is a fast and sensitive spliced alignment program for mapping RNA-seq reads. In addition to one 
+ global FM index that represents a whole genome, HISAT uses a large set of small FM indexes that collectively cover 
+ the whole genome (each index represents a genomic region of ~64,000 bp and ~48,000 indexes are needed to cover the 
+ human genome). These small indexes (called local indexes) combined with several alignment strategies enable effective 
+ alignment of RNA-seq reads, in particular, reads spanning multiple exons. The memory footprint of HISAT is relatively 
+ low (~4.3GB for the human genome). We have developed HISAT based on the Bowtie2 implementation to handle most of the 
+ operations on the FM index. """
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+sources = [{
+    'filename': '%(name)s-%(version)s.zip',
+    'download_filename': 'download',
+}]
+
+source_urls = ['https://cloud.biohpc.swmed.edu/index.php/s/hisat2-220-source/']
+
+#checksums = [''] 
+
+dependencies = [
+    ('NGS', '2.9.1', '-Java-1.8.0_162'),
+    ('ncbi-vdb', '2.9.1-1'),
+]
+
+buildopts = 'CC="$CC" CPP="$CXX" RELEASE_FLAGS="$CFLAGS" '
+buildopts += "USE_SRA=1 NCBI_NGS_DIR=$EBROOTNGS NCBI_VDB_DIR=$EBROOTNCBIMINVDB"
+
+local_executables = [name, 'hisat2-build', 'hisat2-inspect', 'hisat2-build-s', 'hisat2-inspect-s', 'hisat2-align-s', 
+               'hisat2-build-l', 'hisat2-inspect-l', 'hisat2-align-l', 'extract_exons.py', 'extract_splice_sites.py',
+               'hisat2_extract_exons.py', 'hisat2_extract_snps_haplotypes_UCSC.py', 
+               'hisat2_extract_snps_haplotypes_VCF.py', 'hisat2_extract_splice_sites.py', 'hisat2_read_statistics.py',
+               'hisat2_simulate_reads.py', 'hisatgenotype_build_genome.py', 'hisatgenotype_extract_reads.py',
+               'hisatgenotype_extract_vars.py', 'hisatgenotype_hla_cyp.py', 'hisatgenotype_locus.py',
+               'hisatgenotype.py'
+]
+
+files_to_copy = [(local_executables, 'bin')]
+
+sanity_check_paths = {
+    'files': ['bin/%s' % x for x in local_executables],
+    'dirs': [],
+}
+
+moduleclass = 'bio'

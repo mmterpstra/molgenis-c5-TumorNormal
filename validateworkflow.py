@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import os.path
 import time
 
 #use workflow
@@ -9,6 +10,7 @@ except:
     print('Die cannot open file' + sys.argv[1])
     exit
 
+wfbase = os.path.dirname(sys.argv[1])
 
 def info(info):
   print >> sys.stderr, "## %s ## INFO ## %s"  % (time.asctime(),info)
@@ -77,7 +79,7 @@ try:
             element.rstrip()
             if("=" in element and  element != ""):
                 parameterseen[element.split("=")[0]]=0
-        checkprotocol(csv[1],parameterseen)
+        checkprotocol(wfbase + "/" + csv[1],parameterseen)
         checkparameterseen(parameterseen,csv[1])
 finally:
     workflow.close()

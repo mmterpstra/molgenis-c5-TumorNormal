@@ -12,7 +12,7 @@ homepage = 'https://metacpan.org/pod/JSON'
 description = """JSON (JavaScript Object Notation) encoder/decoder"""
 
 
-toolchain = {'name': 'foss', 'version': '2015b'}
+toolchain = {'name': 'foss', 'version': '2016a'}
 toolchainopts = {'optarch': True, 'pic': True}
 
 #remainders from other perl packages
@@ -34,6 +34,10 @@ moduleclass = 'lang'
 # Only extensions
 #
 exts_list = [
+    ('Canary::Stability', '2012', {
+        'source_tmpl': 'Canary-Stability-2012.tar.gz',
+        'source_urls': ['https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN/'],
+    }),
     ('common::sense', '3.74', {
         'source_tmpl': 'common-sense-3.74.tar.gz',
         'source_urls': ['https://cpan.metacpan.org/authors/id/M/ML/MLEHMANN/'],

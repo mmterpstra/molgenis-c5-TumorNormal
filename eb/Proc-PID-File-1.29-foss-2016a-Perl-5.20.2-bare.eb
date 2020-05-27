@@ -1,0 +1,39 @@
+name = 'Proc-PID-File'
+version = '1.29'
+
+homepage = 'https://metacpan.org/pod/Proc::Daemon'
+description = """Proc::PID::File - a module to manage process id files"""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+easyblock = 'PerlModule'
+
+#
+# Example URL: https://github.com/molgenis/CoNVaDING/archive/1.3.8.zip
+#  
+#
+
+source_urls = [('https://cpan.metacpan.org/authors/id/D/DM/DMITRI/' )]
+sources = [ '%s-%s.tar.gz' % (name,version) ]
+
+perl = 'Perl'
+perlver = '5.20.2'
+perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (perl, perlver, perlversuffix)
+
+
+dependencies = [
+    (perl, perlver, perlversuffix),
+#maybe     ('Proc-ProcessTable', 'Version', perlversuffix),
+]
+
+
+sanity_check_paths = {
+    'files': ['lib/perl5/site_perl/%s/%s' % (perlver,'/'.join(name.split('-')) + '.pm' ) ],
+    'dirs': []
+}
+
+#modextrapaths = {'PATH': 'scripts/'}
+
+options = {'modulename': '::'.join(name.split('-'))}
+
+moduleclass = 'lib'

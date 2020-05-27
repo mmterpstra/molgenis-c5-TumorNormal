@@ -1,0 +1,150 @@
+easyblock = 'Bundle'
+
+name = 'R-bundle-ichorCNA'
+version = '0.2.0'
+r = 'R'
+rver = '3.3.3'
+rversuffix = '-bioconductor'
+versionsuffix = '-%s-%s%s' % (r, rver, rversuffix)
+
+homepage = 'http://www.r-project.org/'
+description = """R is a free software environment for statistical computing and graphics."""
+
+toolchain = {'name': 'foss', 'version': '2016a'}
+
+# these are extensions for R
+exts_defaultclass = 'RPackage'
+exts_filter = ("R -q --no-save", "library(%(ext_name)s)")
+
+dependencies = [
+    (r, rver, rversuffix),
+    ('cURL', '7.47.0'),
+    ('libxml2', '2.9.3'),
+    ('hmmcopy_utils', '5911bf69f1'),
+]
+
+package_name_tmpl = '%(name)s_%(version)s.tar.gz'
+
+cran_options = {
+    'source_urls': [
+        'http://cran.r-project.org/src/contrib/',
+        'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+    ],
+    'source_tmpl': package_name_tmpl,
+}
+
+bioconductor_options = {
+    'source_urls': [
+        'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+        'http://bioconductor.org/packages/3.2/bioc/src/contrib/',
+        'http://bioconductor.org/packages/3.2/data/annotation/src/contrib/',
+        'http://bioconductor.org/packages/3.2/data/experiment/src/contrib/',
+        'http://bioconductor.org/packages/3.2/extra/src/contrib/',
+        'http://bioconductor.org/packages/3.8/bioc/src/contrib/',
+        'http://bioconductor.org/packages/3.8/data/annotation/src/contrib/',
+        'http://bioconductor.org/packages/3.8/data/experiment/src/contrib/',
+        'http://bioconductor.org/packages/3.8/extra/src/contrib/',
+
+    ],
+    'source_tmpl': package_name_tmpl,
+}
+
+
+#
+# R package list.
+#   * Order of packages is important!
+#   * Packages should be specified with fixed versions!
+#
+
+exts_list = [
+        # 
+        # Default libraries; only here to sanity check their presence.
+        #
+        'base',
+        'compiler',
+        'datasets',
+        'graphics',
+        'grDevices',
+        'grid',
+        'methods',
+        'parallel',
+        'splines',
+        'stats',
+        'stats4',
+        'tcltk',
+        'tools',
+        'utils',
+        #
+        # Other packages.
+        #
+        ('getopt', '1.20.3', cran_options),
+        ('optparse', '1.6.2', cran_options),
+        ('BiocGenerics', '0.28.0', bioconductor_options),
+        ('Biobase', '2.42.0', bioconductor_options),
+        ('S4Vectors', '0.20.1', bioconductor_options),
+        ('IRanges', '2.16.0', bioconductor_options),
+	('DBI', '1.0.0', cran_options),
+        ('bit', '1.1-12', cran_options),
+        ('bit64', '0.9-7', cran_options),
+        ('magrittr', '1.5', cran_options),
+        ('assertthat', '0.2.1', cran_options),
+	('prettyunits', '1.0.2', cran_options),
+	('crayon', '1.3.4', cran_options),
+	('cli', '1.1.0', cran_options),
+	('fansi', '0.4.0', cran_options),
+	('rlang', '0.3.4', cran_options),
+	('utf8', '1.1.4', cran_options),
+	('pillar', '1.3.1', cran_options),
+        ('pkgconfig', '2.0.2', cran_options),
+	('tibble', '2.1.1', cran_options),
+        ('blob', '1.1.1', cran_options),
+        ('digest', '0.6.12', cran_options),
+        ('memoise', '1.1.0', cran_options),
+        ('Rcpp','0.12.19', cran_options),
+        ('BH', '1.69.0-1', cran_options),
+        ('plogr', '0.2.0', cran_options),
+        ('RSQLite', '2.1.1', cran_options),
+        ('XML', '3.98-1.9', cran_options),
+        ('lattice', '0.20-33', cran_options),
+        ('AnnotationDbi', '1.44.0', bioconductor_options),
+        ('bitops', '1.0-6', cran_options),
+        ('RCurl', '1.95-4.12', cran_options),
+        ('xtable', '1.8-4', cran_options),
+        ('annotate', '1.60.1', bioconductor_options),
+        ('plyr', '1.8.4', cran_options),
+        ('RColorBrewer', '1.1-2', cran_options),
+        ('geneplotter','1.60.0', bioconductor_options),
+        ('HMMcopy', '1.24.0', bioconductor_options),
+        ('GenomeInfoDbData', '1.2.0', bioconductor_options),
+        ('GenomeInfoDb', '1.18.2', bioconductor_options),
+        ('ichorCNA', version, 
+            {
+                'source_urls': [
+                     'https://github.com/broadinstitute/ichorCNA/archive/',
+                ],
+                'source_tmpl': 'v%(version)s.tar.gz',
+            }
+	),
+]
+
+modextrapaths = {'R_LIBS': ''}
+postinstallcmds = [ 'mkdir -p %(installdir)s/bin', 
+    'wget https://raw.githubusercontent.com/broadinstitute/ichorCNA/99801a51fa2580c3b5ca38a4e9f41b94b364a641/scripts/createPanelOfNormals.R -O %(installdir)s/bin/createPanelOfNormals.R.tmp',
+    'echo "#!/usr/bin/env Rscript " | ' + 
+        'cat /dev/stdin %(installdir)s/bin/createPanelOfNormals.R.tmp > %(installdir)s/bin/createPanelOfNormals.R',
+    'wget https://raw.githubusercontent.com/broadinstitute/ichorCNA/99801a51fa2580c3b5ca38a4e9f41b94b364a641/scripts/runIchorCNA.R -O %(installdir)s/bin/runIchorCNA.R.tmp',
+    'echo "#!/usr/bin/env Rscript " | ' + 
+         'cat /dev/stdin %(installdir)s/bin/runIchorCNA.R.tmp > %(installdir)s/bin/runIchorCNA.R',
+    'rm %(installdir)s/bin/createPanelOfNormals.R.tmp  %(installdir)s/bin/runIchorCNA.R.tmp -v ' ,
+    'chmod -R ugo+rx %(installdir)s/bin/*.R']
+
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['RCurl', 'XML',],
+}
+
+moduleclass = 'lang'
+

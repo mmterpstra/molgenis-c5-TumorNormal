@@ -1,0 +1,125 @@
+#
+# This EasyBuild config file for RPlus was generated with generateEasyConfig.R
+#
+easyblock = 'Bundle'
+name = 'RPlus'
+version = '3.6.3'
+versionsuffix = '-v20.04.1'
+homepage = 'http://www.r-project.org/'
+description = """R is a free software environment for statistical computing and graphics."""
+moduleclass = 'lang'
+modextrapaths = {'R_LIBS': ['library', '']}
+toolchain = {'name': 'foss', 'version': '2019a'}
+
+#
+# You may need to include a more recent Python to download R packages from HTTPS based URLs
+# when the Python that comes with your OS is too old and you encounter:
+#     SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
+# In that case make sure to include a Python as builddependency. 
+# This Python should not be too new either: it's dependencies like for example on ncursus should be compatible with R's dependencies.
+# The alternative is to replace the https URLs with http URLs in the generated EasyConfig.
+#
+#builddependencies = [
+#    ('Python', '3.7.4')
+#]
+
+dependencies = [
+    ('R', '%(version)s', '-bare'),
+    ('GMP', '6.1.2'),
+    ('UDUNITS', '2.2.27.6'),
+    ('ImageMagick', '7.0.8-56'),
+    ('MariaDB-connector-c', '3.1.2'),
+    ('NLopt', '2.6.1'),
+]
+
+#
+# The '.' is a silly workaround to check for whatever current dir as workaround
+# until an updated RPackage is available, which installs extension R packages in a library subdir.
+#
+sanity_check_paths = {
+    'files': [],
+    'dirs': [('library', '.')],
+}
+
+package_name_tmpl = '%(name)s_%(version)s.tar.gz'
+exts_defaultclass = 'RPackage'
+exts_filter = ('R -q --no-save', 'library(%(ext_name)s)')
+
+cran_options = {
+    'source_urls': [
+        'http://cran.r-project.org/src/contrib/',
+        'http://cran.r-project.org/src/contrib/Archive/%(name)s',
+    ],
+    'source_tmpl': package_name_tmpl,
+}
+bioconductor_options = {
+    'source_urls': [
+        'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
+        'http://www.bioconductor.org/packages/release/data/experiment/src/contrib/',
+        'http://www.bioconductor.org/packages/release/extra/src/contrib/',
+        'http://bioconductor.org/packages/3.10/bioc/src/contrib/',
+        'http://bioconductor.org/packages/3.10/data/annotation/src/contrib/',
+        'http://bioconductor.org/packages/3.10/data/experiment/src/contrib/',
+        'http://bioconductor.org/packages/3.10/workflows/src/contrib/',
+        'http://bioconductor.org/packages/3.10/bioc/src/contrib/Archive/%(name)s/',
+        'http://bioconductor.org/packages/3.10/data/annotation/src/contrib/Archive/%(name)s/',
+        'http://bioconductor.org/packages/3.10/data/experiment/src/contrib/Archive/%(name)s/',
+        'http://bioconductor.org/packages/3.10/workflows/src/contrib/Archive/%(name)s/',
+    ],
+    'source_tmpl': package_name_tmpl,
+}
+
+#
+# R package list.
+#   * Order of packages is important!
+#   * Packages should be specified with fixed versions!
+#
+exts_list = [
+    ('BH', '1.72.0-3', cran_options),
+    ('BiocGenerics', '0.32.0', bioconductor_options),
+    ('Biobase', '2.46.0', bioconductor_options),
+    ('BiocManager', '1.30.10', cran_options),
+    ('formatR', '1.7', cran_options),
+    ('lambda.r', '1.2.4', cran_options),
+    ('futile.options', '1.0.1', cran_options),
+    ('futile.logger', '1.4.3', cran_options),
+    ('snow', '0.4-3', cran_options),
+    ('BiocParallel', '1.20.1', bioconductor_options),
+    ('BiocVersion', '3.10.1', bioconductor_options),
+    ('S4Vectors', '0.24.4', bioconductor_options),
+    ('IRanges', '2.20.2', bioconductor_options),
+    ('zlibbioc', '1.32.0', bioconductor_options),
+    ('XVector', '0.26.0', bioconductor_options),
+    ('Biostrings', '2.54.0', bioconductor_options),
+    ('bitops', '1.0-6', cran_options),
+    ('limma', '3.42.2', bioconductor_options),
+    ('marray', '1.64.0', bioconductor_options),
+    ('CGHbase', '1.46.0', bioconductor_options),
+    ('impute', '1.60.0', bioconductor_options),
+    ('DNAcopy', '1.60.0', bioconductor_options),
+    ('snowfall', '1.84-6.1', cran_options),
+    ('CGHcall', '2.48.0', bioconductor_options),
+    ('codetools', '0.2-16', cran_options),
+    ('digest', '0.6.25', cran_options),
+    ('globals', '0.12.5', cran_options),
+    ('listenv', '0.8.0', cran_options),
+    ('future', '1.17.0', cran_options),
+    ('future.apply', '1.5.0', cran_options),
+    ('RCurl', '1.98-1.2', cran_options),
+    ('GenomeInfoDbData', '1.2.2', bioconductor_options),
+    ('GenomeInfoDb', '1.22.1', bioconductor_options),
+    ('GenomicRanges', '1.38.0', bioconductor_options),
+    ('glue', '1.4.0', cran_options),
+    ('logging', '0.10-108', cran_options),
+    ('magrittr', '1.5', cran_options),
+    ('matrixStats', '0.56.0', cran_options),
+    ('R.methodsS3', '1.8.0', cran_options),
+    ('R.oo', '1.23.0', cran_options),
+    ('R.utils', '2.9.2', cran_options),
+    ('Rhtslib', '1.18.1', bioconductor_options),
+    ('Rsamtools', '2.2.3', bioconductor_options),
+    ('QDNAseq', '1.22.0', bioconductor_options),
+    ('stringi', '1.4.6', cran_options),
+    ('stringr', '1.4.0', cran_options),
+]

@@ -26,6 +26,10 @@ dependencies = [
 # Check if all binaries are present.
 #
 
+modextrapaths = {
+    'PATH': [''],
+}
+
 sanity_check_paths = {
     'files': [ 'fastq_screen' ],
     'dirs': [ ],

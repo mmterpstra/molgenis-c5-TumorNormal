@@ -33,3 +33,6 @@ sanity_check_paths = {
     'files': ["bin/bgzip", "bin/tabix", "lib/libhts.%s" % SHLIB_EXT],
     'dirs': [],
 }
+
+moduleclass = 'bio'
+

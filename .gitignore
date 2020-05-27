@@ -49,6 +49,7 @@ parameters.molgenis.csv
 .RunWorkFlowGeneration.sh
 .parameters.molgenis.csv
 .parameters.site.molgenis.csv
+csv/
 
 # gedit backups          #
 ##########################
@@ -58,3 +59,5 @@ parameters.molgenis.csv
 ##########################
 *.bak
 *.bak_*
+*bak
+*save
