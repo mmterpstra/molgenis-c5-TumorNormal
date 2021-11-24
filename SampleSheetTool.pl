@@ -4,7 +4,7 @@ use Data::Dumper;
 use Getopt::Std;
 use POSIX;
 my $use =<<"END";
-use: perl $0 [merge|addfile|reformat|stats|uniq|batch|help] 
+use: perl $0 [merge|addfile|reformat|reformatmin|stats|uniq|batch|help] 
 END
 scalar
 
@@ -30,7 +30,9 @@ sub ToolRunner {
 		ReformatSampleSheet($tool);
 	}elsif($tool eq 'reformatillumina'){
 		ReformatSampleSheetIllumina($tool);
-	}elsif($tool eq 'stats'){
+	}elsif($tool eq 'reformatmin'){
+                ReformatSampleSheetMin($tool);
+        }elsif($tool eq 'stats'){
 		CollectStatsSampleSheet($tool);
 	}elsif($tool eq 'uniq'){
 		UniquefySamplesheets($tool);
@@ -171,6 +173,32 @@ END
 	
 	#die Dumper($samplesheet);
 	print SamplesheetAsString($samplesheet);
+}
+
+##############################################################################
+
+sub ReformatSampleSheetMin { 
+	my $tool = shift @_;
+	my $use .=<<"END";
+use: perl $0 $tool minsamplesheetwithfilenames.csv > samplesheet.reformat.csv
+
+note the header should contain fq1/fq2/fq3/fq4 etc
+example for creating from scratch:
+ls *_R1.fastq.gz| perl -wne 'BEGIN{print "fq1,fq2,sampleName\n"};chomp;print \$_;s/_R1\./_R2./g; print ",\$_"; s/.*-(\\d\\d\\d)_.*/\$1/g; print ",\$_" ;print "\n"'
+END
+
+	my $samplesheetfile = shift @ARGV;
+	#my $prefix = shift @ARGV;
+	warn "## ".localtime(time())." ## INFO ## $0 init with samplesheetfile='$samplesheetfile'.\n";
+	my $samplesheet = ReadSamplesheet($samplesheetfile);
+	#die Dumper($samplesheet)." ";
+	my $samplesheetann = AnnotateSamplesheet($samplesheet);
+	#die Dumper($samplesheetann)." ";
+	#my $reformatTemplate=ReformatHashGccToRnaSeq();
+	#$samplesheet=ConvertSampleSheet($samplesheet,$reformatTemplate);
+	
+	#die Dumper($samplesheet);
+	print SamplesheetAsString($samplesheetann);
 }
 ##############################################################################
 sub ReformatSampleSheetIllumina { 
@@ -461,6 +489,100 @@ sub ReadSamplesheet {
 	}
 	return $samplesheet;
 }
+sub AnnotateSamplesheet {
+	my $samplesheet = shift @_;
+	my $reformatTemplate = shift @_;
+	
+	#die Dumper($samplesheet)."  here";
+	my $newSamplesheet;
+	my $id = 1;
+	for my $sample (@$samplesheet){
+		my $newSample;
+		$newSample -> {'sampleName'} = $sample -> {'sampleName'};
+		#missing:internalId,samplePrep,sequencer,sequencerId,barcode,sequencingStartDate,project,
+		#	controlSampleName,reads3FqGz
+		$newSample -> {'reads1FqGz'}="something went wrong using samplesheet tool.";
+		$newSample -> {'internalId'}="$id";$id++;
+		$newSample -> {'samplePrep'}="oneLibraryPrepPerSampleAssumed";
+		$newSample -> {'sequencer'}="illumina";#assumed
+		my $date;@{$date} = CmdRunner('date --iso-8601=date');
+		chomp($date -> [-1]);
+		$newSample -> {'sequencingStartDate'}=$date -> [0];
+		$newSample -> {'project'}="projectNameHere";#lazy find and replace for this keyword in generatescrpts
+		$newSample -> {'controlSampleName'}=$sample -> {'sampleName'};
+		$newSample -> {'reads2FqGz'}="";#always present but empty when not found
+		$newSample -> {'reads3FqGz'}="";
+		$newSample -> {'barcode'} = "NNNNNN"; 
+		my @files;
+		map{push(@files,$sample -> {$_})if($_ =~ m/^fq\d/)}(keys(%{$sample}));
+		#die Dumper(@files);
+		#i put in a sort but this might still give problems based on the sorting of filenames....
+		for my $file (sort(@files)){
+			chomp $file;
+			#Add defaults here when not present in fastq files
+			#unreadble code.I hope it works!
+			if($file =~ m/_R1\./){
+				$newSample -> {'reads1FqGz'} = $file;
+				#zcat $file |head -n 1 should contain @M00000:999:000000000-FLOWCELLIDD:TILE:12345:23456:4567 1:N:0:GTGATTCC+TATAGCCT
+				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads1FqGz}.'|head -n 1');
+				my @fqheadsplit= split /[: \@]/,($fqhead -> [0]);
+				chomp($fqheadsplit[-1]);
+				$newSample -> {'run'} = $fqheadsplit[2];
+				$newSample -> {'sequencerId'} = $fqheadsplit[1];
+				$newSample -> {'flowcellId'} = $fqheadsplit[3];
+				$newSample -> {'seqType'} = $fqheadsplit[3];
+				$newSample -> {'lane'} = $fqheadsplit[4];#this should create an uniq list of lanes
+				$newSample -> {'barcode'}=$fqheadsplit[-1] if($fqheadsplit[-1] =~ m/[ATCGN\+]{6,}/);
+				$newSample -> {'reads1FqGzMd5'}=Md5Sum($newSample -> {"reads1FqGz"});
+			}elsif($file =~ m/_R2\./){
+				$newSample -> {'reads2FqGz'} = $file;
+				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads2FqGz}.'|head -n 1');
+				my @fqheadsplit= split /[: \@]/,($fqhead -> [0]);
+				$newSample -> {'run'} = $fqheadsplit[2];
+				$newSample -> {'flowcellId'} = $fqheadsplit[3];
+				$newSample -> {'seqType'} = $fqheadsplit[3];
+				$newSample -> {'lane'} = $fqheadsplit[4];
+                                $newSample -> {'reads2FqGzMd5'}=Md5Sum($newSample -> {"reads2FqGz"});
+
+			}elsif($file =~ m/_R3\./){#nugene/umi probs
+				$newSample -> {'reads3FqGz'} = $newSample -> {reads2FqGz};	
+				$newSample -> {'reads3FqGzMd5'} = $newSample -> {reads2FqGzMd5};	
+				$newSample -> {'reads2FqGz'} = $file;
+				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads2FqGz}.'|head -n 1');
+				my @fqheadsplit= split /[: \@]/,($fqhead -> [0]);
+				$newSample -> {'run'} = $fqheadsplit[2];
+				$newSample -> {'flowcellId'} = $fqheadsplit[3];
+				$newSample -> {'seqType'} = $fqheadsplit[3];
+				$newSample -> {'lane'} = $fqheadsplit[4];#this should create an uniq list of lanes
+                                $newSample -> {'reads2FqGzMd5'}=Md5Sum($newSample -> {"reads2FqGz"});
+			
+			}elsif($file =~ m/_umi\./){#umi probes literal no annoying R2 as umi and R2=R3
+				$newSample -> {'reads3FqGz'} = $file;
+				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads2FqGz}.'|head -n 1');
+				my @fqheadsplit= split /[: \@]/,($fqhead -> [0]);
+				$newSample -> {'run'} = $fqheadsplit[2];
+				$newSample -> {'flowcellId'} = $fqheadsplit[3];
+				$newSample -> {'seqType'} = $fqheadsplit[3];
+				$newSample -> {'lane'} = $fqheadsplit[4];#this should create an uniq list of lanes
+                                $newSample -> {'reads3FqGzMd5'}=Md5Sum($newSample -> {"reads3FqGz"});
+			
+			}elsif($file =~ m/_R4\./){
+				#Future proofing
+				$newSample -> {'reads4FqGz'} = $file;
+				$newSample -> {'reads4FqGzMd5'} = Md5Sum($newSample -> {"reads4FqGz"});
+				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads4FqGz}.'|head -n 1');
+				my @fqheadsplit= split /[: \@]/,($fqhead -> [0]);
+				$newSample -> {'run'} = $fqheadsplit[2];
+				$newSample -> {'flowcellId'} = $fqheadsplit[3];
+				$newSample -> {'seqType'} = $fqheadsplit[3];
+				$newSample -> {'lane'} = $fqheadsplit[4];#this should create an uniq list of lanes
+			}
+		}
+		#die Dumper($newSample);
+		push (@$newSamplesheet, $newSample);
+	}
+	return $newSamplesheet;
+}
 sub ReadSamplesheetIllumina {
 	my $samplesheetf = shift @_;
 	my $samplesheet;
@@ -499,9 +621,10 @@ sub ReadSamplesheetIllumina {
 			my $i=0;
 			map{$d{$_}=$c[$i]; $i++}(@h);
 			$c[$i]=join(",",@h);
+			die "ERROR Invalid sample id: '".$d{'Sample_ID'}."'. This should not contain spaces." if($d{'Sample_ID'} =~ m/ /);
 			#ReadFileNameConstructor(\%d);
 			my $ret;
-			@{$ret} = CmdRunner('ls $(dirname '."$samplesheetf".')/'.$d{'Sample_Project'}.'/'.$d{'Sample_ID'}.'_*_R[1234]_*.fastq.gz');
+			@{$ret} = CmdRunner('ls "$(dirname '."'$samplesheetf'".')"/'.$d{'Sample_Project'}.'/'.$d{'Sample_ID'}.'_*_R[1234]_*.fastq.gz');
 			if(scalar(@{$ret})){
 				my @lanes;
 				for my $file (@{$ret}){
@@ -1100,7 +1223,7 @@ sub ValidateSequence{
 	my $samplesheet = shift @_;
 	
 	for my $sample (@{$samplesheet}){
-		die "[VALIDATIONERROR] Invalid 'sequence' field contains '". uc($sample -> {'sequencer'}).
+		die "[VALIDATIONERROR] Invalid 'sequencer' field contains '". uc($sample -> {'sequencer'}).
 			"' should match ILLUMINA, SLX, SOLEXA, SOLID, 454, LS454, COMPLETE, PACBIO, IONTORRENT, CAPILLARY, HELICOS or UNKNOWN"
 			 if(not(uc($sample -> {'sequencer'}) =~ m/ILLUMINA|SLX|SOLEXA|SOLID|454|LS454|COMPLETE|PACBIO|IONTORRENT|CAPILLARY|HELICOS|UNKNOWN/ ));
 	}
@@ -1245,22 +1368,32 @@ sub Batcher{
 	
 	my $batchedSamplesheet;
 	my @batchedProjectNames;
+	my %sampleNameToBatch; #for checkin if samplename is already seen and adding samplename to the correct batch
 	for my $sample (@{$samplesheet}){
-		my $batchProjectName = $projectbase . (floor($batchindex / $maxbatchsize));
+		if(defined($sampleNameToBatch{$sample -> {'sampleName'}})){
+			
+			$sample -> {'project'} = $sampleNameToBatch{$sample -> {'sampleName'}};
+			$sample -> {'controlSampleName'} = $controlsample -> {'sampleName'};
+			push(@{$batchedSamplesheet}, $sample);
+		}else{
+			my $batchProjectName = $projectbase . (floor($batchindex / $maxbatchsize));
+			
+			$sampleNameToBatch{$sample -> {'sampleName'}} = $batchProjectName;
 
-		if((floor($batchindex / $maxbatchsize) == $batchindex / $maxbatchsize)){
-			push(@batchedProjectNames,$batchProjectName);
-			warn "INFO: Adding new project $batchProjectName\n";
-			my $newControl; %{$newControl} =  %{$controlsample};			
-			$newControl -> {'project'} = $batchProjectName;
-			$newControl -> {'controlSampleName'} = $newControl -> {'sampleName'};
-			push(@{$batchedSamplesheet}, $newControl);
+			if((floor($batchindex / $maxbatchsize) == $batchindex / $maxbatchsize)){
+				push(@batchedProjectNames,$batchProjectName);
+				warn "INFO: Adding new project $batchProjectName\n";
+				my $newControl; %{$newControl} =  %{$controlsample};			
+				$newControl -> {'project'} = $batchProjectName;
+				$newControl -> {'controlSampleName'} = $newControl -> {'sampleName'};
+				push(@{$batchedSamplesheet}, $newControl);
+			}
+			$sample -> {'project'} = $batchProjectName;
+			$sample -> {'controlSampleName'} = $controlsample -> {'sampleName'};
+			push(@{$batchedSamplesheet}, $sample);
+			#print $projectbase. (floor($batchindex / $maxbatchsize)) . SamplesheetAsString($cs).Dumper($cs)."\n";
+			$batchindex++;
 		}
-		$sample -> {'project'} = $batchProjectName;
-		$sample -> {'controlSampleName'} = $controlsample -> {'sampleName'};
-		push(@{$batchedSamplesheet}, $sample);
-		#print $projectbase. (floor($batchindex / $maxbatchsize)) . SamplesheetAsString($cs).Dumper($cs)."\n";
-		$batchindex++;
 	}
 	#now cleanup any second 'controlsamples'
 	my $sampleindex = 0;
@@ -1347,6 +1480,6 @@ sub CmdRunner {
 
 sub Md5Sum {
 	my $file = $_[0];
-	my $ret;@{$ret} = CmdRunner("md5sum $file");
+	my $ret;@{$ret} = CmdRunner("md5sum '$file'");
 	return substr(${$ret}[0],0,32);
 }

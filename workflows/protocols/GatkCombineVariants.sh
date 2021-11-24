@@ -103,6 +103,13 @@ if [ -e "${combineVcf}.tmp.complex.vcf" ] ; then
 	rm -v ${combineVcf}.tmp.complex.vcf
 fi
 
+if [ $(grep -vc '^#' ${combineVcf}.tmp.annotNoComplex.vcf) -eq 0 ]; then
+	echo "emtpy file"
+	cp ${combineVcf}.tmp.combine.vcf ${combineVcf}.tmp.annotNoComplex.vcf 
+	#${combineVcf}.tmp.annotNoComplex.vcf
+else
+
+
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
  ${combineVcf}.tmp.complex.vcf \
  ${combineVcf}.tmp.combine.vcf \
@@ -111,7 +118,7 @@ perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPo
  ${combineVcf}.tmp.mutect2norm.vcf \
  > ${combineVcf}.tmp.annotNoComplex.vcf
 
-
+fi
 
 if [ -s ${combineVcf}.tmp.complex.vcf ] ; then
 	#${combineVcf}.tmp.annotNoComplex.vcf
@@ -160,12 +167,18 @@ if [ -s ${combineVcf}.tmp.complex.vcf ] ; then
 	        rm -v ${combineVcf}.tmp.ReallyComplex.vcf
 	fi
 
-	perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
-	 ${combineVcf}.tmp.ReallyComplex.vcf \
-	 ${combineVcf}.tmp.annotNoComplex.vcf \
-	 ${combineVcf}.tmp.complexregeno.norm.vcf \
-	 > ${combineVcf}
+	if [ $(grep -vc '^#' ${combineVcf}.tmp.annotNoComplex.vcf) -eq 0 ]; then
+		echo "emtpy file"
+		cp ${combineVcf}.tmp.annotNoComplex.vcf ${combineVcf}
+		#${combineVcf}.tmp.annotNoComplex.vcf
+	else
 
+		perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
+		 ${combineVcf}.tmp.ReallyComplex.vcf \
+		 ${combineVcf}.tmp.annotNoComplex.vcf \
+		 ${combineVcf}.tmp.complexregeno.norm.vcf \
+		 > ${combineVcf}
+	fi
 	#fear the complex variants
 	grep -vPc "^#" ${combineVcf}.tmp.ReallyComplex.vcf|| echo "## no errors here!! Yaay!!"
 	tail  ${combineVcf}.tmp.ReallyComplex.vcf

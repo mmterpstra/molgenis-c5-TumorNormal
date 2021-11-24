@@ -39,6 +39,11 @@ for tsv in $(ls ${tableDir}/*{snv,indel}*.tsv| grep -v 'description\|split_'); d
 
 	parallel -a "$tsv" --header ".*\n" -j 4 --block 10m  \
 		--pipepart "cat |VcfTableExportOneVariantPerSample.pl /dev/stdin>  ${splitTableDir}$(basename $tsv .tsv)_split_{#}.tsv"
+	
+	#catch empty file
+	if [ $(cat "$tsv"| wc -l) -le 1 ]; then
+		cp "$tsv" ${splitTableDir}$(basename $tsv .tsv)_split_1.tsv	
+	fi
 	tableToXlsxAsStrings.pl \\t ${splitTableDir}$(basename $tsv .tsv)_split_*.tsv	
 done
 

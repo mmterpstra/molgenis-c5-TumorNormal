@@ -53,11 +53,14 @@ if [ $varscanlines -gt 100 ] ; then
 	echo "Varscan lines found. plotting genome."
 
 	cd $(dirname ${varscanCopycaller})
+	
+	#this is needed because the plotscript creates a ${snvRawTable}.table that can cause file overwrite issues when you do a sample with multiple controls.
+	cp -v ${snvRawTable} ./"$(basename "${cnvPlotPdf}" .pdf)"".snv.raw.tsv"
 
 	perl $EBROOTPIPELINEMINUTIL/bin/${plotScriptPl} \
 	 -R Rscript \
 	 -d ${onekgGenomeFastaDict} \
-	 -v ${snvRawTable} \
+	 -v ./"$(basename "${cnvPlotPdf}" .pdf)"".snv.raw.tsv" \
 	 ${varscanCopycaller}
 
 	cd $oldDirName

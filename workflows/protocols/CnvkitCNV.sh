@@ -39,12 +39,12 @@ ${checkStage}
 set -x
 set -e
 
-
 if [ `printf '%s\n' "${bqsrBam[@]}" | sort -u | grep -v -c  "$(basename "${controlSampleBam}")"` == 0 ] ; then
+        mkdir -p ${cnvDir}
 
 	echo "Skipping because no controls"
+	mkdir -p "$(dirname "${controlSampleTargetcoverageCnn}")"
 	touch "${controlSampleTargetcoverageCnn}"
-	touch "${cnvDir}"
 
 else
 	# sort unique and print like 'INPUT=file1.bam INPUT=file2.bam '

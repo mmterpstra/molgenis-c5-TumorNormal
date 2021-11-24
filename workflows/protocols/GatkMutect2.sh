@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=1 mem=10gb walltime=33:59:00
+#MOLGENIS nodes=1 ppn=1 mem=10gb walltime=47:59:00
 
 #string project
 
@@ -84,7 +84,7 @@ if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
 fi
 
 #this should override the normalspec and the data should be ran only when using Panel Of Normals generation
-if [ ! -e ${mutect2PonProjectScatVcf} ]; then
+if [ ! -e ${mutect2PonProjectScatVcf}  ${mutect2PonProjectScatVcf}.done ]; then
 	
 	echo "## "$(date)" ##  $0 Running in panel of normals mode."
 

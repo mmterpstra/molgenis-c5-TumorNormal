@@ -47,6 +47,7 @@ done
 	echo
 	echo " - Fastq metrics"
 	echo " - Alignment metrics"
+	echo " - Depth of Coverage metrics"
 	echo " - Duplicate metrics"
 	echo " - Hybrid selection (abbr. HS) metrics"
 

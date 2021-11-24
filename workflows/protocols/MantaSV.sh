@@ -12,8 +12,8 @@
 #string markDuplicatesBam
 #string markDuplicatesBai
 
-#string vcfToolsMod
 #string samtoolsMod
+#string htslibMod
 #string mantaMod
 #string mantaConfigType
 #string mantaDir
@@ -34,8 +34,7 @@ for file in "${onekgGenomeFasta}" "${markDuplicatesBam[@]}" "${markDuplicatesBai
 done
 
 #Load module
-${stage} ${samtoolsMod}
-${stage} ${vcfToolsMod}
+#${stage} ${samtoolsMod} ${htslibMod}
 ${stage} ${mantaMod}
 ${checkStage}
 
@@ -52,15 +51,19 @@ mkdir -p ${mantaRunDir}
 
 
 for bam in "${bamsu[@]}" ; do
-	if [ $(samtools view -c -f 1  $bam) -ge 1 ]; then
-		#bams+=($bam)
-		nohardclipbam=${mantaRunDir}/$(basename $bam)
-		samtools view -F 1024 -h $bam | perl -wlane 'if(not(m/^[@]/)&& defined($F[5])){$F[5] =~ s/\d*H//g;print join("\t",@F);}else{print $_;}' | samtools view -Sb > $nohardclipbam
-		samtools index $nohardclipbam
-		bams+=($nohardclipbam)
-	else
-		echo "SE, Skipped "$bam"'"
-	fi;
+	(
+		${stage} ${samtoolsMod} ${htslibMod}
+		
+		if [ $(samtools view -c -f 1  $bam) -ge 1 ]; then
+			#bams+=($bam)
+			nohardclipbam=${mantaRunDir}/$(basename $bam)
+			samtools view -F 1024 -h $bam | perl -wlane 'if(not(m/^[@]/)&& defined($F[5])){$F[5] =~ s/\d*H//g;print join("\t",@F);}else{print $_;}' | samtools view -Sb > $nohardclipbam
+			samtools index $nohardclipbam
+			bams+=($nohardclipbam)
+		else
+			echo "SE, Skipped "$bam"'"
+		fi;
+	)
 done
 
 if [ ${#bams[*]} -ge 1 ]; then
@@ -91,7 +94,8 @@ else
 	echo "Manta sv detection skipped because no PE reads present in bamfiles"
 	mkdir -p $(dirname ${mantaVcf})
 	touch ${mantaVcf}
-	(cat << EOF
+	(${stage} ${samtoolsMod} ${htslibMod}
+		(cat << EOF
 ##fileformat=VCFv4.1
 ##fileDate=20170101
 ##source=GenerateSVCandidates 0.29.5 Dummy file
@@ -221,8 +225,8 @@ else
 ##cmdline=/data/umcg-mterpstra/apps/software/manta/0.29.5-foss-2016a/bin/configManta.py --bam=Dummy.bam --exome --referenceFasta=/data/umcg-mterpstra/apps/data//ftp.broadinstitute.org/bundle/2.8/b37//human_g1k_v37_decoy.fasta --runDir=Dummy/Dir/
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT'
 EOF
-) | bgzip > ${mantaVcf}
-
+		) | bgzip > ${mantaVcf}
+	)
 	#touch ${mantaVcfIdx}
 	touch ${mantaVcf}.pefail
 fi

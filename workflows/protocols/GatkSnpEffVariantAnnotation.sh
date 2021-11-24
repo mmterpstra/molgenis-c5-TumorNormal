@@ -1,4 +1,4 @@
-#MOLGENIS walltime=33:59:00 mem=9gb ppn=2
+#MOLGENIS walltime=33:59:00 mem=9gb ppn=1
 
 #string project
 
@@ -10,9 +10,11 @@
 
 #string gatkMod
 #string gatkOpt
+#string picardMod
 #string dbsnpVcf
 #string dbsnpVcfIdx
 #string onekgGenomeFasta
+#string onekgGenomeFastaDict
 #list bqsrBam,bqsrBai
 #string targetsList
 
@@ -25,6 +27,7 @@
 #string snpEffMod
 #string vcfToolsMod
 #string pipelineUtilMod
+#string openCravatMod
 #string snpEffStats
 #string snpeffDataDir
 
@@ -243,17 +246,47 @@ java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar \
 >&2 echo -e $(date)" ## INFO ## SnpSift dbnsfp done "
 
 
+#(
+#	
+#	${stage} ${openCravatMod}
+#	
+#	if [ -e ${annotVcf}.snpsiftdbnsfp.vcf.sqlite ]; then 
+#		>&2 echo -e $(date)" ## INFO ## Cleaning up OpenCravat output"
+#		rm -v ${annotVcf}.snpsiftdbnsfp.vcf.*
+#	fi
+#	mkdir -p ${annotatorDir}/oc/
+#	oc run ${annotVcf}.snpsiftdbnsfp.vcf -d ${annotatorDir}/oc/ --mp 4 -l hg38 -t vcf
+#	
+#	#this thingy unsorts thecoordinates
+#	#so
+#)
+#(
+#	${stage} ${picardMod}
+#	
+#	java -Xmx12g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar \
+#	 SortVcf \
+#	 INPUT=${annotVcf}.snpsiftdbnsfp.vcf.vcf \
+#	 OUTPUT=${annotVcf}.oc.sorted.vcf \
+#	 SD=${onekgGenomeFastaDict}
+#	
+#	>&2 echo -e $(date)" ## INFO ## Opencravat done "
+#
+#)
+
 # java -jar SnpSift.jar annotate dbSnp132.vcf variants.vcf > variants_annotated.vcf 
 java -Xmx8g -jar $EBROOTSNPEFF/SnpSift.jar annotate \
  ${gnomadVcf} \
  ${annotVcf}.snpsiftdbnsfp.vcf > ${annotVcf}.snpsiftannot.vcf
 
+#${annotVcf}.oc.sorted.vcf > ${annotVcf}.snpsiftannot.vcf
 
 >&2 echo -e $(date)" ## INFO ## SnpSift gnomad done "
 
- 
-grep -v '^@' ${targetsList} | perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));'| sort -k1,1V -k2,3n| bgzip >  ${annotVcf}.targets.bed.gz
-
+#sorted gzipped bedfile 
+grep -v '^@' ${targetsList} |\
+ perl -wlane 'print join("\t",($F[0],$F[1]-1,$F[2],$.));' |\
+ sort -k1,1V -k2,3n| bgzip >  ${annotVcf}.targets.bed.gz
+#of course with tabix index
 tabix -p bed ${annotVcf}.targets.bed.gz
 
 #new format

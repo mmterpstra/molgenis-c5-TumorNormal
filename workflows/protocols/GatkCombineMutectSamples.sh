@@ -45,27 +45,59 @@ inputs=""
 prio=""
 
 for v in ${vcfs[@]}; do
-	tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
-	normal=$(perl -wpe  's/.*.t_.*.n_(.*).00.*/$1/g' <(echo ${v}))
-	inputs=$(echo -n "$inputs -V:$tumor $v")
-	if [ -z "$prio" ]; then
-		prio="$tumor"
-	else
-		if [ $(echo $prio| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -gt 0 ] ; then
-			if [ "x$tumor" -eq "x$normal" ]; then
-				prio="$prio,${tumor}2"
-			else
-				prio="${tumor}2,$prio"
-			fi
-		else
-			if [ "x$tumor" -eq "x$normal" ]; then
-				prio="$prio,${tumor}"
-			else
-				prio="${tumor},$prio"
-			fi
-		fi
-	fi
+        tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
+        normal=$(perl -wpe  's/.*.t_.*.n_(.*)\.0\d+.*/$1/g' <(echo ${v}))
+        inputs=$(echo -n "$inputs -V:$tumor $v")
+        if [ -z "$prio" ]; then
+                prio="$tumor"
+        else
+            	count=0
+                if [ $(echo $prio|perl -wpe 's/,/,\n,/g'| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -ne 0 ]; then
+
+                        count=$( echo $prio|perl -wpe 's/,/,\n,/g'| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$\|^$tumor[123456789],\|,$tumor[123456789],\|,$tumor[123456789]\$\|^$tumor[123456789]\$"  )
+                fi
+		
+		#countofinputs=0
+		#if [ $(echo $prio|perl -wpe 's/,/,\n,/g'| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -ne 0 ]; then
+			
+		
+
+                if [ $count -ge 1 ] ; then
+                        suffix=0
+                        let suffix=count+1
+
+                        if [ "x$tumor" == "x$normal" ]; then
+                                prio="$prio,${tumor}${suffix}"
+                        else
+                                prio="${tumor}${suffix},$prio"
+                        fi
+                else
+                    	if [ "x$tumor" == "x$normal" ]; then
+                                prio="$prio,${tumor}"
+                        else
+                            	prio="${tumor},$prio"
+                        fi
+                fi
+        fi
 done
+
+echo 'prio='$prio';'
+
+
+#for v in ${vcfs[@]}; do
+#        tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
+#        normal=$(perl -wpe  's/.*.t_.*.n_(.*)\.0\d+.*/$1/g' <(echo ${v}))
+#        if [ $(echo $prio| grep -c "^$normal,\|,$normal,\|,$normal\$\|^$normal\$" || true) -eq 0 ] ; then
+#                prio="${prio},${normal}"
+#       	else
+#		count=0
+#		#f [ $(echo $prio|perl -wpe 's/,/,\n,/g'| grep -c "^$tumor,\|,$tumor,\|,$tumor\$\|^$tumor\$") -ne 0 ]; then
+#		count=$( echo $prio|perl -wpe 's/,/,\n,/g'| grep -c "^$normal,\|,$normal,\|,$normal\$\|^$normal\$\|^$normal[123456789],\|,$normal[123456789],\|,$normal[123456789]\$\|^$normal[123456789]\$"  )
+#		suffix=0
+#		let suffix=count+1
+#		prio="$prio,${normal}${suffix}"
+#	fi
+#done
 
 echo "inputs="$inputs";"
 echo 'prio='$prio';'

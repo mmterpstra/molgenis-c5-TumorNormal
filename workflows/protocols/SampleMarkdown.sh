@@ -17,6 +17,7 @@
 #string fastqcDir
 #string fastqcCleanDir
 #string collectMultipleMetricsPrefix
+#string collectWGSMetricsPrefix
 
 #string onekgGenomeFasta
 
@@ -82,10 +83,17 @@ baseQ20pct=0
 baseQ30pct=0
 
 fqList=()
+function join_by { local IFS="$1"; shift; echo -n "$*";}
 
+#cleanup needed?
+#rationale
+#shoud match ${fastqcDir}/${internalId[@]}"_"${sampleName}"_fastqc/"$(basename (${reads1FqGz[@]}|${reads2FqGz[@]}) .fq.gz)_fastqc.zip alt least once per combination of samplename and reads1FqGz or reads2FqGz
+#this for avoinding collisions of samplename and same fq files also compute support for using multiple lists is not completely reliable sometimes.
+#funky cases this should catch: merging a samplename (123 and 456) then naming the merge  to 123_456 and keeping the internalId(001) the same=001_123_456 and 001_456 or 001_123 being in the same project.
+#using a wildcard for internalID would not discern between 001_123_456 and 001_456
 for fq in $(ls ${reads1FqGz[@]} ${reads2FqGz[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
 	if [ ${#fq} -ne 0 ] ; then
-		for fastqcBasename in $(ls ${fastqcDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)_fastqc.zip -d); do
+		for fastqcBasename in $(shopt -s extglob;ls "${fastqcDir}/"$(echo -n "+(";join_by \| "${internalId[@]}";echo -n ")";)"_"${sampleName}"_fastqc/"$(basename $fq .fq.gz)_fastqc.zip -d); do
 			fqList+=($fq)
 			fastqcBasename=$(dirname ${fastqcBasename})
 			cd ${fastqcBasename}
@@ -134,7 +142,7 @@ readNumberClean=0
 if [ -e ${fastqcCleanDir} ] ; then
 	for fq in $(ls ${reads1FqGzClean[@]} ${reads2FqGzClean[@]}| perl -wpe 's!.*/|\.fq\.gz|\.fastq\.gz|\.gz!!g'| sort -u ); do
 		if [ ${#fq} -ne 0 ] ; then
-			for fastqcBasename in $(ls ${fastqcCleanDir}/*${sampleName}"_fastqc/"$(basename $fq .fq.gz)*.zip -d); do
+			for fastqcBasename in $(shopt -s extglob;ls "${fastqcCleanDir}/"$(echo -n "+(";join_by \| "${internalId[@]}";echo -n ")";)"_"${sampleName}"_fastqc/"$(basename $fq .fq.gz)_fastqc.zip -d); do
 				fqList+=($fq)
 				fastqcBasename=$(dirname ${fastqcBasename})
 				cd ${fastqcBasename}
@@ -390,7 +398,73 @@ else
 		echo "This is single end read data. So this was not performed."
 	)  >>  ${sampleMarkdown}
 fi
+################################################################################
+##
+#
 
+
+if [ -e ${collectWGSMetricsPrefix}.raw_wgs_metrics.tsv ] ; then
+	(
+		echo
+		echo "WGS metrics"
+		echo "==========================="
+		echo
+		echo "**metrics definitions**"
+		echo
+		echo "literal source: http://broadinstitute.github.io/picard/picard-metric-definitions.html"
+		echo
+		echo "| field | description |"
+		echo "| ----- | ----------- |"
+		echo "| GENOME_TERRITORY | The number of non-N bases in the genome reference over which coverage will be evaluated. |"
+		echo "| MEAN_COVERAGE | The mean coverage in bases of the genome territory, after all filters are applied. |"
+		echo "| SD_COVERAGE | The standard deviation of coverage of the genome after all filters are applied. |"
+		echo "| MEDIAN_COVERAGE | The median coverage in bases of the genome territory, after all filters are applied. |"
+		echo "| MAD_COVERAGE | The median absolute deviation of coverage of the genome after all filters are applied. |"
+		#echo "| PCT_EXC_MAPQ | The fraction of aligned bases that were filtered out because they were in reads with low mapping quality (default is < 20). |"
+		#echo "| PCT_EXC_DUPE | The fraction of aligned bases that were filtered out because they were in reads marked as duplicates. |"
+		#echo "| PCT_EXC_UNPAIRED | The fraction of aligned bases that were filtered out because they were of low base quality (default is < 20). |"
+		#echo "| PCT_EXC_BASEQ | The fraction of aligned bases that were filtered out because they were of low base quality (default is < 20). |"
+		#echo "| PCT_EXC_OVERLAP | The fraction of aligned bases that were filtered out because they were the second observation from an insert with overlapping reads. |"
+		#echo "| PCT_EXC_CAPPED | The fraction of aligned bases that were filtered out because they would have raised coverage above the capped value (default cap = 250x). |"
+		echo "| PCT_EXC_TOTAL | The total fraction of aligned bases excluded due to all filters. |"
+		echo "| HET_SNP_SENSITIVITY | The theoretical HET SNP sensitivity. |"
+		echo "| HET_SNP_Q | The Phred Scaled Q Score of the theoretical HET SNP sensitivity. |"
+		echo
+		#the table
+		echo "In the table below the output of raw **wgs** metrics collection is shown."
+		echo
+		#create a clean table and not a mix of two tables
+		perl -wne 'BEGIN{my $pr=0;};$pr=0 if($_ =~ m/^\n$/); $pr = 1 if($_ =~ m/GENOME_TERRITORY/); print $_ if($pr); ' \
+			${collectWGSMetricsPrefix}.raw_wgs_metrics.tsv \
+			 > ${collectWGSMetricsPrefix}.raw_wgs_metrics.tsv.tmp
+		#just for logging
+		cat ${collectWGSMetricsPrefix}.raw_wgs_metrics.tsv.tmp >/dev/stderr
+		#create markduplicates table for a single sample. Note the recalculation of PCT_PCR_DUPs.
+		echo 'tablewgs=read.table("'${collectWGSMetricsPrefix}.raw_wgs_metrics.tsv.tmp'", header=TRUE, sep="\t", fill=NA);
+		 write.table(subset(tablewgs,select=c("GENOME_TERRITORY","MEAN_COVERAGE","SD_COVERAGE","MEDIAN_COVERAGE","MAD_COVERAGE","PCT_EXC_TOTAL","HET_SNP_SENSITIVITY","HET_SNP_Q"))
+		 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' >  ${sampleMarkdownDir}/${sampleName}_rawwgsmetrics.R;
+		 #convert to markdown
+		Rscript ${sampleMarkdownDir}/${sampleName}_rawwgsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
+		rm   ${sampleMarkdownDir}/${sampleName}_rawwgsmetrics.R
+		
+		echo
+		echo "In the table below the output of wgs metrics collection is shown."
+		echo
+		#create a clean table and not a mix of two tables
+		perl -wne 'BEGIN{my $pr=0;};$pr=0 if($_ =~ m/^\n$/); $pr = 1 if($_ =~ m/GENOME_TERRITORY/); print $_ if($pr); ' \
+			${collectWGSMetricsPrefix}.wgs_metrics.tsv \
+			 > ${collectWGSMetricsPrefix}.wgs_metrics.tsv.tmp
+		#just for logging
+		cat ${collectWGSMetricsPrefix}.wgs_metrics.tsv.tmp >/dev/stderr
+		#create markduplicates table for a single sample. Note the recalculation of PCT_PCR_DUPs.
+		echo 'tablewgs=read.table("'${collectWGSMetricsPrefix}.wgs_metrics.tsv.tmp'", header=TRUE, sep="\t", fill=NA);
+		 write.table(subset(tablewgs,select=c("GENOME_TERRITORY","MEAN_COVERAGE","SD_COVERAGE","MEDIAN_COVERAGE","MAD_COVERAGE","PCT_EXC_TOTAL","HET_SNP_SENSITIVITY","HET_SNP_Q"))
+		 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' >  ${sampleMarkdownDir}/${sampleName}_wgsmetrics.R;
+		 #convert to markdown
+		Rscript ${sampleMarkdownDir}/${sampleName}_wgsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[a-zA-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
+		rm   ${sampleMarkdownDir}/${sampleName}_wgsmetrics.R
+	)>> ${sampleMarkdown}
+fi		
 ################################################################################
 ##
 #

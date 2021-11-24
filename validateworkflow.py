@@ -27,7 +27,7 @@ def checkprotocol(protocolfile,parameterseen):
     try:
         protocol = open(protocolfile)
     except:
-	print('Die cannot open file ' + protocolfile)
+        print('Die cannot open file ' + protocolfile)
         exit
     try:
         for i, line in enumerate(protocol):
@@ -40,7 +40,7 @@ def checkprotocol(protocolfile,parameterseen):
                 if(val in parameterseen):
                     parameterseen[val]+=1
     finally:
-	protocol.close()
+         protocol.close()
 
 def checkparameterseen(parameterseen,protocol):
     fail=0
@@ -63,13 +63,13 @@ try:
             continue
         line=line.rstrip()
         csv= line.split(",")
-	if csv[0].startswith("#"):
-       	    continue
+        if csv[0].startswith("#"):
+               continue
         if csv[0] in steps:
             steps[csv[0]]=steps[csv[0]]+1
         else:
             steps[csv[0]]=1
-	#protocolfiles.append(csv[1])
+    #protocolfiles.append(csv[1])
         #print csv[0]
         #print("node "+ csv[0])
         remap=csv[2].split(";")

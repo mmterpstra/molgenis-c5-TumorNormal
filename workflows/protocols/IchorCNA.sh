@@ -53,8 +53,8 @@ readCounter\
  --chromosome $(echo "${ichorcnaChromosomes}"| perl -wpe 's/\t/,/g') \
  ${controlSampleBam} > ${coverageWig}_norm.wig
 
-
-
+#NCBI
+#BSgenome.Hsapiens.1000genomes.hs37d5
 runIchorCNA.R \
  --WIG  ${coverageWig} \
  --NORMWIG  ${coverageWig}_norm.wig \
@@ -62,6 +62,8 @@ runIchorCNA.R \
  --id t_$(basename ${coverageWig} .wig)_n_$(basename ${controlSampleBam} .bam) \
  --outDir=${ichorcnaDir} \
  --mapWig=$EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/${mapability1000kbWig} \
+ --genomeBuild="hg38" \
+ --genomeStyle="NCBI" \
  --estimateScPrevalence FALSE --scStates "c()" \
  --chrs $(echo "${ichorcnaChrs}"| perl -wpe 's/\t/,/g') \
  --chrTrain $(echo "${ichorcnaChrtrain}"| perl -wpe 's/\t/,/g') \

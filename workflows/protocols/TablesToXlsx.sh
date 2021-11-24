@@ -101,7 +101,19 @@ for t in ${tableDir}/*.tsv; do
 		
 	#if does not contain _split_[0123456789] then split
 	elif [ ! -z "${t##*_split_[0123456789]*.tsv}" ]; then
-		parallel -a "$t" --header ".*\n" -j 4 --block 100m --pipepart "cat /dev/stdin> $(dirname $t)/$(basename $t .tsv)_split_{#}.tsv";
+		parallel \
+		 -a "$t" \
+		 --header ".*\n" \
+		 -j 4 \
+		 --block 100m \
+		 --pipepart "cat /dev/stdin> $(dirname $t)/$(basename $t .tsv)_split_{#}.tsv";
+		
+		#catchempty indel file
+	        if [ $(cat "$t" | wc -l ) -le 1 ]; then
+			cp "$t" $(dirname $t)/$(basename $t .tsv)_split_1.tsv
+		fi
+
+		
 		#this below might not be safe
 		tableToXlsxAsStrings.pl \\t $(dirname $t)/$(basename $t .tsv)_split_*.tsv
 		xlsx=$(echo $t| perl -wpe 's/.txt$|.tsv$|.csv$|.table$/_split\*.xlsx/g')

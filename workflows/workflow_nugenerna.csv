@@ -57,4 +57,4 @@ MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
 SamQC,protocols/SamQc.sh,MergeBamFiles;MarkDuplicates
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SelectIndels;SelectSNV;SamQC;VariantAnnotation
-Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;TablesToSplitTables;HaplotypeCaller
+Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;TablesToSplitTables;HaplotypeCaller;NugeneProbeMetrics

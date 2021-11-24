@@ -170,6 +170,11 @@ nugeneBai,${nugeneRgDir}${internalId}_${sampleName}.bai
 mergeBamFilesDir,${projectDir}/MergeBams/
 mergeBamFilesBam,${mergeBamFilesDir}${sampleName}.bam
 mergeBamFilesBai,${mergeBamFilesDir}${sampleName}.bai
+
+#
+abraDir,${projectDir}/Abra2/
+abraBam,${abraDir}${sampleName}.bam
+abraBai,${abraDir}${sampleName}.bai
 #
 ################################################################################
 ##MarkDuplicates
@@ -227,6 +232,11 @@ collectRnaSeqMetricsChart,${collectRnaSeqMetricsDir}${sampleName}.chart.pdf
 
 collectMultipleMetricsDir,${projectDir}/multipleMetrics/
 collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
+################################################################################
+##CollectWGSMetrics
+
+collectWGSMetricsDir,${projectDir}/WGSMetrics/
+collectWGSMetricsPrefix,${collectWGSMetricsDir}/${sampleName}
 ################################################################################
 ##CalculateHsMetrics bed files
 
@@ -473,7 +483,7 @@ svVcfIdx,${svVcf}.idx
 tableDir,${projectDir}/tables/
 variantFields,
 #variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AC -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AC -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AC -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AC -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AC -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AC -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AC -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC -F HRun -F IsChangeInTumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MeanDP -F MinDP -F MQ -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SOR -F STR -F VariantType  -GF AD -GF DP -GF F -GF GQ -GF GT -GF Z 
-variantFieldsLimited, -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.AFR_AF -F 1000gPhase1Indels.AMR_AF -F 1000gPhase1Indels.ASN_AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.AFR_AF -F 1000gPhase1Snps.AMR_AF -F 1000gPhase1Snps.EUR_AF -F AC -F AN -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AF -F dbNSFP_1000Gp1_AFR_AF -F dbNSFP_1000Gp1_AMR_AF -F dbNSFP_1000Gp1_ASN_AF -F dbNSFP_1000Gp1_EUR_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_Ancestral_allele -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Interpro_domain -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F dbSnp.CAF -F dbSnp.COMMON -F dbSnp.dbSNPBuildID -F DP -F exac.AC -F exac.AC_Adj -F exac.AC_AFR -F exac.AC_AMR -F exac.AC_EAS -F exac.AC_FIN -F exac.AC_Hemi -F exac.AC_Het -F exac.AC_Hom -F exac.AC_OTH -F exac.AC_SAS -F exac.AN -F exac.AN_AFR -F exac.AN_AMR -F exac.AN_EAS -F exac.AN_FIN -F exac.AN_OTH -F exac.AN_SAS -F FILTER -F FS -F GC  -F HRun -F IsChangeInTumor -F IsHetrozygousInNormal -F LOF -F LowMQ -F MQ -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SOR -F STR -F VariantType -F set -GF AD -GF GT -GF FreebayesAD -GF HCallerAD -GF MuTect2AD 
+variantFieldsLimited, -F CADD_phred -F CADD_raw -F clinvar_CLNDN -F clinvar_CLNDISDB -F clinvar_CLNHGVS -F clinvar_CLNSIG -F gnomad3.0_AF_raw -F gnomad3.0_AC -F gnomad3.0_AC_raw -F gnomad3.0_AN -F gnomad3.0_AN_raw -F gnomad3.0_AF  -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F DP -F exac.AC -F exac.AC_Hom -F exac.AN  -F FS -F GC -F HRun -F LOF -F LowMQ -F MQ -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SOR -F STR -F segdup -F variant_type -F non_topmed_AN_nfe_nwe -F non_topmed_AC_nfe_nwe -F non_topmed_AC -F non_topmed_AN -F non_cancer_AN -F non_cancer_AF -F non_cancer_AC_nfe_nwe -F non_cancer_AC -F dbNSFP_MutationTaster_converted_rankscore -F dbNSFP_MutationTaster_pred -F dbNSFP_MutationTaster_score -F VariantType -F set -GF AD -GF GT -GF FreebayesAD -GF HCallerAD -GF MuTect2AD -F SAF -F SAP -F SAR -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.EUR_AF -F AB -F AC -F AC_nfe_nwe -F AF -F AF_nfe_nwe -F AN -F AN_nfe_nwe -F DB -F DS -F HCallerAC -F HCallerFS -F HCallerQD -F MQM -F MQMR -F PAIRED
 
 #variantTable,${tableDir}/${project}.tsv
 snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
@@ -562,6 +572,16 @@ coverageWig,${projectDir}/ichorcna.${controlSampleName}/${sampleName}.wig
 cnvDir,${projectDir}/cnv.${controlSampleName}/
 cnvTargetBed,${cnvDir}/targets.bed
 controlSampleTargetcoverageCnn,${cnvDir}/${controlSampleName}.targetcoverage.cnn
+
+################################################################################
+#QDNAseq
+#
+
+#files
+qdnaseqDir,${projectDir}/qdnaseq/
+qdnaseqPdf,${projectDir}//qdnaseq/bins50kbp/${sampleName}.pdf
+qdnaseqSeg,${projectDir}/qdnaseq/bins50kbp/${sampleName}.seg
+
 
 ################################################################################
 #Misc

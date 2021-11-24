@@ -8,7 +8,7 @@ ml purge
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
->&2 echo "## "$(date)" ## $0 ## Use:$0 [none|exome|rna|nugene|nugrna|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
+>&2 echo "## "$(date)" ## $0 ## Use:$0 [none|wgs|exome|exomele150|exomegt150|rna|nugene|nugrna|prepiont|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
 >&2 echo "## "$(date)" ## $0 ##     [none|exome|rna|nugene|nugrna|iont|withpoly|lexo]   "
 >&2 echo "## "$(date)" ## $0 ##                    Application to use for sequencing."
 >&2 echo "## "$(date)" ## $0 ##     samplesheet    Csv file describing the fastq and samples to be analysed."
@@ -114,10 +114,20 @@ projectname=$3
 
 	if [ $1 == "none" ];then
 	        exit 1
+	elif [ $1 == "wgs" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+		#workflowBase="workflow.csv"
+		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+		workflowBase="workflow_grch38_wgs.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "exome" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
-	        workflowBase="workflow.csv"
-		cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+	        #workflowBase="workflow.csv"
+		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+                workflowBase="workflow_grch38.csv"
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
         elif [ $1 == "exomehuman38" ];then
                 >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
                 workflowBase="workflow_grch38.csv"
@@ -142,17 +152,17 @@ projectname=$3
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene workflow"
 	        workflowBase="workflow_nugene.csv"
 	        nugeneProbeBed=$5
-		cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	        perl -i.bak  -wpe 's!(probeBed,).*!$1'"$nugeneProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	
 	elif [ $1 == "nuginc" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
 	        workflowBase="workflow_nugeneinc.csv"
-                cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "nugincbybed" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
 	        workflowBase="workflow_nugeneinctrimbybed.csv"
-                cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 
 	elif [ $1 == "nugrna" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
@@ -165,14 +175,14 @@ projectname=$3
 		>&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA STAR workflow"
 		workflowBase="workflow_nugenerna_star.csv"
 		nugeneRnaProbeBed=$5
-		cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 
 		perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $workflowDir/.parameters.site.tmp.csv
 
 	elif [ $1 == "iont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
 	        workflowBase="workflow_iont_scat.csv"
-                cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 		ampliconsBed=$5
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "prepiont" ];then
@@ -183,18 +193,30 @@ projectname=$3
 		else
 			backend="localhost"
 		fi
-                cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 		
 		ampliconsBed=$5
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "withpoly" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
 	        workflowBase="workflow_withPolymorfic.csv"
-                cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+                cat $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	elif [ $1 == "lexo" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen stranded 3prime mRNA-seq workflow"
 		workflowBase="workflow_lexogenrna.csv"
-                cat  $workflowDir/parameters/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+	elif [ $1 == "lpwgs" ]; then
+		>&2 echo  "## "$(date)" ## $0 ## Using Low pass wgs protocol aka only produce bams/qc tables"
+		workflowBase="workflow_lpwgs.csv"
+		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+	elif [ $1 == "lpwgsle150" ]; then
+		>&2 echo  "## "$(date)" ## $0 ## Using Low pass wgs protocol aka only produce bams/qc tables"
+		workflowBase="workflow_lpwgs_le150.csv"
+		cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
+	elif [ $1 == "lpwgsgt150" ]; then
+		>&2 echo  "## "$(date)" ## $0 ## Using Low pass wgs protocol aka only produce bams/qc tables"
+		workflowBase="workflow_lpwgs_gt150.csv"
+		cat  $workflowDir/human_parameters.csv >>  $workflowDir/.parameters.site.tmp.csv
 	else
 	    	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
 	fi
@@ -255,6 +277,7 @@ projectname=$3
 	#if not present create file
 	touch "$runDir/generation.log"	
 	
+
 	#block of text to append to file
 	(
 		if which git &>/dev/null; then
@@ -288,6 +311,9 @@ projectname=$3
 		else
 			>&2 echo "## "$(date)" ## $0 ## Commmand 'dot' not present, trying module load."
 			ml Graphviz
+
+			#basic way of generating workflow svgs
+			python ${workflowDir}/workflow2dot.py $workflowDir/workflows/$workflowBase | dot -Tsvg /dev/stdin > $workflowDir/svg/$(basename $workflowBase .csv).svg
 		fi
 		echo
 		echo "## "$(date)" # $0 # Generation info"
@@ -306,7 +332,7 @@ projectname=$3
 		echo 
 		echo "workflow used as shown below"
 		echo
-		echo -n '<img src="data:image/svg+xml;base64,'$(python workflow2dot.py $workflowDir/$workflowBase | dot -Tsvg /dev/stdin| base64)'"\>'
+		echo -n '<img src="data:image/svg+xml;base64,'$(python ${workflowDir}/workflow2dot.py $workflowDir/workflows/$workflowBase | dot -Tsvg /dev/stdin | base64)'"\>'
 		echo
 		echo "### Used software versions"
 		echo
@@ -336,7 +362,7 @@ Relevant method	of acknowledgement if host looks like "peregrine.hpc.rug.nl or p
 > If you want to acknowledge the use of the Peregrine cluster and the support of the CIT in your papers you can use the following acknowledgement:
 >    'We would like to thank the Center for Information Technology of the University of Groningen for their support
 >    and for providing access to the Peregrine high performance computing cluster.'
-> from https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+> from https://wiki.hpc.rug.nl/peregrine/introduction/scientific_output
 
 "
                 echo "### Generation tries"

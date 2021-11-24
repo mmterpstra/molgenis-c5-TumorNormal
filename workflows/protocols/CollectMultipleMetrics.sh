@@ -42,9 +42,10 @@ getFile ${dbsnpVcf}
 getFile ${targetsList}
 
 #load modules
-${stage} ${picardMod}
 ${stage} ${RMod}
 ${stage} ${samtoolsMod}
+${stage} ${picardMod}
+
 ${checkStage}
 
 set -x
@@ -69,7 +70,7 @@ fi
 #MeanQualityByCycle, CollectBaseDistributionByCycle, CollectGcBiasMetrics, RnaSeqMetrics, 
 #CollectSequencingArtifactMetrics, CollectQualityYieldMetrics
 
-if [ `samtools view -c /groups/umcg-oncogenetics/tmp04/projects/iontorrent_D1_batch14_29may18/MergeBams/2015-43a_Horizon_2015-43a.bam` == 0 ] ; then 
+if [ `samtools view -c "${markDuplicatesBam}"` == 0 ] ; then 
 	"## INFO ## No reads skipping analysis"
 	touch  ${collectMultipleMetricsPrefix}.alignment_summary_metrics
 	touch ${collectMultipleMetricsPrefix}.quality_by_cycle_metrics

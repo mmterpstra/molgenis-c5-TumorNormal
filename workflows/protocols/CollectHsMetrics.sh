@@ -31,7 +31,7 @@ getFile ${targetsList}
 
 
 #load modules
-${stage} ${picardMod} ${RMod}
+${stage} ${picardMod}
 ${checkStage}
 
 set -x

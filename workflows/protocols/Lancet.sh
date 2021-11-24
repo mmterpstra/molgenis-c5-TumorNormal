@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=8gb walltime=23:59:00
+#MOLGENIS nodes=1 ppn=8 mem=16gb walltime=23:59:00
 
 #string project
 
@@ -88,8 +88,13 @@ fi
 #	
 #fi
 
-lancet --tumor ${indelRealignmentBam} $Normalspec --ref ${onekgGenomeFasta} $InterValOperand --num-threads 8 > ${lancetScatVcf}
-
+if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
+        #run with controlsample
+	lancet --tumor ${indelRealignmentBam} $Normalspec --ref ${onekgGenomeFasta} $InterValOperand --num-threads 8 > ${lancetScatVcf}
+else
+	#no tumoronly mode
+	touch ${lancetScatVcf}
+fi
 #java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 # -T MuTect2 \
 # -R ${onekgGenomeFasta} \
