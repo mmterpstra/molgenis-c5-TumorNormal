@@ -1,4 +1,4 @@
 cd ../
 for i in workflows/workflow*.csv; do
-	python validateworkflow.py $i
+	python scripts/validateworkflow.py $i
 done

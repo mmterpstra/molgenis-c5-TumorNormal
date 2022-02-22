@@ -23,7 +23,7 @@ done)> samplesheet_long.csv
 
 
 touch dummy.interval_list && \
-	bash ../GenerateScripts.sh $1 samplesheet_long.csv exome dummy.interval_list $probe
+	bash ../scripts/GenerateScripts.sh $1 samplesheet_long.csv exome dummy.interval_list $probe
 
 bash .RunWorkFlowGeneration.sh &> workflow_generation.log || (tail -n 100 workflow_generation.log ; exit 1)
 
