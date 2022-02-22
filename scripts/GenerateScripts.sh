@@ -319,11 +319,14 @@ projectname=$3
 		echo -n "This is generated based on the git or path+date '"
 		$GITCMD | head -n 1
 		echo "' with command '"$SCRIPTCALL"'. Althought this is software in development and also the next commit should also be considered."
-	        echo
-		echo "### Branch info"
-		echo
-		git branch
+
 		
+		if [ git branch &>/dev/null ]; then
+			echo
+			echo "### Branch info"
+			echo
+			git branch
+		fi 
 		if [ which dot &>/dev/null || ml Graphviz ]; then
 			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
 			echo
