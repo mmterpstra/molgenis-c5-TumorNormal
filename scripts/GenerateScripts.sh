@@ -350,7 +350,7 @@ Software/version[-easybuild toolchain][-suffix]. \
 compiler / devtools /etc ).\`suffix\`: mainly to indicate a \
 specific language version the tool uses."
 		echo
-		grep "^[a-zA-Z].*Mod"  $workflowDir/.parameters.site.tmp.csv | perl -wpe 's/.*Mod,/ - /g'
+		grep "^[a-zA-Z].*Mod"  ${runDir}/.parameters.site.tmp.csv | perl -wpe 's/.*Mod,/ - /g'
 		echo
 		echo "### Used host for acknowledgements"
 		echo
