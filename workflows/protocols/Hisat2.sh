@@ -60,33 +60,35 @@ fi
 
 echo "## "$(date)" ##  $0 Align with hisat with readspec='$readspec'"
 #note the cleansam diffcult stuff is for read alignments going outside the reference seqs (still it occasionally happens).
+
+#this ugly alright but the idea is that the last step just idles until the first three complete due to the nature of sorting.
 hisat2 \
- -x ${onekgGenomeFastaIdxBase} \
+ -x "${onekgGenomeFastaIdxBase}" \
  $readspec \
- --known-splicesite-infile ${hisat2SpliceKnownTxt} \
+ --known-splicesite-infile "${hisat2SpliceKnownTxt}" \
  --score-min L,0,-0.6 \
  --sp 1,1.5 -D 20 -R 3 -S \
- /dev/stdout --threads 1 | \
+ /dev/stdout --threads 4 | \
 java \
  -Xmx4g \
  -XX:ParallelGCThreads=2 \
- -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -Djava.io.tmpdir="${hisat2AlignmentDir}" \
  -jar $EBROOTPICARD/picard.jar CleanSam \
  I=/dev/stdin O=/dev/stdout | \
 java \
  -Xmx4g \
  -XX:ParallelGCThreads=2 \
- -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -Djava.io.tmpdir="${hisat2AlignmentDir}" \
  -jar $EBROOTPICARD/picard.jar SortSam \
  SORT_ORDER=queryname I=/dev/stdin O=/dev/stdout | \
 java \
  -Xmx4g \
  -XX:ParallelGCThreads=2 \
- -Djava.io.tmpdir="${addOrReplaceReadGroupsDir}" \
+ -Djava.io.tmpdir="${hisat2AlignmentDir}" \
  -jar $EBROOTPICARD/picard.jar FixMateInformation \
  ADD_MATE_CIGAR=true \
  I=/dev/stdin O=/dev/stdout | \
- samtools view -h - > ${hisat2Sam}
+ samtools view -h - > "${hisat2Sam}"
 
 putFile ${hisat2Sam} 
 

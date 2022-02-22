@@ -310,15 +310,7 @@ projectname=$3
 		
 		fi
 
-		if which dot &>/dev/null; then
-			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
-		else
-			>&2 echo "## "$(date)" ## $0 ## Commmand 'dot' not present, trying module load."
-			ml Graphviz
 
-			#basic way of generating workflow svgs
-			python ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | dot -Tsvg /dev/stdin > $workflowDir/svg/$(basename $workflowBase .csv).svg
-		fi
 		echo
 		echo "## "$(date)" # $0 # Generation info"
 		echo
@@ -331,12 +323,20 @@ projectname=$3
 		echo "### Branch info"
 		echo
 		git branch
-		echo
-		echo "### Workflow image"
-		echo 
-		echo "workflow used as shown below"
-		echo
-		echo -n '<img src="data:image/svg+xml;base64,'$(python ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | dot -Tsvg /dev/stdin | base64)'"\>'
+		
+		if [ which dot &>/dev/null || ml Graphviz ]; then
+			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
+			echo
+			echo "### Workflow image"
+			echo 
+			echo "workflow used as shown below"
+			echo
+			echo -n '<img src="data:image/svg+xml;base64,'$(python ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | dot -Tsvg /dev/stdin | base64)'"\>'
+		else
+			>&2 echo "## "$(date)" ## $0 ## Commmand 'dot' not present."
+			
+		fi
+		
 		echo
 		echo "### Used software versions"
 		echo

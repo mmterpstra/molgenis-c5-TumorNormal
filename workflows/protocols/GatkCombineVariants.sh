@@ -150,11 +150,12 @@ if [ -s ${combineVcf}.tmp.complex.vcf ] ; then
 	 --dbsnp ${dbsnpVcf}\
 	 $inputs \
 	 --max_alternate_alleles 9 \
-	 --activeRegionExtension 200 \
-	 --activeRegionMaxSize 200 \
+	 --activeRegionExtension 302 \
+	 --activeRegionMaxSize 302 \
 	 --genotyping_mode GENOTYPE_GIVEN_ALLELES \
 	 --alleles ${combineVcf}.tmp.complex.vcf \
 	 --output_mode EMIT_ALL_SITES \
+	 --downsample_to_coverage 5000 \
 	 --forceActive \
 	 -stand_call_conf 0 \
 	 -L ${combineVcf}.tmp.complex.vcf \

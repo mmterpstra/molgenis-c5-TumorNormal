@@ -224,6 +224,7 @@ java -Xmx8g -jar  $EBROOTSNPEFF/snpEff.jar \
  -dataDir ${snpeffDataDir} \
  -hgvs \
  -lof \
+ -canon \
  -stats ${snpEffStats} \
  -csvStats ${snpEffStats}.csv \
  -v \

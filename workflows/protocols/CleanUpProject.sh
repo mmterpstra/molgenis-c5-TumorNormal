@@ -36,7 +36,7 @@ alloutputsexist \
 	"$archiveDir"/${project}.zip" \
 
 
-(
+#(
 	cd "$(dirname "${projectDir}")"
 	
 	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}" "${convadingDir}"; do
@@ -172,9 +172,8 @@ alloutputsexist \
 	done
 	
 	putFile "$archiveDir"
-	putFile "$archiveDir/${project}.zip"
-
-)
+	putFile "$archiveDir"/${project}.zip" 
+#)
 
 echo "## "$(date)" ##  $0 Done "
 
