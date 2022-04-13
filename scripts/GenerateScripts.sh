@@ -8,7 +8,7 @@ ml purge
 
 SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ## Called with call '${SCRIPTCALL}'"
->&2 echo "## "$(date)" ## $0 ## Use:$0 [none|wgs|exome|exomele150|exomegt150|rna|nugene|nugrna|prepiont|iont|withpoly|lexo] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
+>&2 echo "## "$(date)" ## $0 ## Use:$0 [none|wgs|exome|exomele150|exomegt150|rna|nugene|nugrna|prepiont|iont|withpoly|lexo|lpwgs|lpwgsle150|lpwgsgt150] samplesheet projectname targetsList <nugeneProbebed/iontAmpliconBed>"
 >&2 echo "## "$(date)" ## $0 ##     [none|exome|rna|nugene|nugrna|iont|withpoly|lexo]   "
 >&2 echo "## "$(date)" ## $0 ##                    Application to use for sequencing."
 >&2 echo "## "$(date)" ## $0 ##     samplesheet    Csv file describing the fastq and samples to be analysed."
@@ -115,11 +115,14 @@ projectname=$3
 		cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
 
 	fi
+	
+	>&2 echo "## "$(date)" ## $0 ## Running with workflow '"$1"'."
 
 	if [ $1 == "none" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Exiting cause no workflow specified"
 	        exit 1
 	elif [ $1 == "wgs" ];then
-		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq cause no working wgs workflow"
 		#workflowBase="workflow.csv"
 		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
@@ -130,10 +133,6 @@ projectname=$3
 	        #workflowBase="workflow.csv"
 		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
-                workflowBase="workflow_grch38.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
-        elif [ $1 == "exomehuman38" ];then
-                >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
                 workflowBase="workflow_grch38.csv"
                 cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
         elif [ $1 == "exomele150" ];then
@@ -163,6 +162,7 @@ projectname=$3
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
 	        workflowBase="workflow_nugeneinc.csv"
                 cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+                
 	elif [ $1 == "nugincbybed" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
 	        workflowBase="workflow_nugeneinctrimbybed.csv"
@@ -189,6 +189,15 @@ projectname=$3
                 cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		ampliconsBed=$5
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $runDir/.parameters.site.tmp.csv
+		
+	elif [ $1 == "umi" ];then
+	        >&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
+	        #workflowBase="workflow.csv"
+		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
+                workflowBase="workflow_umi.csv"
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+                
 	elif [ $1 == "prepiont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
 	        workflowBase="workflow_prepiont.csv"
@@ -201,26 +210,32 @@ projectname=$3
 		
 		ampliconsBed=$5
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $runDir/.parameters.site.tmp.csv
+		
 	elif [ $1 == "withpoly" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
 	        workflowBase="workflow_withPolymorfic.csv"
                 cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+                
 	elif [ $1 == "lexo" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen stranded 3prime mRNA-seq workflow"
 		workflowBase="workflow_lexogenrna.csv"
 		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		
 	elif [ $1 == "lpwgs" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Low pass wgs protocol aka only produce bams/qc tables"
 		workflowBase="workflow_lpwgs.csv"
 		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		
 	elif [ $1 == "lpwgsle150" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Low pass wgs protocol aka only produce bams/qc tables"
 		workflowBase="workflow_lpwgs_le150.csv"
 		cat  $workflowDir/human_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		
 	elif [ $1 == "lpwgsgt150" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Low pass wgs protocol aka only produce bams/qc tables"
 		workflowBase="workflow_lpwgs_gt150.csv"
 		cat  $workflowDir/human_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		
 	else
 	    	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
 	fi

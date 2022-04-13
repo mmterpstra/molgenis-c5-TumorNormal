@@ -130,6 +130,14 @@ trimByBedBam,${trimByBedDir}${internalId}_${sampleName}.bam
 trimByBedBai,${trimByBedDir}${internalId}_${sampleName}.bai
 trimByBedMetrics,${trimByBedDir}${internalId}_${sampleName}.metrics.log
 
+#
+################################################################################
+##CallMolecularConsensusReads
+#
+
+consensusDir,${projectDir}/CallMolecularConsensusReads/
+consensusBam,${consensusDir}${sampleName}.bam
+consensusBai,${consensusDir}${sampleName}.bai
 
 ################################################################################
 ##AddOrReplaceGroups
@@ -415,6 +423,14 @@ annotVcfIdx,${annotVcf}.idx
 
 #custAnnotVcf,${annotatorDir}/${project}.annot.cust.n_${controlSampleName}.vcf
 #custAnnotVcfIdx,${custAnnotVcf}.idx
+
+################################################################################
+#umi fragment count variant annotation
+annotateConsensusDir,${projectDir}/annotateConsensus/
+annotateConsensusBaseDir,${annotateConsensusDir}${scatterIDs}/
+annotateConsensusBase,${annotateConsensusBaseDir}${sampleName}
+annotateConsensusScatVcf,${annotateConsensusDir}${project}.${scatterIDs}.vcf
+
 
 ################################################################################
 #switch custom annotation around!!!!!!!!!!!!

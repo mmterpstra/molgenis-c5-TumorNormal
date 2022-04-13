@@ -121,5 +121,6 @@ qdnaseq50kbpBins,/data/umcg-mterpstra/apps/data/QDNAseqBins/R-bundle-QDNAseq/1.1
 #/groups/umcg-oncogenetics/prm02/data/resources/gff/Homo_sapiens.GRCh38.86.tes1000.gtf
 #/groups/umcg-oncogenetics/prm02/data/resources/gff/Homo_sapiens.GRCh38.86.tes500.gtf
 #hisat2
-hisat2IdxBase,${bundle}/hisat2/2.2.0-foss-2018a/Homo_sapiens_assembly38
+#actually ensembl based so might not be completely compatible .../bundle/bundle17jan2020/hg38/hisat2/2.2.0-foss-2018a
+hisat2IdxBase,${bundle}/hisat2/2.2.0-foss-2018a/grch38_snp_tran
 hisat2SpliceKnownTxt,${bundle}/hisat2/2.2.0-foss-2018a/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.hisat2_extract_splice_sites.tsv

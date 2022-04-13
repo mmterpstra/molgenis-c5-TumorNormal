@@ -21,7 +21,7 @@ for filename in os.listdir(input_dir):
         #print(f)
         fh = open(f.replace(".started",""))
         for line in fh:
-            if(line[:len("project")] == "project"):
+            if(line.find("project=\"")==0):
                 projectname=line[len("project=\""):-2]
                 #print(projectname,f)
         started_jobs.append({"file" : f, "projectname" : projectname})
@@ -44,9 +44,10 @@ for line in queue.stdout.decode('UTF-8').splitlines():
 	if not jobnamefull == "batch":
 		running_jobs.append({"base": "_".join(jobbase),"fullname": jobnamefull})
 
-#pp = pprint.PrettyPrinter()
-#pp.pprint(running_jobs)
-
+pp = pprint.PrettyPrinter()
+pp.pprint(running_jobs)
+pp = pprint.PrettyPrinter()
+pp.pprint(started_jobs)
 failed_jobs = {}
 
 print("# Removing running slurm jobs from started list...")
@@ -55,7 +56,7 @@ for job in started_jobs:
 	running = False
 	#print(job)
 	for runningjob in running_jobs:
-		#print(runningjob["fullname"][:len(job["projectname"])])
+		#print(runningjob["fullname"][:len(job["projectnajob["file"].find(runningjob["base"]+".sh.started"))
 		if job["file"].find(runningjob["base"]+".sh.started") != -1 and runningjob["fullname"][:len(job["projectname"])] == job["projectname"]:
 			running=True
 	if not running:

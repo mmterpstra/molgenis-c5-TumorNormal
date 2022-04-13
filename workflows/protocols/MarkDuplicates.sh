@@ -38,9 +38,9 @@ set -e
 mkdir -p ${markDuplicatesDir}
 
 
-# test for specified FqGz with UMIs if not present do default markduplicats else do UmiAwareMarkDuplicatesWithMateCigar
-if [ ${#reads3FqGz[0]} -eq 0 ];then
-
+# test for specified FqGz with UMIs if not present do default markduplicates else do UmiAwareMarkDuplicatesWithMateCigar
+#if [ ${#reads3FqGz[0]} -eq 0 ];then
+if [ $(samtools view ${mergeBamFilesBam} | head -n 10 | grep -c 'RX:') -eq 0 ]; then
 	java -Xmx14g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
 	 INPUT=${mergeBamFilesBam} \
 	 OUTPUT=${markDuplicatesBam} \
