@@ -3,9 +3,9 @@ easyblock = 'Bundle'
 name = 'R-bundle-ichorCNA'
 version = '0.2.0'
 r = 'R'
-rver = '3.3.3'
-rversuffix = '-bioconductor'
-versionsuffix = '-%s-%s%s' % (r, rver, rversuffix)
+local_rver = '3.3.3'
+local_rversuffix = '-bioconductor'
+versionsuffix = '-%s-%s%s' % (r, local_rver, local_rversuffix)
 
 homepage = 'http://www.r-project.org/'
 description = """R is a free software environment for statistical computing and graphics."""
@@ -17,23 +17,23 @@ exts_defaultclass = 'RPackage'
 exts_filter = ("R -q --no-save", "library(%(ext_name)s)")
 
 dependencies = [
-    (r, rver, rversuffix),
+    (r, local_rver, local_rversuffix),
     ('cURL', '7.47.0'),
     ('libxml2', '2.9.3'),
     ('hmmcopy_utils', '5911bf69f1'),
 ]
 
-package_name_tmpl = '%(name)s_%(version)s.tar.gz'
+local_package_name_tmpl = '%(name)s_%(version)s.tar.gz'
 
-cran_options = {
+local_cran_options = {
     'source_urls': [
         'http://cran.r-project.org/src/contrib/',
         'http://cran.r-project.org/src/contrib/Archive/%(name)s',
     ],
-    'source_tmpl': package_name_tmpl,
+    'source_tmpl': local_package_name_tmpl,
 }
 
-bioconductor_options = {
+local_bioconductor_options = {
     'source_urls': [
         'http://www.bioconductor.org/packages/release/bioc/src/contrib/',
         'http://www.bioconductor.org/packages/release/data/annotation/src/contrib/',
@@ -48,7 +48,7 @@ bioconductor_options = {
         'http://bioconductor.org/packages/3.8/extra/src/contrib/',
 
     ],
-    'source_tmpl': package_name_tmpl,
+    'source_tmpl': local_package_name_tmpl,
 }
 
 
@@ -79,46 +79,46 @@ exts_list = [
         #
         # Other packages.
         #
-        ('getopt', '1.20.3', cran_options),
-        ('optparse', '1.6.2', cran_options),
-        ('BiocGenerics', '0.28.0', bioconductor_options),
-        ('Biobase', '2.42.0', bioconductor_options),
-        ('S4Vectors', '0.20.1', bioconductor_options),
-        ('IRanges', '2.16.0', bioconductor_options),
-	('DBI', '1.0.0', cran_options),
-        ('bit', '1.1-12', cran_options),
-        ('bit64', '0.9-7', cran_options),
-        ('magrittr', '1.5', cran_options),
-        ('assertthat', '0.2.1', cran_options),
-	('prettyunits', '1.0.2', cran_options),
-	('crayon', '1.3.4', cran_options),
-	('cli', '1.1.0', cran_options),
-	('fansi', '0.4.0', cran_options),
-	('rlang', '0.3.4', cran_options),
-	('utf8', '1.1.4', cran_options),
-	('pillar', '1.3.1', cran_options),
-        ('pkgconfig', '2.0.2', cran_options),
-	('tibble', '2.1.1', cran_options),
-        ('blob', '1.1.1', cran_options),
-        ('digest', '0.6.12', cran_options),
-        ('memoise', '1.1.0', cran_options),
-        ('Rcpp','0.12.19', cran_options),
-        ('BH', '1.69.0-1', cran_options),
-        ('plogr', '0.2.0', cran_options),
-        ('RSQLite', '2.1.1', cran_options),
-        ('XML', '3.98-1.9', cran_options),
-        ('lattice', '0.20-33', cran_options),
-        ('AnnotationDbi', '1.44.0', bioconductor_options),
-        ('bitops', '1.0-6', cran_options),
-        ('RCurl', '1.95-4.12', cran_options),
-        ('xtable', '1.8-4', cran_options),
-        ('annotate', '1.60.1', bioconductor_options),
-        ('plyr', '1.8.4', cran_options),
-        ('RColorBrewer', '1.1-2', cran_options),
-        ('geneplotter','1.60.0', bioconductor_options),
-        ('HMMcopy', '1.24.0', bioconductor_options),
-        ('GenomeInfoDbData', '1.2.0', bioconductor_options),
-        ('GenomeInfoDb', '1.18.2', bioconductor_options),
+        ('getopt', '1.20.3', local_cran_options),
+        ('optparse', '1.6.2', local_cran_options),
+        ('BiocGenerics', '0.28.0', local_bioconductor_options),
+        ('Biobase', '2.42.0', local_bioconductor_options),
+        ('S4Vectors', '0.20.1', local_bioconductor_options),
+        ('IRanges', '2.16.0', local_bioconductor_options),
+	('DBI', '1.0.0', local_cran_options),
+        ('bit', '1.1-12', local_cran_options),
+        ('bit64', '0.9-7', local_cran_options),
+        ('magrittr', '1.5', local_cran_options),
+        ('assertthat', '0.2.1', local_cran_options),
+	('prettyunits', '1.0.2', local_cran_options),
+	('crayon', '1.3.4', local_cran_options),
+	('cli', '1.1.0', local_cran_options),
+	('fansi', '0.4.0', local_cran_options),
+	('rlang', '0.3.4', local_cran_options),
+	('utf8', '1.1.4', local_cran_options),
+	('pillar', '1.3.1', local_cran_options),
+        ('pkgconfig', '2.0.2', local_cran_options),
+	('tibble', '2.1.1', local_cran_options),
+        ('blob', '1.1.1', local_cran_options),
+        ('digest', '0.6.12', local_cran_options),
+        ('memoise', '1.1.0', local_cran_options),
+        ('Rcpp','0.12.19', local_cran_options),
+        ('BH', '1.69.0-1', local_cran_options),
+        ('plogr', '0.2.0', local_cran_options),
+        ('RSQLite', '2.1.1', local_cran_options),
+        ('XML', '3.98-1.9', local_cran_options),
+        ('lattice', '0.20-33', local_cran_options),
+        ('AnnotationDbi', '1.44.0', local_bioconductor_options),
+        ('bitops', '1.0-6', local_cran_options),
+        ('RCurl', '1.95-4.12', local_cran_options),
+        ('xtable', '1.8-4', local_cran_options),
+        ('annotate', '1.60.1', local_bioconductor_options),
+        ('plyr', '1.8.4', local_cran_options),
+        ('RColorBrewer', '1.1-2', local_cran_options),
+        ('geneplotter','1.60.0', local_bioconductor_options),
+        ('HMMcopy', '1.24.0', local_bioconductor_options),
+        ('GenomeInfoDbData', '1.2.0', local_bioconductor_options),
+        ('GenomeInfoDb', '1.18.2', local_bioconductor_options),
         ('ichorCNA', version, 
             {
                 'source_urls': [

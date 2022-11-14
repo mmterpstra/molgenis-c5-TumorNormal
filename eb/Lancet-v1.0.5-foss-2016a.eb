@@ -34,8 +34,8 @@ buildopts = 'INCLUDES=" -I$EBROOTHTSLIB/include -I$EBROOTBAMTOOLS/include/bamtoo
 parallel = 1
 #separate_build_dir = True
 
-executables = ['./src/lancet']
-files_to_copy = [(executables,'bin')]
+local_executables = ['./src/lancet']
+files_to_copy = [(local_executables,'bin')]
 
 sanity_check_paths = {
     'files': ["bin/lancet"],

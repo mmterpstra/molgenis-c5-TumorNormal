@@ -44,7 +44,7 @@ dependencies = [
     # Disabled TK, because the -no-X11 option does not work and still requires X11,
     # which does not exist on headless compute nodes.
     #
-    ('Tk','8.6.9'),#Tk/8.6.9-GCCcore-8.2.0
+    #('Tk','8.6.9'),#Tk/8.6.9-GCCcore-8.2.0
     #
     # OS dependency should be preferred if the os version is more recent then this version,
     # it's nice to have an up to date openssl for security reasons.
@@ -96,7 +96,7 @@ exts_list = [
     'splines',
     'stats',
     'stats4',
-    'tcltk',
+    #'tcltk',
     'tools',
     'utils',
 ]

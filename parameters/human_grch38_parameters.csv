@@ -106,7 +106,7 @@ mapability500kbWig,map_hg38_500kb.wig
 #rna
 genesRefFlat,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.refflat
 rRnaIntervalList,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.rrna.interval_list
-ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.gtf
+ensemblAnnotationGtf,${data}/ftp.ensembl.org/pub/release-${ensemblVersion}/gtf/homo_sapiens/${genomeLatSpecies}.${genomeGrchBuild}.${ensemblVersion}.gatk.gtf
 ensemblAnnotationTes1000Gtf,${resDir}/gff/Homo_sapiens.GRCh37.75.tes1000.gff
 ensemblAnnotationTes500Gtf,${resDir}/gff/Homo_sapiens.GRCh37.75.tes500.gff
 

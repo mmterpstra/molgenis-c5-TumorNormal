@@ -8,19 +8,19 @@ description = """A command-line toolkit and Python library for detecting copy nu
 
 toolchain = {'name': 'foss', 'version': '2016a'}
 
-python = 'Python'
-pyver = '2.7.11'
-pyshortver = '2.7'
-versionsuffix = '-%s-%s' % (python, pyver)
+local_python = 'Python'
+local_pyver = '2.7.11'
+local_pyshortver = '2.7'
+versionsuffix = '-%s-%s' % (local_python, local_pyver)
 
 
-#at pypi.python.org
+#at pypi.local_python.org
 source_urls = ['https://github.com/etal/cnvkit/archive/'  ]
 sources = ['v%s.tar.gz' % version]
 
 skipsteps = ['build']
 
-dependencies = [(python, pyver),
+dependencies = [(local_python, local_pyver),
 		('Biopython','1.65', versionsuffix),
 		('reportlab','3.3.0',versionsuffix),
                 ('matplotlib','1.5.1',versionsuffix),
@@ -35,7 +35,7 @@ dependencies = [(python, pyver),
 
 sanity_check_paths = {
     'files': ['bin/cnvkit.py'],
-    'dirs': ['lib/python%s/site-packages' % pyshortver],
+    'dirs': ['lib/local_python%s/site-packages' % local_pyshortver],
 }
 
 moduleclass = 'bio'
