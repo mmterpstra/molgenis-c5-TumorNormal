@@ -1,0 +1,37 @@
+easyblock = 'RPackage'
+
+name = 'markdown'
+version = '0.7.7'
+
+homepage = 'https://cran.r-project.org/web/packages/%s/index.html' % (name)
+description = """'Markdown' Rendering for R"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+#http://bioconductor.org/packages/devel/bioc/src/contrib/DNAcopy_1.45.0.tar.gz
+source_urls = [('https://cran.r-project.org/src/contrib/')]
+sources = [ ('%s_%s.tar.gz' % (name, version)) ]
+
+local_r = 'R'
+local_rver = '3.6.3'
+local_rversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (local_r, local_rver, local_rversuffix)
+
+
+dependencies = [
+    (local_r, local_rver, local_rversuffix),
+    ('mime', '0.4', versionsuffix)
+]
+
+
+#
+# Check if all binaries are present.
+#
+
+sanity_check_paths = {
+    'files':  [ '%(installdir)s/' + name + '/R/' + name , 
+               '%(installdir)s/' + name + '/libs/' + name + '.so' , ],
+    'dirs' :  [ name ],
+}
+
+moduleclass = 'lib'

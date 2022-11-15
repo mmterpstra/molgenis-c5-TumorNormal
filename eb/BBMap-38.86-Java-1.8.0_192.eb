@@ -1,0 +1,32 @@
+import time
+
+easyblock = 'PackedBinary'
+
+name = 'BBMap'
+version = '38.86'
+
+homepage = 'http://bbmap.sourceforge.net/'
+description = """This package includes BBMap, a short read aligner, as well as 
+various other bioinformatic tools. It is written in pure Java, can run on any 
+platform, and has no dependencies other than Java being installed (compiled for
+ Java 6 and higher). All tools are efficient and multithreaded."""
+
+toolchain = {'name': 'dummy', 'version': 'dummy'}
+
+source_urls = [SOURCEFORGE_SOURCE]
+sources = [('%s_%s.tar.gz' % (name, version))]
+
+
+java = 'Java'
+javaver = '1.8.0_192'
+versionsuffix = '-%s-%s' % (java, javaver)
+dependencies = [(java, javaver)]
+
+modloadmsg = """To execute BBmap look in: \\${EBROOTBBMAP}"""
+
+sanity_check_paths = {
+	'files': ['bbduk.sh','bbmap.sh',],
+	'dirs': [],
+}
+
+moduleclass = 'bio'

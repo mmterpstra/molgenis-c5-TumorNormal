@@ -1,0 +1,24 @@
+easyblock = 'PackedBinary'
+
+name = 'apt'
+version = '2.11.4_linux_64_bit_x86_binaries'
+#versionsuffix = '-Java-%(javaver)s'
+
+homepage = 'https://www.thermofisher.com/nl/en/home/life-science/microarray-analysis/microarray-analysis-partners-programs/affymetrix-developers-network/affymetrix-power-tools.html'
+description = """affymetrix-power-tools also known as analyis power
+ tools is a suite of tools for the analysis of array data."""
+
+toolchain = SYSTEM
+
+source_urls = ["https://downloads.thermofisher.com/APT/APT_2.11.4/"]
+sources = ["apt_2.11.4_linux_64_bit_x86_binaries.zip"]
+checksums = ['ee178f081401914c4454b12086c47701ae1883a9a0a404a2f979a2d0611153e4']
+unpack_options = "&& chmod u+w -R  %(builddir)s/ %(installdir)s/"
+
+sanity_check_paths = {
+    'files': ['bin/apt-annotation-converter'],
+    'dirs': ['bin', 'doc'],
+}
+
+moduleclass = 'bio'
+

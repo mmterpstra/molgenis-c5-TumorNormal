@@ -1,0 +1,26 @@
+easyblock = 'PerlModule'
+
+name = 'Exporter-Tiny'
+version = '1.002002'
+
+homepage = 'https://metacpan.org/pod/Exporter::Tiny'
+description = """Exporter::Tiny - an exporter with the features of Sub::Exporter but only core dependencies"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+source_urls = ['https://cpan.metacpan.org/authors/id/T/TO/TOBYINK/']
+sources = [SOURCE_TAR_GZ]
+
+
+local_perl = 'Perl'
+local_perlver = '5.26.1'
+local_perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (local_perl, local_perlver, local_perlversuffix)
+installopts = '&& mkdir -p %(installdir)s/bin/ && touch %(installdir)s/bin/.exists'
+dependencies = [
+    (local_perl, local_perlver, local_perlversuffix)
+]
+
+options = {'modulename': 'Exporter::Tiny'}
+
+moduleclass = 'data'
+

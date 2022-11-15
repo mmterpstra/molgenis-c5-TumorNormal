@@ -1,0 +1,30 @@
+name = 'GATK'
+version = '3.8-0'
+
+homepage = 'http://www.broadinstitute.org/gatk/'
+description = """The Genome Analysis Toolkit or GATK is a software package developed at the Broad Institute 
+ to analyse next-generation resequencing data. The toolkit offers a wide variety of tools,
+ with a primary focus on variant discovery and genotyping as well as strong emphasis on 
+ data quality assurance. Its robust architecture, powerful processing engine and 
+ high-performance computing features make it capable of taking on projects of any size."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+easyblock = 'Tarball'
+
+# download manually from http://www.broadinstitute.org/gatk/download
+sources = ['GenomeAnalysisTK-%(version)s.tar.bz2']
+
+local_java = 'Java'
+local_javaver = '1.8.0_192'
+versionsuffix = '-%s-%s' % (local_java, local_javaver)
+dependencies = [('R-bundle-GATK','20200701','-R-3.6.3-bare'),
+                (local_java, local_javaver, '', True)]
+
+modloadmsg = """To execute GATK run: java -jar \${EBROOTGATK}/GenomeAnalysisTK.jar"""
+
+sanity_check_paths = {
+    'files': ["GenomeAnalysisTK.jar"],
+    'dirs': [],
+}
+
+moduleclass = 'bio'

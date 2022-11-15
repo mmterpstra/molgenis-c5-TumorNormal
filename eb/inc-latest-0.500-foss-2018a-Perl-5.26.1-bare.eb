@@ -1,0 +1,26 @@
+easyblock = 'PerlModule'
+
+name = 'inc-latest'
+version = '0.500'
+
+homepage = 'https://metacpan.org/pod/inc::latest'
+description = """inc::latest - use modules bundled in inc/ if they are newer than installed ones"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+source_urls = ['https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/']
+sources = [SOURCE_TAR_GZ]
+
+
+local_perl = 'Perl'
+local_perlver = '5.26.1'
+local_perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (local_perl, local_perlver, local_perlversuffix)
+installopts = '&& mkdir -p %(installdir)s/bin/ && touch %(installdir)s/bin/.exists'
+dependencies = [
+    (local_perl, local_perlver, local_perlversuffix)
+]
+
+options = {'modulename': 'inc::latest'}
+
+moduleclass = 'data'
+

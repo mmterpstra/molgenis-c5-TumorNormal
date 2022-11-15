@@ -1,0 +1,40 @@
+easyblock = 'JAR'
+
+name = 'abra2'
+version = '2.24'
+
+homepage = 'https://github.com/mozack/abra2'
+description = """Splice aware indel realignment"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = ['https://github.com/mozack/%(name)s/releases/download/v%(version)s/']
+
+#this should fail because the jarfile is named as '%(name)s.jar' thus this is not versioned and thus not safe so:
+#manual download and then rename 
+sources = [{
+    'filename': '%(name)s-%(version)s.jar',
+#    'download_filename': '%(name)s.jar',
+}]
+
+local_javaver = '1.8.0_192'
+versionsuffix = '-%s-%s' % ('Java', local_javaver)
+
+dependencies = [
+    ('Java', local_javaver , '', True),]
+
+checksums = ['f4b6ecd27491c6f7aecdef6f40d9065ce5251fbb12458ff680ca73e7cc3233e3']#sha256
+
+postinstallcmds=["cd %(installdir)s && mv -v  %(name)s-%(version)s.jar  %(name)s.jar"]
+
+sanity_check_paths = {
+    'files': ["%s.jar" % name,],
+    'dirs': [],
+}
+
+modloadmsg = "To execute abra2 run: java -jar $EBROOTABRA2/%(name)s.jar"
+
+#sanity_check_commands = ["java -jar ${EBROOTABRA2}/%(name)s.jar --version"]
+
+
+moduleclass = 'bio'

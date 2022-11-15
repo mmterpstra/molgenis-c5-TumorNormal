@@ -1,0 +1,40 @@
+easyblock = "CMakeMake"
+
+name = 'BamTools'
+version = '2.5.1'
+
+homepage = 'https://github.com/pezmaster31/bamtools'
+description = """Bam tools"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+#toolchainopts = {'pic': True, 'usempi': True}
+
+source_urls = ['https://github.com/pezmaster31/bamtools/archive/']
+sources = ['v%(version)s.tar.gz']
+
+builddependencies = [('CMake', '3.10.2')]
+
+dependencies = [
+    ('zlib', '1.2.11'),
+    ('bzip2', '1.0.8'),
+]
+
+skipsteps = ['install']
+#buildopts = ' && mkdir -p %(installdir)s && cp -r * %(installdir)s/'
+#prebuildopts = 'mkdir build && cd build && '
+buildopts = '&&  make install'
+
+
+separate_build_dir = True
+
+executables = ['bamtools']
+#files_to_copy = [(executables,'bin')]
+
+sanity_check_paths = {
+    'files': ["bin/bamtools"],
+    'dirs': [],
+}
+
+modextrapaths = {'PATH': [''],'LD_LIBRARY_PATH': ['lib/bamtools/']}
+
+moduleclass = 'bio'

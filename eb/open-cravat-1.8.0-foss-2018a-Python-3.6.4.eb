@@ -1,0 +1,164 @@
+# Author: Pavel Grochal (INUITS)
+# License: GPLv2
+
+easyblock = 'PythonBundle'
+
+name = 'open-cravat'
+version = '1.8.0'
+
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = "https://docs.ray.io/en/latest/"
+description = "Ray is a fast and simple framework for building and running distributed applications."
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+toolchainopts = {'usempi': True}
+
+dependencies = [
+    ('Python', '3.6.4'),
+#    ('SciPy-bundle', '2019.10', versionsuffix),
+#    ('protobuf-python', '3.10.0', versionsuffix),
+    ('PyYAML', '3.12', versionsuffix),
+    ('libffi', '3.2.1'),
+    ('bzip2', '1.0.6'),
+    ('zlib', '1.2.11'),
+    ('libreadline', '7.0'),
+    ('ncurses', '6.0'),
+    ('SQLite', '3.20.1'),
+    ('GMP', '6.1.2'),
+    ('XZ', '5.2.3'),
+    ('libsodium', '1.0.16'),
+]
+
+use_pip = True
+sanity_pip_check = True
+
+exts_default_options = {'source_urls': [PYPI_SOURCE]}
+
+
+# ('requests','2.23.0', versionsuffix),
+# ('requests_toolbelt','0.9.1', versionsuffix),#aka requests-toolbelt
+# ('pyliftover','0.4', versionsuffix),
+# ('websockets','8.1', versionsuffix),
+# ('markdown','3.2.2', versionsuffix),
+# ('aiohttp','3.6.2', versionsuffix),
+# ('chardet','3.0.4', versionsuffix),
+# ('aiosqlite3','0.3.0 ', versionsuffix),
+# ('oyaml','0.9', versionsuffix),
+# ('infi.systray','0.1.12', versionsuffix),
+# ('intervaltree','3.0.2', versionsuffix),
+# ('xlsxwriter','1.2.9', versionsuffix),
+# ('twobitreader','3.1.7', versionsuffix),
+
+#\ntyping-extensions 3.7.4.2 requires typing, 
+#which is not installed.\nMarkdown 3.2.2 requires importlib-metadata, 
+#which is not installed.\ncryptography 2.1.4 requires cffi,
+# which is not installed.\n
+#PyNaCl 1.2.1 requires cffi, which is not installed.\nbcr')
+
+exts_list = [
+    ('setuptools', '41.0.0', {
+        'source_urls': ['https://pypi.python.org/packages/source/s/setuptools/'],
+        'source_tmpl': '%(name)s-%(version)s.zip',
+        'checksums': ['79d30254b6fe7a8e672e43cd85f13a9f3f2a50080bc81d851143e2219ef0dcb1'],
+    }),
+    ('pycparser', '2.20', {
+        'checksums': ['2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0'],
+    }),
+    ('cffi', '1.14.0', {
+        'checksums': ['2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6'],
+    }),
+    ('requests', '2.23.0', {
+        'checksums': ['b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6'],
+    }),
+    ('requests-toolbelt', '0.9.1', {
+        'checksums': ['968089d4584ad4ad7c171454f0a5c6dac23971e9472521ea3b6d49d610aa6fc0'],
+    }),
+    ('pyliftover', '0.4', {
+        'checksums': ['72bcfb7de907569b0eb75e86c817840365297d63ba43a961da394187e399da41'],
+    }),
+    ('websockets', '8.1', {
+        'checksums': ['5c65d2da8c6bce0fca2528f69f44b2f977e06954c8512a952222cea50dad430f'],
+    }),
+    ('more-itertools','8.3.0',{
+    }),
+    ('zipp', '1.0.0', {
+    }),
+    ('importlib-metadata', '1.6.1', {
+        'modulename': 'importlib_metadata',
+        'source_tmpl': 'importlib_metadata-%(version)s.tar.gz',
+        'checksums': ['0505dd08068cfec00f53a74a0ad927676d7757da81b7436a6eefe4c7cf75c545'],
+    }),
+    ('Markdown', '3.2.1', {
+        'checksums': ['90fee683eeabe1a92e149f7ba74e5ccdc81cd397bd6c516d93a8da0ef90b6902'],
+    }),
+    ('attrs', '18.2.0', {
+        'modulename': 'attr',
+        'source_urls': ['https://pypi.python.org/packages/source/a/attrs/'],
+        'checksums': ['10cbf6e27dbce8c30807caf056c8eb50917e0eaafe86347671b57254006c3e69'],
+    }),
+    ('multidict', '4.7.6', {
+        'checksums': ['fbb77a75e529021e7c4a8d4e823d88ef4d23674a202be4f5addffc72cbb91430'],
+    }),
+    ('async-timeout', '3.0.1', {
+        'checksums': ['0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f'],
+    }),
+    ('yarl', '1.4.2', {
+        'checksums': ['58cd9c469eced558cd81aa3f484b2924e8897049e06889e8ff2510435b7ef74b'],
+    }),
+    ('idna-ssl', '1.1.0', {
+        'checksums': ['a933e3bb13da54383f9e8f35dc4f9cb9eb9b3b78c6b36f311254d6d0d92c6c7c'],
+    }),
+    ('typing', '3.7.4.1', {
+        'checksums': ['91dfe6f3f706ee8cc32d38edbbf304e9b7583fb37108fef38229617f8b3eba23'],
+    }),
+    ('typing-extensions', '3.7.4.2', {
+        'modulename': 'typing_extensions',
+        'source_tmpl': 'typing_extensions-%(version)s.tar.gz',
+        'checksums': ['79ee589a3caca649a9bfd2a8de4709837400dfa00b6cc81962a1e6a1815969ae'],
+    }),
+    ('aiohttp', '3.6.2', {
+        'checksums': ['259ab809ff0727d0e834ac5e8a283dc5e3e0ecc30c4d80b3cd17a4139ce1f326'],
+    }),
+    ('chardet', '3.0.4', {
+        'checksums': ['84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae'],
+    }),
+    ('aiosqlite3', '0.3.0', {
+        'source_tmpl': 'aiosqlite3-%(version)s-py3-none-any.whl',
+        'unpack_sources': False,
+        'checksums': ['11efa1b61bdf621f1ba5568bd4ac7db6387b49cf11f4b99f6aa5e6668591ae85'],
+    }),
+    ('oyaml', '0.9', {
+        'checksums': ['03990464021274031c2905c3ee5c1345f318b30d0f247ea4368c44921e2b1d67'],
+    }),
+#    ('infi.systray', '0.1.12', {
+#        'checksums': ['635bc10fabd3ba60a2382922fdec1e4e47efaea4b8c5ea7e437f6cdedae884d3'],
+#    }),
+    ('sortedcontainers', '2.1.0', {
+        'checksums': ['974e9a32f56b17c1bac2aebd9dcf197f3eb9cd30553c5852a3187ad162e1a03a'],
+    }),
+    ('intervaltree', '3.0.2', {
+        'checksums': ['cb4f61c81dcb4fea6c09903f3599015a83c9bdad1f0bbd232495e6681e19e273'],
+    }),
+    ('XlsxWriter', '1.2.9', {
+        'checksums': ['828b3285fc95105f5b1946a6a015b31cf388bd5378fdc6604e4d1b7839df2e77'],
+    }),
+    ('twobitreader', '3.1.7', {
+        'checksums': ['f7d9e9a59f8cfe9801df84aea6911bafd3f72de5d28a3cc77cd1ba88d40e828a'],
+    }),
+    (name, version, {
+        'preinstallopts': "perl -i.bak -wpe \"s/'infi.systray',//g\" setup.py && ",
+        'modulename': 'cravat',
+        'checksums': ['63bc9f96a6e0fcebd402bc91ee5fed2d00e0585512cce8f4542004f9c1ce5f94'],
+    }),
+]
+#cravat.oc
+sanity_check_paths = {
+    'files': ['bin/oc'],
+    'dirs': ['lib/python%(pyshortver)s/site-packages'],
+}
+#sanity_check_commands = [
+#    'oc --help'
+#]
+
+moduleclass = 'bio'

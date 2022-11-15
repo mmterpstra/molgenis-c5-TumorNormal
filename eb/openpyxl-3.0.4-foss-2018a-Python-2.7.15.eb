@@ -1,0 +1,29 @@
+easyblock = "PythonPackage"
+
+name = 'openpyxl'
+version = '3.0.4'
+
+homepage = 'https://pypi.local_python.org/pypi/openpyxl'
+description = """openpyxl is a Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = [PYPI_SOURCE]
+sources = [SOURCELOWER_TAR_GZ]
+
+local_python = 'Python'
+local_pyver = '2.7.15'
+local_pyshortver = '.'.join(local_pyver.split('.')[:2])
+versionsuffix = '-%s-%s' % (local_python, local_pyver)
+
+dependencies = [
+    (local_python, local_pyver),
+]
+
+#openpyxl-1.5.6-py2.7.egg/
+sanity_check_paths = {
+    'files': ['lib/local_python' + local_pyshortver + '/site-packages/' + name + '-' + version + '-py' + local_pyshortver + '.egg'],
+    'dirs': [],
+}
+
+moduleclass = 'tools'

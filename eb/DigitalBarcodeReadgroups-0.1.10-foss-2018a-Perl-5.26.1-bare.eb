@@ -1,0 +1,36 @@
+easyblock = 'Tarball'
+
+name = 'DigitalBarcodeReadgroups'
+version = '0.1.10'
+
+homepage = 'https://github.com/mmterpstra/%s' % (name)
+description = """Misc tools"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = [('https://github.com/mmterpstra/%s/archive/' % (name) )]
+sources = [ '%s.tar.gz' % version ]
+
+local_perl = 'Perl'
+local_perlver = '5.26.1'
+local_perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (local_perl, local_perlver, local_perlversuffix)
+
+local_samtools='SAMtools'
+local_samtoolsver='1.10'
+
+dependencies = [
+    (local_perl, local_perlver, local_perlversuffix),
+    (local_samtools, local_samtoolsver),
+]
+
+#
+# Check if all binaries are present.
+#
+
+sanity_check_paths = {
+    'files': [ 'src/NugeneDigitalSplitter.pl', 'src/NugeneMergeFastqFiles.pl' ],
+    'dirs': [ 'src/' ],
+}
+
+moduleclass = 'bio'

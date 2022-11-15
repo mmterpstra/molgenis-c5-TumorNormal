@@ -1,0 +1,101 @@
+# Author: Pavel Grochal (INUITS)
+# License: GPLv2
+
+easyblock = 'PythonBundle'
+
+name = 'gsport'
+version = '1.4.2'
+
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = "https://docs.ray.io/en/latest/"
+description = "GenomeScan commandline download client."
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+toolchainopts = {'usempi': True}
+
+dependencies = [
+    ('Python', '3.6.4'),
+#    ('SciPy-bundle', '2019.10', versionsuffix),
+#    ('protobuf-python', '3.10.0', versionsuffix),
+#    ('PyYAML', '3.12', versionsuffix),
+    ('libffi', '3.2.1'),
+#    ('bzip2', '1.0.6'),
+#    ('zlib', '1.2.11'),
+#    ('libreadline', '7.0'),
+#    ('ncurses', '6.0'),
+#    ('SQLite', '3.20.1'),
+#    ('GMP', '6.1.2'),
+#    ('XZ', '5.2.3'),
+    ('libsodium', '1.0.16'),
+]
+
+use_pip = True
+sanity_pip_check = True
+
+exts_default_options = {'source_urls': [PYPI_SOURCE]}
+
+
+# ('requests','2.23.0', versionsuffix),
+# ('requests_toolbelt','0.9.1', versionsuffix),#aka requests-toolbelt
+# ('pyliftover','0.4', versionsuffix),
+# ('websockets','8.1', versionsuffix),
+# ('markdown','3.2.2', versionsuffix),
+# ('aiohttp','3.6.2', versionsuffix),
+# ('chardet','3.0.4', versionsuffix),
+# ('aiosqlite3','0.3.0 ', versionsuffix),
+# ('oyaml','0.9', versionsuffix),
+# ('infi.systray','0.1.12', versionsuffix),
+# ('intervaltree','3.0.2', versionsuffix),
+# ('xlsxwriter','1.2.9', versionsuffix),
+# ('twobitreader','3.1.7', versionsuffix),
+
+#\ntyping-extensions 3.7.4.2 requires typing, 
+#which is not installed.\nMarkdown 3.2.2 requires importlib-metadata, 
+#which is not installed.\ncryptography 2.1.4 requires cffi,
+# which is not installed.\n
+#PyNaCl 1.2.1 requires cffi, which is not installed.\nbcr')
+
+exts_list = [
+    ('setuptools', '41.0.0', {
+        'source_urls': ['https://pypi.python.org/packages/source/s/setuptools/'],
+        'source_tmpl': '%(name)s-%(version)s.zip',
+        'checksums': ['79d30254b6fe7a8e672e43cd85f13a9f3f2a50080bc81d851143e2219ef0dcb1'],
+    }),
+    ('pycparser', '2.20', {
+        'checksums': ['2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0'],
+    }),
+    ('cffi', '1.14.0', {
+        'checksums': ['2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6'],
+    }),
+    ('requests', '2.22.0', {
+    }),
+    ('idna-ssl', '1.1.0', {
+        'checksums': ['a933e3bb13da54383f9e8f35dc4f9cb9eb9b3b78c6b36f311254d6d0d92c6c7c'],
+    }),
+    ('chardet', '3.0.4', {
+        'checksums': ['84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae'],
+    }),
+    ('idna', '2.8', {
+    }),
+    ('certifi', '2019.11.28', {
+    }),
+# #   ('pkg-resources', '0.0.0', {
+#    }),
+    ('urllib3', '1.25.7', {
+    }),
+    (name, version, {
+#        'preinstallopts': "perl -i.bak -wpe \"s/'infi.systray',//g\" setup.py && ",
+        'modulename': 'gsport',
+    }),
+]
+#cravat.oc
+sanity_check_paths = {
+    'files': ['bin/gsport'],
+    'dirs': ['lib/python%(pyshortver)s/site-packages'],
+}
+#sanity_check_commands = [
+#    'oc --help'
+#]
+
+moduleclass = 'bio'

@@ -1,0 +1,28 @@
+easyblock = "PythonPackage"
+
+name = 'xlrd'
+version = '1.2.0'
+
+homepage = 'https://pypi.local_python.org/pypi/xlrd'
+description = """Library for developers to extract data from Microsoft Excel (tm) spreadsheet files"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = [PYPI_SOURCE]
+sources = [SOURCELOWER_TAR_GZ]
+
+local_python = 'Python'
+local_pyver = '2.7.15'
+local_pyshortver = '.'.join(local_pyver.split('.')[:2])
+versionsuffix = '-%s-%s' % (local_python, local_pyver)
+
+dependencies = [
+    (local_python, local_pyver),
+]
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['lib/python' + local_pyshortver + '/site-packages/' + name + '-' + version + '-py' + local_pyshortver + '.egg'],
+}
+
+moduleclass = 'tools'

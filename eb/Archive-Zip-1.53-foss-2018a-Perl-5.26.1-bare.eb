@@ -1,0 +1,25 @@
+easyblock = 'PerlModule'
+
+name = 'Archive-Zip'
+version = '1.53'
+
+homepage = 'https://metacpan.org/pod/Excel::Writer::XLSX'
+description = """Archive::Zip - Provide an interface to ZIP archive files."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+source_urls = ['https://cpan.metacpan.org/authors/id/P/PH/PHRED/']
+sources = [SOURCE_TAR_GZ]
+
+
+local_perl = 'Perl'
+local_perlver = '5.26.1'
+local_perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (local_perl, local_perlver, local_perlversuffix)
+
+dependencies = [
+    (local_perl, local_perlver, local_perlversuffix)
+]
+
+options = {'modulename': 'Archive::Zip'}
+
+moduleclass = 'data'

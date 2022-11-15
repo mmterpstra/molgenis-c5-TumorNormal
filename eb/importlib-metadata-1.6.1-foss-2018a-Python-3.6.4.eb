@@ -1,0 +1,26 @@
+easyblock = 'PythonPackage'
+
+name = 'importlib-metadata'
+version = '1.6.1'
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = 'https://pypi.python.org/pypi/importlib-metadata'
+description = """Read metadata from Python packages"""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = [PYPI_LOWER_SOURCE]
+sources = [name.replace('-','_') + '-' + version + '.tar.gz']
+
+dependencies = [
+    ('Python', '3.6.4'),
+]
+
+options = {'modulename': 'importlib_metadata','sanity_pip_check':'True'}
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['lib/python%(pyshortver)s/site-packages'],
+}
+
+
+moduleclass = 'devel'

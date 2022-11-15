@@ -1,0 +1,32 @@
+# This file is an EasyBuild reciPY as per https://github.com/hpcugent/easybuild
+# Author: Pablo Escobar Lopez
+# Swiss Institute of Bioinformatics
+# Biozentrum - University of Basel
+
+easyblock = 'ConfigureMake'
+
+name = 'HTSlib'
+version = '1.10.2'
+
+homepage = "http://www.htslib.org/"
+description = """ A C library for reading/writing high-throughput sequencing data.
+ This package includes the utilities bgzip and tabix """
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = ['https://github.com/samtools/%(namelower)s/releases/download/%(version)s/']
+sources = [SOURCELOWER_TAR_BZ2]
+
+dependencies = [
+    ('zlib', '1.2.11'),
+    ('bzip2', '1.0.8'),
+    ('XZ', '5.2.4'),#XZ/5.2.3-GCCcore-6.4.0
+    ('cURL', '7.66.0'),#cURL/7.58.0-GCCcore-6.4.0
+]
+
+sanity_check_paths = {
+    'files': ["bin/bgzip", "bin/tabix", "lib/libhts.%s" % SHLIB_EXT],
+    'dirs': [],
+}
+
+moduleclass = 'bio'

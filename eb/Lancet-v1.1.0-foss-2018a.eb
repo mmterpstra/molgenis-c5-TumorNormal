@@ -1,0 +1,45 @@
+# Author: mmterpstra
+# Dept of Genetics - University Medical Center Groningen
+# 
+
+easyblock = "MakeCp"
+
+name = 'Lancet'
+version = 'v1.1.0'
+
+homepage = 'https://github.com/nygenome/lancet'
+description = """Assembly based somatic variant detection."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+#toolchainopts = {'pic': True, 'usempi': True}
+
+source_urls = ['https://github.com/nygenome/lancet/archive/']
+sources = ['%(version)s.tar.gz']
+
+builddependencies = [('CMake', '3.10.2')]
+
+dependencies = [
+    ('zlib', '1.2.11'),
+    ('bzip2', '1.0.8'),
+    ('BamTools', '2.5.1'),
+    ('HTSlib', '1.10.2'),
+]
+
+prebuildopts = 'export LD_LIBRARY_PATH=$EBROOTBAMTOOLS/lib/bamtools/:$EBROOTBAMTOOLS/lib/:$EBROOTHTSLIB:$LD_LIBRARY_PATH && '
+buildopts = 'INCLUDES=" -I$EBROOTHTSLIB/include -I$EBROOTBAMTOOLS/include/bamtools/ " CXXFLAGS=" -std=c++0x -Wno-deprecated -Wall -O3 -fexceptions -g -L$EBROOTBAMTOOLS/lib/bamtools/ -L$EBROOTHTSLIB/lib/"'
+
+parallel = 1
+#separate_build_dir = True
+
+local_executables = ['./src/lancet']
+files_to_copy = [(local_executables,'bin')]
+
+sanity_check_paths = {
+    'files': ["bin/lancet"],
+    'dirs': [],
+}
+
+modextrapaths = {'PATH': ['']}
+
+moduleclass = 'bio'
+

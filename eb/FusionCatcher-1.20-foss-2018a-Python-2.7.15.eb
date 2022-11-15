@@ -1,0 +1,48 @@
+easyblock = 'PackedBinary'
+
+name = 'FusionCatcher'
+local_namelower = name.lower()
+version = '1.20'
+
+homepage = 'https://github.com/ndaniel/fusioncatcher/'
+description = """Finder of somatic fusion-genes in RNA-seq data."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+local_python = 'Python'
+local_pyver = '2.7.15'
+versionsuffix = '-%s-%s' % (local_python, local_pyver)
+
+#https://github.com/ndaniel/fusioncatcher/releases/download/1.20/fusioncatcher_v1.20.zip
+#http://sourceforge.net/projects/fusioncatcher/files/fusioncatcher_v0.99.5a.zip
+source_urls = ['https://github.com/ndaniel/fusioncatcher/releases/download/' + version +'/' ]
+sources = [('%(namelower)s_v%(version)s.zip')]
+
+
+
+dependencies = [(local_python, local_pyver),
+		('Velvet','1.2.10'),
+		('Biopython','1.76'),
+		('Bowtie','1.2.3'),
+		('Bowtie2','2.3.5.1'),
+                ('BBMap','38.44', '-Java-1.8.0_192', True),
+		('BLAT','3.5'),
+		('Seqtk','1.2-r101c'),
+		('STAR','2.7.2b'),
+		('openpyxl','2.6.4', versionsuffix),
+		('xlrd','1.2.0', versionsuffix),
+		('Coreutils','8.25'),
+		('pigz','2.3.1'),
+		('BWA','0.7.12'),
+		('SAMtools','1.10'),
+		('picard','2.23.1','-Java-1.8.0_192'),
+]
+
+sanity_check_paths = {
+    'files': ['bin/fusioncatcher.py'],
+    'dirs': []
+}
+
+sanity_check_commands = ["fusioncatcher.py --help"]
+
+moduleclass = 'bio'

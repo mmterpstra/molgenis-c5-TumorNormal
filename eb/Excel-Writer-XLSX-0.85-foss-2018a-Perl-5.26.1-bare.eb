@@ -1,0 +1,26 @@
+easyblock = 'PerlModule'
+
+name = 'Excel-Writer-XLSX'
+version = '0.85'
+
+homepage = 'https://metacpan.org/pod/Excel::Writer::XLSX'
+description = """Excel::Writer::XLSX - Create a new file in the Excel 2007+ XLSX format."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+source_urls = ['https://cpan.metacpan.org/authors/id/J/JM/JMCNAMARA/']
+sources = [SOURCE_TAR_GZ]
+
+
+local_perl = 'Perl'
+local_perlver = '5.26.1'
+local_perlversuffix = '-bare'
+versionsuffix = '-%s-%s%s' % (local_perl, local_perlver, local_perlversuffix)
+
+dependencies = [
+    (local_perl, local_perlver, local_perlversuffix),
+    ('Archive-Zip', '1.53', versionsuffix),
+]
+
+options = {'modulename': 'Excel::Writer::XLSX'}
+
+moduleclass = 'data'

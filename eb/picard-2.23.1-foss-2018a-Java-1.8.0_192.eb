@@ -1,0 +1,43 @@
+easyblock = 'JAR'
+
+name = 'picard'
+version = '2.23.1'
+
+homepage = 'http://sourceforge.net/projects/picard'
+description = """A set of tools (in Java) for working with next generation sequencing data in the BAM format."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = ['https://github.com/broadinstitute/%(name)s/releases/download/%(version)s/']
+
+#this should fail because the jarfile is named as '%(name)s.jar' thus this is not versioned and thus not safe so:
+#manual download and then rename 
+sources = [{
+    'filename': '%(name)s-%(version)s.jar',
+    'download_filename': '%(name)s.jar',
+}]
+
+local_javaver = '1.8.0_192'
+versionsuffix = '-%s-%s' % ('Java', local_javaver)
+
+dependencies = [('R', '3.6.3', '-bare'),
+                ('R-bundle-GATK', '20200701','-R-3.6.3-bare'),
+                ('Java', local_javaver , '', True),]
+
+#checksums = ['37e9060e40ef3038c694f84e6e229335']
+
+postinstallcmds=["cd %(installdir)s && mv -v  %(name)s-%(version)s.jar  %(name)s.jar"]
+
+modloadmsg = """To execute Picard run: java -jar ${EBROOTPICARD}/picard.jar"""
+
+sanity_check_paths = {
+    'files': ["%s.jar" % name,],
+    'dirs': [],
+}
+
+modloadmsg = "To execute picard run: java -jar $EBROOTPICARD/%(name)s.jar"
+
+#sanity_check_commands = ["java -jar ${EBROOTPICARD}/picard.jar"]
+
+
+moduleclass = 'bio'

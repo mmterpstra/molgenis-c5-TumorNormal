@@ -1,0 +1,36 @@
+# This file is an EasyBuild reciPY as per https://github.com/easybuilders/easybuild
+
+easyblock = 'PythonPackage'
+
+name = 'HTSeq'
+version = '0.12.4'
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = 'http://www-huber.embl.de/users/anders/%(name)s/'
+description = "A framework to process and analyze data from high-throughput sequencing (HTS) assays"
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+source_urls = [PYPI_SOURCE]
+sources = [SOURCE_TAR_GZ]
+
+
+builddependencies = [('Cython', '0.29.20', versionsuffix),
+    ('SWIG', '3.0.12', versionsuffix)]
+
+dependencies = [
+    ('Python', '3.7.2'),
+    ('Pysam', '0.15.1', versionsuffix),
+    ('matplotlib', '3.0.3', versionsuffix),
+]
+
+sanity_check_paths = {
+    'files': ['bin/%(namelower)s-count', 'bin/%(namelower)s-qa'],
+    'dirs': ['lib/python%(pyshortver)s/site-packages/'],
+}
+
+sanity_check_commands = ['%(namelower)s-count --help']
+
+options = {'modulename': '%(name)s'}
+
+moduleclass = 'bio'

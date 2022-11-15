@@ -1,0 +1,46 @@
+easyblock = 'CMakeMake'
+
+name = 'hmmcopy_utils'
+version = '5911bf69f1'
+
+homepage = 'https://github.com/shahcompbio/hmmcopy_utils/'
+description = """Varios tools to generate readcounts and
+ mappability stats for bioconductor package HMMCopy."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+#toolchainopts = {'pic': True, 'usempi': True}
+
+source_urls = ['https://github.com/shahcompbio/hmmcopy_utils/archive/']
+sources = ['5911bf69f11d8d185f7054098d39799d2c6894cc.zip']
+
+builddependencies = [
+    ('CMake', '3.15.3'),
+    ('pkg-config', '0.29.2')
+]
+
+dependencies = [
+    ('zlib', '1.2.11'),
+    ('bzip2', '1.0.8'),
+]
+
+skipsteps = ['install']
+buildopts = ' && make && mkdir -p %(installdir)s && cp -r %(builddir)s/easybuild_obj/* %(installdir)s/'
+#prebuildopts = 'mkdir build && cd build && '
+#buildopts = '&&  make'
+
+
+separate_build_dir = True
+
+#executables = ['bin/gcCounter', 'bin/mapCounter', 'bin/readCounter']
+local_files_to_copy = [('%(builddir)s/easybuild_obj/bin','bin'),('%(builddir)s/easybuild_obj/lib','bin'),('%(builddir)s/easybuild_obj/src','bin'),('%(builddir)s/easybuild_obj/util','.')]
+
+sanity_check_paths = {
+    'files': ["bin/readCounter"],
+    'dirs': [],
+}
+
+#modextrapaths = {'PATH': [''],'LD_LIBRARY_PATH': ['lib/bamtools/']}
+
+moduleclass = 'bio'
+
+#https://github.com/shahcompbio/hmmcopy_utils/archive/5911bf69f11d8d185f7054098d39799d2c6894cc.zip

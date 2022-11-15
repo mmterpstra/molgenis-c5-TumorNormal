@@ -1,0 +1,32 @@
+easyblock = 'MakeCp'
+
+name = 'SiNVICT'
+version = '8e87e8d'
+
+homepage = 'https://github.com/sfu-compbio/sinvict/'
+description = """SiNVICT is a tool for the detection of SNVs and indels from cfDNA/ctDNA samples obtained by ultra-deep sequencing."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+source_urls = ['https://github.com/sfu-compbio/sinvict/archive/']
+sources = ['8e87e8d25c19d287dd68c7daa7375095dc099fa5.tar.gz']
+checksums = ['d724114e08632c761c25db2bb5b6f19d76acd487194247c93ab537617d58cb8c']
+
+files_to_copy = [(['sinvict', 'sinvict_to_vcf.py'], 'bin')]
+
+# MariaDB/10.3.10-foss-2018a libpng/1.6.34-GCCcore-6.4.0 zlib/1.2.11-GCCcore-6.4.0 util-linux/2.31-GCCcore-6.4.0
+dependencies = [
+#    ('Abra', '10.3.10'),
+#    ('bam-readcount', '1.6.34'),
+#    ('bwa', '1.2.11'),
+#    ('fastx_toolkit', '2.31'),
+#    ('Python','3.6.4')
+    ('bam-readcount', '1.0.1')
+]
+
+
+sanity_check_paths = {
+    'files': ['bin/sinvict', 'bin/sinvict_to_vcf.py'],
+    'dirs': [],
+}
+
+moduleclass = 'bio'

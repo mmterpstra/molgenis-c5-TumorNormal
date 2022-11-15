@@ -1,0 +1,29 @@
+easyblock = 'PythonPackage'
+
+name = 'pyfaidx'
+version = '0.5.9'
+
+homepage = 'https://pypi.python.org/pypi/pyfaidx'
+description = """This python module implements pure Python classes for indexing, retrieval, and in-place modification of FASTA files using a samtools compatible index."""
+
+toolchain = {'name': 'foss', 'version': '2018a'}
+
+local_python = 'Python'
+local_pyver = '3.7.2'
+local_pyshortver = '3.7'
+versionsuffix = '-%s-%s' % (local_python, local_pyver)
+
+
+#https://www.reportlab.com/pypi/packages/reportlab-3.3.8.tar.gz an pypi.local_python.org
+source_urls = [PYPI_LOWER_SOURCE]
+sources = [SOURCELOWER_TAR_GZ]
+
+dependencies = [(local_python, local_pyver),
+]
+
+sanity_check_paths = {
+    'files': [],
+    'dirs': ['lib/python%s/site-packages' % local_pyshortver],
+}
+
+moduleclass = 'bio'
