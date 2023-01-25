@@ -33,11 +33,13 @@ zipbase='zip -n bam:xlsx:cram -ru '"${archiveDir}"'/'"${project}"'.zip '
 
 alloutputsexist \
 	"$archiveDir" \
-	"$archiveDir"/${project}.zip" \
+	"$archiveDir""/""${project}.zip" \
 
 
 #(
 	cd "$(dirname "${projectDir}")"
+	
+	mkdir -p "${archiveDir}"
 	
 	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}" "${convadingDir}"; do
 		if [ -n "$(ls -A $dir/*)" ]; then
@@ -163,7 +165,10 @@ alloutputsexist \
 	fi
 	
 	#cd "${projectDir}"
-	md5sum ${project}.zip > ${project}.zip.md5
+	md5sum "$archiveDir"/"${project}".zip > "$archiveDir"/"${project}".zip.md5
+	for i in "$archiveDir"/*/*.ba{i,m}; do
+		(cd "$(dirname $i)" && md5sum "$(basename $i)")
+	done
 	
 	for i in $(ls ${projectDir}/*/ -d| grep -v jobs ); do 
 		echo $i
@@ -172,7 +177,7 @@ alloutputsexist \
 	done
 	
 	putFile "$archiveDir"
-	putFile "$archiveDir"/${project}.zip" 
+	putFile "$archiveDir""/""${project}"".zip" 
 #)
 
 echo "## "$(date)" ##  $0 Done "

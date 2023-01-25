@@ -55,16 +55,12 @@ projectname=$3
 		runDir=/scratch/$USER/projects/$projectname
 		siteParam=$workflowDir/parameters/peregrine.siteconfig.csv
 
-		cp $siteParam $runDir/.parameters.site.tmp.csv
-		cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
 		#partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
 	elif [ $HOSTNAME == "peregrine.hpc.rug.nl" ];then
 	        >&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 	        runDir=/scratch/$USER/projects/$projectname
 	        siteParam=$workflowDir/parameters/peregrine.siteconfig.csv
 	
-	        cp $siteParam $runDir/.parameters.site.tmp.csv
-	        cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
 	        #partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
 	elif [ $HOSTNAME == "pg-login" ];then
 	        >&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
@@ -91,8 +87,6 @@ projectname=$3
 		mlCmd="module load Molgenis-Compute"
 		runDir=/home/$USER/projects/$projectname
 	        siteParam=$workflowDir/parameters/peregrine.siteconfig.csv
-		cp $siteParam $runDir/.parameters.site.tmp.csv
-	        cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
 
 	elif [[ "$HOSTNAME" =~ testing-* ]] || [[ "$HOSTNAME" =~ *worker-org* ]] ; then
 
@@ -101,8 +95,6 @@ projectname=$3
 	        mlCmd="module load Molgenis-Compute"
 	        runDir=/home/$USER/projects/$projectname
 	        siteParam=$workflowDir/parameters/peregrine.siteconfig.csv
-	        cp $siteParam $runDir/.parameters.site.tmp.csv
-	       	cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
 
 
 	else
@@ -111,10 +103,14 @@ projectname=$3
 		mlCmd="module load Molgenis-Compute"
 		runDir=/home/$USER/projects/$projectname
 		siteParam=$workflowDir/parameters/peregrine.siteconfig.csv
-		cp $siteParam $runDir/.parameters.site.tmp.csv
-		cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
 
 	fi
+	
+	#copying the files to the project folder
+	mkdir -p $runDir/
+	cp $siteParam $runDir/.parameters.site.tmp.csv
+	cp $workflowDir/parameters/parameters.csv  $runDir/.parameters.tmp.csv
+
 	
 	>&2 echo "## "$(date)" ## $0 ## Running with workflow '"$1"'."
 
@@ -123,15 +119,10 @@ projectname=$3
 	        exit 1
 	elif [ $1 == "wgs" ];then
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq cause no working wgs workflow"
-		#workflowBase="workflow.csv"
-		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
 		workflowBase="workflow_grch38_wgs.csv"
 		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "exome" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
-	        #workflowBase="workflow.csv"
-		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
                 workflowBase="workflow_grch38.csv"
                 cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
@@ -145,8 +136,12 @@ projectname=$3
                 cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "rna" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
-	        workflowBase="workflow_rnaseq.csv"
-                cat  $workflowDir/parameters/human_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+	        workflowBase="workflow_rnaseq_star.csv"
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+	elif [ $1 == "rnaumi" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Using RNA-seq umi workflow"
+		workflowBase="workflow_rnaseq_star_umi.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "lexorat" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen Rat workflow"
 		workflowBase="workflow_lexogenrnarat.csv"
@@ -247,7 +242,16 @@ projectname=$3
 	fi
 	if [ -d $SAMPLESHEETFOLDER ]; then
 		>&2 echo "## "$(date)" ## $0 ## Copying samplesheet to samplesheets folder '$SAMPLESHEETFOLDER'"
-		cp -v "${samplesheet}" "$SAMPLESHEETFOLDER/${HOSTNAME}_"$(basename ${samplesheet})
+		if [ -e  "$SAMPLESHEETFOLDER/${HOSTNAME}_"$(basename ${samplesheet}) ]; then 
+			if cmp -s "$SAMPLESHEETFOLDER/${HOSTNAME}_""$(basename ${samplesheet})" "${samplesheet}"; then
+				 >&2 echo "##  Samplesheet files are the same do noting"
+			else
+				 cp -v "${samplesheet}" "$SAMPLESHEETFOLDER/${HOSTNAME}_""$(date --iso)""_""$(basename ${samplesheet})"
+			fi
+
+		else 
+			cp -v "${samplesheet}" "$SAMPLESHEETFOLDER/${HOSTNAME}_"$(basename ${samplesheet})
+		fi
 		>&2 echo "## "$(date)",${0},${HOSTNAME},bash ${SCRIPTCALL}" >> $SAMPLESHEETFOLDER/"${HOSTNAME}"_all_generated.log
 		>&2 echo "## "$(date)",${0},${HOSTNAME},bash ${SCRIPTCALL},"$((git log -1 || echo "$(pwd)" "$(date)") | head -n 1 ) >> "$SAMPLESHEETFOLDER""/""${HOSTNAME}""_all_generated.log"
 	fi
@@ -282,8 +286,10 @@ projectname=$3
 	>&2 echo  "## "$(date)" ## $0 ## Convert samplesheet"
 	perl -wpe 's!projectNameHere!'$projectname'!g' "$samplesheet" > "${samplesheet}"".tmp.csv"
 	if [ $1 != "prepiont" ];then
-		perl $workflowDir/scripts/ValidateSampleSheet.pl "$samplesheet"
-		perl $workflowDir/scripts/SampleSheetTool.pl valid "$samplesheet"
+		echo "Validating samplesheet"
+		#perl $workflowDir/scripts/ValidateSampleSheet.pl "$samplesheet" 
+		#perl $workflowDir/scripts/SampleSheetTool.pl valid "$samplesheet"
+
 	fi
 	cp "$samplesheet.tmp.csv" "$runDir/""$(basename $samplesheet .csv)"".input.csv"
 	cp "$runDir/.parameters.tmp.csv" "$runDir/parameters.csv"
@@ -342,17 +348,17 @@ projectname=$3
 			echo
 			git branch
 		fi 
-		if [ which dot &>/dev/null || ml Graphviz ]; then
+		if which dot &>/dev/null || module load Graphviz ; then
 			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
 			echo
 			echo "### Workflow image"
 			echo 
 			echo "workflow used as shown below"
 			echo
-			echo -n '<img src="data:image/svg+xml;base64,'$(python ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | dot -Tsvg /dev/stdin | base64)'"\>'
+			echo -n '<img src="data:image/svg+xml;base64,'$(python ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | (ml Graphviz &&  dot -Tsvg /dev/stdin) | base64)'"\>'
 		else
 			>&2 echo "## "$(date)" ## $0 ## Commmand 'dot' not present."
-			
+			echo '<!-- Commmand `dot` not present. so no workflow image is generated -->'
 		fi
 		
 		echo

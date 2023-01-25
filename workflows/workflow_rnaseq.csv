@@ -6,7 +6,8 @@ Hisat2Alignment,protocols/Hisat2.sh,onekgGenomeFastaIdxBase=hisat2IdxBase
 AddOrReplaceReadGroups,protocols/AddOrReplaceReadGroups.sh,Hisat2Alignment;bwaSam=hisat2Sam
 MergeBamFiles,protocols/MergeBamFiles.sh,AddOrReplaceReadGroups
 HtseqCountDups,protocols/HtseqCount.sh,MergeBamFiles;markDuplicatesBam=mergeBamFilesBam;markDuplicatesBai=mergeBamFilesBai;htseqDir=htseqDupsDir;htseqTsv=htseqDupsTsv
-MarkDuplicates,protocols/MarkDuplicates.sh,MergeBamFiles
+ABRA2,protocols/ABRA2.sh,MergeBamFiles
+MarkDuplicates,protocols/MarkDuplicates.sh,ABRA2;mergeBamFilesBam=abraBam
 #Manta,protocols/MantaSV.sh,MarkDuplicates;mantaConfigType=mantaConfigTypeRna
 HtseqCount,protocols/HtseqCount.sh,MarkDuplicates
 CollectMultipleMetrics,protocols/CollectMultipleMetrics.sh,MarkDuplicates

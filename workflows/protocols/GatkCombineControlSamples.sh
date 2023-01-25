@@ -13,19 +13,18 @@
 #string onekgGenomeFasta
 
 ##the following parameters select for control samples also. To remove this bias cleaner merging needs to be done
-#list mutect2SampleVcf
-#string mutect2Dir
-#string mutect2PonDir
-#string mutect2Vcf
-#string mutect2VcfIdx
+#list controlSamplesVcf
+#string sampleVcfDir
+#string sampleVcf
+#string sampleVcfIdx
 
 echo "## "$(date)" ##  $0 Started "
 
 alloutputsexist \
-"${mutect2Vcf}" \
-"${mutect2VcfIdx}" 
+"${sampleVcf}" \
+"${sampleVcfIdx}" 
 
-for file in "${onekgGenomeFasta}" "${mutect2SampleVcf[@]}"; do
+for file in "${onekgGenomeFasta}" "${controlSamplesVcf[@]}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -38,17 +37,15 @@ ${checkStage}
 set -x
 set -e
 
-mkdir -p ${mutect2Dir}
+mkdir -p ${sampleVcfDir}
 
-vcfs=($(printf '%s\n' "${mutect2SampleVcf[@]}" | sort -u ))
+vcfs=($(printf '%s\n' "${controlSamplesVcf[@]}" | sort -u ))
 inputs=""
 prio=""
 
 for v in ${vcfs[@]}; do
-	#match tumor only name and tumor and normal name
-        tumor=$(perl -wpe  's/.*.t_(.*?){1}(\.n_.*?){0,1}\.0\d+.*/$1/g' <(echo ${v}))
-	#explicitly match tumor and normal name 
-        normal=$(perl -wpe  's/.*.t_(.*?){1}(\.n_.*?){1}\.0\d+.*/$2/g or $_=""' <(echo ${v}))
+        tumor=$(perl -wpe  's/.*.t_(.*).n_.*/$1/g' <(echo ${v}))
+        normal=$(perl -wpe  's/.*.t_.*.n_(.*)\.0\d+.*/$1/g' <(echo ${v}))
         inputs=$(echo -n "$inputs -V:$tumor $v")
         if [ -z "$prio" ]; then
                 prio="$tumor"
@@ -105,35 +102,32 @@ echo "inputs="$inputs";"
 echo 'prio='$prio';'
 
 minimumNOption=""
-if [ "$(dirname ${mutect2Vcf})" -eq  "${mutect2PonDir}" ]; then
-	echo "## INFO ## Assumed to be working on mutect pon files so setting the minimumN option";
-	minimumNOption="--minimumN 3"
+#minimumNOption="--minimumN 2"
 
-fi
 #merge gatk/freebayes
-java -Xmx4g -Djava.io.tmpdir=${mutect2Dir} \
+java -Xmx4g -Djava.io.tmpdir=${sampleVcfDir} \
   -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T CombineVariants \
  -R ${onekgGenomeFasta} \
  $inputs \
- -o ${mutect2Vcf}.tmp.vcf \
+ -o ${sampleVcf}.tmp.vcf \
  -genotypeMergeOptions PRIORITIZE \
  -priority $prio \
  --filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED \
  ${minimumNOption}
 
 
-if grep -v '^#' ${mutect2Vcf}.tmp.vcf -c ; then
+if grep -v '^#' ${sampleVcf}.tmp.vcf -c ; then
 perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
-         ${mutect2Vcf}.tmp.ReallyComplex.vcf \
-         ${mutect2Vcf}.tmp.vcf \
-         $(printf '%s\n' "${mutect2SampleVcf[@]}" | sort -u ) \
-         > ${mutect2Vcf}
+         ${sampleVcf}.tmp.ReallyComplex.vcf \
+         ${sampleVcf}.tmp.vcf \
+         $(printf '%s\n' "${controlSamplesVcf[@]}" | sort -u ) \
+         > ${sampleVcf}
 else
-	cp ${mutect2Vcf}.tmp.vcf ${mutect2Vcf}
+	cp ${sampleVcf}.tmp.vcf ${sampleVcf}
 fi
 
-putFile ${mutect2Vcf}
-#putFile ${mutect2VcfIdx}
+putFile ${sampleVcf}
+#putFile ${sampleVcfIdx}
 
 echo "## "$(date)" ##  $0 Done "

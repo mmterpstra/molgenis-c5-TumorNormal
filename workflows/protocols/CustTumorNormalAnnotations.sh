@@ -10,7 +10,7 @@
 
 #string annotatorDir
 #string annotVcf
-#string controlSampleName
+#list controlSampleName
 #string custAnnotVcf
 #string normalAnnotPl
 
@@ -30,7 +30,7 @@ set -x
 set -e
 
 perl $EBROOTPIPELINEMINUTIL/bin/${normalAnnotPl} \
- ${controlSampleName} \
+ ${controlSampleName[0]} \
  ${annotVcf} \
  >${custAnnotVcf}
 

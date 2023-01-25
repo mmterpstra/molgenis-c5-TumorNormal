@@ -19,7 +19,7 @@ RMod,R/3.6.3-foss-2018a-bare
 #gatkMod,GATK/3.5-foss-2016a-Java-1.7.0_80
 #gatkMod,GATK/3.4-0-Java-1.7.0_80
 gatkMod,GATK/3.8-0-foss-2018a-Java-1.8.0_192
-abraMod,abra2/2.24-foss-2018a-Java-1.8.0_192
+abraMod,abra2/2.23-foss-2018a-Java-1.8.0_192
 #snpEffMod,snpEff/4.1g-Java-1.7.0_80
 snpEffMod,snpEff/4.3t-Java-1.8
 varScanMod,VarScan/2.4.3-Java-1.7.0_80
@@ -29,7 +29,7 @@ bcftoolsMod,BCFtools/1.10.2-foss-2018a
 vcfToolsMod,VCFtools/0.1.16-foss-2018a-Perl-5.26.1-bare
 openCravatMod,open-cravat/1.8.0-foss-2018a-Python-3.6.4
 #pipelineUtilMod,pipeline-util/0.2.1-foss-2016a-Perl-5.20.2-bare
-pipelineUtilMod,pipeline-util/f81b3de9553462add70919fdd5793eb12f4c8e15-foss-2018a-Perl-5.26.1-bare
+pipelineUtilMod,pipeline-util/0.8.20-5-ga0a29bb-foss-2018a-Perl-5.26.1-bare
 #parallelMod,parallel/20160622-foss-2016a
 parallelMod,parallel/20190222-GCCcore-6.4.0
 tableToXlsxMod,TableToXlsx/0.3.0-foss-2018a-Perl-5.26.1-bare
@@ -52,6 +52,9 @@ cnvlibMod,CNVkit/0.9.7-foss-2018a-Python-3.7.2
 ichorcnaMod,R-bundle-ichorCNA/0.3.2-5bfc03e-foss-2018a-R-3.6.3-bare
 convadingMod,CoNVaDING/1.3.13-foss-2018a-Perl-5.26.1-bare
 abra2mod,abra2/2.23-foss-2018a-Java-1.8.0_192
+fgbioMod,fgbio/1.3.0-foss-2018a-Java-1.8.0_192
+starMod,STAR/2.7.2b-foss-2018a
+trimgaloreMod,Trim_Galore/0.6.6-GCCcore-9.3.0-Python-3.8.2
 ################################################################################
 ##user data
 #remap plz

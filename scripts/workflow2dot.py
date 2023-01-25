@@ -4,11 +4,11 @@ import time
 try:
     input_file = open(sys.argv[1])
 except:
-    print('Die cannot open file')
+    print('Takes a workflow file as first argument and prints a dotfile to stdout. Die cannot open file')
     exit
 
 
-print "digraph "+ sys.argv[1].strip(".csv").split('/')[-1] + " {"
+print("digraph " + sys.argv[1].strip(".csv").split('/')[-1] + " {")
 
 try:
     for i, line in enumerate(input_file):

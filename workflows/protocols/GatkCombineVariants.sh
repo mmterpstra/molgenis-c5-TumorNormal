@@ -15,6 +15,8 @@
 #string haplotyperVcf
 #string freebayesVcf
 #string mutect2Vcf
+#string lofreqVcf
+#string lancetVcf
 
 #string variantCombineDir
 #string combineVcf
@@ -35,7 +37,7 @@ alloutputsexist \
 "${combineVcf}" \
 "${combineVcfIdx}" 
 
-for file in "${onekgGenomeFasta}" "${freebayesVcf}" "${haplotyperVcf}" "${mutect2Vcf}"; do
+for file in "${onekgGenomeFasta}" "${freebayesVcf}" "${haplotyperVcf}" "${mutect2Vcf}" "${lofreqVcf}" "${lancetVcf}"; do
 	echo "getFile file='$file'"
 	getFile $file
 done
@@ -65,15 +67,24 @@ mkdir -p ${variantCombineDir}
 
 #rm ${combineVcf}.tmp.allelicprimitives.vcf.idx
 
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl Freebayes ${freebayesVcf} > ${combineVcf}.tmp.freebayescallerised.vcf
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl HCaller ${haplotyperVcf} > ${combineVcf}.tmp.haplotypercallerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl -c Freebayes -i ${freebayesVcf} > ${combineVcf}.tmp.freebayescallerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl -c HCaller -i ${haplotyperVcf} > ${combineVcf}.tmp.haplotypercallerised.vcf
 #did this already on a per sample base maybe overkill to do it again
-perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl MuTect2 ${mutect2Vcf} |perl  $(which VcfQssFix.pl ) /dev/stdin > ${combineVcf}.tmp.mutect2callerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl -c MuTect2 -i ${mutect2Vcf} |perl  $(which VcfQssFix.pl ) /dev/stdin > ${combineVcf}.tmp.mutect2callerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl -c LoFreq -i ${lofreqVcf} > ${combineVcf}.tmp.lofreqcallerised.vcf
+perl $EBROOTPIPELINEMINUTIL/bin/CalleriseVcf.pl -c Lancet -i ${lancetVcf} > ${combineVcf}.tmp.lancetcallerised.vcf
 
 ${stage} ${bcftoolsMod}
-bgzip -c ${combineVcf}.tmp.haplotypercallerised.vcf > ${combineVcf}.tmp.haplotypercallerised.vcf.gz && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
-bgzip -c ${combineVcf}.tmp.freebayescallerised.vcf  > ${combineVcf}.tmp.freebayescallerised.vcf.gz  && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
-bgzip -c ${combineVcf}.tmp.mutect2callerised.vcf    > ${combineVcf}.tmp.mutect2callerised.vcf.gz    && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz    > ${combineVcf}.tmp.mutect2norm.vcf
+bgzip -c ${combineVcf}.tmp.haplotypercallerised.vcf > ${combineVcf}.tmp.haplotypercallerised.vcf.gz \
+&& bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.haplotypercallerised.vcf.gz > ${combineVcf}.tmp.haplotypernorm.vcf
+bgzip -c ${combineVcf}.tmp.freebayescallerised.vcf  > ${combineVcf}.tmp.freebayescallerised.vcf.gz \
+&& bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.freebayescallerised.vcf.gz  > ${combineVcf}.tmp.freebayesnorm.vcf
+bgzip -c ${combineVcf}.tmp.mutect2callerised.vcf    > ${combineVcf}.tmp.mutect2callerised.vcf.gz  \
+ && bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.mutect2callerised.vcf.gz   > ${combineVcf}.tmp.mutect2norm.vcf
+bgzip -c ${combineVcf}.tmp.lofreqcallerised.vcf    > ${combineVcf}.tmp.lofreqcallerised.vcf.gz  \
+&& bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.lofreqcallerised.vcf.gz     > ${combineVcf}.tmp.lofreqnorm.vcf
+bgzip -c ${combineVcf}.tmp.lancetcallerised.vcf    > ${combineVcf}.tmp.lancetcallerised.vcf.gz  \
+&& bcftools norm -m -any -f ${onekgGenomeFasta} ${combineVcf}.tmp.lancetcallerised.vcf.gz     > ${combineVcf}.tmp.lancetnorm.vcf
 
 #merge gatk/freebayes/mutect
 java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
@@ -83,9 +94,11 @@ java -Xmx4g -Djava.io.tmpdir=${variantCombineDir} \
  --variant:GATK ${combineVcf}.tmp.haplotypernorm.vcf \
  --variant:freebayes  ${combineVcf}.tmp.freebayesnorm.vcf \
  --variant:MuTect2 ${combineVcf}.tmp.mutect2norm.vcf \
+ --variant:LoFreq ${combineVcf}.tmp.lofreqnorm.vcf \
+ --variant:Lancet ${combineVcf}.tmp.lancetnorm.vcf \
  -o ${combineVcf}.tmp.combine.vcf \
  -genotypeMergeOptions PRIORITIZE \
- -priority GATK,freebayes,MuTect2 \
+ -priority GATK,freebayes,MuTect2,LoFreq,Lancet \
  --filteredrecordsmergetype KEEP_UNCONDITIONAL
 
 #fix genotype fields
@@ -103,20 +116,23 @@ if [ -e "${combineVcf}.tmp.complex.vcf" ] ; then
 	rm -v ${combineVcf}.tmp.complex.vcf
 fi
 
-if [ $(grep -vc '^#' ${combineVcf}.tmp.annotNoComplex.vcf) -eq 0 ]; then
+if [ "$(grep -vc '^#' ${combineVcf}.tmp.combine.vcf)" = "0" ]; then
+
 	echo "emtpy file"
 	cp ${combineVcf}.tmp.combine.vcf ${combineVcf}.tmp.annotNoComplex.vcf 
 	#${combineVcf}.tmp.annotNoComplex.vcf
+
 else
 
 
-perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
- ${combineVcf}.tmp.complex.vcf \
- ${combineVcf}.tmp.combine.vcf \
- ${combineVcf}.tmp.haplotypernorm.vcf \
- ${combineVcf}.tmp.freebayesnorm.vcf \
- ${combineVcf}.tmp.mutect2norm.vcf \
- > ${combineVcf}.tmp.annotNoComplex.vcf
+	perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
+	 ${combineVcf}.tmp.complex.vcf \
+	 ${combineVcf}.tmp.combine.vcf \
+	 ${combineVcf}.tmp.haplotypernorm.vcf \
+	 ${combineVcf}.tmp.freebayesnorm.vcf \
+	 ${combineVcf}.tmp.mutect2norm.vcf \
+	 ${combineVcf}.tmp.lofreqnorm.vcf \
+	 > ${combineVcf}.tmp.annotNoComplex.vcf
 
 fi
 
@@ -168,7 +184,7 @@ if [ -s ${combineVcf}.tmp.complex.vcf ] ; then
 	        rm -v ${combineVcf}.tmp.ReallyComplex.vcf
 	fi
 
-	if [ $(grep -vc '^#' ${combineVcf}.tmp.annotNoComplex.vcf) -eq 0 ]; then
+	if [ "$(grep -vc '^#' ${combineVcf}.tmp.annotNoComplex.vcf)" = "0" ]; then
 		echo "emtpy file"
 		cp ${combineVcf}.tmp.annotNoComplex.vcf ${combineVcf}
 		#${combineVcf}.tmp.annotNoComplex.vcf

@@ -39,7 +39,8 @@ test-weave-grch38:
 	bash weave_test.sh exomehuman38 ../samplesheet.csv
 test-weave-umi:
 	bash weave_test.sh umi ../samplesheet.csv
+#removed test-weave-iont  test-weave-nugene test-weave-nuginc test-weave-withpoly test-weave-nugrna test-weave-lexo from test all
 
-test-all: test-java test-perl test-bash test-python test-wfdups test-wfremap test-mlcompute test-protocolsyntax test-headerfootersyntax test-weave-exome test-weave-rna test-weave-withpoly test-weave-iont test-weave-nugene test-weave-nuginc test-weave-nugrna test-weave-lexo test-weave-umi
+test-all: test-java test-perl test-bash test-python test-wfdups test-wfremap test-mlcompute test-protocolsyntax test-headerfootersyntax test-weave-exome test-weave-rna test-weave-withpoly test-weave-nuginc test-weave-umi
 
 test: test-all

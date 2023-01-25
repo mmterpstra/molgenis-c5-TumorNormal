@@ -8,6 +8,7 @@
 #string checkStage
 #string lancetMod
 #string samtoolsMod
+#string picardMod
 #string pipelineUtilMod
 #string onekgGenomeFasta
 #string targetsList
@@ -90,11 +91,52 @@ fi
 
 if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
         #run with controlsample
-	lancet --tumor ${indelRealignmentBam} $Normalspec --ref ${onekgGenomeFasta} $InterValOperand --num-threads 8 > ${lancetScatVcf}
+	lancet --tumor ${indelRealignmentBam} $Normalspec --ref ${onekgGenomeFasta} $InterValOperand --num-threads 8 > ${lancetScatVcf}.tmp.vcf
 else
 	#no tumoronly mode
-	touch ${lancetScatVcf}
+	touch ${lancetScatVcf}..tmp.vcf
+	cat <<- 'END' > ${lancetScatVcf}.tmp.vcf
+		##fileformat=VCFv4.2
+		##fileDate=Wed Apr 13 10:35:04 2022
+		##source=lancet 1.1.0, October 18 2019
+		##cmdline=lancet --tumor /scratch/umcg-mterpstra/projects/29JUL2021_7_HL_885846//indelRealignment/104103-001-018.bam --normal /scratch/umcg-mterpstra/projects/29JUL2021_7_HL_885846//indelRealignment/104103-003-007.bam --ref /data/umcg-mterpstra/apps/data//ftp.broadinstitute.org/bundle/bundle17jan2020/hg38//Homo_sapiens_assembly38.fasta --bed /scratch/umcg-mterpstra/projects/29JUL2021_7_HL_885846//scatter/temp_0001_of_12/scattered.interval_list.bed --num-threads 8 
+		##reference=/data/umcg-mterpstra/apps/data//ftp.broadinstitute.org/bundle/bundle17jan2020/hg38//Homo_sapiens_assembly38.fasta
+		##INFO=<ID=FETS,Number=1,Type=Float,Description="Phred-scaled p-value of the Fisher's exact test for tumor-normal allele counts">
+		##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="Somatic mutation">
+		##INFO=<ID=SHARED,Number=0,Type=Flag,Description="Shared mutation betweem tumor and normal">
+		##INFO=<ID=NORMAL,Number=0,Type=Flag,Description="Mutation present only in the normal">
+		##INFO=<ID=NONE,Number=0,Type=Flag,Description="Mutation not supported by data">
+		##INFO=<ID=KMERSIZE,Number=1,Type=Integer,Description="K-mer size used to assemble the locus">
+		##INFO=<ID=SB,Number=1,Type=Float,Description="Strand bias score: phred-scaled p-value of the Fisher's exact test for the forward/reverse read counts in the tumor">
+		##INFO=<ID=MS,Number=1,Type=String,Description="Microsatellite mutation (format: #LEN#MOTIF)">
+		##INFO=<ID=LEN,Number=1,Type=Integer,Description="Variant size in base pairs">
+		##INFO=<ID=TYPE,Number=1,Type=String,Description="Variant type (snv, del, ins, complex)">
+		##FILTER=<ID=LowCovNormal,Description="Low coverage in the normal (<10)">
+		##FILTER=<ID=HighCovNormal,Description="High coverage in the normal (>1000000)">
+		##FILTER=<ID=LowCovTumor,Description="Low coverage in the tumor (<4)">
+		##FILTER=<ID=HighCovTumor,Description="High coverage in the tumor (>1000000)">
+		##FILTER=<ID=LowVafTumor,Description="Low variant allele frequency in the tumor (<0.04)">
+		##FILTER=<ID=HighVafNormal,Description="High variant allele frequency in the normal (>0)">
+		##FILTER=<ID=LowAltCntTumor,Description="Low alternative allele count in the tumor (<3)">
+		##FILTER=<ID=HighAltCntNormal,Description="High alternative allele count in the normal (>0)">
+		##FILTER=<ID=LowFisherScore,Description="Low Fisher's exact test score for tumor-normal allele counts (<5)">
+		##FILTER=<ID=LowFisherSTR,Description="Low Fisher's exact test score for tumor-normal STR allele counts (<25)">
+		##FILTER=<ID=StrandBias,Description="Strand bias: # of non-reference reads in either forward or reverse strand below threshold (<1)">
+		##FILTER=<ID=STR,Description="Microsatellite mutation">
+		##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+		##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Depth">
+		##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allele depth: # of supporting ref,alt reads at the site">
+		##FORMAT=<ID=SR,Number=.,Type=Integer,Description="Strand counts for ref: # of supporting forward,reverse reads for reference allele">
+		##FORMAT=<ID=SA,Number=.,Type=Integer,Description="Strand counts for alt: # of supporting forward,reverse reads for alterantive allele">
+		#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	
+		END
 fi
+
+(${stage} ${picardMod}
+		java -jar $EBROOTPICARD/picard.jar SortVcf \
+			SD=/data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/bundle17jan2020/hg38/Homo_sapiens_assembly38.fasta.dict \
+			I=${lancetScatVcf}.tmp.vcf \
+			O=${lancetScatVcf})
 #java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 # -T MuTect2 \
 # -R ${onekgGenomeFasta} \

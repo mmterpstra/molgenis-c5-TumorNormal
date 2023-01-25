@@ -16,6 +16,7 @@
 #string onekgGenomeFasta
 #string onekgGenomeFastaDict
 #list bqsrBam,bqsrBai
+#string bqsrDir
 #string targetsList
 
 #string haplotyperDir
@@ -108,7 +109,7 @@ set -x
 set -e
 
 # sort unique and print like '-I file1.bam -I file2.bam '
-bams=($(printf '%s\n' "${bqsrBam[@]}" | sort -u ))
+bams=($(printf '%s\n' "$bqsrDir/*.bam" | sort -u ))
 inputs=$(printf ' -I %s ' $(printf '%s\n' ${bams[@]}))
 
 mkdir -p ${annotatorDir}
@@ -177,15 +178,6 @@ java -Xmx8g -Djava.io.tmpdir=${annotatorDir}  -XX:+UseConcMarkSweepGC  -XX:Paral
  -R ${onekgGenomeFasta} \
  --dbsnp ${dbsnpVcf} \
  ${inputs[@]} \
- --excludeAnnotation MVLikelihoodRatio \
- --excludeAnnotation TechnologyComposition \
- --excludeAnnotation DepthPerSampleHC \
- --excludeAnnotation PercentNBaseSolid \
- --excludeAnnotation PossibleDeNovo \
- --excludeAnnotation ClusteredReadPosition \
- --excludeAnnotation AS_RMSMappingQuality \
- --filter_bases_not_stored \
- --useAllAnnotations \
  --snpEffFile ${snpEffGatkAnnotVcf} \
  --resource:cosmic,VCF ${cosmicVcf} \
  -E 'cosmic.ID' \
