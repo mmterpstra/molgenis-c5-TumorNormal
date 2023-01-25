@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=7 mem=40gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=6 mem=40gb walltime=10:00:00
 
 #string project
 
@@ -89,12 +89,22 @@ alloutputsexist \
 	
 	echo "## "$(date)" ##  $0 Align with star with readspec='$readspec' sjdbOverhang='$sjdbOverhang'"
 	
+	#tar -xvzf ${star_genome_refs_zipped}
+
 	STAR \
 	 --genomeDir ${starIndexDir}/sjdboverhang_${sjdbOverhang} \
+	 --runThreadN 7 \
 	 $readspec \
-	 --runThreadN 6 \
 	 --readFilesCommand "zcat " \
+	 --sjdbOverhang ${sjdbOverhang} \
+	 --outSAMtype BAM SortedByCoordinate \
+	 --twopassMode Basic \
+	 --limitBAMsortRAM 45000000000 \
+	 --outFileNamePrefix "${starSampleDir}/reads" \
 	 --chimSegmentMin 15 \
-	 --chimJunctionOverhangMin 15 
+         --chimJunctionOverhangMin 15
+	
+	
+	# --limitOutSJcollapsed ${default=1000000 star_limitOutSJcollapsed} \
 )
 echo "## "$(date)" ##  $0 Done "

@@ -7,6 +7,7 @@
 #string stage
 #string checkStage
 #string gatkMod
+#string picardMod
 #string samtoolsMod
 #string onekgGenomeFasta
 #string gatkOpt
@@ -51,9 +52,14 @@ qualAction=$(samtools view ${markDuplicatesBam} | \
  sort -n | \
  perl -wne '
  use strict;
- use List::Util qw/max min/;
+ use List::Util qw/max sum min/;
  my @ords=<STDIN>;
- if(min(@ords) >= 59 && max(@ords) <=104 ){
+ if(min(@ords) >= 33 && max(@ords) <= 80 && ((sum(@ords))/scalar(@ords))>76){
+	#this is a quality score umi catch they tend to (almost?) exclusively use the higher quality scores and thus making quality detection by range impossible this is why i added the range 
+	#barring any mayor leaps in sequencing this will last till 2030-2040 or beyond
+	warn "Strange UMI like quals detected using:--allow_potentially_misencoded_quality_scores.";
+	print " --allow_potentially_misencoded_quality_scores ";
+ }elsif(min(@ords) >= 59 && max(@ords) <=104 ){
 	print " --fix_misencoded_quality_scores ";
 	warn "Illumina <= 1.7 scores detected using:--fix_misencoded_quality_scores.\n";
  }elsif(min(@ords) >= 33 && max(@ords) <= 74){
@@ -61,20 +67,53 @@ qualAction=$(samtools view ${markDuplicatesBam} | \
 	warn "quals > illumina 1.8 detected no action to take.\n";
  }elsif(min(@ords) >= 33 && max(@ords) <= 80){
 	print " --allow_potentially_misencoded_quality_scores "; 
-	warn "Strange illumina like quals detected using:--allow_potentially_misencoded_quality_scores."
+	warn "Strange illumina like quals detected using:--allow_potentially_misencoded_quality_scores.";
  }else{
 	die "Cannot estimate quality scores here is the list:".join(",",@ords)."\n";
  }
 ')
 
-
-
+#this cleans up DN combinations (which is an invalid CIGAR tag combination)
+samtools view -h ${markDuplicatesBam} | \
+    perl -wape 'while($F[5] =~ m/(\d+)[DN](\d+)[DN]/){
+            substr($_,index($_,$&),length($&),($1+$2)."N");
+            substr($F[5],index($F[5],$&),length($&),($1+$2)."N");
+        }
+        my $samfieldindex = 11;
+        while($samfieldindex < scalar(@F)){
+            #warn $outer
+            if($F[$samfieldindex] =~ m/Y[AO]:Z:/){
+                while($F[$samfieldindex] =~ m/(\d+)[DN](\d+)[DN]/){
+                    #warn $samfieldindex."\t".$_;
+                    substr($_,index($_,$&),length($&),($1+$2)."N");
+                    substr($F[$samfieldindex],index($F[$samfieldindex],$&),length($&),($1+$2)."N");
+                }
+            }
+            $samfieldindex++;
+        }' | samtools view -Sb > ${splitAndTrimBam}.cigarfixed.bam
+samtools index ${splitAndTrimBam}.cigarfixed.bam
+#more fixups
+(ml picard;
+	java  -Xmx5g -XX:ParallelGCThreads=2 \
+	-Djava.io.tmpdir="${splitAndTrimDir}" \
+	-jar $EBROOTPICARD/picard.jar FixMateInformation \
+	INPUT="${splitAndTrimBam}.cigarfixed.bam" \
+	ADD_MATE_CIGAR=true IGNORE_MISSING_MATES=true  ASSUME_SORTED=false \
+	SORT_ORDER=coordinate  CREATE_INDEX=true  TMP_DIR="${splitAndTrimDir}" \
+	OUTPUT="${splitAndTrimBam}.cigarmatefixed.bam" )
+(ml picard;
+	java -Xmx5g -XX:ParallelGCThreads=2 \
+	-Djava.io.tmpdir="${splitAndTrimDir}" \
+	-jar $EBROOTPICARD/picard.jar SetNmMdAndUqTags \
+	--INPUT "${splitAndTrimBam}.cigarmatefixed.bam" \
+	--OUTPUT "${splitAndTrimBam}.cigarmatetagfixed.bam" \
+	-R ${onekgGenomeFasta}; )
 
 
 java -Xmx8g -Djava.io.tmpdir=${splitAndTrimDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
  -T SplitNCigarReads \
  -R ${onekgGenomeFasta} \
- -I ${markDuplicatesBam} \
+ -I ${splitAndTrimBam}.cigarfixed.bam \
  -o ${splitAndTrimBam} \
  -rf ReassignOneMappingQuality \
  -RMQF 255 \

@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=7gb walltime=47:59:00
+#MOLGENIS nodes=1 ppn=8 mem=18gb walltime=47:59:00
 
 #string project
 
@@ -12,6 +12,8 @@
 #string ensemblAnnotationGtf
 #string mergeBamFilesBam
 #string mergeBamFilesBai
+#string abraMod
+#string samtoolsMod
 #string abraDir
 #string abraBam
 #string abraBai
@@ -29,7 +31,7 @@ getFile ${onekgGenomeFasta}
 getFile ${mergeBamFilesBam}
 getFile ${mergeBamFilesBai}
 
-${stage} ${abraMod}
+${stage} ${abraMod} ${samtoolsMod}
 ${checkStage}
 
 set -x
@@ -51,7 +53,7 @@ mkdir -p ${abraDir}
 #it breaks on number formatting using the not US locale https://github.com/mozack/abra2/issues/25
 export LC_ALL=en_US.UTF-8
 
-java -Xmx16G -jar abra2.jar \
+java -Xmx16G -jar ${EBROOTABRA2}/abra2.jar \
  --in ${mergeBamFilesBam} \
  --out ${abraBam} \
  --ref ${onekgGenomeFasta} \
@@ -60,6 +62,8 @@ java -Xmx16G -jar abra2.jar \
  --gtf ${ensemblAnnotationGtf} \
  --dist 500000 \
  --sua --tmpdir ${abraDir}
+
+samtools index ${abraBam}
 
 putFile ${abraBam}
 putFile ${abraBai}

@@ -59,6 +59,14 @@ lnFq3Name,${fastqcDir}/${internalId}_${sampleName}_R3.fastq.gz
 fusioncatcherDir,${projectDir}/fusioncatcher/
 fusioncatcherOutDir,${projectDir}/fusioncatcher/${sampleName}/
 fusioncatcherTsv,${fusioncatcherOutDir}final-list_candidate-fusion-genes.txt
+#################################################################################
+##Trim_Galore
+trimgaloreDir,${projectDir}/trimgalore/
+trimgaloreSampleDir,${trimgaloreDir}/${sampleName}/
+trimgalore1FqGz,${trimgaloreDir}/${internalId}_${sampleName}_R1.fastq.gz
+trimgalore2FqGz,${trimgaloreDir}/${internalId}_${sampleName}_R2.fastq.gz
+
+
 ################################################################################
 ##Nugene random fastq integration/bbduk trimming
 nugeneFastqDir,${projectDir}/nugeneFastq/
@@ -95,8 +103,13 @@ lexogenReads2FqGz,${lexogenFastqDir}/${internalId}_${sampleName}_2.fq.gz
 nTreads,8
 bwaAlignmentDir,${projectDir}/bwa/
 bwaSam,${bwaAlignmentDir}${internalId}_${sampleName}.sam
+bwaBam,${bwaAlignmentDir}${internalId}_${sampleName}.bam
+bwaBai,${bwaAlignmentDir}${internalId}_${sampleName}.bai
+
+#these are for itegrating trimming workflows
 reads1FqGzOriginal,${reads1FqGz}
 reads2FqGzOriginal,${reads2FqGz}
+reads3FqGzOriginal,${reads3FqGz}
 
 ################################################################################
 ##optional trimminginsertsize ater addorreplacereadgroups
@@ -120,7 +133,8 @@ gatkOpt,
 starIndexDir,${projectDir}/starIndex/
 starAlignmentDir,${projectDir}/star/
 starSampleDir,${starAlignmentDir}/${internalId}_${sampleName}
-starSam,${starSampleDir}/Aligned.out.sam
+starSam,${starSampleDir}/readsAligned.sortedByCoord.out.bam
+
 
 ################################################################################
 ##TrimBybed subdirs
@@ -132,12 +146,30 @@ trimByBedMetrics,${trimByBedDir}${internalId}_${sampleName}.metrics.log
 
 #
 ################################################################################
+##annotateBamWithUmisBam
+#
+annotateBamWithUmisDir,${projectDir}/annotateBamWithUmis/
+annotateBamWithUmisBam,${annotateBamWithUmisDir}${internalId}_${sampleName}.bam
+annotateBamWithUmisBai,${annotateBamWithUmisDir}${internalId}_${sampleName}.bai
+################################################################################
 ##CallMolecularConsensusReads
 #
-
+#ran after mergebams
 consensusDir,${projectDir}/CallMolecularConsensusReads/
 consensusBam,${consensusDir}${sampleName}.bam
 consensusBai,${consensusDir}${sampleName}.bai
+consensusReads1FqGz,${consensusDir}${sampleName}_R1.fq.gz
+consensusReads2FqGz,${consensusDir}${sampleName}_R2.fq.gz
+#Realgnng the consensusReads
+consensusStarSampleDir,${consensusDir}/${internalId}_${sampleName}
+consensusStarSam,${consensusStarSampleDir}/readsAligned.sortedByCoord.out.bam
+consensusAddOrReplaceReadGroupsBam,${consensusDir}${sampleName}.readgroups.bam
+consensusAddOrReplaceReadGroupsBai,${consensusDir}${sampleName}.readgroups.bai
+
+#consensusAddOrReplaceReadGroupsBam,${consensusDir}${internalId}_${sampleName}.readgroups.bam
+#consensusAddOrReplaceReadGroupsBai,${consensusDir}${internalId}_${sampleName}.readgroups.bai
+#consensusMergeBamFilesBam,${consensusDir}${sampleName}.mergebams.bam
+#consensusMergeBamFilesBai,${consensusDir}${sampleName}.mergebams.bai
 
 ################################################################################
 ##AddOrReplaceGroups
@@ -182,7 +214,7 @@ mergeBamFilesBai,${mergeBamFilesDir}${sampleName}.bai
 #
 abraDir,${projectDir}/Abra2/
 abraBam,${abraDir}${sampleName}.bam
-abraBai,${abraDir}${sampleName}.bai
+abraBai,${abraDir}${sampleName}.bam.bai
 #
 ################################################################################
 ##MarkDuplicates
@@ -240,6 +272,12 @@ collectRnaSeqMetricsChart,${collectRnaSeqMetricsDir}${sampleName}.chart.pdf
 
 collectMultipleMetricsDir,${projectDir}/multipleMetrics/
 collectMultipleMetricsPrefix,${collectMultipleMetricsDir}/${sampleName}
+################################################################################
+##CollectDuplexMetrics
+
+collectDuplexMetricsDir,${projectDir}/duplexMetrics/
+collectDuplexMetricsPrefix,${collectDuplexMetricsDir}/${sampleName}
+
 ################################################################################
 ##CollectWGSMetrics
 
@@ -346,10 +384,12 @@ lancetScatVcfIdx,${lancetScatVcf}.idx
 lancetDir,${projectDir}/lancet/
 lancetSampleVcf,${lancetDir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
 lancetSampleVcfIdx,${lancetSampleVcf}.idx
+lancetSampleControlsMergedVcf,${lancetDir}/${project}.t_${sampleName}.${scatterIDs}.vcf
+lancetSampleControlsMergedVcfIdx,${lancetSampleControlsMergedVcf}.idx
 lancetProjectScatVcf,${lancetDir}/${project}.${scatterIDs}.vcf
 lancetProjectScatVcfIdx,${lancetProjectScatVcf}.idx
-lancetVcf,${lancetDir}/${project}.vcf
-lancetVcfIdx,${lancetVcf}.idx
+#lancetProjectVcf,${lancetDir}/${project}.n_${controlSampleName}.vcf
+#lancetProjectVcfIdx,${lancetProjectVcf}.idx
 
 ################################################################################
 #LoFreq
@@ -366,19 +406,36 @@ lofreqScatVcfIdx,${lofreqVcf}.idx
 lofreqVcf,${lofreqDir}/${project}_t_${sampleName}_n_${controlSampleName}.vcf
 lofreqVcfIdx,${lofreqVcf}.idx
 
+lofreqSampleControlsMergedVcf,${lofreqDir}/${project}.t_${sampleName}.${scatterIDs}.vcf
+lofreqSampleControlsMergedVcfIdx,${lofreqSampleControlsMergedVcf}.idx
+lofreqProjectScatVcf,${lofreqDir}/${project}.${scatterIDs}.vcf
+lofreqProjectScatVcfIdx,${lofreqProjectScatVcf}.idx
+
+#lofreqProjectVcf,${lofreqDir}/${project}.n_${controlSampleName}.vcf
+#lofreqProjectVcfIdx,${lofreqProjectVcf}.idx
+
 
 ################################################################################
 #mutect2
+#todo fix this cause prio by sampleid aint safe
 mutect2Dir,${projectDir}/mutect2/
 mutect2ScatVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
 mutect2ScatVcfIdx,${mutect2ScatVcf}.idx
 mutect2SampleVcf,${mutect2Dir}/${project}.t_${sampleName}.n_${controlSampleName}.vcf
 mutect2SampleVcfIdx,${mutect2SampleVcf}.idx
+
+#merging control samples
+mutect2SampleControlsMergedVcf,${mutect2Dir}/${project}.t_${sampleName}.${scatterIDs}.vcf
+mutect2SampleControlsMergedVcfIdx,${mutect2SampleControlsMergedVcf}.idx
+
 #mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
-mutect2Vcf,${mutect2Dir}/${project}.vcf
+mutect2Vcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
 mutect2VcfIdx,${mutect2Vcf}.idx
 mutect2ProjectScatVcf,${mutect2Dir}/${project}.${scatterIDs}.vcf
 mutect2ProjectScatVcfIdx,${mutect2ProjectScatVcf}.idx
+mutect2ProjectVcf,${mutect2Dir}/${project}.n_${controlSampleName}.vcf
+mutect2ProjectVcfIdx,${mutect2ProjectVcf}.idx
+
 #Pon Panel of Normals creation
 mutect2PonDir,${projectDir}/mutect2Pon/
 mutect2PonScatVcf,${mutect2PonDir}/${project}.t_${sampleName}.n_${controlSampleName}.${scatterIDs}.vcf
@@ -449,7 +506,7 @@ annotateConsensusScatVcf,${annotateConsensusDir}${project}.${scatterIDs}.vcf
 
 #customscript
 #normalAnnotPl,/gcc/tools/scripts/Vcf_tools_misc/ForGerardTeMeermanVcfAnnotation0.0.2.pl
-custAnnotVcf,${annotatorDir}/${project}.annot.cust.n_${controlSampleName}.vcf
+custAnnotVcf,${annotatorDir}/${project}.annot.cust.vcf
 custAnnotVcfIdx,${custAnnotVcf}.idx
 
 ################################################################################
@@ -478,16 +535,16 @@ snpEffMantaStats,${snpeffMantaDir}/${project}.${sampleName}.snpeffmanta.stats.cs
 #variant filtration
 variantFiltDir,${projectDir}/variantfiltering/
 #select INDELS & MNP / SNVS
-snvRawVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.raw.vcf
+snvRawVcf,${variantFiltDir}/${project}.snv.raw.vcf
 snvRawVcfIdx,${snvRawVcf}.idx
-indelMnpRawVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.raw.vcf
+indelMnpRawVcf,${variantFiltDir}/${project}indelmnp.raw.vcf
 indelMnpRawVcfIdx,${indelMnpRawVcf}.idx
 svRawVcf,${variantFiltDir}/${project}.${sampleName}.${controlSampleName}.sv.raw.vcf
 svRawVcfIdx,${svRawVcf}.idx
 #and filtered
-snvVcf,${variantFiltDir}/${project}.${controlSampleName}.snv.vcf
+snvVcf,${variantFiltDir}/${project}.snv.vcf
 snvVcfIdx,${snvVcf}.idx
-indelMnpVcf,${variantFiltDir}/${project}.${controlSampleName}.indelmnp.vcf
+indelMnpVcf,${variantFiltDir}/${project}.indelmnp.vcf
 indelMnpVcfIdx,${indelMnpVcf}.idx
 #to be added
 svVcf,${variantFiltDir}/${project}.${sampleName}.sv.vcf
@@ -502,18 +559,18 @@ variantFields,
 variantFieldsLimited, -F CADD_phred -F CADD_raw -F clinvar_CLNDN -F clinvar_CLNDISDB -F clinvar_CLNHGVS -F clinvar_CLNSIG -F gnomad3.0_AF_raw -F gnomad3.0_AC -F gnomad3.0_AC_raw -F gnomad3.0_AN -F gnomad3.0_AN_raw -F gnomad3.0_AF  -F BaseCounts -F BaseQRankSum -F ClippingRankSum -F cosmic.ID -F dbNSFP_1000Gp1_AF -F dbNSFP_aapos -F dbNSFP_aapos_SIFT -F dbNSFP_ARIC5606_AA_AF -F dbNSFP_ARIC5606_EA_AF -F dbNSFP_ESP6500_AA_AF -F dbNSFP_ESP6500_EA_AF -F dbNSFP_Polyphen2_HDIV_pred -F dbNSFP_Polyphen2_HDIV_rankscore -F dbNSFP_Polyphen2_HDIV_score -F dbNSFP_Polyphen2_HVAR_pred -F dbNSFP_Polyphen2_HVAR_rankscore -F dbNSFP_Polyphen2_HVAR_score -F dbNSFP_SIFT_converted_rankscore -F dbNSFP_SIFT_pred -F dbNSFP_SIFT_score -F DP -F exac.AC -F exac.AC_Hom -F exac.AN  -F FS -F GC -F HRun -F LOF -F LowMQ -F MQ -F MQRankSum -F PercentNBase -F QD -F QUAL -F ReadPosRankSum -F RPA -F RU -F Samples -F SNPEFFANN_AA_POS_AND_AA_LENGTH -F SNPEFFANN_ALLELE -F SNPEFFANN_ANNOTATION -F SNPEFFANN_ANNOTATION_IMPACT -F SNPEFFANN_CDNA_POS_AND_CDNA_LENGTH -F SNPEFFANN_CDS_POS_AND_CDS_LENGTH -F SNPEFFANN_DISTANCE -F SNPEFFANN_ERRORS_AND_WARNINGS_AND_INFO -F SNPEFFANN_FEATURE_ID -F SNPEFFANN_FEATURE_TYPE -F SNPEFFANN_GENE_ID -F SNPEFFANN_GENE_NAME -F SNPEFFANN_HGVS_C -F SNPEFFANN_HGVS_P -F SNPEFFANN_RANK -F SNPEFFANN_TRANSCRIPT_BIOTYPE -F SOR -F STR -F segdup -F variant_type -F non_topmed_AN_nfe_nwe -F non_topmed_AC_nfe_nwe -F non_topmed_AC -F non_topmed_AN -F non_cancer_AN -F non_cancer_AF -F non_cancer_AC_nfe_nwe -F non_cancer_AC -F dbNSFP_MutationTaster_converted_rankscore -F dbNSFP_MutationTaster_pred -F dbNSFP_MutationTaster_score -F VariantType -F set -GF AD -GF GT -GF FreebayesAD -GF HCallerAD -GF MuTect2AD -F SAF -F SAP -F SAR -F 1000gPhase1Indels.AF -F 1000gPhase1Indels.EUR_AF -F 1000gPhase1Snps.AF -F 1000gPhase1Snps.EUR_AF -F AB -F AC -F AC_nfe_nwe -F AF -F AF_nfe_nwe -F AN -F AN_nfe_nwe -F DB -F DS -F HCallerAC -F HCallerFS -F HCallerQD -F MQM -F MQMR -F PAIRED
 
 #variantTable,${tableDir}/${project}.tsv
-snvTable,${tableDir}/${project}.${controlSampleName}.snv.tsv
-snvRawTable,${tableDir}/${project}.${controlSampleName}.snv.raw.tsv
-indelMnpTable,${tableDir}/${project}.${controlSampleName}.indelmnp.tsv
-indelMnpRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.raw.tsv
+snvTable,${tableDir}/${project}.snv.tsv
+snvRawTable,${tableDir}/${project}.snv.raw.tsv
+indelMnpTable,${tableDir}/${project}.indelmnp.tsv
+indelMnpRawTable,${tableDir}/${project}.indelmnp.raw.tsv
 svTable,${tableDir}/${project}.${sampleName}.sv.tsv
 svRawTable,${tableDir}/${project}.${sampleName}.sv.raw.tsv
 
 #Minified tables (subset of the main table)
-snvMinTable,${tableDir}/${project}.${controlSampleName}.snv.min.tsv
-snvMinRawTable,${tableDir}/${project}.${controlSampleName}.snv.min.raw.tsv
-indelMnpMinTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.tsv
-indelMnpMinRawTable,${tableDir}/${project}.${controlSampleName}.indelmnp.min.raw.tsv
+snvMinTable,${tableDir}/${project}.snv.min.tsv
+snvMinRawTable,${tableDir}/${project}.snv.min.raw.tsv
+indelMnpMinTable,${tableDir}/${project}.indelmnp.min.tsv
+indelMnpMinRawTable,${tableDir}/${project}.indelmnp.min.raw.tsv
 svMinTable,${tableDir}/${project}.${sampleName}.sv.min.tsv
 svMinRawTable,${tableDir}/${project}.${sampleName}.sv.min.raw.tsv
 
@@ -530,8 +587,8 @@ svDescrTable,${tableDir}/${project}.sv.description.tsv
 #tables to xlsx
 #
 xlsxDir,${projectDir}/xlsx/
-snvXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.xlsx
-snvRawXlsx,${xlsxDir}/${project}.${controlSampleName}.snv.raw.xlsx
+snvXlsx,${xlsxDir}/${project}.snv.xlsx
+snvRawXlsx,${xlsxDir}/${project}.snv.raw.xlsx
 snvDescrXlsx,${xlsxDir}/${project}.snv.description.xlsx
 
 indelMnpXlsx,${xlsxDir}/${project}.${controlSampleName}.indelmnp.xlsx

@@ -12,7 +12,8 @@
 #string sampleMarkdown
 
 #string sampleName
-#list reads1FqGz,reads2FqGz,reads1FqGzClean,reads2FqGzClean
+#list reads1FqGz,reads2FqGz,reads1FqGzClean,reads2FqGzClean,internalId
+
 
 #string fastqcDir
 #string fastqcCleanDir
