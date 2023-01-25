@@ -23,7 +23,7 @@
 alloutputsexist \
  ${collectDuplexMetricsPrefix}.alignment_summary_metrics \
  ${collectDuplexMetricsPrefix}.quality_by_cycle_metrics \
- ${collectDuplexMetricsPrefix}.quality_distribution_metrics \
+ ${collectDuplexMetricsPrefix}.quality_distribution_metrics 
 
 # ${collectMultipleMetricsPrefix}.quality_by_cycle.pdf \
 # ${collectMultipleMetricsPrefix}.quality_distribution.pdf 
@@ -72,7 +72,7 @@ else
 	 -jar $EBROOTFGBIO/fgbio.jar CallMolecularConsensusReads \
 	 --input="${consensusBam}.grouped.bam" \
 	 --output="${collectDuplexMetricsPrefix}" \
-	 $intervals \
+	 $intervals
 fi
 
 
