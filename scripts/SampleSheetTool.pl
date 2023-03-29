@@ -3,6 +3,7 @@ use strict;
 use Data::Dumper;
 use Getopt::Std;
 use POSIX;
+#use JSON;
 my $use =<<"END";
 use: perl $0 [merge|addfile|reformat|reformatmin|stats|uniq|batch|help] 
 END
@@ -26,6 +27,8 @@ sub ToolRunner {
 		MergeSampleSheets($tool);
 	}elsif($tool eq 'addfile'){
 		AddFilesSampleSheet($tool);
+	}elsif($tool eq 'jsondump'){
+		JsonSampleSheet($tool);
 	}elsif($tool eq 'reformat'){
 		ReformatSampleSheet($tool);
 	}elsif($tool eq 'reformatillumina'){
@@ -70,6 +73,10 @@ use: perl $0 [merge|addfile|reformat|stats|uniq|help] commands
 	use: perl $0 reformat \
 		samplesheet.filename.csv > samplesheet.reformat.csv
 
+ - reformatmin	Converts minimal (tsv with fq1,fq2,fq3,sample) spec to my own spec
+	use: perl $0 reformatmin \
+		samplesheet.filename.csv > samplesheet.reformat.csv
+
  - stats	Collect statistics on samplesheet
 	use: perl $0 stats \
 
@@ -78,10 +85,12 @@ use: perl $0 [merge|addfile|reformat|stats|uniq|help] commands
 	use: perl $0 uniq \
 		samplesheet1.csv samplesheet2.csv \
 		-f field1[,field2] >uniq.csv
+
  - validate	wip! Validate samplesheets using all modules default or only specified modules
 	use: perl $0 valid \
 		[-m module[,moduleN]]
 		samplesheet.csv
+
  - batch	wip! Batches projectnames based on PROJECTBASE and max INT samples in batches 
 		also adds a controlsample in here.
 		use: perl $0 $tool -p PROJECTBASE -b INT -c CONTROLSAMPLENAME samplesheet.csv
@@ -217,6 +226,25 @@ END
 	
 	#die Dumper($samplesheet);
 	print SamplesheetAsString($samplesheet);
+}
+#############################################################################
+sub JsonSampleSheet { 
+	my $tool = shift @_;
+	my $use .=<<"END";
+Somewhat stupid json dump... wip...
+use: perl $0 $tool gccsamplesheetwithfilenames.csv > samplesheet.json
+END
+
+	my $samplesheetfile = shift @ARGV;
+	#my $prefix = shift @ARGV;
+	warn "## ".localtime(time())." ## INFO ## $0 init with samplesheetfile='$samplesheetfile'.\n";
+	my $samplesheet = ReadSamplesheet($samplesheetfile);
+	#my $samplesheetann = AnnotateSamplesheet($samplesheet);
+	#my $reformatTemplate=ReformatHashIlluminaToSampleSheet();
+	#$samplesheet=ConvertSampleSheet($samplesheet,$reformatTemplate);
+	
+	#die Dumper($samplesheet);
+	print SamplesheetAsJSONString($samplesheet);
 }
 
 ######################################################################
@@ -521,7 +549,20 @@ sub AnnotateSamplesheet {
 			chomp $file;
 			#Add defaults here when not present in fastq files
 			#unreadble code.I hope it works!
-			if($file =~ m/_R1\./){
+			if($file =~ m/.txt.gz/){#This is very experimental should work for single end sequencing
+				$newSample -> {'reads1FqGz'} = $file;
+				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads1FqGz}.'|head -n 1');
+				my @fqheadsplit= split /[\/_\-: \@#]/,($fqhead -> [0]);
+				chomp($fqheadsplit[-1]);
+				#@HWI-ST001_0001:1:1111:112345:12345#NNNNNN/1 for read end 1
+				$newSample -> {'run'} = $fqheadsplit[3];
+				$newSample -> {'sequencerId'} = $fqheadsplit[2];
+				$newSample -> {'flowcellId'} = "nofcid";
+				$newSample -> {'seqType'} = "illumina";
+				$newSample -> {'lane'} = $fqheadsplit[4];#this should create an uniq list of lanes
+				$newSample -> {'barcode'}=$fqheadsplit[-2] if($fqheadsplit[-2] =~ m/[ATCGN\+]{6,}/);
+				$newSample -> {'reads1FqGzMd5'}=Md5Sum($newSample -> {"reads1FqGz"});
+			}if($file =~ m/_R1\./){
 				$newSample -> {'reads1FqGz'} = $file;
 				#zcat $file |head -n 1 should contain @M00000:999:000000000-FLOWCELLIDD:TILE:12345:23456:4567 1:N:0:GTGATTCC+TATAGCCT
 				my $fqhead;@{$fqhead} = CmdRunner('zcat '.$newSample -> {reads1FqGz}.'|head -n 1');
@@ -727,6 +768,72 @@ sub SamplesheetAsString {
 		}
 		$string.=join(",",@c)."\n";
 	}
+	return $string;
+}
+
+sub SamplesheetAsJSONString {
+	my $self = shift @_;
+	my $string = '';
+	#get header values;
+	my %h;
+	for my $sample (@$self){
+		for my $key (keys(%$sample)){
+			$h{"KEYS"} -> {$key}++ if not $key eq "sampleName";
+			push(@{$h{"SAMPLENAMES"} -> {$sample -> {'sampleName'}}},$sample) if $key eq "sampleName";
+		}
+	}
+	
+	$string.= '{"samples": [';
+	
+	#my @h = sort {$b cmp $a} (keys(%h));
+	#$string.=join(",",@h)."\n";
+	#warn scalar(@$self);
+	my $idx = 0;
+	for my $samplename (keys(%{$h{"SAMPLENAMES"}})){
+		#die Dumper(%h);
+
+		$string.= '    {"name": "'.$h{"SAMPLENAMES"}->{$samplename} ->  [0] -> {'sampleName'}.'",
+			"threeLetterName": "MS1",
+			"readgroups" : ['."\n";
+		my $rgidx = 0;
+		for my $rg (@{$h{"SAMPLENAMES"} -> { $samplename }}){
+		#	my @c;
+		#	for my $h (@h){
+		#		if($$sample{$h}){
+		#			push (@c,$$sample{$h});
+		#		}else{
+		#			push (@c,"");
+		#		}
+		#	}
+		#	$string.=join(",",@c)."\n";
+
+			$string.= '    				{"identifier": "'.$rg -> {'sampleName'}.'_'.
+						$rg -> {'lane'}.'_'.$rg -> {'barcode'}.'",
+					"lane": "'.$rg -> {'lane'}.'",
+					"barcode2": "NNNNNN",
+					"fastq1": "'.$rg -> {'reads1FqGz'}.'",'."\n";
+			$string .= '                "fastq2": "'.$rg -> {'reads2FqGz'}.'",'."\n" if($rg -> {'reads2FqGz'} ne "");
+					$string .= '					"date": "'.$rg -> {'sequencingStartDate'}.'",
+					"barcode1": "'.$rg -> {'barcode'}.'",
+					"run": "'.$rg -> {'run'}.'",
+					"platform_model" : "HiSeq2xxx",
+					"sequencer":"'.$rg -> {'sequencerId'}.'",
+					"platform": "'.$rg -> {'sequencer'}.'",
+					"flowcell":"'.$rg -> {'flowcellId'}.'",
+					"sequencing_center": "undef"
+				}';
+			$string = $string .',' if(($rgidx+1) < scalar(@{$h{"SAMPLENAMES"} -> { $samplename }}));
+			$string .= "\n";
+			$rgidx++;
+		}
+
+		$string .= '       ]'."\n".'    }';
+		$string = $string .',' if(($idx+1) < scalar(keys(%{$h{"SAMPLENAMES"}})));
+		$string .= "\n";
+		$idx++;
+	}
+	$string.= ']}'."\n";
+	
 	return $string;
 }
 

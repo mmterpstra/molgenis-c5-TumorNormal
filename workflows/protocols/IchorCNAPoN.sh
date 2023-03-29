@@ -8,6 +8,7 @@
 #string checkStage
 #string ichorcnaMod
 #string ichorcnaChromosomes
+#string mapability1000kbWig
 #string onekgGenomeFasta
 #list controlSampleBam
 #string projectDir
@@ -40,12 +41,12 @@ inputs=$(printf ' -I %s '  ${bams[@]})
 echo "">  ${projectDir}/ichorCNAPoN/normal.txt
 
 for bam in "${bams[@]}"; do
-	window=500000
+	window=1000000
 	wig="${projectDir}/ichorCNAPoN/$(basename $bam .bam).${window}b.wig"
 	readCounter\
 		--window $window \
 		--quality 20 \
-		-chromosome $(echo "${ichorcnaChromosomes}"| perl -wpe 's/\t/,/g') \
+		--chromosome $(echo "${ichorcnaChromosomes}"| perl -wpe 's/\t/,/g') \
 		"${bam}" > "${wig}"
 	echo "${wig}" >> ${projectDir}/ichorCNAPoN/normal.txt
 done
@@ -53,7 +54,7 @@ done
 createPanelOfNormals.R \
 	--filelist ${projectDir}/ichorCNAPoN/normal.txt \
 	--gcWig ${onekgGenomeFasta}.500000b.gc.wig \
-	--mapWig $EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/${mapability500kbWig} \
+	--mapWig $EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/${mapability1000kbWig} \
 	--centromere $EBROOTRMINBUNDLEMINICHORCNA/ichorCNA/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt \
 	--genomeBuild="hg38" \
 	--genomeStyle="NCBI" \

@@ -53,7 +53,7 @@ SNVVariantsToMinTable,protocols/GatkVariantsToTable.sh,SelectSNV;vcf=snvVcf;vari
 IndelVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectIndels;vcf=indelMnpVcf;descrTable=indelMnpDescrTable
 SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvVcf;descrTable=snvDescrTable
 TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToDescriptionTable
-Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
+Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;GenotypeGvcfs
 PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown

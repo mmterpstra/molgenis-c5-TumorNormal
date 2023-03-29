@@ -12,6 +12,7 @@
 #string sampleMarkdownDir
 #string projectMarkdown
 #string calculateHsMetricsDir
+#string collectDuplexMetricsDir
 #string collectMultipleMetricsDir
 #string nugeneProbeMetricsDir
 #list varscanDir,snvVcf,indelMnpVcf
@@ -41,7 +42,7 @@ alloutputsexist \
 	
 	mkdir -p "${archiveDir}"
 	
-	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}" "${convadingDir}"; do
+	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}" "${convadingDir}" "${collectDuplexMetricsDir}"; do
 		if [ -n "$(ls -A $dir/*)" ]; then
 	               	$zipbase $(echo "$dir/*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 		fi
@@ -127,7 +128,7 @@ alloutputsexist \
 		$zipbase $(echo "${nugeneProbeMetricsDir}/*.tsv" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 		#$zipbase $(echo "${nugeneProbeMetricsDir}/*.xlsx" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 	fi
-	
+	#duplexMetrics
 
 	###############################
 	#Stuff below here goes into output without zipping

@@ -95,6 +95,17 @@ if [ ${#reads3FqGzOriginal} -eq 0 ]; then
 else
 	ml ${fgbioMod}
 	#this piece of code reads the umis in memory so more mem as the reads3 file gets bigger
+	#java -Xmx4g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/fgbio.jar FastqToBam \
+	# --input "${reads1FqGz}" "${reads2FqGz}" "${reads3FqGz}" --read-structures +T +T +M \
+	# --output "${bwaBam}.umi.bam" \
+	# --sort true \
+	# --sample "${sampleName}" \
+	# --library "${sampleName}_${samplePrep}" \
+	# --platform "${sequencer}" \
+	# --platform-unit "${seqType}_${sequencerId}_${flowcellId}_${run}_${lane}_${barcode}" \
+	# --run-date "$(date --rfc-3339=date)"
+	# omitted platform-model sequencing-center predicted-insert-size description comment 
+
 	java -Xmx16g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/fgbio.jar AnnotateBamWithUmis \
 	 --input "${bwaBam}.unmapped.bam" \
 	 --fastq ${reads3FqGzOriginal} \

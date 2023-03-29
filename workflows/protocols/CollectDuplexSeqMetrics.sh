@@ -18,6 +18,7 @@
 #string targetsList
 #string consensusBam
 #string consensusBai
+#string consensusDir
 
 #alloutputsext
 alloutputsexist \
@@ -38,7 +39,7 @@ echo "## "$(date)" Start $0"
 
 getFile ${consensusBam}
 #more important:${consensusBam}.grouped.bam
-getFile ${consensusBai}
+#getFile ${consensusBai}
 getFile ${onekgGenomeFasta}
 #getFile ${dbsnpVcf}
 getFile ${targetsList}
@@ -67,10 +68,15 @@ if [ `samtools view -c "${consensusBam}.grouped.bam"` == 0 ] ; then
 	touch ${collectDuplexMetricsPrefix}.duplex_yield_metrics.txt
 	touch ${collectDuplexMetricsPrefix}.duplex_qc.pdf
 else 
-
+	groupedbam="${consensusBam}.grouped.bam"
+	
+	if [ `samtools view -h "${consensusBam}.grouped.bam" | grep -Pc 'RX:Z:[ATCGN]+-'` == 0 ] ; then
+		groupedbam="$(dirname "${consensusBam}.grouped.bam")"/"$(basename "${consensusBam}.grouped.bam" .grouped.bam).umifix.grouped.bam"
+		samtools view -h "${consensusBam}.grouped.bam" | perl -wpe 's/RX:Z:[ATCGN]+/$&-AAAAAA/g' | samtools view -Sb> "${groupedbam}"
+	fi		
 	java -Xmx5g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
-	 -jar $EBROOTFGBIO/fgbio.jar CallMolecularConsensusReads \
-	 --input="${consensusBam}.grouped.bam" \
+	 -jar $EBROOTFGBIO/fgbio.jar CollectDuplexSeqMetrics \
+	 --input="${groupedbam}" \
 	 --output="${collectDuplexMetricsPrefix}" \
 	 $intervals
 fi

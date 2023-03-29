@@ -43,7 +43,7 @@ MergeVariants,protocols/MergeVcfs.sh,HaplotypeCaller
 #SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvVcf;descrTable=snvDescrTable
 #TablesToXlsx,protocols/TablesToXlsx.sh,IndelVariantsToTable;SNVVariantsToTable;SNVVariantsToDescriptionTable;IndelVariantsToDescriptionTable
 #CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;IndelRealignmentKnown;bqsrBam=indelRealignmentBam;bqsrBai=indelRealignmentBai
-#Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;HaplotypeCaller
+#Varscan2,protocols/Varscan2.sh,IndelRealignmentKnown;GenotypeGvcfs
 #PlotGenome,protocols/Plotgenome.sh,Varscan2;SNVVariantsToTable
 #MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
 ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown

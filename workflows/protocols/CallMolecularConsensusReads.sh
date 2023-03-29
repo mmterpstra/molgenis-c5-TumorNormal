@@ -127,6 +127,10 @@ java -Djava.io.tmpdir="${consensusDir}" -Xmx4g -XX:+AggressiveOpts -XX:+Aggressi
  CREATE_INDEX=true \
  MAX_RECORDS_IN_RAM=1000000 
 
+ll -alh $(dirname ${consensusBam})/
+
+java -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar BuildBamIndex \
+	 INPUT=${consensusBam}
 
 putFile ${consensusBam} 
 putFile ${consensusBai} 

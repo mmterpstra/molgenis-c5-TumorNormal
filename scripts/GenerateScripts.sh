@@ -287,8 +287,8 @@ projectname=$3
 	perl -wpe 's!projectNameHere!'$projectname'!g' "$samplesheet" > "${samplesheet}"".tmp.csv"
 	if [ $1 != "prepiont" ];then
 		echo "Validating samplesheet"
-		#perl $workflowDir/scripts/ValidateSampleSheet.pl "$samplesheet" 
-		#perl $workflowDir/scripts/SampleSheetTool.pl valid "$samplesheet"
+		perl $workflowDir/scripts/ValidateSampleSheet.pl "$samplesheet" 
+		perl $workflowDir/scripts/SampleSheetTool.pl valid "$samplesheet"
 
 	fi
 	cp "$samplesheet.tmp.csv" "$runDir/""$(basename $samplesheet .csv)"".input.csv"
@@ -342,20 +342,29 @@ projectname=$3
 		echo "' with command '"$SCRIPTCALL"'. Althought this is software in development and also the next commit should also be considered."
 
 		
+		module load Graphviz || true
+		
 		if [ git branch &>/dev/null ]; then
 			echo
 			echo "### Branch info"
 			echo
 			git branch
 		fi 
-		if which dot &>/dev/null || module load Graphviz ; then
+		
+		mlGraphvizCmd="true"
+		if module load Graphviz; then 
+			mlGraphvizCmd="module load Graphviz"
+			which dot &>/dev/null || exit 1
+		fi	
+
+		if which dot &>/dev/null; then
 			>&2 echo "## "$(date)" ## $0 ## Command 'dot' present"
 			echo
 			echo "### Workflow image"
 			echo 
 			echo "workflow used as shown below"
 			echo
-			echo -n '<img src="data:image/svg+xml;base64,'$(python ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | (ml Graphviz &&  dot -Tsvg /dev/stdin) | base64)'"\>'
+			echo -n '<img src="data:image/svg+xml;base64,'"$(python3 ${workflowDir}/scripts/workflow2dot.py $workflowDir/workflows/$workflowBase | ($mlGraphvizCmd &&  dot -Tsvg /dev/stdin) | base64)"'"\>'
 		else
 			>&2 echo "## "$(date)" ## $0 ## Commmand 'dot' not present."
 			echo '<!-- Commmand `dot` not present. so no workflow image is generated -->'
