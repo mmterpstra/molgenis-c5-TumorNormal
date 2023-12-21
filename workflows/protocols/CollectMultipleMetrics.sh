@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=5gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=8gb nodes=1 ppn=1
 
 #string project
 
@@ -82,22 +82,23 @@ if [ `samtools view -c "${markDuplicatesBam}"` == 0 ] ; then
 		touch ${collectMultipleMetricsPrefix}.insert_size_metrics
 	fi
 else 
-
-	java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectMultipleMetrics\
-	 I=${markDuplicatesBam} \
-	 O=${collectMultipleMetricsPrefix} \
-	 R=${onekgGenomeFasta} \
-	 PROGRAM=CollectAlignmentSummaryMetrics \
-	 PROGRAM=QualityScoreDistribution \
-	 PROGRAM=MeanQualityByCycle \
-	 $insertSizeMetrics \
-	 PROGRAM=CollectBaseDistributionByCycle \
-	 PROGRAM=CollectGcBiasMetrics \
-	 PROGRAM=CollectSequencingArtifactMetrics \
-	 PROGRAM=CollectQualityYieldMetrics \
-	 DB_SNP=${dbsnpVcf}  \
-	 $intervals \
-	 TMP_DIR=${collectMultipleMetricsDir}
+	#oom kill event at 5gb memory probably due to R also using more memory next to the vm
+	java -Xmx6g -XX:ParallelGCThreads=1  -Djava.io.tmpdir="${collectMultipleMetricsDir}" \
+		-jar $EBROOTPICARD/picard.jar CollectMultipleMetrics\
+		I=${markDuplicatesBam} \
+		O=${collectMultipleMetricsPrefix} \
+		R=${onekgGenomeFasta} \
+		PROGRAM=CollectAlignmentSummaryMetrics \
+		PROGRAM=QualityScoreDistribution \
+		PROGRAM=MeanQualityByCycle \
+		$insertSizeMetrics \
+		PROGRAM=CollectBaseDistributionByCycle \
+		PROGRAM=CollectGcBiasMetrics \
+		PROGRAM=CollectSequencingArtifactMetrics \
+		PROGRAM=CollectQualityYieldMetrics \
+		DB_SNP=${dbsnpVcf}  \
+		$intervals \
+		TMP_DIR=${collectMultipleMetricsDir}
 
 fi
 

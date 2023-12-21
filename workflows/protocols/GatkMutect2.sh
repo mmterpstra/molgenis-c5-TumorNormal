@@ -1,5 +1,5 @@
-#MOLGENIS nodes=1 ppn=1 mem=10gb walltime=47:59:00
-
+#MOLGENIS nodes=1 ppn=1 mem=10gb walltime=20:59:00 tmp=50gb
+##rna seq needs more mem nodes=1 ppn=2 mem=10gb walltime=30:59:00 tmp=50gb
 #string project
 
 
@@ -33,7 +33,7 @@ alloutputsexist \
  ${mutect2ScatVcf} \
  ${mutect2ScatVcfIdx}
 
-${stage} ${samtoolsMod} ${gatkMod} ${pipelineUtilMod}
+${stage} ${samtoolsMod} ${gatkMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}
@@ -84,7 +84,7 @@ if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
 fi
 
 #this should override the normalspec and the data should be ran only when using Panel Of Normals generation
-if [ ! -e ${mutect2PonProjectScatVcf}  ${mutect2PonProjectScatVcf}.done ]; then
+if [ ! -e ${mutect2PonProjectScatVcf} ] && [ ! -e ${mutect2PonProjectScatVcf}.done ]; then
 	
 	echo "## "$(date)" ##  $0 Running in panel of normals mode."
 
@@ -92,28 +92,61 @@ if [ ! -e ${mutect2PonProjectScatVcf}  ${mutect2PonProjectScatVcf}.done ]; then
 	
 fi
 
+java -version
+if [ "z$TMPDIR" == "z" ]; then 
+	echo "NO TMP set do regular"
+		
+	java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+	-T MuTect2 \
+	-R ${onekgGenomeFasta} \
+	--dbsnp ${dbsnpVcf} \
+	--cosmic ${cosmicVcf} \
+	-I:tumor ${indelRealignmentBam} \
+	$Normalspec \
+	$InterValOperand \
+	-o ${mutect2ScatVcf}.tmp.vcf
+else 
+	echo "non empty $TMPDIR do local data"
+	LOCALTEMP=$(mktemp -d --suffix="_${HOSTNAME}_${BASHPID}" -p ""$TMPDIR)
+		
+	cp -v ${cosmicVcf}* \
+		${dbsnpVcf}* \
+		${indelRealignmentBam} \
+		${indelRealignmentBai} \
+		$LOCALTEMP
+	
+ 	if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
+		#run with controlsample
+		echo "## "$(date)" ##  $0 Running with controlsample '${controlSampleBam}'."
+		cp -v ${controlSampleBam} ${controlSampleBai} $LOCALTEMP
+		Normalspec="-I:normal $LOCALTEMP/$(basename ${controlSampleBam}) "
+	fi
 
-java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T MuTect2 \
- -R ${onekgGenomeFasta} \
- --dbsnp ${dbsnpVcf} \
- --cosmic ${cosmicVcf} \
- -I:tumor ${indelRealignmentBam} \
- $Normalspec \
- $InterValOperand \
- -o ${mutect2ScatVcf}.tmp.vcf
+	java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+		-T MuTect2 \
+		-R ${onekgGenomeFasta} \
+		--dbsnp $LOCALTEMP/$(basename ${dbsnpVcf}) \
+		--cosmic $LOCALTEMP/$(basename ${cosmicVcf}) \
+		-I:tumor $LOCALTEMP/$(basename ${indelRealignmentBam}) \
+		$Normalspec \
+		$InterValOperand \
+		-o ${mutect2ScatVcf}.tmp.vcf
+fi
 
 #cleans name of any not [a-zA-Z0-9_]. It is up to the human interpreter to interpret these names, if needed.
 
 #sampleNameClean=$(echo "${sampleName}" | perl -wpe 'chomp;$_=uc;s/\W/_/g;')
 
 #this should be better than callerise is this case
-perl $EBROOTPIPELINEMINUTIL/bin/MutectAnnotationsToSampleFormat.pl TLOD,NLOD,MIN_ED,MAX_ED,ECNT,HCNT ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}
 
-NORMAL="$(perl -wne 'if(s/.*NORMAL,SampleName=(.*?),.*/$1/){print};' ${mutect2ScatVcf}.tmp.vcf)"
-TUMOR="$(perl -wne 'if(s/.*TUMOR,SampleName=(.*?),.*/$1/){print};' ${mutect2ScatVcf}.tmp.vcf)"
-perl -i.tumornormal.bak -wpe 's/\tNORMAL/\t'"$NORMAL"'/;s/\tTUMOR/\t'"$TUMOR"'/;' ${mutect2ScatVcf}
+(
+   ml ${pipelineUtilMod} 
+   perl $EBROOTPIPELINEMINUTIL/bin/MutectAnnotationsToSampleFormat.pl TLOD,NLOD,MIN_ED,MAX_ED,ECNT,HCNT ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}
 
+    NORMAL="$(perl -wne 'if(s/.*NORMAL,SampleName=(.*?),.*/$1/){print};' ${mutect2ScatVcf}.tmp.vcf)"
+    TUMOR="$(perl -wne 'if(s/.*TUMOR,SampleName=(.*?),.*/$1/){print};' ${mutect2ScatVcf}.tmp.vcf)"
+    perl -i.tumornormal.bak -wpe 's/\tNORMAL/\t'"$NORMAL"'/;s/\tTUMOR/\t'"$TUMOR"'/;' ${mutect2ScatVcf}
+)
 
 #java -Xmx8g -Djava.io.tmpdir=${haplotyperDir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 # -T HaplotypeCaller \

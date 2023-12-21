@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=1
 
 #string project
 
@@ -25,6 +25,7 @@
 #string markDuplicatesMetrics
 
 #string calculateHsMetricsLog
+#string collectHsMetricsLog
 
 alloutputsexist \
  ${sampleMarkdown}
@@ -227,41 +228,52 @@ fi
 ################################################################################
 ##
 #
-(
-	echo
-	echo "Hybrid selection metrics"
-	echo "========================"
-	echo
-	echo "**metrics definitions**"
-	echo
-	echo "literal source: http://broadinstitute.github.io/picard/picard-metric-definitions.html"
-	echo
-	echo "| field | description |"
-	echo "| ----- | ----------- |"
-	echo "| SAMPLE | The sample to which these metrics apply. If null, it means they apply to all reads in the file. |"
-	echo "| READ_GROUP | The read group to which these metrics apply. If null, it means that the metrics were accumulated at the library or sample level."
-	echo "| LIBRARY | The library to which these metrics apply. If null, it means that the metrics were accumulated at the sample level.|"
-	echo "| TARGET_TERRITORY | The number of unique bases covered by the intervals of all targets that should be covered. |"
-	echo "| PF_UQ_READS_ALIGNED | The number of PF unique reads that are aligned with mapping score > 0 to the reference genome. |"
-	echo "| PF_UQ_BASES_ALIGNED | The number of PF unique bases that are aligned with mapping score > 0 to the reference genome. |"
-	echo "| PF unique reads | The number of reads that pass the vendor's filter that are not marked as duplicates. |"
-	echo "| ON_TARGET_BASES | The number of PF aligned bases that mapped to a targeted region of the genome.|"
-	echo "| PCT_USABLE_BASES_ON_TARGET | The number of aligned, de-duped, on-target bases out of the PF bases available.|"
-	echo "| MEAN_TARGET_COVERAGE | The mean coverage of targets that received at least coverage depth = 2 at one base.|"
-	echo "| PCT_TARGET_BASES_2X | The percentage of ALL target bases achieving 2X or greater coverage.|"
-	echo
-	#the table
-	echo "In the table below the output of metrics collection is shown."
-	echo
-	#hsmetrics
-	echo 'tablehs=read.table("'${calculateHsMetricsLog}'", skip=6, header=TRUE, fill=NA, sep="\t");
-	 write.table(subset(tablehs,SAMPLE != "",select=c("SAMPLE","TARGET_TERRITORY","PF_UQ_READS_ALIGNED","PF_UQ_BASES_ALIGNED",
-	   "ON_TARGET_BASES","PCT_USABLE_BASES_ON_TARGET","MEAN_TARGET_COVERAGE","PCT_TARGET_BASES_2X","PCT_TARGET_BASES_10X",
-	   "PCT_TARGET_BASES_20X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_40X", "PCT_TARGET_BASES_50X", "PCT_TARGET_BASES_100X"))
-	 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
-	Rscript ${sampleMarkdownDir}/${sampleName}_hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
-	rm  ${sampleMarkdownDir}/${sampleName}_hsmetrics.R 
-)>> ${sampleMarkdown}
+	if [ -e ${calculateHsMetricsLog} ]; then
+		(
+			echo
+			echo "Hybrid selection metrics"
+			echo "========================"
+			echo
+			echo "**metrics definitions**"
+			echo
+			echo "literal source: http://broadinstitute.github.io/picard/picard-metric-definitions.html"
+			echo
+			echo "| field | description |"
+			echo "| ----- | ----------- |"
+			echo "| SAMPLE | The sample to which these metrics apply. If null, it means they apply to all reads in the file. |"
+			echo "| READ_GROUP | The read group to which these metrics apply. If null, it means that the metrics were accumulated at the library or sample level."
+			echo "| LIBRARY | The library to which these metrics apply. If null, it means that the metrics were accumulated at the sample level.|"
+			echo "| TARGET_TERRITORY | The number of unique bases covered by the intervals of all targets that should be covered. |"
+			echo "| PF_UQ_READS_ALIGNED | The number of PF unique reads that are aligned with mapping score > 0 to the reference genome. |"
+			echo "| PF_UQ_BASES_ALIGNED | The number of PF unique bases that are aligned with mapping score > 0 to the reference genome. |"
+			echo "| PF unique reads | The number of reads that pass the vendor's filter that are not marked as duplicates. |"
+			echo "| ON_TARGET_BASES | The number of PF aligned bases that mapped to a targeted region of the genome.|"
+			echo "| PCT_USABLE_BASES_ON_TARGET | The number of aligned, de-duped, on-target bases out of the PF bases available.|"
+			echo "| MEAN_TARGET_COVERAGE | The mean coverage of targets that received at least coverage depth = 2 at one base.|"
+			echo "| PCT_TARGET_BASES_2X | The percentage of ALL target bases achieving 2X or greater coverage.|"
+			echo
+			#the table
+			echo "In the table below the output of metrics collection is shown."
+			echo
+			#hsmetrics
+			echo 'tablehs=read.table("'${calculateHsMetricsLog}'", skip=6, header=TRUE, fill=NA, sep="\t");
+			 write.table(subset(tablehs,SAMPLE != "",select=c("SAMPLE","TARGET_TERRITORY","PF_UQ_READS_ALIGNED","PF_UQ_BASES_ALIGNED",
+			   "ON_TARGET_BASES","PCT_USABLE_BASES_ON_TARGET","MEAN_TARGET_COVERAGE","PCT_TARGET_BASES_2X","PCT_TARGET_BASES_10X",
+			   "PCT_TARGET_BASES_20X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_40X", "PCT_TARGET_BASES_50X", "PCT_TARGET_BASES_100X"))
+			 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
+			Rscript ${sampleMarkdownDir}/${sampleName}_hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
+			rm  ${sampleMarkdownDir}/${sampleName}_hsmetrics.R 
+		)>> ${sampleMarkdown}
+	elif [ -e ${collectHsMetricsLog} ]; then
+		(
+			echo "<!-- CollectHsMetrics here... --> "
+		)>> ${sampleMarkdown}
+	else
+		(
+                        echo "<!-- No HsMetrics in the data --> "
+                )>> ${sampleMarkdown}	
+	fi
+
 ################################################################################
 ##
 #

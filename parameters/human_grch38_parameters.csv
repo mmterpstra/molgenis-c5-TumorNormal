@@ -8,18 +8,19 @@ genomeBuild,hg38
 genomeGrchBuild,GRCh38
 ensemblVersion,86
 #/data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/bundle17jan2020/hg38/Homo_sapiens_assembly38.fasta
-bundle,${data}/ftp.broadinstitute.org/bundle/bundle17jan2020/${genomeBuild}/
+bundle,${data}/genomics-public-data/resources/broad/${genomeBuild}/v0/
+broadReferencesBundle,${data}/gcp-public-data--broad-references/hg38/v0/
 #onekgGgenomeDecoyFasta,${resDir}/${genomeBuild}/indices/human_g1k_v37_decoy.fasta
 onekgGenomeFasta,${bundle}/Homo_sapiens_assembly38.fasta
-onekgGenomeFastaIdxBase,${bundle}/BWA/0.7.15-foss-2016a/Homo_sapiens_assembly38.fasta
+onekgGenomeFastaIdxBase,${bundle}/Homo_sapiens_assembly38.fasta
 onekgGenomeFastaDict,${bundle}/Homo_sapiens_assembly38.dict
 
-goldStandardVcf,${bundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+goldStandardVcf,${broadReferencesBundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
 goldStandardVcfIdx,${goldStandardVcf}.tbi
 
-oneKgPhase1SnpsVcf,${bundle}/1000G_phase1.snps.high_confidence.hg38.vcf.gz
+oneKgPhase1SnpsVcf,${broadReferencesBundle}/1000G_phase1.snps.high_confidence.hg38.vcf.gz
 oneKgPhase1SnpsVcfIdx,${oneKgPhase1SnpsVcf}.tbi
-oneKgPhase1IndelsVcf,${bundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+oneKgPhase1IndelsVcf,${broadReferencesBundle}/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
 oneKgPhase1IndelsVcfIdx,${oneKgPhase1IndelsVcf}.tbi
 
 #oneKgPhase3v4Vcf,${bundle}/1000G_phase3_v4_20130502.sites.vcf.gz
@@ -30,13 +31,13 @@ popStratifiedVcfIdx,${popStratifiedVcf}.tbi
 #phase 3 indels / snps
 #${resDir}/${genomeBuild}/variants/1000G_Phase3/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5.20130502.sites.vcf.gz
 
-dbsnp138Vcf,${bundle}/dbsnp_138.hg38.vcf.gz
-dbsnp138VcfIdx,${dbsnpVcf}.tbi
-dbsnpVcf,${bundle}/dbsnp_146.hg38.vcf.gz
-dbsnpVcfIdx,${dbsnpVcf}.tbi
+dbsnp138Vcf,${broadReferencesBundle}/Homo_sapiens_assembly38.dbsnp138.vcf.gz
+dbsnp138VcfIdx,${dbsnp138Vcf}.tbi
+dbsnpVcf,${dbsnp138Vcf}
+dbsnpVcfIdx,${dbsnp138VcfIdx}
 
 #see gnomad v3
-#exacVcf,${data}/ExAC/release0.3/ExAC.r0.3.sites.vep.vcf.gz
+#exacVcf,/apps/data/gnomAD/v3.1.1/gnomad.genomes.v3.1.1.sites.stripped.vcf.gz
 #exacVcfIdx,${exacVcf}.tbi
 
 #limit to known realignment when using haplotype caller because the haplotypecaller will consider multiple haplotypes instead of one when the GatkRealignerTargetCreator step is used.
@@ -73,8 +74,11 @@ dbnsfpTbi,${dbnsfp}.tbi
 
 #gnomad genome data
 gnomadDir,${data}/storage.googleapis.com/gnomad-public/release/3.0/vcf/
-gnomadVcf,${gnomadDir}/genomes/gnomad.genomes.r3.0.sites.snpsift.vcf.gz
+gnomadVcf,/groups/umcg-pmb/tmp01//apps/data/gnomAD/v3.1.1/gnomad.genomes.v3.1.1.sites.snpsift.vcf.gz
 gnomadVcfIdx,${gnomadVcf}.tbi
+gnomad312Vcf,/groups/umcg-pmb/tmp01/apps/data/gnomAD/v3.1.2/gnomad.genomes.v3.1.2.sites.vcf.gz
+gnomad312VcfIdx,${gnomad312Vcf}.tbi
+
 
 #clinvar
 #ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar_20200210_Homo_sapiens_assembly38.vcf.gz 

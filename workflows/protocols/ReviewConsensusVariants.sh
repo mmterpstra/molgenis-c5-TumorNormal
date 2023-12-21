@@ -61,7 +61,7 @@ mkdir -p ${annotateConsensusBaseDir}
 		${annotateConsensusBaseDir}/$(basename ${consensusBam}).sorted.grouped.bam
 )
 java -Xmx6g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar \
+ -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar \
  ReviewConsensusVariants \
  -r ${onekgGenomeFasta} \
  -c "${consensusBam}" \

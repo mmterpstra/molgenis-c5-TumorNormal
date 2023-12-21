@@ -17,6 +17,7 @@
 #string nugeneProbeMetricsDir
 #list varscanDir,snvVcf,indelMnpVcf
 #string fastqcDir
+#string tableDir
 #string xlsxDir
 #string splitTableDir
 #string htseqDir
@@ -42,7 +43,7 @@ alloutputsexist \
 	
 	mkdir -p "${archiveDir}"
 	
-	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${splitTableDir}" "${convadingDir}" "${collectDuplexMetricsDir}"; do
+	for dir in "${calculateHsMetricsDir}" "${collectMultipleMetricsDir}" "${fastqcDir}" "${xlsxDir}" "${tableDir}" "${splitTableDir}" "${convadingDir}" "${collectDuplexMetricsDir}"; do
 		if [ -n "$(ls -A $dir/*)" ]; then
 	               	$zipbase $(echo "$dir/*" | perl -wpe 's!'"$(dirname "${projectDir}")"'/*!!g;s!/+!/!g')
 		fi

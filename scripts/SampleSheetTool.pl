@@ -73,7 +73,7 @@ use: perl $0 [merge|addfile|reformat|stats|uniq|help] commands
 	use: perl $0 reformat \
 		samplesheet.filename.csv > samplesheet.reformat.csv
 
- - reformatmin	Converts minimal (tsv with fq1,fq2,fq3,sample) spec to my own spec
+ - reformatmin	Converts minimal (tsv with fq1,fq2,fq3,sampleName) spec to my own spec
 	use: perl $0 reformatmin \
 		samplesheet.filename.csv > samplesheet.reformat.csv
 
@@ -807,7 +807,7 @@ sub SamplesheetAsJSONString {
 		#	}
 		#	$string.=join(",",@c)."\n";
 
-			$string.= '    				{"identifier": "'.$rg -> {'sampleName'}.'_'.
+			$string.= '    				{"identifier": "'.$rg -> {'sampleName'}.'_'.$rg -> {'flowcellId'}.
 						$rg -> {'lane'}.'_'.$rg -> {'barcode'}.'",
 					"lane": "'.$rg -> {'lane'}.'",
 					"barcode2": "NNNNNN",

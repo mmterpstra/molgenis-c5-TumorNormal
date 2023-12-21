@@ -27,6 +27,7 @@ ${checkStage}
 
 set -x
 set -e
+set -o pipefail
 
 mkdir -p ${splitTableDir}
 touch "${splitTableDir}".run

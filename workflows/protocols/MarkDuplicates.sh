@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=15gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=15gb nodes=1 ppn=2
 
 #string project
 
@@ -9,6 +9,7 @@
 #string projectDir
 
 #string picardMod
+#string samtoolsMod
 
 #string mergeBamFilesBam
 #string mergeBamFilesBai
@@ -30,6 +31,8 @@ getFile ${mergeBamFilesBam}
 getFile ${mergeBamFilesBai}
 
 ${stage} ${picardMod}
+${stage} ${samtoolsMod}
+
 ${checkStage}
 
 set -x
@@ -41,7 +44,7 @@ mkdir -p ${markDuplicatesDir}
 # test for specified FqGz with UMIs if not present do default markduplicates else do UmiAwareMarkDuplicatesWithMateCigar
 #if [ ${#reads3FqGz[0]} -eq 0 ];then
 if [ $(samtools view ${mergeBamFilesBam} | head -n 10 | grep -c 'RX:') -eq 0 ]; then
-	java -Xmx14g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
+	java -Xmx14g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar MarkDuplicates \
 	 INPUT=${mergeBamFilesBam} \
 	 OUTPUT=${markDuplicatesBam} \
 	 CREATE_INDEX=true \

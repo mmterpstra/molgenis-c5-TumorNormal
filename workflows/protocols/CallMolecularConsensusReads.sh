@@ -45,7 +45,7 @@ mkdir -p ${consensusDir}
 
 #groupreads
 java -Xmx1g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar GroupReadsByUmi \
+ -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar GroupReadsByUmi \
 	 --input="${mergeBamFilesBam}" \
 	 --strategy=adjacency \
 	 --edits=1 \
@@ -54,7 +54,7 @@ java -Xmx1g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+Aggress
 
 #call consensus
 java -Xmx5g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar CallMolecularConsensusReads \
+ -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar CallMolecularConsensusReads \
 	 --input="${consensusBam}.grouped.bam" \
 	 --error-rate-post-umi=30 \
 	 --min-reads=1 \
@@ -62,7 +62,7 @@ java -Xmx5g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+Aggress
 
 #filterconsensus
 java -Xmx1g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar FilterConsensusReads \
+ -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar FilterConsensusReads \
 	 --input="${consensusBam}.called.bam" \
 	 --ref="${onekgGenomeFasta}" \
 	 --reverse-per-base-tags=true \
@@ -119,7 +119,19 @@ java -Djava.io.tmpdir="${consensusDir}" -Xmx3g -XX:+AggressiveOpts -XX:+Aggressi
  UNMAP_CONTAMINANT_READS=false \
  CLIP_OVERLAPPING_READS=true \
  ATTRIBUTES_TO_RETAIN=XS \
- ATTRIBUTES_TO_RETAIN=XA | \
+ ATTRIBUTES_TO_RETAIN=XA \
+ ATTRIBUTES_TO_RETAIN=X0 \
+ ATTRIBUTES_TO_RETAIN=ZS \
+ ATTRIBUTES_TO_RETAIN=ZI \
+ ATTRIBUTES_TO_RETAIN=ZM \
+ ATTRIBUTES_TO_RETAIN=ZC \
+ ATTRIBUTES_TO_RETAIN=ZN \
+ ATTRIBUTES_TO_RETAIN=ad \
+ ATTRIBUTES_TO_RETAIN=bd \
+ ATTRIBUTES_TO_RETAIN=cd \
+ ATTRIBUTES_TO_RETAIN=ae \
+ ATTRIBUTES_TO_RETAIN=be \
+ ATTRIBUTES_TO_RETAIN=ce | \
 java -Djava.io.tmpdir="${consensusDir}" -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SetNmMdAndUqTags \
  I="/dev/stdin" \
  O="${consensusBam}" \
@@ -127,10 +139,13 @@ java -Djava.io.tmpdir="${consensusDir}" -Xmx4g -XX:+AggressiveOpts -XX:+Aggressi
  CREATE_INDEX=true \
  MAX_RECORDS_IN_RAM=1000000 
 
-ll -alh $(dirname ${consensusBam})/
+ls -alh $(dirname ${consensusBam})/
 
 java -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar BuildBamIndex \
 	 INPUT=${consensusBam}
+
+rm -v ${consensusBam}.grouped.bam ${consensusBam}.called.bam
+
 
 putFile ${consensusBam} 
 putFile ${consensusBai} 

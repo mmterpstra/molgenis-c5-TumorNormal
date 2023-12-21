@@ -11,6 +11,7 @@
 #string picardMod
 #string pipelineUtilMod
 #string onekgGenomeFasta
+#string onekgGenomeFastaDict
 #string targetsList
 #string cosmicVcf
 #string dbsnpVcf
@@ -32,7 +33,7 @@ alloutputsexist \
  ${lancetScatVcf} 
 
 
-${stage} ${samtoolsMod} ${lancetMod} ${pipelineUtilMod}
+${stage} ${lancetMod} 
 ${checkStage}
 
 getFile ${onekgGenomeFasta}
@@ -132,9 +133,9 @@ else
 		END
 fi
 
-(${stage} ${picardMod}
+(ml purge;${stage} ${picardMod}
 		java -jar $EBROOTPICARD/picard.jar SortVcf \
-			SD=/data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/bundle17jan2020/hg38/Homo_sapiens_assembly38.fasta.dict \
+			SD=${onekgGenomeFastaDict} \
 			I=${lancetScatVcf}.tmp.vcf \
 			O=${lancetScatVcf})
 #java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
