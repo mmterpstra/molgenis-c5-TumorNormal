@@ -44,7 +44,7 @@ BAMTOPROCESS="${revertSamAddOrReplaceReadGroupsBam}"
 else
 	ml ${fgbioMod}
 	#this piece of code reads the umis in memory so more mem as the reads3 file gets bigger
-	java -Xmx16g  -Djava.io.tmpdir="${mergeBamAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/fgbio.jar AnnotateBamWithUmis \
+	java -Xmx16g  -Djava.io.tmpdir="${mergeBamAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar AnnotateBamWithUmis \
 	 --input "${revertSamAddOrReplaceReadGroupsBam}" \
 	 --fastq ${reads3FqGzOriginal} \
 	 --output "${mergeBamAlignmentBam}.revertsam.umi.bam" 

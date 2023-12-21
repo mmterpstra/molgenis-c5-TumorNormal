@@ -1,8 +1,6 @@
-#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=1
 
 #string project
-
-
 
 #string stage
 #string checkStage
@@ -43,7 +41,7 @@ mkdir -p ${collectHsMetricsDir}
 
 
 #Run Picard
-java -jar -Xmx4g -XX:ParallelGCThreads=4 $EBROOTPICARD/picard.jar CollectHsMetrics\
+java -jar -Xmx4g -XX:ParallelGCThreads=1 $EBROOTPICARD/picard.jar CollectHsMetrics\
  I=${markDuplicatesBam} \
  O=${collectHsMetricsLog} \
  R=${onekgGenomeFasta} \

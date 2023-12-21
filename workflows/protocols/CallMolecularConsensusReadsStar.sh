@@ -47,7 +47,7 @@ mkdir -p ${consensusDir}
 
 #groupreads
 java -Xmx1g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar GroupReadsByUmi \
+ -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar GroupReadsByUmi \
 	 --input="${mergeBamFilesBam}" \
 	 --strategy=adjacency \
 	 --edits=1 \
@@ -56,7 +56,7 @@ java -Xmx1g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+Aggress
 
 #call consensus
 java -Xmx5g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar CallMolecularConsensusReads \
+ -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar CallMolecularConsensusReads \
 	 --input="${consensusBam}.grouped.bam" \
 	 --error-rate-post-umi=30 \
 	 --min-reads=1 \
@@ -64,7 +64,7 @@ java -Xmx5g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+Aggress
 
 #filterconsensus
 java -Xmx1g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
- -jar $EBROOTFGBIO/fgbio.jar FilterConsensusReads \
+ -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar FilterConsensusReads \
 	 --input="${consensusBam}.called.bam" \
 	 --ref="${onekgGenomeFasta}" \
 	 --reverse-per-base-tags=true \

@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=13gb ppn=2
+#MOLGENIS walltime=5:59:00 mem=13gb ppn=1
 
 #string project
 
@@ -48,9 +48,9 @@ inputs=$(printf ' INPUT=%s ' $(printf '%s\n' ${vcflist[@]}))
 
 echo $inputs
 
-java -Xmx12g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
+java -Xmx12g -XX:ParallelGCThreads=1 -jar $EBROOTPICARD/picard.jar MergeVcfs $inputs OUTPUT=${haplotyperVcf}.tmp.vcf D=${onekgGenomeFastaDict}
 
-java -Xmx12g -XX:ParallelGCThreads=2 -jar $EBROOTPICARD/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
+java -Xmx12g -XX:ParallelGCThreads=1 -jar $EBROOTPICARD/picard.jar SortVcf INPUT=${haplotyperVcf}.tmp.vcf OUTPUT=${haplotyperVcf} SD=${onekgGenomeFastaDict}
 
 rm ${haplotyperVcf}.tmp.vcf
 rm ${haplotyperVcf}.tmp.vcf.idx

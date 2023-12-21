@@ -1,4 +1,4 @@
-#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=4
+#MOLGENIS walltime=23:59:00 mem=4gb nodes=1 ppn=1
 
 #string project
 #string projectDir
@@ -160,15 +160,18 @@ done
 	echo "## Hybrid selection metrics"
 	echo
 
-	echo "Result table of the hybrid selection for all samples."
+	echo "Result table of the hybrid selection picard tool metrics for all samples."
 	echo
 	HEADER='| SAMPLE|TARGET_TERRITORY|PF_UQ_READS_ALIGNED|PF_UQ_BASES_ALIGNED|ON_TARGET_BASES|PCT_USABLE_BASES_ON_TARGET|MEAN_TARGET_COVERAGE|PCT_TARGET_BASES_2X|PCT_TARGET_BASES_10X|PCT_TARGET_BASES_20X|PCT_TARGET_BASES_30X|PCT_TARGET_BASES_40X|PCT_TARGET_BASES_50X|PCT_TARGET_BASES_100X |'
-	grep -A 1 "$HEADER" ${mdlist[1]}
-	for md in "${mdlist[@]}"; do
-		if [ -s "$md" ] ; then
-			grep -A 2 "$HEADER" "$md" | tail -n 1
-		fi
-	done
+	if [ `grep -A 1 "$HEADER" ${mdlist[1]}` ] ; then
+		for md in "${mdlist[@]}"; do
+			if [ -s "$md" ] ; then
+				grep -A 2 "$HEADER" "$md" | tail -n 1
+			fi
+		done
+	else
+		echo "<!-- No Hs metrics -->"	
+	fi
 ) >>  ${projectMarkdown}
 #vcf metrics? entincity? gender? HLA type? CGH metrics?
 

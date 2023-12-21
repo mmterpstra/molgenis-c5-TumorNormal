@@ -75,7 +75,7 @@ else
 		samtools view -h "${consensusBam}.grouped.bam" | perl -wpe 's/RX:Z:[ATCGN]+/$&-AAAAAA/g' | samtools view -Sb> "${groupedbam}"
 	fi		
 	java -Xmx5g  -Djava.io.tmpdir="${consensusDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap \
-	 -jar $EBROOTFGBIO/fgbio.jar CollectDuplexSeqMetrics \
+	 -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar CollectDuplexSeqMetrics \
 	 --input="${groupedbam}" \
 	 --output="${collectDuplexMetricsPrefix}" \
 	 $intervals

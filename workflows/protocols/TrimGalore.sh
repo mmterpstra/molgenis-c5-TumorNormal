@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=2 mem=4gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=1 mem=1gb walltime=10:00:00
 
 #string project
 
@@ -45,16 +45,23 @@ mkdir -p ${trimgaloreSampleDir}
 
 if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	getFile ${reads1FqGz}
+	
 	trim_galore "${reads1FqGz}" \
 	 --output_dir "${trimgaloreSampleDir}"
-	mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}"  .fq.gz)" .fastq.gz)_trimmed.fq.gz" "${trimgalore1FqGz}"
+	mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}"  .fq.gz)" .fastq.gz)_trimmed.fq.gz"  "${trimgalore1FqGz}"
 else
 	getFile ${reads1FqGz}
 	getFile ${reads2FqGz}
         trim_galore --paired "${reads1FqGz}" "${reads2FqGz}" \
          --output_dir "${trimgaloreSampleDir}"
-        mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}"  .fq.gz)" .fastq.gz)_val_1.fq.gz" "${trimgalore1FqGz}"       
-	mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads2FqGz}"  .fq.gz)" .fastq.gz)_val_2.fq.gz" "${trimgalore2FqGz}"
+        if [ -e   "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}" .fq.gz)" .fastq.gz)_val_"1".fq.gz" ]; then
+            mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}" .fq.gz)" .fastq.gz)_val_"1".fq.gz"  "${trimgalore1FqGz}"       
+	    mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads2FqGz}" .fq.gz)" .fastq.gz)_val_"2".fq.gz"  "${trimgalore2FqGz}"
+        elif [ -e "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}" .fq.gz)" .fastq.gz)_val_"2".fq.gz" ]; then
+            mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads1FqGz}" .fq.gz)" .fastq.gz)_val_"2".fq.gz"  "${trimgalore1FqGz}"
+            mv "${trimgaloreSampleDir}/$(basename "$(basename "${reads2FqGz}" .fq.gz)" .fastq.gz)_val_"1".fq.gz"  "${trimgalore2FqGz}"
+	fi
+        putFile ${trimgalore2FqGz}
 fi
 
 putFile ${trimgalore1FqGz}

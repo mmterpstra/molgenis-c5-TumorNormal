@@ -1,7 +1,6 @@
-#MOLGENIS nodes=1 ppn=1 mem=2gb walltime=23:59:00
+#MOLGENIS nodes=1 ppn=1 mem=2gb walltime=15:59:00
 
 #string project
-
 
 #Parameter mapping  #why not string foo,bar? instead of string foo\nstring bar
 #string stage
@@ -32,7 +31,7 @@ alloutputsexist \
  ${lofreqScatVcf} \
  ${lofreqScatVcfIdx}
 
-${stage} ${samtoolsMod} ${lofreqMod}
+${stage} ${lofreqMod}
 ${checkStage}
 
 getFile ${onekgGenomeFasta}
@@ -101,7 +100,7 @@ if [ ${viterbiBam} !=  ${viterbiControlBam} ]; then
 	 --threads 1
 	
 	
-	(${stage} ${pipelineUtilMod}
+	(ml purge; ${stage} ${pipelineUtilMod}
 		#fixup by moving stuff to the genotype fields and adding general fields (AD/GT)
 		for i in tumor_stringent.indels.vcf.gz tumor_stringent.snvs.vcf.gz somatic_final.snvs.vcf.gz somatic_final.indels.vcf.gz; do
 			perl -wpe 's/^##fileformat=VCFv4\.0$/##fileformat=VCFv4.2/;
@@ -121,7 +120,7 @@ if [ ${viterbiBam} !=  ${viterbiControlBam} ]; then
 	#Merge tumor calls to one VCF 
 	(${stage} ${picardMod}
 		java -jar $EBROOTPICARD/picard.jar SortVcf \
-			SD=/data/umcg-mterpstra/apps/data/ftp.broadinstitute.org/bundle/bundle17jan2020/hg38/Homo_sapiens_assembly38.fasta.dict \
+			SD=${onekgGenomeFasta}.dict \
 			I=${lofreqScatVcf}tumor_stringent.indels.fixed.vcf I=${lofreqScatVcf}tumor_stringent.snvs.fixed.vcf \
 			O=${lofreqScatVcf}tumor_stringent.fixed.vcf)
 	if [ "$(grep -vc '^#' ${combineVcf}.tmp.annotNoComplex.vcf)" = "0" ]; then
@@ -156,7 +155,7 @@ else
 		};' ${lofreqScatVcf}.raw.vcf > ${lofreqScatVcf}.nogenotype.vcf
 	
 	#add format fields
-	(${stage} ${pipelineUtilMod};
+	(ml purge; ${stage} ${pipelineUtilMod};
 		InfoFieldsToGenotypeFields.pl -f 'GT,AD,DP,DP4,AF,SB' -g "${sampleName}" -i ${lofreqScatVcf}.nogenotype.vcf > ${lofreqScatVcf}
 	)
 

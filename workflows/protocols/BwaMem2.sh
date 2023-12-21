@@ -1,4 +1,5 @@
 #MOLGENIS nodes=1 ppn=8 mem=17gb walltime=10:00:00
+#for some umi datasets mem=40gb walltime=10:00:00
 
 #string project
 
@@ -94,28 +95,44 @@ if [ ${#reads3FqGzOriginal} -eq 0 ]; then
 
 else
 	ml ${fgbioMod}
-	#this piece of code reads the umis in memory so more mem as the reads3 file gets bigger
-	#java -Xmx4g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/fgbio.jar FastqToBam \
-	# --input "${reads1FqGz}" "${reads2FqGz}" "${reads3FqGz}" --read-structures +T +T +M \
-	# --output "${bwaBam}.umi.bam" \
-	# --sort true \
-	# --sample "${sampleName}" \
-	# --library "${sampleName}_${samplePrep}" \
-	# --platform "${sequencer}" \
-	# --platform-unit "${seqType}_${sequencerId}_${flowcellId}_${run}_${lane}_${barcode}" \
-	# --run-date "$(date --rfc-3339=date)"
-	# omitted platform-model sequencing-center predicted-insert-size description comment 
 
-	java -Xmx16g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/fgbio.jar AnnotateBamWithUmis \
-	 --input "${bwaBam}.unmapped.bam" \
-	 --fastq ${reads3FqGzOriginal} \
-	 --output "${bwaBam}.umi.bam" 
+	if [ ${reads3FqGzOriginal}x == ${reads1FqGzOriginal}x ]; then
+		#Twist umis assumed in read. first 5 bases UMI (5M) 2 filler (2S) bases and rest sequence for both pairs (+T)
+		java -Xmx1000m -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar ExtractUmisFromBam \
+			--input="${bwaBam}.unmapped.bam" \
+			--output="${bwaBam}.umi.bam" \
+			--read-structure='5M2S+T' \
+			--read-structure='5M2S+T' \
+			--molecular-index-tags=ZA \
+			--molecular-index-tags=ZB \
+			--single-tag=RX
+	else 
+		#this piece of code reads the umis in memory so more mem as the reads3 file gets bigger
+		#java -Xmx4g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/lib/fgbio-1.3.0.jar FastqToBam \
+		# --input "${reads1FqGz}" "${reads2FqGz}" "${reads3FqGz}" --read-structures +T +T +M \
+		# --output "${bwaBam}.umi.bam" \
+		# --sort true \
+		# --sample "${sampleName}" \
+		# --library "${sampleName}_${samplePrep}" \
+		# --platform "${sequencer}" \
+		# --platform-unit "${seqType}_${sequencerId}_${flowcellId}_${run}_${lane}_${barcode}" \
+		# --run-date "$(date --rfc-3339=date)"
+		# omitted platform-model sequencing-center predicted-insert-size description comment 
+
+		#Replace this with a step in front that merges the umi reads files with either R1/R2 and figures out the resp length and splits em here again.
+
+		java -Xmx38g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar AnnotateBamWithUmis \
+		 --input "${bwaBam}.unmapped.bam" \
+		 --fastq ${reads3FqGzOriginal} \
+		 --output "${bwaBam}.umi.bam" 
+
+	fi
 
 	BAMTOPROCESS="${bwaBam}.umi.bam"
 fi
 
 #MERGEBAMALIGNMENT
-java  -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx4g  -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SamToFastq \
+java  -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx1g  -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SamToFastq \
  INPUT="$BAMTOPROCESS" \
  FASTQ=/dev/stdout \
  INTERLEAVE=true | \
@@ -146,6 +163,10 @@ java -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx4g -XX:+AggressiveOpts -XX:+Aggre
  MAX_RECORDS_IN_RAM=1000000 \
  TMP_DIR="${bwaAlignmentDir}" 
 
+rm -v ${bwaBam}.unmapped.bam
+if [ -e ${bwaBam}.umi.bam ]; then 
+	rm -v ${bwaBam}.umi.bam
+fi
 
 putFile ${bwaBam} 
 putFile ${bwaBai} 

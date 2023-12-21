@@ -18,12 +18,12 @@ SCRIPTCALL="$0 $@"
 >&2 echo "## "$(date)" ## $0 ##                    Specific files for special workflow."
 
 backend="slurm"
-
-javaver="1.8.0_74"
+#javaver="1.8.0_74"
 #computever="v16.04.1"
 computever="v17.08.1"
-
-mlCmd="module load Molgenis-Compute/${computever}-Java-${javaver}"
+#computever="v19.01.1"; #this version aint compatible
+#mlCmd="module load Molgenis-Compute/${computever}-Java-${javaver}"
+mlCmd="module load Molgenis-Compute/v17.08.1-Java-8-LTS"
 	###module load Molgenis-Compute/v15.11.1-Java-1.8.0_45
 
 
@@ -50,7 +50,13 @@ projectname=$3
 
 	>&2 echo "## "$(date)" ## $0 ## Running on host '"$HOSTNAME"'."
 
-	if [[ "$HOSTNAME" =~ pg-interactive* ]] ;then
+	if [[ "$HOSTNAME" =~ gearshift ]] ;then
+                >&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
+                runDir=/groups/umcg-pmb/tmp01/projects/hematopathology/Lymphoma/$projectname
+                siteParam=$workflowDir/parameters/gearshift.siteconfig.csv
+
+                #partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
+        elif [[ "$HOSTNAME" =~ pg-interactive* ]] ;then
 		>&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 		runDir=/scratch/$USER/projects/$projectname
 		siteParam=$workflowDir/parameters/peregrine.siteconfig.csv
@@ -191,6 +197,22 @@ projectname=$3
 		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
                 workflowBase="workflow_umi.csv"
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+                
+	elif [ $1 == "umitwist" ];then
+	        >&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
+	        #workflowBase="workflow.csv"
+		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using Twist exome umi workflow"
+                workflowBase="workflow_umi_twist.csv"
+                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+                
+	elif [ $1 == "umitwistlpwgs" ];then
+	        >&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
+	        #workflowBase="workflow.csv"
+		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using Twist exome umi workflow"
+                workflowBase="workflow_umi_twist_lpwgs.csv"
                 cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
                 
 	elif [ $1 == "prepiont" ];then
@@ -439,8 +461,8 @@ Relevant method	of acknowledgement if host looks like "peregrine.hpc.rug.nl or p
 	
 		echo -e "perl scripts/RemoveDuplicatesCompute.pl $jobsDir/*.sh &>/dev/null && perl -i -wpe 's/#SBATCH --partition=duo-pro/#SBATCH --partition=duo-pro\n#SBATCH --qos=leftover/;s/#SBATCH --partition=duo-dev/#SBATCH --partition=duo-dev\n#SBATCH --qos=leftover/' $jobsDir/*.sh"
 		echo -e "echo -e bash $jobsDir/submit.sh"
-	)| tee .RunWorkFlowGeneration.sh
-
+	#)| tee .RunWorkFlowGeneration.sh
+	) > .RunWorkFlowGeneration.sh
 	if [ $(find $jobsDir -iname '*.finished'| head -1|wc -l | tee /dev/stderr) -ne 0 ] && [ -e $(find $jobsDir -iname *.finished| head -1) ]; then
 	        >&2 echo "## "$(date)" ## $0 ## Already generated removing finished."
 	       	#echo 'rm $jobsDir/*.finished' >> .RunWorkFlowGeneration.sh

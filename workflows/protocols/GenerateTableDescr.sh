@@ -27,7 +27,7 @@ for file in "${vcf}" "${onekgGenomeFasta}"; do
 	getFile $file
 done
 
-${stage} ${vcfToolsMod}
+#${stage} ${vcfToolsMod}
 ${stage} ${pipelineUtilMod}
 ${checkStage}
 

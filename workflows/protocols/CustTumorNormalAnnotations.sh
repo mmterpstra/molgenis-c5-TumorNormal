@@ -22,7 +22,7 @@ echo ${annotatorDir} ${project} ${annotVcf}
 
 getFile ${annotVcf}
 
-${stage} ${vcfToolsMod}
+#${stage} ${vcfToolsMod}
 ${stage} ${pipelineUtilMod}
 ${checkStage}
 
