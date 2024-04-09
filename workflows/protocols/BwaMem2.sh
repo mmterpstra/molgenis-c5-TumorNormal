@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=8 mem=17gb walltime=10:00:00
+#MOLGENIS nodes=1 ppn=8 mem=17gb walltime=10:00:00 tmp=80gb
 #for some umi datasets mem=40gb walltime=10:00:00
 
 #string project
@@ -60,12 +60,23 @@ set -e
 
 mkdir -p ${bwaAlignmentDir}
 
+#configuring of local tmp for speeding up alignment
+if [ "z$TMPDIR" == "z" ]; then 
+	echo "NO TMP set do regular"
+	LOCALTEMP="${bwaAlignmentDir}"
+else
+	echo "non empty $TMPDIR do local data"
+	LOCALTEMP="$(mktemp -d --suffix="_${HOSTNAME}_${BASHPID}" -p ""$TMPDIR)"
+
+
+fi
+
 #fastq to unmapped bam
 
 BAMTOPROCESS="${bwaBam}.unmapped.bam"
 
 if [ ${#reads2FqGzOriginal} -eq 0 ]; then
-	java -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx1g  -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar FastqToSam \
+	java -Djava.io.tmpdir="$LOCALTEMP" -Xmx1g  -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar FastqToSam \
 	 F1="${reads1FqGz}" \
 	 OUTPUT="${bwaBam}.unmapped.bam" \
 	 SORT_ORDER=queryname \
@@ -76,7 +87,7 @@ if [ ${#reads2FqGzOriginal} -eq 0 ]; then
 	 DT="$(date --rfc-3339=date)" \
 	 MAX_RECORDS_IN_RAM=1000000
 else
-	java  -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx1g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar FastqToSam \
+	java  -Djava.io.tmpdir="$LOCALTEMP" -Xmx1g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar FastqToSam \
 	 F1="${reads1FqGz}" \
 	 F2="${reads2FqGz}" \
 	 O="${bwaBam}.unmapped.bam" \
@@ -121,7 +132,7 @@ else
 
 		#Replace this with a step in front that merges the umi reads files with either R1/R2 and figures out the resp length and splits em here again.
 
-		java -Xmx38g  -Djava.io.tmpdir="${bwaAlignmentDir}" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar AnnotateBamWithUmis \
+		java -Xmx38g  -Djava.io.tmpdir="$LOCALTEMP" -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTFGBIO/lib/fgbio-$(echo ${fgbioMod} | perl -wpe 's/fgbio\/([\d.]+).*/$1/g').jar AnnotateBamWithUmis \
 		 --input "${bwaBam}.unmapped.bam" \
 		 --fastq ${reads3FqGzOriginal} \
 		 --output "${bwaBam}.umi.bam" 
@@ -132,7 +143,7 @@ else
 fi
 
 #MERGEBAMALIGNMENT
-java  -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx1g  -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SamToFastq \
+java  -Djava.io.tmpdir="$LOCALTEMP" -Xmx1g  -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SamToFastq \
  INPUT="$BAMTOPROCESS" \
  FASTQ=/dev/stdout \
  INTERLEAVE=true | \
@@ -142,7 +153,7 @@ bwa mem \
  -t ${nTreads} \
  ${onekgGenomeFastaIdxBase} \
  /dev/stdin | \
-java -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar MergeBamAlignment \
+java -Djava.io.tmpdir="$LOCALTEMP" -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar MergeBamAlignment \
  R="${onekgGenomeFasta}" \
  UNMAPPED="$BAMTOPROCESS" \
  ALIGNED="/dev/stdin" \
@@ -155,7 +166,7 @@ java -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx4g -XX:+AggressiveOpts -XX:+Aggre
  CLIP_OVERLAPPING_READS=true \
  ATTRIBUTES_TO_RETAIN=XS \
  ATTRIBUTES_TO_RETAIN=XA | \
-java -Djava.io.tmpdir="${bwaAlignmentDir}" -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SetNmMdAndUqTags \
+java -Djava.io.tmpdir="$LOCALTEMP" -Xmx4g -XX:+AggressiveOpts -XX:+AggressiveHeap -jar $EBROOTPICARD/picard.jar SetNmMdAndUqTags \
  I="/dev/stdin" \
  O="${bwaBam}" \
  R="${onekgGenomeFasta}" \

@@ -267,12 +267,88 @@ fi
 	elif [ -e ${collectHsMetricsLog} ]; then
 		(
 			echo "<!-- CollectHsMetrics here... --> "
+			echo
+			echo "Hybrid selection metrics"
+			echo "========================"
+			echo
+			echo "**metrics definitions**"
+			echo
+			echo "literal source: https://broadinstitute.github.io/picard/picard-metric-definitions.html#HsMetrics"
+			echo
+			echo "| field | description |"
+			echo "| ----- | ----------- |"
+			echo "| BAIT_SET	 | The name of the bait set used in the hybrid selection. |"
+			echo "| GENOME_SIZE	 | The number of bases in the reference genome used for alignment. |"
+			echo "| BAIT_TERRITORY	 | The number of bases which are localized to one or more baits. |"
+			echo "| TARGET_TERRITORY	 | The unique number of target bases in the experiment, where the target sequence is usually exons etc. |"
+			echo "| BAIT_DESIGN_EFFICIENCY	 | The ratio of TARGET_TERRITORY/BAIT_TERRITORY. A value of 1 indicates a perfect design efficiency, while a valud of 0.5 indicates that half of bases within the bait region are not within the target region. |"
+			echo "| TOTAL_READS	 | The total number of reads in the SAM or BAM file examined. |"
+			echo "| PF_READS	 | The total number of reads that pass the vendor's filter. |"
+			echo "| PF_UNIQUE_READS	 | The number of PF reads that are not marked as duplicates. |"
+			echo "| PCT_PF_READS	 | The fraction of reads passing the vendor's filter, PF_READS/TOTAL_READS. |"
+			echo "| PCT_PF_UQ_READS	 | The fraction of PF_UNIQUE_READS from the TOTAL_READS, PF_UNIQUE_READS/TOTAL_READS. |"
+			echo "| PF_UQ_READS_ALIGNED	 | The number of PF_UNIQUE_READS that aligned to the reference genome with a mapping score > 0. |"
+			echo "| PCT_PF_UQ_READS_ALIGNED	 | The fraction of PF_UQ_READS_ALIGNED from the total number of PF reads. |"
+			echo "| PF_BASES_ALIGNED	 | The number of PF unique bases that are aligned to the reference genome with mapping scores > 0. |"
+			echo "| PF_UQ_BASES_ALIGNED	 | The number of bases in the PF_UQ_READS_ALIGNED reads. Accounts for clipping and gaps. |"
+			echo "| ON_BAIT_BASES	 | The number of PF_BASES_ALIGNED that are mapped to the baited regions of the genome. |"
+			echo "| NEAR_BAIT_BASES	 | The number of PF_BASES_ALIGNED that are mapped to within a fixed interval containing a baited region, but not within the baited section per se. |"
+			echo "| OFF_BAIT_BASES	 | The number of PF_BASES_ALIGNED that are mapped away from any baited region. |"
+			echo "| ON_TARGET_BASES	 | The number of PF_BASES_ALIGNED that are mapped to a targeted region of the genome. |"
+			echo "| PCT_SELECTED_BASES	 | The fraction of PF_BASES_ALIGNED located on or near a baited region (ON_BAIT_BASES + NEAR_BAIT_BASES)/PF_BASES_ALIGNED. |"
+			echo "| PCT_OFF_BAIT	 | The fraction of PF_BASES_ALIGNED that are mapped away from any baited region, OFF_BAIT_BASES/PF_BASES_ALIGNED. |"
+			echo "| ON_BAIT_VS_SELECTED	 | The fraction of bases on or near baits that are covered by baits, ON_BAIT_BASES/(ON_BAIT_BASES + NEAR_BAIT_BASES). |"
+			echo "| MEAN_BAIT_COVERAGE	 | The mean coverage of all baits in the experiment. |"
+			echo "| MEAN_TARGET_COVERAGE	 | The mean coverage of a target region. |"
+			echo "| MEDIAN_TARGET_COVERAGE	 | The median coverage of a target region. |"
+			echo "| MAX_TARGET_COVERAGE	 | The maximum coverage of reads that mapped to target regions of an experiment. |"
+			echo "| PCT_USABLE_BASES_ON_BAIT	 | The number of aligned, de-duped, on-bait bases out of the PF bases available. |"
+			echo "| PCT_USABLE_BASES_ON_TARGET	 | The number of aligned, de-duped, on-target bases out of all of the PF bases available. |"
+			echo "| FOLD_ENRICHMENT	 | The fold by which the baited region has been amplified above genomic background. |"
+			echo "| ZERO_CVG_TARGETS_PCT	 | The fraction of targets that did not reach coverage=1 over any base. |"
+			echo "| PCT_EXC_DUPE	 | The fraction of aligned bases that were filtered out because they were in reads marked as duplicates. |"
+			echo "| PCT_EXC_MAPQ	 | The fraction of aligned bases that were filtered out because they were in reads with low mapping quality. |"
+			echo "| PCT_EXC_BASEQ	 | The fraction of aligned bases that were filtered out because they were of low base quality. |"
+			echo "| PCT_EXC_OVERLAP	 | The fraction of aligned bases that were filtered out because they were the second observation from an insert with overlapping reads. |"
+			echo "| PCT_EXC_OFF_TARGET	 | The fraction of aligned bases that were filtered out because they did not align over a target base. |"
+			echo "| FOLD_80_BASE_PENALTY	 | The fold over-coverage necessary to raise 80% of bases in "non-zero-cvg" targets to the mean coverage level in those targets. |"
+			echo "| PCT_TARGET_BASES_1X	 | The fraction of all target bases achieving 1X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_2X	 | The fraction of all target bases achieving 2X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_10X	 | The fraction of all target bases achieving 10X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_20X	 | The fraction of all target bases achieving 20X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_30X	 | The fraction of all target bases achieving 30X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_40X	 | The fraction of all target bases achieving 40X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_50X	 | The fraction of all target bases achieving 50X or greater coverage. |"
+			echo "| PCT_TARGET_BASES_100X	 | The fraction of all target bases achieving 100X or greater coverage. |"
+			echo "| HS_LIBRARY_SIZE	 | The estimated number of unique molecules in the selected part of the library. |"
+			echo "| HS_PENALTY_10X	 | The "hybrid selection penalty" incurred to get 80% of target bases to 10X. This metric should be interpreted as: if I have a design with 10 megabases of target, and want to get 10X coverage I need to sequence until PF_ALIGNED_BASES = 10^7 * 10 * HS_PENALTY_10X. |"
+			echo "| HS_PENALTY_20X	 | The "hybrid selection penalty" incurred to get 80% of target bases to 20X. This metric should be interpreted as: if I have a design with 10 megabases of target, and want to get 20X coverage I need to sequence until PF_ALIGNED_BASES = 10^7 * 20 * HS_PENALTY_20X. |"
+			echo "| HS_PENALTY_30X	 | The "hybrid selection penalty" incurred to get 80% of target bases to 30X. This metric should be interpreted as: if I have a design with 10 megabases of target, and want to get 30X coverage I need to sequence until PF_ALIGNED_BASES = 10^7 * 30 * HS_PENALTY_30X. |"
+			echo "| HS_PENALTY_40X	 | The "hybrid selection penalty" incurred to get 80% of target bases to 40X. This metric should be interpreted as: if I have a design with 10 megabases of target, and want to get 40X coverage I need to sequence until PF_ALIGNED_BASES = 10^7 * 40 * HS_PENALTY_40X. |"
+			echo "| HS_PENALTY_50X	 | The "hybrid selection penalty" incurred to get 80% of target bases to 50X. This metric should be interpreted as: if I have a design with 10 megabases of target, and want to get 50X coverage I need to sequence until PF_ALIGNED_BASES = 10^7 * 50 * HS_PENALTY_50X. |"
+			echo "| HS_PENALTY_100X	 | The "hybrid selection penalty" incurred to get 80% of target bases to 100X. This metric should be interpreted as: if I have a design with 10 megabases of target, and want to get 100X coverage I need to sequence until PF_ALIGNED_BASES = 10^7 * 100 * HS_PENALTY_100X. |"
+			echo "| AT_DROPOUT	 | A measure of how undercovered <= 50% GC regions are relative to the mean. For each GC bin [0..50] we calculate a = % of target territory, and b = % of aligned reads aligned to these targets. AT DROPOUT is then abs(sum(a-b when a-b < 0)). E.g. if the value is 5% this implies that 5% of total reads that should have mapped to GC<=50% regions mapped elsewhere. |"
+			echo "| GC_DROPOUT	 | A measure of how undercovered >= 50% GC regions are relative to the mean. For each GC bin [50..100] we calculate a = % of target territory, and b = % of aligned reads aligned to these targets. GC DROPOUT is then abs(sum(a-b when a-b < 0)). E.g. if the value is 5% this implies that 5% of total reads that should have mapped to GC>=50% regions mapped elsewhere. |"
+			echo "| HET_SNP_SENSITIVITY	 | The theoretical HET SNP sensitivity. |"
+ 			echo "| HET_SNP_Q	 | The Phred Scaled Q Score of the theoretical HET SNP sensitivity. |"
+			echo
+
+			#This should work the same as the old one 
+			echo 'tablehs=read.table("'${collectHsMetricsLog}'", skip=6, header=TRUE, fill=NA, sep="\t");
+			 write.table(subset(tablehs,SAMPLE != "",select=c("SAMPLE","TARGET_TERRITORY","PF_UQ_READS_ALIGNED","PF_UQ_BASES_ALIGNED",
+			   "ON_TARGET_BASES","PCT_USABLE_BASES_ON_TARGET","MEAN_TARGET_COVERAGE","PCT_TARGET_BASES_2X","PCT_TARGET_BASES_10X",
+			   "PCT_TARGET_BASES_20X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_40X", "PCT_TARGET_BASES_50X", "PCT_TARGET_BASES_100X"))
+			 ,file=stdout(),sep="|", row.names=FALSE, quote=FALSE);' > ${sampleMarkdownDir}/${sampleName}_hsmetrics.R
+			Rscript ${sampleMarkdownDir}/${sampleName}_hsmetrics.R | perl -wpe 'chomp $_; $_="| ".$_." |\n";if($.==1){print $_; $_ =~  s/[A-Z0-9\"\_]+/\ \-\-\-\ /g;}; '
+			rm  ${sampleMarkdownDir}/${sampleName}_hsmetrics.R 
+
 		)>> ${sampleMarkdown}
 	else
 		(
                         echo "<!-- No HsMetrics in the data --> "
                 )>> ${sampleMarkdown}	
 	fi
+
 
 ################################################################################
 ##

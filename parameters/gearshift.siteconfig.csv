@@ -6,7 +6,7 @@ queue,regular
 group,umcg-gcc
 user,umcg-mterpstra
 data,/groups/umcg-pmb/tmp01/apps/data/
-projectDir,/groups/umcg-pmb/tmp01/projects/hematopathology/Lymphoma/${project}/
+projectDir,/groups/umcg-pmb/tmp01/umcg-mterpstra/projects/${project}/
 logsDir,/data/umcg-mterpstra/umcg-oncogenetics/git/molgenis-c5-TumorNormal/log/
 ################################################################################
 ##module parameters
