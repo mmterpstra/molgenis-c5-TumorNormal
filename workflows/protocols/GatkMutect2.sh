@@ -1,4 +1,4 @@
-#MOLGENIS nodes=1 ppn=1 mem=10gb walltime=20:59:00 tmp=50gb
+#MOLGENIS nodes=1 ppn=1 mem=10gb walltime=41:59:00 tmp=50gb
 ##rna seq needs more mem nodes=1 ppn=2 mem=10gb walltime=30:59:00 tmp=50gb
 #string project
 
@@ -138,7 +138,7 @@ fi
 #sampleNameClean=$(echo "${sampleName}" | perl -wpe 'chomp;$_=uc;s/\W/_/g;')
 
 #this should be better than callerise is this case
-
+#this tranfers annotations from the INFO field to the FORMAT field. Then find and replaces sample names in the fields following the FORMAT field.
 (
    ml ${pipelineUtilMod} 
    perl $EBROOTPIPELINEMINUTIL/bin/MutectAnnotationsToSampleFormat.pl TLOD,NLOD,MIN_ED,MAX_ED,ECNT,HCNT ${mutect2ScatVcf}.tmp.vcf  > ${mutect2ScatVcf}

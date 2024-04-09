@@ -4,21 +4,20 @@ version = '0.3.0'
 homepage = 'https://github.com/mmterpstra/TableToXlsx'
 description = """Lazy xlsx conversion for tsv/csv files from perl or for the cli"""
 
-toolchain = {'name': 'foss', 'version': '2018a'}
+toolchain = {'name': 'GCCcore', 'version': '11.3.0'}
 easyblock = 'PerlModule'
 
 source_urls = [('https://github.com/mmterpstra/%s/archive/' % (name) )]
 sources = [ '%s.tar.gz' % version ]
 
 perl = 'Perl'
-perlver = '5.26.1'
+perlver = '5.34.1'
 perlversuffix = '-bare'
 versionsuffix = '-%s-%s%s' % (perl, perlver, perlversuffix)
 
 dependencies = [
     (perl, perlver, perlversuffix),
-    ('Archive-Zip', '1.53', versionsuffix),
-    ('Excel-Writer-XLSX', '0.85', versionsuffix),
+    ('Excel-Writer-XLSX', '1.11', versionsuffix),
 ]
 
 

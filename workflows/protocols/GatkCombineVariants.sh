@@ -141,6 +141,7 @@ else
 		 ${combineVcf}.tmp.freebayesnorm.vcf \
 		 ${combineVcf}.tmp.mutect2norm.vcf \
 		 ${combineVcf}.tmp.lofreqnorm.vcf \
+		 ${combineVcf}.tmp.lancetnorm.vcf \
 		 > ${combineVcf}.tmp.annotNoComplex.vcf
 	)
 fi

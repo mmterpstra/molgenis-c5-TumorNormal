@@ -74,7 +74,10 @@ else
 	minAlternateFraction="0.03"
 fi
 #-C 3 #min read depth
-
+#binomial-obs-priors-off might interferen with exome data, amplicon /  spet data
+#allele-balance-priors-off / pooled-continuous low frequency data
+#hwe-priors-off Shouldn't have data of the variant
+#
 freebayes \
  --fasta-reference ${onekgGenomeFasta} \
  --allele-balance-priors-off \
@@ -82,7 +85,9 @@ freebayes \
  --hwe-priors-off \
  --min-alternate-fraction $minAlternateFraction \
  --min-mapping-quality 20 \
- --max-complex-gap 20\
+ --max-complex-gap 20 \
+ --genotype-qualities \
+ --report-genotype-likelihood-max \
  --min-alternate-count 3 \
  --pooled-continuous \
  --strict-vcf \

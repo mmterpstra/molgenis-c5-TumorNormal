@@ -106,23 +106,23 @@ minimumNOption=""
 
 #merge gatk/freebayes
 java -Xmx4g -Djava.io.tmpdir=${sampleVcfDir} \
-  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
- -T CombineVariants \
- -R ${onekgGenomeFasta} \
- $inputs \
- -o ${sampleVcf}.tmp.vcf \
- -genotypeMergeOptions PRIORITIZE \
- -priority $prio \
- --filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED \
- ${minimumNOption}
+        -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
+        -T CombineVariants \
+        -R ${onekgGenomeFasta} \
+        $inputs \
+        -o ${sampleVcf}.tmp.vcf \
+        -genotypeMergeOptions PRIORITIZE \
+        -priority $prio \
+        --filteredrecordsmergetype KEEP_IF_ANY_UNFILTERED \
+        ${minimumNOption}
 
 
 if grep -v '^#' ${sampleVcf}.tmp.vcf -c ; then
-perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
-         ${sampleVcf}.tmp.ReallyComplex.vcf \
-         ${sampleVcf}.tmp.vcf \
-         $(printf '%s\n' "${controlSamplesVcf[@]}" | sort -u ) \
-         > ${sampleVcf}
+        perl $EBROOTPIPELINEMINUTIL/bin/RecoverSampleAnnotationsAfterCombineVariantsByPosWalk.pl \
+                ${sampleVcf}.tmp.ReallyComplex.vcf \
+                ${sampleVcf}.tmp.vcf \
+                $(printf '%s\n' "${controlSamplesVcf[@]}" | sort -u ) \
+                > ${sampleVcf}
 else
 	cp ${sampleVcf}.tmp.vcf ${sampleVcf}
 fi

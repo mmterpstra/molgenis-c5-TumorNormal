@@ -52,11 +52,11 @@ projectname=$3
 
 	if [[ "$HOSTNAME" =~ gearshift ]] ;then
                 >&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
-                runDir=/groups/umcg-pmb/tmp01/projects/hematopathology/Lymphoma/$projectname
+                runDir=/groups/umcg-pmb/tmp01/umcg-mterpstra/projects/$projectname
                 siteParam=$workflowDir/parameters/gearshift.siteconfig.csv
 
                 #partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
-        elif [[ "$HOSTNAME" =~ pg-interactive* ]] ;then
+	elif [[ "$HOSTNAME" =~ pg-interactive* ]] ;then
 		>&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 		runDir=/scratch/$USER/projects/$projectname
 		siteParam=$workflowDir/parameters/peregrine.siteconfig.csv

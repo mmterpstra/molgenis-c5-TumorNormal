@@ -10,7 +10,7 @@ my $use = <<"END";
 	soft filter opencravat data.
 END
 my %opts;
-getopts('f:s:c:d:a:n:m:f:', \%opts);
+getopts('h:s:c:d:a:n:m:f:r:n:', \%opts);
 die "no valid 'in.vcf' specified on command line\n$use" if(not(defined($ARGV[0])) ||not -e $ARGV[0]);
 #main
 
@@ -31,8 +31,8 @@ sub main{
 	#s=comma separated strings to filter base__so from opencravat
 	#splice_acceptor_variant
 	#splice_donor_variant
-	my $opts;$opts = {'f' => 0.005,						#frequency GNomad
-		's' => 'TF_binding_site_variant,splice_region_variant,3_prime_UTR_variant,coding_sequence_variant,synonymous_variant,downstream_gene_variant,upstream_gene_variant,exon_variant,gene_variant,duplication,intergenic_region,conserved_intergenic_variant,intragenic_variant,intron_variant,conserved_intron_variant,initiator_codon_variant,stop_retained_variant,5_prime_UTR_variant,5_prime_UTR_premature_start_codon_gain_variant,start_retained,stop_retained_variant,3_prime_UTR_truncation + exon_loss,5_prime_UTR_truncation + exon_loss_variant,sequence_feature + exon_loss_variant,sequence_feature,non_coding_transcript_exon_variant', 	
+	my $opts;$opts = {'f' => 0.001,						#frequency GNomad
+		's' => 'TF_binding_site_variant,splice_region_variant,3_prime_UTR_variant,coding_sequence_variant,synonymous_variant,structural_interaction_variant,downstream_gene_variant,upstream_gene_variant,exon_variant,gene_variant,duplication,intergenic_region,conserved_intergenic_variant,intragenic_variant,intron_variant,conserved_intron_variant,initiator_codon_variant,stop_retained_variant,5_prime_UTR_variant,5_prime_UTR_premature_start_codon_gain_variant,start_retained,stop_retained_variant,3_prime_UTR_truncation + exon_loss,5_prime_UTR_truncation + exon_loss_variant,sequence_feature + exon_loss_variant,sequence_feature,non_coding_transcript_exon_variant', 	
 		# --filterExpression "!((vc.hasAttribute('SNPEFFANN_ANNOTATION_IMPACT') && 
 		#vc.getAttribute('SNPEFFANN_ANNOTATION_IMPACT').contains('HIGH'))
 		#||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('missense_variant'))
@@ -43,10 +43,16 @@ sub main{
 		#||(vc.hasAttribute('SNPEFFANN_ANNOTATION') && vc.getAttribute('SNPEFFANN_ANNOTATION').contains('disruptive_inframe_deletion')))" \
 		#^ annotation
 		'c' => 15,								#CADD score
-		'd' => 4,								#mindepth sumAD
+		'd' => 10,								#mindepth sumAD
+		'v' => 0.01,							#min vaf
+		'a' => 4,								#mindepth alt reads
 		'n' => '',								#name
-		'f' => 60,								#HcCallerFisherStrand
-		'm' => -12.5,								#HcCallerMQranksum
+		'f' => 0.001,							#rare var frequency cutoff
+		's' => 60,								#HcCallerFisherStrand
+		'm' => -12.5,							#HcCallerMQranksum
+		'h' => '0.75',							#het cutoff
+		'r' => '/groups/umcg-pmb/tmp01/apps/data/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta',	#reference seq
+		'p' => 5, 								#N or more repeats not allowed
 	};										
 	#hidden 'a' => "some.csv" ;#this contains af / ad data in csv format:dp,ad[0],ad[1],f";
 	my $cmdopts = $_[0];
@@ -75,12 +81,20 @@ sub main{
 		my $annfilter = $opts -> {'s'};
 		$annfilter =~ s/['"]//g;
 	my $headerlines;@{$headerlines} = (
-		{key=>'FILTER', ID=>'AFlt'.$opts -> {'f'}.'Filter', Description=>'Filter based on AF in gnomad < '.$opts -> {'f'}.'.'},
+		{key=>'FILTER', ID=>'NoSampleInfo', Description=>'Filter based on availability of sample data of sample '.$opts -> {'n'}.'.'},
+		{key=>'FILTER', ID=>'AFlt'.$opts -> {'f'}.'Filter', Description=>'Filter based on (allele frequency) AF in gnomad < '.$opts -> {'f'}.'.'},
 		{key=>'FILTER', ID=>'SumAdlt'.$opts -> {'d'}.'Filter', Description=>'Sum of allele depth less than '.$opts -> {'d'}.' .'},
+		{key=>'FILTER', ID=>'AdAltGt'.$opts -> {'a'}.'Filter', Description=>'Allele depth of alt greater then '.$opts -> {'a'}.' .'},
+		{key=>'FILTER', ID=>'VAFgt'.$opts -> {'v'}.'Filter', Description=>'Variant allele frequenc of alt greater then '.$opts -> {'v'}.' .'},
+		{key=>'FILTER', ID=>'HetGt'.$opts -> {'h'}.'Filter', Description=>'Alt fraction greater then '.$opts -> {'h'}.' .'},
 		{key=>'FILTER', ID=>'EffFilter', Description=>'Filter for non functional variants ('.$annfilter.').'},
 		{key=>'FILTER', ID=>'Caddgt'.$opts -> {'c'}, Description=>'CADD filter for cadd phred > '.$opts -> {'c'}.' .'},
-		{key=>'FILTER', ID=>'HcFisherStrand'.$opts -> {'f'}, Description=>'Fisherstrand filter for haplotypecaller HCallerFS > '.$opts -> {'f'}.' .'},
+		{key=>'FILTER', ID=>'HcFisherStrand'.$opts -> {'s'}, Description=>'Fisherstrand filter for haplotypecaller HCallerFS > '.$opts -> {'s'}.' .'},
 		{key=>'FILTER', ID=>'HcMQRankSum'.$opts -> {'m'}, Description=>'MappingQualityRankSum filter for haplotypecaller HCallerMQRankSum > '.$opts -> {'m'}.' .'},
+		{key=>'FILTER', ID=>'HcMQRankSum'.$opts -> {'m'}, Description=>'MappingQualityRankSum filter for haplotypecaller HCallerMQRankSum > '.$opts -> {'m'}.' .'},
+		{key=> 'INFO', ID=>'RepeatCount',Number=>"R",Type=>'Integer', Description=>'Count of repeated alts. 1 = no repeat'},
+		{key=> 'INFO', ID=>'RepeatCountRepeatUnit',Number=>"R",Type=>'String', Description=>'Repeated unit'},
+		{key=>'FILTER', ID=>'NRepeatGe'.$opts -> {'p'}, Description=>'Filter on n repeats greater or equal then n >= '.$opts -> {'p'}.' .'},
 		{key=>'FILTER', ID=>'PASS', Description=>'All filters passed'});
 	for my $headerline (@{$headerlines}){
 		$vcf -> add_header_line($headerline);
@@ -91,32 +105,44 @@ sub main{
 	warn localtime(time())." [INFO] $0: Iterating records."; my $records=0;
 	my %stats;
 	while (my $x=$vcf->next_data_hash()){
-		
-		if(defined($annheaderline) && scalar(@{$annheaderline})){
-			FillSNPEFFANNFields('record' => $x,'ann' => $annotations);
-		}
 		#die Dumper($x, $crvheaderline, $annotations,$crvparsed);
 		if(not(defined($x -> {'FILTER'} )) or $x -> {'FILTER'} -> [0] eq "." ){
 			$x -> {'FILTER'} -> [0] = "PASS";
+		}
+		my $filters;@{$filters} = ();
+
+		if(defined($opts -> {'r'}) && -e $opts -> {'r'}){
+			$x = RepeatAnnotator('record'=> $x,'ref'=> $opts -> {'r'} ,);
+			if ($opts -> {'p'}){
+				my @repeatCounts = split(',', $x -> {'INFO'} -> {'RepeatCount'});
+				for my $repeatCount ( @repeatCounts){
+					if($repeatCount >= $opts -> {'p'} ){
+						push(@{$filters},'NRepeatGe'.$opts -> {'p'});
+						$stats{'filter'}{'NRepeatGe'.$opts -> {'p'}.'Filter'}++;
+
+					}
+				}
+			}
+			
+		}
+		
+		if(defined($annheaderline) && scalar(@{$annheaderline})){
+			FillSNPEFFANNFields('record' => $x,'ann' => $annotations);
 		}
 		#die Dumper($x)." ";
 		#setting things up for filtering
 		$stats{'EFF'}{$x -> {'INFO'} -> {'SNPEFFANN_ANNOTATION'} }++;
 			
-		#die Dumper($x, $crvheaderline, $annotations,$crvparsed);
-		if(not(defined($x -> {'FILTER'})) or $x -> {'FILTER'} eq "." ){
-			@{$x -> {'FILTER'}} = ("PASS");
-		#	die Dumper($x -> {'FILTER'});
-		}
-		my $filters;@{$filters} = ();
 			
 		#af gnomad filtereing with inclusion of clinvar
-		if(defined($x -> {'INFO'} -> {'gnomad3.0_AN'}) && not($x -> {'INFO'} -> {'gnomad3.0_AN'} eq '') && defined($x -> {'INFO'} -> {'gnomad3.0_AC'}) && not($x -> {'INFO'} -> {'gnomad3.0_AC'} eq '')){
-			my @GnomadAC = split(',',$x -> {'INFO'} -> {'gnomad3.0_AC'});
+		#dbNSFP_gnomAD_exomes_controls_AN
+		#dbNSFP_clinvar_clnsig
+		if(defined($x -> {'INFO'} -> {'gnomad_v3_1_2_AN'}) && not($x -> {'INFO'} -> {'gnomad_v3_1_2_AN'} eq '') && defined($x -> {'INFO'} -> {'gnomad_v3_1_2_AC'}) && not($x -> {'INFO'} -> {'gnomad_v3_1_2_AC'} eq '')){
+			my @GnomadAC = split(',',$x -> {'INFO'} -> {'gnomad_v3_1_2_AC'});
 			my $GnomadFiltered=0;
 			for my $ac (@GnomadAC){
-				if(defined($ac) && not($ac eq '' ) && $x -> {'INFO'} -> {'gnomad3.0_AN'} != 0){
-					if(($ac/$x -> {'INFO'} -> {'gnomad3.0_AN'}) > $opts -> {'f'}){
+				if(defined($ac) && not($ac eq '' ) && not($ac eq '.' ) && $x -> {'INFO'} -> {'gnomad_v3_1_2_AN'} != 0){
+					if(($ac/$x -> {'INFO'} -> {'gnomad_v3_1_2_AN'}) > $opts -> {'f'}){
 						#clinical significance should be present and not matching pathogenic or shouln'd be present.
 						if(defined($x -> {'INFO'} -> {'clinvar_CLNSIG'}) && not($x -> {'INFO'} -> {'clinvar_CLNSIG'} eq '' && not(index($x -> {'INFO'} -> {'clinvar_CLNSIG'},'athogenic') > -1  ))){
 						
@@ -133,27 +159,157 @@ sub main{
 				}
 			}
 		}
+		#ideally only run this if official gnomad aint in
+		if(defined($x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AN'}) && not($x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AN'} eq '') && defined($x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AC'}) && not($x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AC'} eq '')){
+                        my @GnomadAC = split(',',$x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AC'});
+                        my $GnomadFiltered=0;
+                        for my $ac (@GnomadAC){
+                                if(defined($ac) && not($ac eq '' ) && $x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AN'} != 0){
+                                        if(($ac/$x -> {'INFO'} -> {'dbNSFP_gnomAD_exomes_controls_AN'}) > $opts -> {'f'}){
+                                                #clinical significance should be present and not matching pathogenic or shouln'd be present.
+                                                if(defined($x -> {'INFO'} -> {'dbNSFP_clinvar_clnsig'}) && not($x -> {'INFO'} -> {'dbNSFP_clinvar_clnsig'} eq '' && not(index(lc($x -> {'INFO'} -> {'dbNSFP_clinvar_clnsig'}),'athogenic') > -1  ))){
+
+
+                                                        $GnomadFiltered=1;
+                                                        push(@{$filters},'AFlt'.$opts -> {'f'}.'Filter');
+                                                        $stats{'filter'}{'AFlt'.$opts -> {'f'}.'Filter'}++;
+                                                }elsif(not(defined($x -> {'INFO'} -> {'dbNSFP_clinvar_clnsig'}) && not($x -> {'INFO'} -> {'dbNSFP_clinvar_clnsig'} eq ''))){
+                                                        $GnomadFiltered=1;
+                                                        push(@{$filters},'AFlt'.$opts -> {'f'}.'Filter');
+                                                        $stats{'filter'}{'AFlt'.$opts -> {'f'}.'Filter'}++;
+                                                }
+                                        }
+                                }
+                        }
+                }
+
+		
 		#sumAD filter
 		#warn "## sum=".GetSumAD('x' => $x)." ";
 		#only for single sample filtering
-		#my ($sample);
-		#if(defined $opts -> {'n'} && $opts -> {'n'} ne ''){
-		#	if(defined($x -> {'gtypes'} -> {$opts -> {'n'}})){
-		#		$sample = $opts -> {'n'};
-		#	}else{
-		#		die "Invalid samplename specified with -n. Current samplename speicified '".$opts -> {'n'}."' and valid options [".join(',', keys(%{$x -> {'gtypes'}}))."]\n";
-		#	}
-		#}else{
-		#	($sample) = keys(%{$x -> {'gtypes'}});
-		#	die "This is not meant for multisample filtering" if scalar(keys(%{$x -> {'gtypes'}})) != 1; 
-		#}
-		#if(defined($x -> {'gtypes'} -> {$sample} -> {'AD'}) && (substr($x -> {'gtypes'} -> {$sample} -> {'AD'},0,1) ne '.') && GetSumAD('x' => $x) < $opts -> {'d'}){
-		#		push(@{$filters},'SumAdlt'.$opts -> {'d'}.'Filter');
-		#		$stats{'filter'}{'SumAdlt'.$opts -> {'d'}.'Filter'}++;
-		#}
+		my ($sample);
+		#sanity check single sample 
+		if(defined $opts -> {'n'} && $opts -> {'n'} ne ''){
+			if(defined($x -> {'gtypes'} -> {$opts -> {'n'}})){
+				$sample = $opts -> {'n'};
+			}else{
+				die "Invalid samplename specified with -n. Current samplename speicified '".$opts -> {'n'}."' and valid options [".join(',', keys(%{$x -> {'gtypes'}}))."]\n";
+			}
+		
+		}else{
+			($sample) = keys(%{$x -> {'gtypes'}});
+			die "This is not meant for multisample filtering" if scalar(keys(%{$x -> {'gtypes'}})) != 1; 
+		}
+		#format of sample present
+		if($x -> {'gtypes'} -> {$sample} -> {'GT'} eq './.' && length(keys(%{$x -> {'gtypes'} -> {$sample}})) == 1){
+			push(@{$filters},'NoSampleInfo');
+			$stats{'filter'}{'NoSampleInfo'}++;
+		} 
+		#actual filter
+		if(defined($x -> {'gtypes'} -> {$sample} -> {'AD'}) && (substr($x -> {'gtypes'} -> {$sample} -> {'AD'},0,1) ne '.')) {
+				#my @AD = split(',', $x -> {'gtypes'} -> {$sample} -> {'AD'});
+				
+				if( GetSumAD('x' => $x,'sample'=> $sample)  < $opts -> {'d'}){
+					push(@{$filters},'SumAdlt'.$opts -> {'d'}.'Filter');
+					$stats{'filter'}{'SumAdlt'.$opts -> {'d'}.'Filter'}++;
+				}
+				
+		}
+		#hetfilter calcs from AD
+		if(defined($x -> {'gtypes'} -> {$sample} -> {'AD'}) && (substr($x -> {'gtypes'} -> {$sample} -> {'AD'},0,1) ne '.')){
+			my @AD = split(',', $x -> {'gtypes'} -> {$sample} -> {'AD'});
+			for my $adval (@AD[1..$#AD]){
+				#warn "AD results dump for hetfilter".$AD[0]."\t".$adval."\n";
+				if($adval ne '.' && $adval > 0 ){
+					if( ($adval/ GetSumAD('x' => $x,'sample'=> $sample))  > $opts -> {'h'}){
+										push(@{$filters},'HetGt'.$opts -> {'h'}.'Filter');
+										$stats{'filter'}{'HetGt'.$opts -> {'h'}.'Filter'}++;
+					}
+					if( ($adval/ GetSumAD('x' => $x,'sample'=> $sample)) < $opts -> {'v'}){
+													push(@{$filters},'VAFgt'.$opts -> {'v'}.'Filter');
+													$stats{'filter'}{'VAFgt'.$opts -> {'v'}.'Filter'}++;
+											}
+					#if(($adval/GetSumAD('x' =. $x)) < $opts -> {'a'){
+					#	push(@{$filters},'AdAltGt'.$opts -> {'a'}.'Filter');
+					#	$stats{'filter'}{'AdAltGt'.$opts -> {'a'}.'Filter'}++;
+					#
+					#}
+					if($adval < $opts -> {'a'}){
+						push(@{$filters},'AdAltGt'.$opts -> {'a'}.'Filter');
+						$stats{'filter'}{'AdAltGt'.$opts -> {'a'}.'Filter'}++;
+					}
+
+					
+				}elsif($adval == 0 ){
+					#zero handling
+					#het filter is ok
+					
+					#alt count filter
+							push(@{$filters},'AdAltGt'.$opts -> {'a'}.'Filter');
+									$stats{'filter'}{'AdAltGt'.$opts -> {'a'}.'Filter'}++;
+					if(defined( $opts -> {'v'})){
+							push(@{$filters},'VAFgt'.$opts -> {'v'}.'Filter');
+							$stats{'filter'}{'VAFgt'.$opts -> {'v'}.'Filter'}++;
+					}
+
+					
+				}
+				#elsif($adval eq '.'){
+				#	#filter on undef???
+				#	
+				#}else{
+				#	#filter on entire field??
+				#	#or use af/dp? 
+				#}
+				
+			}
+		}
+		#also apply HCallerAD
+		if(defined($x -> {'gtypes'} -> {$sample} -> {'HCallerAD'}) && (substr($x -> {'gtypes'} -> {$sample} -> {'HCallerAD'},0,1) ne '.')){
+			my @AD = split(',', $x -> {'gtypes'} -> {$sample} -> {'HCallerAD'});
+			for my $adval (@AD[1..$#AD]){
+				#warn "HcCallerAdVals".$AD[0]."\t".$adval."\n";
+				if($adval ne '.' && $adval > 0 ){
+					if( ($adval/ GetSumHCallerAD('x' => $x,'sample'=> $sample))  > $opts -> {'h'}){
+										push(@{$filters},'HetGt'.$opts -> {'h'}.'Filter');
+										$stats{'filter'}{'HetGt'.$opts -> {'h'}.'Filter'}++;
+					}
+					if( ($adval/ GetSumHCallerAD('x' => $x,'sample'=> $sample)) < $opts -> {'v'}){
+													push(@{$filters},'VAFgt'.$opts -> {'v'}.'Filter');
+													$stats{'filter'}{'VAFgt'.$opts -> {'v'}.'Filter'}++;
+											}
+					#if(($adval/GetSumHCallerAD('x' =. $x,'sample'=> $sample)) < $opts -> {'a'){
+					#	push(@{$filters},'AdAltGt'.$opts -> {'a'}.'Filter');
+					#	$stats{'filter'}{'AdAltGt'.$opts -> {'a'}.'Filter'}++;
+					#
+					#}
+					if($adval < $opts -> {'a'}){
+						push(@{$filters},'AdAltGt'.$opts -> {'a'}.'Filter');
+						$stats{'filter'}{'AdAltGt'.$opts -> {'a'}.'Filter'}++;
+					}
+
+					
+				}elsif($adval == 0 ){
+					#zero handling
+					#het filter is ok
+					
+					#alt count filter
+							push(@{$filters},'AdAltGt'.$opts -> {'a'}.'Filter');
+									$stats{'filter'}{'AdAltGt'.$opts -> {'a'}.'Filter'}++;
+					if(defined( $opts -> {'v'})){
+							push(@{$filters},'VAFgt'.$opts -> {'v'}.'Filter');
+							$stats{'filter'}{'VAFgt'.$opts -> {'v'}.'Filter'}++;
+					}
+
+					
+				}				
+			}
+		}
+		
 				
 		#############effect filtering
 		my $snpEffFiltered = 0;
+		#my $snpEffPresent = 0;
 		#$opts -> {'s'} =~ s///g;
 		my @filters = split(',',$opts -> {'s'});
 		#warn  "Err here".Dumper(@filters)." ";
@@ -162,10 +318,11 @@ sub main{
 			my $effsfiltered = 1;
 			for my $filter (@filters){
 				#die "Err here".Dumper(split(/[,\&]/,$x -> {'INFO'} -> {'SNPEFFANN_ANNOTATION'}),$x -> {'INFO'} -> {'SNPEFFANN_ANNOTATION'})." " if($x -> {'INFO'} -> {'SNPEFFANN_ANNOTATION'} =~ m/[,\&]/ && $x -> {'INFO'} -> {'SNPEFFANN_ANNOTATION'} =~ m/missense/);
-				if($eff eq $filter){
+				if($eff eq $filter){#This test for annotations present on a negative inclusion list.
 					$effsfiltered = 0;
 				}
 			}
+			#When one or more less harmfull catergories are found set to 0 so this is the minimal list of all harmfull effect snps. Assuming the SNPEFFANN_ANNOTATION only contains the most harmfull is ok?
 			if($effsfiltered == 1){
 				$snpEffFiltered = 1;
 			}
@@ -176,6 +333,7 @@ sub main{
 		}
 			
 		##caddd filtering 10?
+		#regular
 		if (defined($x -> {'INFO'} -> {'CADD_SCALED'}) && not($x -> {'INFO'} -> {'CADD_SCALED'} eq '')){ 
 			my @caddexomephred = split(',',$x -> {'INFO'} -> {'CADD_SCALED'});
 			for my $cadd (@caddexomephred){
@@ -186,6 +344,17 @@ sub main{
 					}
 				}
 			}
+		} elsif (defined($x -> {'INFO'} -> {'dbNSFP_CADD_phred'}) && not($x -> {'INFO'} -> {'dbNSFP_CADD_phred'} eq '')){ 
+			#dbnsf field dbNSFP_CADD_phred
+			my @caddexomephred = split(',',$x -> {'INFO'} -> {'dbNSFP_CADD_phred'});
+			for my $cadd (@caddexomephred){
+				if(defined($cadd) && not($cadd eq '')){
+					if($cadd < $opts -> {'c'}){
+						push(@{$filters},'CaddPred'.$opts -> {'c'}.'Filter');
+						$stats{'filter'}{'CaddPred'.$opts -> {'c'}.'dbNSFP_Filter'}++;
+					}
+				}
+			}
 		}
 		#HCallerFS
 		if (defined($x -> {'INFO'} -> {'HCallerFS'}) && not($x -> {'INFO'} -> {'HCallerFS'} eq '')){ 
@@ -193,24 +362,24 @@ sub main{
 			for my $hcfs (@hcfs){
 				if(defined($hcfs) && not($hcfs eq '')){
 					if($hcfs > $opts -> {'f'}){
-						push(@{$filters},'HcFisherStrand'.$opts -> {'f'}.'Filter');
-						$stats{'filter'}{'HcFisherStrand'.$opts -> {'f'}.'Filter'}++;
+						push(@{$filters},'HcFisherStrand'.$opts -> {'s'}.'Filter');
+						$stats{'filter'}{'HcFisherStrand'.$opts -> {'s'}.'Filter'}++;
 					}
 				}
 			}
 		}
 		#HCallerMQ
-		if (defined($x -> {'INFO'} -> {'HCallerMQRankSum'}) && not($x -> {'INFO'} -> {'HCallerMQRankSum'} eq '')){ 
-			my @mqrss = split(',',$x -> {'INFO'} -> {'HCallerMQRankSum'});
-			for my $mqrs (@mqrss){
-				if(defined($mqrs) && not($mqrs eq '')){
-					if($mqrs < $opts -> {'m'}){
-						push(@{$filters},'HcMQRankSum'.$opts -> {'m'}.'Filter');
-						$stats{'filter'}{'HcMQRankSum'.$opts -> {'m'}.'Filter'}++;
-					}
-				}
-			}
-		}
+		#if (defined($x -> {'INFO'} -> {'HCallerMQRankSum'}) && not($x -> {'INFO'} -> {'HCallerMQRankSum'} eq '')){ 
+		#	my @mqrss = split(',',$x -> {'INFO'} -> {'HCallerMQRankSum'});
+		#	for my $mqrs (@mqrss){
+		#		if(defined($mqrs) && not($mqrs eq '')){
+		#			if($mqrs < $opts -> {'m'}){
+		#				push(@{$filters},'HcMQRankSum'.$opts -> {'m'}.'Filter');
+		#				$stats{'filter'}{'HcMQRankSum'.$opts -> {'m'}.'Filter'}++;
+		#			}
+		#		}
+		#	}
+		#}
 		if((not(defined($x -> {'FILTER'})) or $x -> {'FILTER'} -> [0] eq "." or $x -> {'FILTER'} -> [0] eq "PASS") && scalar(@{$filters}) > 0){
 				@{$x -> {'FILTER'}}= @{$filters};#replace filter
 			}elsif(scalar(@{$filters}) > 0){
@@ -253,7 +422,13 @@ sub GetSumAD {
 	my $self;
 	%{$self}= @_;
 	my $record = $self -> {'x'};
-	
+	my @samples = keys(%{$record -> {'gtypes'}}); 
+	my $sample;
+	if(defined( $self -> {'sample'} )){
+		$sample = $self -> {'sample'};
+	}else{
+		$sample = $samples[0];
+	}
 	#die "Genotype count > 1 this aint ment for filtering multiple samples in a single vcf amount of (vcf) columns " if scalar(@{$record}) > 10;
 	#my $format = $record -> {'gtypes'}; my $gtinfo = $record -> [9];
 	#my $gt;
@@ -261,10 +436,33 @@ sub GetSumAD {
 	#my $gtparsed;
 	#map{$gtparsed -> {$_} = shift(@{$gt});}(split(":",$format));
 	#warn Dumper($gtparsed);
-	my @samples = keys(%{$record -> {'gtypes'}}); 
-	die "Genotype count > 1 this aint ment for filtering multiple samples in a single vcf amount of (vcf) columns " if(scalar(@samples)>1); 
+	#my @samples = keys(%{$record -> {'gtypes'}}); 
+	#die "Genotype count > 1 this aint ment for filtering multiple samples in a single vcf amount of (vcf) columns " if(scalar(@samples)>1); 
 	my $sum = 0;
-	map{$sum += $_;}(split(',',$record -> {'gtypes'} -> {$samples[0]} -> {'AD'}));
+	map{$sum += $_;}(split(',',$record -> {'gtypes'} -> {$sample} -> {'AD'}));
+	return $sum;
+}
+sub GetSumHCallerAD {
+	my $self;
+	%{$self}= @_;
+	my $record = $self -> {'x'};
+	my @samples = keys(%{$record -> {'gtypes'}}); 
+	my $sample;
+	if(defined( $self -> {'sample'} )){
+		$sample = $self -> {'sample'};
+	}else{
+		$sample = $samples[0];
+	}
+	#die "Genotype count > 1 this aint ment for filtering multiple samples in a single vcf amount of (vcf) columns " if scalar(@{$record}) > 10;
+	#my $format = $record -> {'gtypes'}; my $gtinfo = $record -> [9];
+	#my $gt;
+	#@{$gtypes} = split(':',$gtinfo);
+	#my $gtparsed;
+	#map{$gtparsed -> {$_} = shift(@{$gt});}(split(":",$format));
+	#warn Dumper($gtparsed);
+	#die "Genotype count > 1 this aint ment for filtering multiple samples in a single vcf amount of (vcf) columns " if(scalar(@samples)>1); 
+	my $sum = 0;
+	map{$sum += $_;}(split(',',$record -> {'gtypes'} -> {$sample} -> {'HCallerAD'}));
 	return $sum;
 }
 #sub GetCrvFunctionalAnnotations {
@@ -433,7 +631,7 @@ sub ParseAnnotation {
 	my $parsed;
 
 	for my $annField (@{$annFields}){
-		my @anns = split /\|/,$annField,-1;
+		my @anns = split(/\|/,$annField,-1);
 		die "Annotations not equal to header:\n".Dumper(\$annField,\@anns,$annotationHeader) if(not(scalar(@anns)==scalar(@{$annotationHeader})));
 		
 		my $fieldindex = 0;
@@ -521,4 +719,169 @@ upstream_gene_variant
 sequence_feature + exon_loss_variant";
 
 print "coding_sequence_variant","downstream_gene_variant","exon_variant","gene_variant","duplication","intergenic_region","conserved_intergenic_variant","intragenic_variant","intron_variant","conserved_intron_variant","initiator_codon_variant","stop_retained_variant","5_prime_UTR_premature_start_codon_gain_variant","start_retained","stop_retained_variant","3_prime_UTR_truncation + exon_loss","5_prime_UTR_truncation + exon_loss_variant","sequence_feature + exon_loss_variant";
+}
+
+sub CmdRunner {
+    my $ret;
+    my $cmd = join(" ",@_);
+
+    #warn localtime( time() ). " [INFO] system call:'". $cmd."'.\n";
+
+    @{$ret} = `($cmd )2>&1`;
+    if ($? == -1) {
+        die localtime( time() ). " [ERROR] failed to execute: $!\n system call:'". $cmd."'.\n";
+    }elsif ($? & 127) {
+        die localtime( time() ). " [ERROR] " .sprintf "child died with signal %d, %s coredump. system call:'". $cmd."'.\n",
+         ($? & 127),  ($? & 128) ? 'with' : 'without';
+    }elsif ($? != 0) {
+        die localtime( time() ). " [ERROR] " .sprintf "child died with signal %d, %s coredump. system call:'". $cmd."'.\n",
+             ($? & 127),  ($? & 128) ? 'with' : 'without';
+    }else {
+        #warn localtime( time() ). " [INFO] " . sprintf "child exited with value %d\n", $? >> 8;
+    }
+    return @{$ret};
+}
+
+sub RepeatAnnotator {
+	my $self;
+	%{$self}= @_;
+	my $record = $self -> {'record'};
+	my $ref = $self -> {'ref'};
+	my $window = 30;#Window size should be smaller then 40 due to clipping 
+	my @fa = CmdRunner('set -o pipefail && echo -e "' .
+		$record -> {'CHROM'}.'\t' .
+		($record -> {'POS'} - $window - 1 ) .'\t' .
+		($record -> {'POS'} + $window + length($record -> {'REF'})).'"| bedtools getfasta -fi '.
+		$ref .
+		' -bed /dev/stdin -fo /dev/stdout');
+	my $selectionBefore = substr($fa[1],0,$window);
+	my $selectionAfter = substr($fa[1],$window+length($record -> {'REF'}),$window);
+	#warn (join("\n",($fa[1],$selectionBefore,substr($fa[1],$window,length($record -> {'REF'})),$selectionAfter,join("_",($selectionBefore,substr($fa[1],$window,length($record -> {'REF'})),$selectionAfter))))," ");
+	#AGCCTGGGCAACAGAGCGAGACTCCATCTC AAAAAA AAAAAAAAAAGAAATGAGAGTAATGTAATA
+	#AGCCTGGGCAACAGAGCGAGACTCCATCTC_AAAAAA_AAAAAAAAAAGAAATGAGAGTAATGTAATA
+	#AGCCTGGGCAACAGAGCGAGACTCCATCTC
+	#AAAAAA
+	#AAAAAAAAAAGAAATGAGAGTAATGTAATA
+	#  at /groups/umcg-pmb/tmp01//umcg-mterpstra/git/molgenis-c5-TumorNormal/scripts/VcfSnpEffAnnoFilter.pl line 664, <__ANONIO__> line 4262.
+
+	$record -> {'INFO'} -> {'RepeatCount'} = "1".",1" x scalar(@{$record -> {'ALT'}});
+	$record -> {'INFO'} -> {'RepeatCountRepeatUnit'} = ($record -> {'REF'}.",".join(',',@{$record -> {'ALT'}}));
+	my @RepeatCounts;
+	my @RepeatCountsRepeatUnit;
+
+	for my $ref (($record -> {'REF'})){
+		my $maxRepeat = 1;
+		my $maxRepeatUnit = $ref;
+		for my $index (0..2){
+			for my $offset (1..length($ref)+3){
+				my ($repeatCount, $repeatUnit) = findRepeat('seq'=>$ref.$selectionAfter,'index'=>$index,'offset'=>$offset);
+				#die Dumper($record). " ";
+				#die ("'seq'=>$ref.$selectionAfter,'index'=>$index,'offset'=>$offset",Dumper($record))if($record -> {'REF'} eq "AGCG" );
+				if($repeatCount >= $maxRepeat && $repeatCount > 1){
+					$maxRepeat = $repeatCount;
+					$maxRepeatUnit = $repeatUnit;
+					#die Dumper($record, \@fa, \$selectionBefore,\$selectionAfter,\$basicSubunit, \$maxrepeat)
+				}
+				my ($repeatCountRev, $repeatUnitRev) = findRepeat('seq'=>reverse($selectionBefore.$ref),'index'=>$index,'offset'=>$offset);
+				if($repeatCountRev >= $maxRepeat && $repeatCountRev > 1){
+					$maxRepeat = $repeatCountRev;
+					$maxRepeatUnit = reverse($repeatUnitRev);
+					#die Dumper($record, \@fa, \$selectionBefore,\$selectionAfter,\$basicSubunit, \$maxrepeat)." ";
+				}
+				#AAAAATGTCAGTCAGCGCCCCGGGGAGCAGCCGAGGGTCCC
+				#AAAAATGTCAGTCAGCGCCC
+				#                     GGGGAGCAGCCGAGGGTCCC
+			}
+			#warn(" ")if($maxRepeatUnit)
+		}
+		
+		push(@RepeatCounts, $maxRepeat);
+		push(@RepeatCountsRepeatUnit, $maxRepeatUnit);
+	}
+	for my $alt (@{$record -> {'ALT'}}){
+		
+		#die Dumper($record, \@fa, \$selectionBefore,\$selectionAfter);
+		#will dump someting like:
+		#$VAR1{
+		#	...
+		#	'ALT' => [
+        #		'A'
+        #		],
+        #	'REF' => 'C',
+		#	...
+		#}
+		#$VAR3 = [
+        #	'>chr1:2556204-2556245
+		#',
+        #	'AAAAATGTCAGTCAGCGCCCCGGGGAGCAGCCGAGGGTCCC
+		#'
+        #];
+		#$VAR4 = \'AAAAATGTCAGTCAGCGCCC';
+		#$VAR5 = \'GGGGAGCAGCCGAGGGTCCC';
+		#comparing gives
+		#AAAAATGTCAGTCAGCGCCCCGGGGAGCAGCCGAGGGTCCC
+		#AAAAATGTCAGTCAGCGCCC
+		#                     GGGGAGCAGCCGAGGGTCCC
+
+		my $maxRepeat = 1;
+		my $maxRepeatUnit = $alt;
+		for my $index (0..2){
+			for my $offset (1..length($alt)+3){
+				my ($repeatCount, $repeatUnit) = findRepeat('seq'=>$alt.$selectionAfter,'index'=>$index,'offset'=>$offset);
+				if($repeatCount >= $maxRepeat && $repeatCount > 1){
+					$maxRepeat = $repeatCount;
+					$maxRepeatUnit = $repeatUnit;
+					#die Dumper($record, \@fa, \$selectionBefore,\$selectionAfter,\$basicSubunit, \$maxrepeat)." ";
+				}
+				#AAAAATGTCAGTCAGCGCCCCGGGGAGCAGCCGAGGGTCCC
+				#AAAAATGTCAGTCAGCGCCC
+				#                     GGGGAGCAGCCGAGGGTCCC
+				my ($repeatCountRev, $repeatUnitRev) = findRepeat('seq'=>reverse($selectionBefore.$alt),'index'=>$index,'offset'=>$offset);
+				if($repeatCountRev >= $maxRepeat && $repeatCountRev > 1){
+					$maxRepeat = $repeatCountRev;
+					$maxRepeatUnit = reverse($repeatUnitRev);
+					#die Dumper($record, \@fa, \$selectionBefore,\$selectionAfter,\$basicSubunit, \$maxrepeat)." ";
+				}
+				#AAAAATGTCAGTCAGCGCCCCGGGGAGCAGCCGAGGGTCCC
+				#AAAAATGTCAGTCAGCGCCC
+				#                     GGGGAGCAGCCGAGGGTCCC
+			}
+		}
+		#ideally they should be left assigned so the before shouldnt be used at all
+		#if(
+		#	$selectionAfter =~ m/^(A){2,}/ |
+		#	$selectionAfter =~ m/^(C){2,}/ |
+		#	$selectionAfter =~ m/^(G){2,}/ | 
+		#	$selectionAfter =~ m/^(T){2,}/ 
+		#){
+		#	my $basicMatch = $1;
+		#	my $fullLength = $&;
+		#	my $repeatLength = length($fullLength)/length($basicMatch);
+		#	die Dumper($record, \@fa, \$selectionBefore,\$selectionAfter,\$basicMatch,\$fullLength, \$repeatLength);
+		#}
+
+		push(@RepeatCounts, $maxRepeat);
+		push(@RepeatCountsRepeatUnit, $maxRepeatUnit);
+
+	}
+	$record -> {'INFO'} -> {'RepeatCount'} = (join(',',@RepeatCounts));
+	$record -> {'INFO'} -> {'RepeatCountRepeatUnit'} = (join(',',@RepeatCountsRepeatUnit));
+	return $record;
+}
+
+sub findRepeat{
+	my $self;
+	%{$self}= @_;
+	#finds repeats in the start of the sequence starting at index-offset and sees if it is repeated by returning repeatcount and repeatunit
+	my $index = $self -> {'index'};
+	my $offset = $self -> {'offset'};
+	my $seq = $self -> {'seq'};
+	my $repeatUnit = substr($seq,$index,$offset);
+	my $repeatCount = 0;
+	while(index($seq,$repeatUnit,$index)==$index){
+		$repeatCount++;
+		$index += $offset;
+		#warn(index($alt.reverse($selectionBefore),$basicSubunit,$index)."Here");
+	}
+	return ($repeatCount,$repeatUnit);
 }
