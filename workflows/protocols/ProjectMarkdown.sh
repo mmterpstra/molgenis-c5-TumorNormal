@@ -167,6 +167,7 @@ done
 		#add in matching header
 		grep -A 1 "$HEADER"  ${mdlist[1]}
 		#get table rows
+
 		for md in "${mdlist[@]}"; do
 			if [ -s "$md" ] ; then
 				grep -A 2 "$HEADER" "$md" | tail -n 1

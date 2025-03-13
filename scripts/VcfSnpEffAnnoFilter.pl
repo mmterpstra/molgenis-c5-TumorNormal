@@ -885,3 +885,4 @@ sub findRepeat{
 	}
 	return ($repeatCount,$repeatUnit);
 }
+
