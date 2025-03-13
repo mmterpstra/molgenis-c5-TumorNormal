@@ -73,7 +73,7 @@ SNVVariantsToDescriptionTable,protocols/GenerateTableDescr.sh,SelectSNV;vcf=snvV
 #IchorCNAPoN,protocols/IchorCNAPoN.sh,MergeBamFilesFreebayes
 #IchorCNA,protocols/IchorCNA.sh,IndelRealignmentKnown;MergeBamFilesFreebayes;IchorCNAPoN
 #MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
-ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
+ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown;GatkDepthOfCoverage
 SamQC,protocols/SamQc.sh,MarkDuplicates
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 Cleanup,protocols/CleanUpProject.sh,SNVVariantsToTable;IndelVariantsToTable;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;HaplotypeCaller;ProjectMarkdown;MultiQC;IchorCNA;CnvProfile

@@ -51,11 +51,11 @@ projectname=$3
 	>&2 echo "## "$(date)" ## $0 ## Running on host '"$HOSTNAME"'."
 
 	if [[ "$HOSTNAME" =~ gearshift ]] ;then
-                >&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
-                runDir=/groups/umcg-pmb/tmp01/umcg-mterpstra/projects/$projectname
-                siteParam=$workflowDir/parameters/gearshift.siteconfig.csv
+		>&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
+		runDir=/groups/umcg-pmb/tmp01/umcg-mterpstra/projects/$projectname
+		siteParam=$workflowDir/parameters/gearshift.siteconfig.csv
 
-                #partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
+		#partitionFix='perl -i -wpe "s/^#SBATCH\ --partition=ll$/#SBATCH\ --partition=nodes/g"'
 	elif [[ "$HOSTNAME" =~ pg-interactive* ]] ;then
 		>&2 echo "## "$(date)" ## $0 ## Setting peregrine molgenis variables"
 		runDir=/scratch/$USER/projects/$projectname
@@ -130,20 +130,24 @@ projectname=$3
 		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "exome" ];then
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
-                workflowBase="workflow_grch38.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
-        elif [ $1 == "exomele150" ];then
-                >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental le150 workflow"
-                workflowBase="workflow_grch38_le150.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
-        elif [ $1 == "exomegt150" ];then
-                >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental gt150 workflow"
-                workflowBase="workflow_grch38_gt150.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		workflowBase="workflow_grch38.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+	elif [ $1 == "exome-min" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq minimal workflow"
+		workflowBase="workflow_grch38_min.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+	elif [ $1 == "exomele150" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental le150 workflow"
+		workflowBase="workflow_grch38_le150.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+	elif [ $1 == "exomegt150" ];then
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq experimental gt150 workflow"
+		workflowBase="workflow_grch38_gt150.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "rna" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
-	        workflowBase="workflow_rnaseq_star.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using RNA-seq workflow"
+		workflowBase="workflow_rnaseq_star.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "rnaumi" ];then
 		>&2 echo  "## "$(date)" ## $0 ## Using RNA-seq umi workflow"
 		workflowBase="workflow_rnaseq_star_umi.csv"
@@ -153,29 +157,29 @@ projectname=$3
 		workflowBase="workflow_lexogenrnarat.csv"
 		cat  $workflowDir/parameters/rat_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "nugene" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using nugene workflow"
-	        workflowBase="workflow_nugene.csv"
-	        nugeneProbeBed=$5
+		>&2 echo  "## "$(date)" ## $0 ## Using nugene workflow"
+		workflowBase="workflow_nugene.csv"
+		nugeneProbeBed=$5
 		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
-	        perl -i.bak  -wpe 's!(probeBed,).*!$1'"$nugeneProbeBed"'!g' $runDir/.parameters.site.tmp.csv
+		perl -i.bak  -wpe 's!(probeBed,).*!$1'"$nugeneProbeBed"'!g' $runDir/.parameters.site.tmp.csv
 	
 	elif [ $1 == "nuginc" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
-	        workflowBase="workflow_nugeneinc.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+		workflowBase="workflow_nugeneinc.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
                 
 	elif [ $1 == "nugincbybed" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
-	        workflowBase="workflow_nugeneinctrimbybed.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using nugene advised workflow"
+		workflowBase="workflow_nugeneinctrimbybed.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 
 	elif [ $1 == "nugrna" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
-	        workflowBase="workflow_nugenerna.csv"
+		>&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA workflow"
+		workflowBase="workflow_nugenerna.csv"
 		nugeneRnaProbeBed=$5
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
-	
-	        perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $runDir/.parameters.site.tmp.csv
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+
+		perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $runDir/.parameters.site.tmp.csv
 	elif [ $1 == "nugrnastar" ];then
 		>&2 echo  "## "$(date)" ## $0 ## Using Nugene RNA STAR workflow"
 		workflowBase="workflow_nugenerna_star.csv"
@@ -185,36 +189,36 @@ projectname=$3
 		perl -i.bak  -wpe 's!(probeRnaBed,).*!$1'"$nugeneRnaProbeBed"'!g' $runDir/.parameters.site.tmp.csv
 
 	elif [ $1 == "iont" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
-	        workflowBase="workflow_iont_scat.csv"
-                cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using iontorrent workflow"
+		workflowBase="workflow_iont_scat.csv"
+		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		ampliconsBed=$5
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $runDir/.parameters.site.tmp.csv
 		
 	elif [ $1 == "umi" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
-	        #workflowBase="workflow.csv"
+		>&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
+		#workflowBase="workflow.csv"
 		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq workflow"
-                workflowBase="workflow_umi.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		workflowBase="workflow_umi.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
                 
 	elif [ $1 == "umitwist" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
-	        #workflowBase="workflow.csv"
+		>&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
+		#workflowBase="workflow.csv"
 		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Twist exome umi workflow"
-                workflowBase="workflow_umi_twist.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		workflowBase="workflow_umi_twist.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
                 
 	elif [ $1 == "umitwistlpwgs" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
-	        #workflowBase="workflow.csv"
+		>&2 echo  "## "$(date)" ## $0 ## Using umi Exome-seq workflow"
+		#workflowBase="workflow.csv"
 		#cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		>&2 echo  "## "$(date)" ## $0 ## Using Twist exome umi workflow"
-                workflowBase="workflow_umi_twist_lpwgs.csv"
-                cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
-                
+		workflowBase="workflow_umi_twist_lpwgs.csv"
+		cat  $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		
 	elif [ $1 == "prepiont" ];then
 	        >&2 echo  "## "$(date)" ## $0 ## Using iontorrent bamtofastq workflow"
 	        workflowBase="workflow_prepiont.csv"
@@ -229,9 +233,9 @@ projectname=$3
 		perl -i.bak  -wpe 's!(ampliconsBed,).*!$1'"$ampliconsBed"'!g' $runDir/.parameters.site.tmp.csv
 		
 	elif [ $1 == "withpoly" ];then
-	        >&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
-	        workflowBase="workflow_withPolymorfic.csv"
-                cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
+		>&2 echo  "## "$(date)" ## $0 ## Using Exome-seq with polymorfic  workflow"
+		workflowBase="workflow_withPolymorfic.csv"
+		cat $workflowDir/parameters/human_grch38_parameters.csv >>  $runDir/.parameters.site.tmp.csv
                 
 	elif [ $1 == "lexo" ]; then
 		>&2 echo  "## "$(date)" ## $0 ## Using Lexogen stranded 3prime mRNA-seq workflow"
@@ -254,7 +258,7 @@ projectname=$3
 		cat  $workflowDir/human_parameters.csv >>  $runDir/.parameters.site.tmp.csv
 		
 	else
-	    	>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
+		>&2 echo  "## "$(date)" ## $0 ## Error: No valid Seqtype in input" && exit 1
 	fi
 
 

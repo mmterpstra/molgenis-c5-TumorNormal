@@ -59,4 +59,6 @@ java -Xmx14g -XX:ParallelGCThreads=4 -jar $EBROOTPICARD/picard.jar MergeSamFiles
 putFile ${mergeBamFilesBam}
 putFile ${mergeBamFilesBai}
 
+echo "rm -v $(printf '%s ' ${bams[@]})" >> ${mergeBamFilesDir}/../CleanIntermediate.sh
+
 echo "## "$(date)" ##  $0 Done "

@@ -181,4 +181,5 @@ fi
 
 putFile ${bwaBam} 
 putFile ${bwaBai} 
+echo "rm -v '${reads1FqGz}' '${reads2FqGz}'" >> ${bwaAlignmentDir}/../CleanIntermediate.sh
 echo "## "$(date)" ##  $0 Done "

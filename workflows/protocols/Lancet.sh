@@ -95,7 +95,7 @@ if [ ${indelRealignmentBam} !=  ${controlSampleBam} ]; then
 	lancet --tumor ${indelRealignmentBam} $Normalspec --ref ${onekgGenomeFasta} $InterValOperand --num-threads 8 > ${lancetScatVcf}.tmp.vcf
 else
 	#no tumoronly mode
-	touch ${lancetScatVcf}..tmp.vcf
+	touch ${lancetScatVcf}.tmp.vcf
 	cat <<- 'END' > ${lancetScatVcf}.tmp.vcf
 		##fileformat=VCFv4.2
 		##fileDate=Wed Apr 13 10:35:04 2022
@@ -133,11 +133,7 @@ else
 		END
 fi
 
-(ml purge;${stage} ${picardMod}
-		java -jar $EBROOTPICARD/picard.jar SortVcf \
-			SD=${onekgGenomeFastaDict} \
-			I=${lancetScatVcf}.tmp.vcf \
-			O=${lancetScatVcf})
+#he
 #java -Xmx8g -Djava.io.tmpdir=${mutect2Dir}  -XX:+UseConcMarkSweepGC  -XX:ParallelGCThreads=1 -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 # -T MuTect2 \
 # -R ${onekgGenomeFasta} \
