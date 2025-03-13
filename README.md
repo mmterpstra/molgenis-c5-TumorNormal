@@ -125,25 +125,34 @@ Here are the tools and software versions (for the current versions look at the *
 
 | software              | version |
 | --------              | ------- |
-| fastQC		 | 0.11.5-Java-1.7.0_80
-| BWA		 | 0.7.12-foss-2016a
-| picard		 | 1.140-foss-2016a-Java-1.8.0_74
-| R		 | 3.2.2-foss-2016a-bioconductor
-| GATK 		 | 3.5-foss-2016a-Java-1.7.0_80
-| snpEff		 | 4.1g-Java-1.7.0_80
-| VarScan		 | 2.4.0-Java-1.7.0_80
-| SAMtools	 | 0.1.18-foss-2016a
-| VCFtools	 | 0.1.12b-foss-2016a-Perl-5.20.2-bare
-| pipeline-util 	 | 0.4.1-foss-2016a-Perl-5.20.2-bare
-| TableToXlsx | latest 
-| DigitalBarcodeReadgroups | 0.1.4-foss-2016a-Perl-5.20.2-bare
-| BBMap		 | 35.69-Java-1.7.0_80
-| BEDTools	 | 2.25.0-foss-2016a
-| hisat2		 | 2.0.3-beta-foss-2016a
-| HTSeq		 | 0.6.1-p1-goolfc-2.7.11-Python-2.7.9
-| FusionCatcher	 | 0.99.6a-foss-2016a-Python-2.7.11
-| markdown(R package)	| 0.7.7-foss-2016a-R-3.2.2-bioconductor
-| manta		 | 0.29.5-foss-2016a 
+| 	FastQC	 | 	0.11.9-Java-11 |
+| 	BWA (mem) 	 | 	0.7.17-GCCcore-11.3.0 |
+| 	picard	 | 	2.26.10-Java-8-LTS |
+| 	R	 | 	4.2.1-foss-2022a |
+| 	GATK	 | 	3.8-1-0-Java-1.8.0_144 |
+| 	snpEff	 | 	4.3t-Java-11-LTS |
+| 	VarScan	 | 	2.4.3-Java-1.7.0_80 |
+| 	SAMtools	 | 	1.9-GCCcore-7.3.0 |
+| 	HTSlib	 | 	1.17-GCCcore-11.3.0 |
+| 	BCFtools	 | 	1.17-GCCcore-11.3.0 |
+| 	VCFtools	 | 	0.1.16-foss-2018b-Perl-5.30.0 |
+| 	open-cravat	 | 	1.8.0-foss-2018b-Python-3.7.4 |
+| 	pipeline-util	 | 	0.8.20-5-ga0a29bb-foss-2022a |
+| 	parallel	 | 	20220722-GCCcore-11.3.0 |
+| 	TableToXlsx	 | 	0.3.0-GCCcore-11.3.0-Perl-5.34.1 |
+| 	BBMap	 | 	35.69-foss-2018b |
+| 	BEDTools	 | 	2.27.1-foss-2018b |
+| 	HTSeq	 | 	0.11.0-GCCcore-7.3.0-Python-3.7.4 |
+| 	R (rmarkdown)	 | 	4.2.1-foss-2022a |
+| 	manta	 | 	1.6.0-GCCcore-11.3.0 |
+| 	freebayes	 | 	1.3.2-GCCcore-7.3.0 |
+| 	LoFreq	 | 	2.1.5-foss-2018b-Python-2.7.16 |
+| 	multiqc	 | 	1.12-GCCcore-11.3.0 |
+| 	R-bundle-ichorCNA	 | 	0.3.2-20191219-foss-2022a-R-4.2.1 |
+| 	fgbio	 | 	1.3.0 |
+| 	STAR	 | 	2.7.3a-foss-2018b |
+| 	TrimGalore	 | 	0.6.7-GCCcore-11.3.0 |
+| 	cutadapt	 | 	4.2-GCCcore-11.3.0 | 
 
 
 Resource links
