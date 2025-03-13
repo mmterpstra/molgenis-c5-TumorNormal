@@ -101,5 +101,6 @@ putFile ${indelRealignmentBam}
 putFile ${indelRealignmentBai}
 putFile ${indelRealignmentBam}.bai
 
+echo "rm -v '${markDuplicatesBam}'" >> ${indelRealignmentDir}/../CleanIntermediate.sh
 
 echo "## "$(date)" ##  $0 Done "

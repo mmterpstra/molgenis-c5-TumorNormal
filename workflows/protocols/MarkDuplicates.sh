@@ -72,4 +72,7 @@ putFile ${markDuplicatesBam}
 putFile ${markDuplicatesBai}
 putFile ${markDuplicatesMetrics}
 
+echo "rm -v '${mergeBamFilesBam}'" >> ${markDuplicatesDir}/../CleanIntermediate.sh
+
+
 echo "## "$(date)" ##  $0 Done "

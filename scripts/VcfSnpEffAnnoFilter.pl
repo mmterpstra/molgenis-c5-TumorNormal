@@ -10,7 +10,7 @@ my $use = <<"END";
 	soft filter opencravat data.
 END
 my %opts;
-getopts('h:s:c:d:a:n:m:f:r:n:', \%opts);
+getopts('h:s:c:d:a:n:m:f:r:n:p:', \%opts);
 die "no valid 'in.vcf' specified on command line\n$use" if(not(defined($ARGV[0])) ||not -e $ARGV[0]);
 #main
 
@@ -885,3 +885,4 @@ sub findRepeat{
 	}
 	return ($repeatCount,$repeatUnit);
 }
+

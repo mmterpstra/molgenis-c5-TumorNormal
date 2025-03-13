@@ -69,7 +69,7 @@ CnvProfile,protocols/CnvkitCNV.sh,MergeVariants;BQSR;haplotyperVcf=combineVcf
 IchorCNA,protocols/IchorCNA.sh,IndelRealignmentKnown;MergeBamFilesFreebayes
 QDNAseq,protocols/QDNAseq.sh,IndelRealignmentKnown
 MergeSegFiles,protocols/MergeSegFiles.sh,PlotGenome
-ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown
+ProjectMarkdown,protocols/ProjectMarkdown.sh,SampleMarkdown;GatkDepthOfCoverage
 SamQC,protocols/SamQc.sh,MarkDuplicates
 MultiQC,protocols/MultiQC.sh,ProjectMarkdown;SnpEffManta;SelectIndels;SelectSNV;SamQC;VariantAnnotation
 Cleanup,protocols/CleanUpProject.sh,PlotGenome;TablesToXlsx;CalculateHsMetrics;CollectMultipleMetrics;Fastqc;AnalyseCovariants;HaplotypeCaller;ProjectMarkdown;MultiQC;TablesToSplitTables
